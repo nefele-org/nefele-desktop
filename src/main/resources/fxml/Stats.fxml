@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.ScrollPane?>
+<?import com.jfoenix.controls.JFXMasonryPane?>
+<?import com.jfoenix.controls.JFXSpinner?>
+<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
+<?import javafx.scene.control.Label?>
+
+<?import javafx.scene.control.Separator?>
+<fx:root minWidth="-Infinity" maxWidth="Infinity" minHeight="-Infinity" maxHeight="Infinity"
+         type="StackPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
+         AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+
+
+    <ScrollPane fx:id="scrollPane" fitToWidth="true" fitToHeight="true" prefWidth="200" prefHeight="200">
+        <StackPane>
+            <JFXMasonryPane fx:id="masonryPane">
+
+                <StackPane styleClass="stats-card" >
+                    <VBox spacing="5">
+                        <Label text="Uso complessivo" styleClass="stats-card-title" />
+                        <Separator orientation="HORIZONTAL"/>
+
+                        <VBox styleClass="stats-card-box">
+                            <Pane styleClass="stats-card-box-header">
+                                <Label text="Archiviazione" />
+                            </Pane>
+                            <Pane styleClass="stats-card-box-content">
+                                <HBox spacing="10">
+                                    <StackPane alignment="CENTER" styleClass="stats-spinner-box">
+                                        <JFXSpinner/>
+                                        <MaterialDesignIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="CLOUD" size="32.0"  />
+                                    </StackPane>
+                                    <VBox spacing="2">
+                                        <Label text="31%" styleClass="stats-card-text-spinner" />
+                                        <Label text="10 GB" />
+                                        <Label text="di 40 GB" />
+                                    </VBox>
+                                </HBox>
+                            </Pane>
+                        </VBox>
+                    </VBox>
+                </StackPane>
+
+                <StackPane styleClass="stats-card">
+                    <VBox spacing="5">
+                        <Label text="Archiviazione Usata" styleClass="stats-card-title" />
+                        <Separator orientation="HORIZONTAL"/>
+
+                        <VBox styleClass="stats-card-box">
+                            <VBox styleClass="stats-card-box-content" spacing="5">
+                                <BorderPane>
+                                    <left>
+                                        <HBox spacing="5">
+                                            <MaterialDesignIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="CLOUD" size="16.0"/>
+                                            <Label text="30%"/>
+                                        </HBox>
+                                    </left>
+                                    <center>
+                                        <Label text="Cloud Drive"/>
+                                    </center>
+                                    <right>
+                                        <Label text="30%"></Label>
+                                    </right>
+                                </BorderPane>
+                                <BorderPane>
+                                    <left>
+                                        <HBox spacing="5">
+                                            <MaterialDesignIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="CIRCLE" size="16.0"/>
+                                            <Label text="30%"/>
+                                        </HBox>
+                                    </left>
+                                    <center>
+                                        <Label text="Disponibile"/>
+                                    </center>
+                                    <right>
+                                        <Label text="30%"></Label>
+                                    </right>
+                                </BorderPane>
+                            </VBox>
+                        </VBox>
+                    </VBox>
+                </StackPane>
+
+                <StackPane styleClass="stats-card">
+                    <VBox spacing="5">
+                        <Label text="Dati:" styleClass="stats-card-title" />
+                        <Separator orientation="HORIZONTAL"/>
+
+                        <VBox styleClass="stats-card-box" spacing="2" >
+                            <BorderPane>
+                                    <left>
+                                        <MaterialDesignIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="FILE" size="16.0"/>
+                                        <Label text="Tutti i file"/>
+                                    </left>
+                                    <center>
+                                        <Label text="11"/>
+                                        <Label text="files"/>
+                                    </center>
+                                    <right>
+                                        <Label text="10"/>
+                                        <Label text="gb"/>
+                                    </right>
+                            </BorderPane>
+                            <BorderPane>
+                                <left>
+                                    <MaterialDesignIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="FILE" size="16.0"/>
+                                    <Label text="Tutti i file"/>
+                                </left>
+                                <center>
+                                    <Label text="11"/>
+                                    <Label text="files"/>
+                                </center>
+                                <right>
+                                    <Label text="10"/>
+                                    <Label text="gb"/>
+                                </right>
+                            </BorderPane>
+                            <BorderPane>
+                                <left>
+                                    <MaterialDesignIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="FILE" size="16.0"/>
+                                    <Label text="Tutti i file"/>
+                                </left>
+                                <center>
+                                    <Label text="11"/>
+                                    <Label text="files"/>
+                                </center>
+                                <right>
+                                    <Label text="10"/>
+                                    <Label text="gb"/>
+                                </right>
+                            </BorderPane>
+                        </VBox>
+                    </VBox>
+
+                </StackPane>
+            </JFXMasonryPane>
+        </StackPane>
+    </ScrollPane>
+</fx:root>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import de.jensd.fx.glyphs.materialdesignicons.*?>
+<?import de.jensd.fx.glyphs.materialicons.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import org.nefele.ui.controls.FileBrowser?>
+
+<!--
+  ~ The MIT License
+  ~
+  ~ Copyright (c) 2020 Nefele <https://github.com/nefele-org>
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in
+  ~ all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  ~ THE SOFTWARE.
+  -->
+
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+         type="StackPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
+         AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+   <children>
+      <BorderPane>
+         <top>
+            <HBox BorderPane.alignment="TOP_CENTER">
+               <children>
+                  <JFXButton contentDisplay="GRAPHIC_ONLY" fx:id="buttonForward" mnemonicParsing="false" text=" " styleClass="filebrowser-header-button">
+                     <graphic>
+                        <MaterialIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="ARROW_BACK" size="24.0" />
+                     </graphic>
+                     <tooltip>
+                        <Tooltip fx:id="tooltipForward"/>
+                     </tooltip></JFXButton>
+                  <JFXButton contentDisplay="GRAPHIC_ONLY" fx:id="buttonBack" mnemonicParsing="false" text=" " styleClass="filebrowser-header-button">
+                     <graphic>
+                        <MaterialIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="ARROW_FORWARD" size="24.0" />
+                     </graphic>
+                     <tooltip>
+                        <Tooltip fx:id="tooltipBack"/>
+                     </tooltip></JFXButton>
+                  <JFXButton contentDisplay="GRAPHIC_ONLY" fx:id="buttonHome" mnemonicParsing="false" text=" " styleClass="filebrowser-header-button">
+                     <graphic>
+                        <MaterialIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="HOME" size="24.0" />
+                     </graphic>
+                     <tooltip>
+                        <Tooltip fx:id="tooltipHome"/>
+                     </tooltip></JFXButton>
+                  <JFXTextField fx:id="textFieldPath" editable="false" HBox.hgrow="ALWAYS" styleClass="filebrowser-text-field" >
+                     <HBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </HBox.margin></JFXTextField>
+                  <JFXButton contentDisplay="GRAPHIC_ONLY" fx:id="buttonAddFile" mnemonicParsing="false" text=" " styleClass="filebrowser-header-button">
+                     <graphic>
+                        <MaterialDesignIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="FILE_PLUS" size="24.0" />
+                     </graphic>
+                     <tooltip>
+                     <Tooltip fx:id="tooltipAddFile"/>
+                  </tooltip></JFXButton>
+                  <JFXButton contentDisplay="GRAPHIC_ONLY" fx:id="buttonAddFolder" mnemonicParsing="false" text=" " styleClass="filebrowser-header-button">
+                     <graphic>
+                        <MaterialIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="CREATE_NEW_FOLDER" size="24.0" />
+                     </graphic>
+                  <tooltip>
+                     <Tooltip fx:id="tooltipAddFolder"/>
+                  </tooltip></JFXButton>
+                  <JFXButton contentDisplay="GRAPHIC_ONLY" fx:id="buttonUpFolder" mnemonicParsing="false" text=" " styleClass="filebrowser-header-button">
+                     <graphic>
+                        <MaterialDesignIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="FOLDER_UPLOAD" size="24.0" />
+                     </graphic>
+                     <tooltip>
+                        <Tooltip fx:id="tooltipUpFolder"/>
+                     </tooltip></JFXButton>
+               </children>
+            </HBox>
+         </top>
+         <center>
+            <FileBrowser fx:id="fileBrowser" />
+         </center>
+      </BorderPane>
+   </children>
+</fx:root>

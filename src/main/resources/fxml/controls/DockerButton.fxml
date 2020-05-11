@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
+<?import javafx.scene.control.Tooltip?>
+
+
+<fx:root type="JFXButton" alignment="CENTER" contentDisplay="CENTER" prefHeight="64.0" prefWidth="64.0" text=" " xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" styleClass="docker-button" >
+   <graphic>
+      <MaterialDesignIconView fx:id="icon" size="28.0" />
+   </graphic>
+   <tooltip>
+      <Tooltip fx:id="tooltip"/>
+   </tooltip>
+</fx:root>

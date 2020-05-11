@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import org.nefele.ui.controls.NefeleContentPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import org.nefele.ui.controls.Docker?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.geometry.Insets?>
+
+
+<fx:root prefHeight="400.0" prefWidth="600.0" type="NefeleContentPane"
+         xmlns="http://javafx.com/javafx/10.0.2-internal"
+         xmlns:fx="http://javafx.com/fxml/1">
+
+
+    <BorderPane>
+        <left>
+            <Docker fx:id="dockerPane" />
+        </left>
+        <center>
+            <AnchorPane fx:id="contentPane">
+                <padding><Insets top="10" right="25" bottom="10" left="10"/></padding>
+            </AnchorPane>
+        </center>
+    </BorderPane>
+
+</fx:root>
