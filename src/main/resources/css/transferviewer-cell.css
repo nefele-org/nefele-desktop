@@ -22,9 +22,6 @@
  * THE SOFTWARE.
  */
 
-.glyph-icon {
-    -fx-fill: -nefele-theme-surface-text;
-}
 
 .transferviewer-label-filename {
     -fx-text-fill: -nefele-theme-surface-text;

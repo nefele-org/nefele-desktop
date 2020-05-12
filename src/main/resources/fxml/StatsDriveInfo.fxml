@@ -30,15 +30,35 @@
   ~ THE SOFTWARE.
   -->
 
-<?import javafx.scene.chart.PieChart?>
-<fx:root minWidth="-Infinity" maxWidth="Infinity" minHeight="-Infinity" maxHeight="Infinity"
-         type="BorderPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
-    <left>
-        <PieChart fx:id="chart" prefWidth="48" prefHeight="48" />
-    </left>
-    <center>
-        <Separator orientation="VERTICAL"/>
-        <Label fx:id="labelNameState" />
-        <Label fx:id="labelSpace" />
-    </center>
+<?import com.jfoenix.controls.JFXSpinner?>
+
+<fx:root minWidth="-Infinity" maxWidth="Infinity" minHeight="-Infinity" maxHeight="Infinity" styleClass="stats-card"
+         type="StackPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" >
+
+        <VBox spacing="5">
+
+            <Label text="Drive" styleClass="stats-card-title" />
+            <Separator orientation="HORIZONTAL"/>
+
+            <VBox styleClass="stats-card-box">
+
+                <HBox styleClass="stats-card-box-content" spacing="5">
+                    <JFXSpinner />
+                    <Separator orientation="VERTICAL"/>
+                    <VBox spacing="2">
+                        <HBox spacing="5">
+                            <Label text="Archiviazione:" />
+                            <Label text="10 / 20 GB" />
+                        </HBox>
+                        <HBox spacing="5">
+                            <Label text="Stato:" />
+                            <Label text="Attivo" />
+                        </HBox>
+                    </VBox>
+                </HBox>
+
+            </VBox>
+
+        </VBox>
+
 </fx:root>

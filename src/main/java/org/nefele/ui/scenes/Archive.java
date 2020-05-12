@@ -161,7 +161,7 @@ public class Archive extends StackPane implements Initializable, Themeable {
         tooltipAddFolder.setText(Application.getInstance().getLocale().get("ARCHIVE_HINT_ADDFOLDER"));
         tooltipUpFolder.setText(Application.getInstance().getLocale().get("ARCHIVE_HINT_UPFOLDER"));
 
-        Resources.getCSS(this, "css/filebrowser-header.css");
+        Resources.getCSS(this, "/css/filebrowser-header.css");
 
     }
 }

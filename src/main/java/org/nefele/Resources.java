@@ -63,6 +63,8 @@ public final class Resources {
             Application.panic(Views.class, e);
         }
 
+
+        //Application.log(Resources.class, "Loaded FXML %s", resource);
         return parent;
 
     }
@@ -74,6 +76,8 @@ public final class Resources {
 
         parent.getStylesheets().remove(css);
         parent.getStylesheets().add(css);
+
+        Application.log(Resources.class, "Loaded CSS %s", resource);
 
     }
 
@@ -103,7 +107,10 @@ public final class Resources {
     }
 
     public static void getFont(Object parent, String resource) {
+
         Font.loadFont(Resources.getURL(parent, resource).toExternalForm(), 12);
+
+        Application.log(Resources.class, "Loaded Font %s", resource);
     }
 
 

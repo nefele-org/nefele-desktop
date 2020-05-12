@@ -25,5 +25,5 @@
 package org.nefele.ui.controls;
 
 public interface NefelePaneClosingOperation {
-    boolean onClose();
+    boolean closing();
 }

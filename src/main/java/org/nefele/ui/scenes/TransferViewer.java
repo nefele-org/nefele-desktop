@@ -77,7 +77,7 @@ public class TransferViewer extends StackPane implements Initializable, Themeabl
 
     @Override
     public void initializeInterface() {
-        Resources.getCSS(this, "css/transferviewer-cell.css");
+        Resources.getCSS(this, "/css/transferviewer-cell.css");
 
         cellPane.getChildren().add(new TransferViewerCell(null)); /* TODO: Remove */
 

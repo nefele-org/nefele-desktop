@@ -139,7 +139,7 @@ public class Trash extends StackPane implements Initializable, Themeable {
         tooltipHome.setText(Application.getInstance().getLocale().get("ARCHIVE_HINT_HOME"));
         tooltipEmpty.setText(Application.getInstance().getLocale().get("TRASH_HINT_EMPTY"));
 
-        Resources.getCSS(this, "css/filebrowser-header.css");
+        Resources.getCSS(this, "/css/filebrowser-header.css");
 
     }
 }

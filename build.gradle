@@ -117,7 +117,9 @@ run {
 
 jar {
     manifest {
-        attributes 'Main-Class' : 'Program'
+        attributes  'Main-Class' : 'Program',
+                    'Name' : 'org/nefele/',
+                    'Sealed' : 'true'
     }
 
     from {

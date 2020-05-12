@@ -85,8 +85,20 @@ public final class Application extends javafx.application.Application implements
 
         instance = this;
 
+        Application.log(Application.class, "Starting application");
+        Application.log(Application.class, "Java: %s %s", System.getProperty("java.vendor"), System.getProperty("java.version"));
+        Application.log(Application.class, "JavaFX: %s", System.getProperty("javafx.runtime.version"));
+        Application.log(Application.class, "System: %s", System.getProperty("os.name"));
+
+        Application.log(Application.class, "Heap: %d/%d MB",
+                Runtime.getRuntime().totalMemory() / 1024 / 1024, Runtime.getRuntime().maxMemory() / 1024 / 1024);
+
+
 
         Resources.getFont(this, "/font/segoeui.ttf");
+        Resources.getFont(this, "/font/segoeuib.ttf");
+        Resources.getFont(this, "/font/segoeuii.ttf");
+
 
         setTheme(new Theme(config.getString("app.ui.theme").orElse(Theme.DEFAULT_THEME)));
         locale.setLanguage(config.getString("app.ui.locale").orElse(Locale.DEFAULT_LOCALE));

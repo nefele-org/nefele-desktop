@@ -32,37 +32,27 @@ import javafx.fxml.Initializable;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import org.nefele.Resources;
 import org.nefele.cloud.Drive;
 import org.nefele.ui.Themeable;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class StatsCell extends BorderPane implements Initializable, Themeable {
+public class StatsDriveInfo extends StackPane implements Initializable, Themeable {
 
-    private final ObjectProperty<Drive> drive;
+    //private final ObjectProperty<Drive> drive;
 
-    @FXML private PieChart chart;
-    @FXML private Label labelNameStatus;
-    @FXML private Label labelSpace;
 
-    public StatsCell(Drive drive) {
+    public StatsDriveInfo() {
 
-        this.drive = new SimpleObjectProperty<>(drive);
+        //this.drive = new SimpleObjectProperty<>(drive);
 
-        Resources.getFXML(this, "/fxml/StatsCell.fxml");
+        Resources.getFXML(this, "/fxml/StatsDriveInfo.fxml");
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
-        chart.setData(FXCollections.observableArrayList(
-                new PieChart.Data("MAX", getDrive().getQuota()),
-                new PieChart.Data("CUR", getDrive().getBlocks())
-        ));
-
-        labelNameStatus.textProperty().bind(getDrive().serviceProperty());
-        labelSpace.textProperty().bind(getDrive().quotaProperty().asString());
 
     }
 
@@ -71,12 +61,12 @@ public class StatsCell extends BorderPane implements Initializable, Themeable {
 
     }
 
-    public Drive getDrive() {
-        return drive.get();
-    }
-
-    public ObjectProperty<Drive> driveProperty() {
-        return drive;
-    }
+//    public Drive getDrive() {
+//        return drive.get();
+//    }
+//
+//    public ObjectProperty<Drive> driveProperty() {
+//        return drive;
+//    }
 
 }

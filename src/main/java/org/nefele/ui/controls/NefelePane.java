@@ -144,7 +144,7 @@ public class NefelePane extends StackPane implements Initializable, Themeable {
             if(getOnClosing() == null)
                 getScene().getWindow().hide();
 
-            else if(getOnClosing().onClose())
+            else if(getOnClosing().closing())
                 getScene().getWindow().hide();
 
         });

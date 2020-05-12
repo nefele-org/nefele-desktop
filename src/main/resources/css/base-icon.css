@@ -24,5 +24,5 @@
 
 .glyph-icon {
     -fx-background-color: transparent;
-    -fx-fill: -nefele-theme-surface-text;
+    -fx-fill: derive(-nefele-theme-surface-text, 50%)
 }

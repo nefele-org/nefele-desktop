@@ -39,11 +39,11 @@ import java.util.ResourceBundle;
 
 public class Stats extends StackPane implements Initializable, Themeable {
 
-    private final ObservableList<StatsCell> cells;
+    private final ObservableList<StatsDriveInfo> cells;
 
     @FXML private ScrollPane scrollPane;
-    @FXML private JFXMasonryPane masonryPane;
-
+    //@FXML private JFXMasonryPane masonryPane;
+    @FXML private FlowPane masonryPane;
 
 
     public Stats() {
@@ -55,6 +55,8 @@ public class Stats extends StackPane implements Initializable, Themeable {
     public void initialize(URL location, ResourceBundle resources) {
 
         //Application.getInstance().getDrives().forEach(i -> cells.add(new StatsCell(i)));
+        masonryPane.getChildren().add(new StatsDriveInfo()  {{ setId("ok2"); }});
+        masonryPane.getChildren().add(new StatsDriveInfo()  {{ setId("ok3"); }});
 
         Application.getInstance().getViews().add(this);
 
