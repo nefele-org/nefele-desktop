@@ -23,7 +23,7 @@
  */
 
 .docker-button {
-    -fx-background-color: -nefele-theme-primary;
+    -fx-background-color: -nefele-theme-primary-variant;
     -fx-text-fill: -nefele-theme-primary-text;
     -fx-background-radius: 24;
     -fx-pref-width: 48;

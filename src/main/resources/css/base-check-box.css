@@ -22,50 +22,21 @@
  * THE SOFTWARE.
  */
 
-
-
-
-.label {
-    -fx-background-color: transparent;
-    -fx-text-fill: -nefele-theme-surface-text;
+.check-box .box {
+    -fx-background-color : -nefele-theme-surface;
+    -fx-border-color: -nefele-theme-surface-text;
+    -fx-border-width: 1px;
 }
 
-.text-shape {
-    -fx-background-color: transparent;
-    -fx-font-smoothing-type: lcd;
-    -fx-fill: -nefele-theme-surface-text;
+.check-box:selected .box {
+    -fx-background-color: -nefele-theme-primary;
 }
 
-.text-area {
-    -fx-background-color: -nefele-theme-surface;
-    -fx-fill: -nefele-theme-surface;
-    -fx-text-fill: -nefele-theme-surface-text;
-    -fx-prompt-text-fill: derive(-nefele-theme-surface-text, 50%);
-    -fx-highlight-fill: -nefele-theme-secondary;
-    -fx-highlight-fill-text: -nefele-theme-secondary-text;
-    -fx-display-caret: true;
+.check-box .mark {
+    -fx-border-color: -nefele-theme-primary-text;
 }
 
-.text-field {
-    -fx-background-color: -nefele-theme-surface;
-    -fx-text-fill: -nefele-theme-surface-text;
-    -fx-prompt-text-fill: derive(-nefele-theme-surface-text, 50%);
-    -fx-highlight-fill: -nefele-theme-secondary;
-    -fx-highlight-fill-text: -nefele-theme-secondary-text;
-    -fx-display-caret: true;
-    -fx-alignment: center-left;
+.jfx-check-box {
+    -jfx-checked-color: -nefele-theme-primary;
+    -jfx-unchecked-color: -nefele-theme-surface;
 }
-
-
-.text-h1 {
-    -fx-font-size: 2em;
-}
-
-.text-h2 {
-    -fx-font-size: 1.4em;
-}
-
-.text-h3 {
-    -fx-font-size: 1.25em;
-}
-

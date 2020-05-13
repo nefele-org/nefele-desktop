@@ -59,7 +59,7 @@ public class Home extends NefeleContentPane implements Initializable, Themeable 
         dockerPane.getParents().add(new DockerItem(new TransferViewer(), "CLOUD_SYNC", "DOCKERBUTTON_HINT_TRANSFERVIEWER"));
         dockerPane.getParents().add(new DockerItem(new Stats(), "CHART_BAR", "DOCKERBUTTON_HINT_STATS"));
         dockerPane.getParents().add(new DockerItem(new Trash(), "DELETE", "DOCKERBUTTON_HINT_TRASH"));
-        dockerPane.getParents().add(new DockerItem(new StackPane(), "SETTINGS", "DOCKERBUTTON_HINT_SETTINGS"));
+        dockerPane.getParents().add(new DockerItem(new Settings(), "SETTINGS", "DOCKERBUTTON_HINT_SETTINGS"));
         dockerPane.getParents().add(new DockerItem(new StackPane(), "EXIT_TO_APP", "DOCKERBUTTON_HINT_EXIT"));
 
         dockerPane.setContentPane(contentPane);

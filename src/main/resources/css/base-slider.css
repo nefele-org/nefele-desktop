@@ -22,50 +22,23 @@
  * THE SOFTWARE.
  */
 
-
-
-
-.label {
-    -fx-background-color: transparent;
-    -fx-text-fill: -nefele-theme-surface-text;
+.slider > .track {
+    /*-fx-background-color: -nefele-theme-secondary;*/
 }
 
-.text-shape {
-    -fx-background-color: transparent;
-    -fx-font-smoothing-type: lcd;
-    -fx-fill: -nefele-theme-surface-text;
+.slider > .thumb {
+    -fx-background-color: -nefele-theme-primary;
 }
 
-.text-area {
-    -fx-background-color: -nefele-theme-surface;
-    -fx-fill: -nefele-theme-surface;
-    -fx-text-fill: -nefele-theme-surface-text;
-    -fx-prompt-text-fill: derive(-nefele-theme-surface-text, 50%);
-    -fx-highlight-fill: -nefele-theme-secondary;
-    -fx-highlight-fill-text: -nefele-theme-secondary-text;
-    -fx-display-caret: true;
+.slider > .colored-track {
+    -fx-background-color: -nefele-theme-primary-variant;
 }
 
-.text-field {
-    -fx-background-color: -nefele-theme-surface;
-    -fx-text-fill: -nefele-theme-surface-text;
-    -fx-prompt-text-fill: derive(-nefele-theme-surface-text, 50%);
-    -fx-highlight-fill: -nefele-theme-secondary;
-    -fx-highlight-fill-text: -nefele-theme-secondary-text;
-    -fx-display-caret: true;
-    -fx-alignment: center-left;
+.slider .slider-value {
+    -fx-fill: -nefele-theme-primary;
+    -fx-stroke: -nefele-theme-primary-text;
 }
 
-
-.text-h1 {
-    -fx-font-size: 2em;
+.jfx-slider > .animated-thumb {
+    -fx-background-color: -nefele-theme-primary;
 }
-
-.text-h2 {
-    -fx-font-size: 1.4em;
-}
-
-.text-h3 {
-    -fx-font-size: 1.25em;
-}
-

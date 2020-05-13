@@ -53,7 +53,7 @@ public final class Views {
 
 
         // translate()
-        Application.getInstance().getLocale().translate(parent);
+        Platform.runLater(() -> Application.getInstance().getLocale().translate(parent));
 
         // initializeInterface()
         Platform.runLater(runnable);

@@ -22,21 +22,21 @@
                                 <MaterialIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="ARROW_BACK" size="24.0" />
                             </graphic>
                             <tooltip>
-                                <Tooltip text="ARCHIVE_HINT_BACK"/>
+                                <Tooltip userData="ARCHIVE_HINT_BACK"/>
                             </tooltip></JFXButton>
                         <JFXButton contentDisplay="GRAPHIC_ONLY" fx:id="buttonForward" mnemonicParsing="false" text=" " styleClass="filebrowser-header-button">
                             <graphic>
                                 <MaterialIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="ARROW_FORWARD" size="24.0" />
                             </graphic>
                             <tooltip>
-                                <Tooltip text="ARCHIVE_HINT_FORWARD"/>
+                                <Tooltip userData="ARCHIVE_HINT_FORWARD"/>
                             </tooltip></JFXButton>
                         <JFXButton contentDisplay="GRAPHIC_ONLY" fx:id="buttonHome" mnemonicParsing="false" text=" " styleClass="filebrowser-header-button">
                             <graphic>
                                 <MaterialIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="HOME" size="24.0" />
                             </graphic>
                             <tooltip>
-                                <Tooltip text="ARCHIVE_HINT_HOME"/>
+                                <Tooltip userData="ARCHIVE_HINT_HOME"/>
                             </tooltip></JFXButton>
                         <JFXTextField fx:id="textFieldPath" editable="false" HBox.hgrow="ALWAYS" styleClass="filebrowser-text-field" >
                             <HBox.margin>
@@ -47,7 +47,7 @@
                                 <MaterialIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="DELETE_FOREVER" size="24.0" />
                             </graphic>
                             <tooltip>
-                                <Tooltip text="TRASH_HINT_EMPTY"/>
+                                <Tooltip userData="TRASH_HINT_EMPTY"/>
                             </tooltip></JFXButton>
                     </children>
                 </HBox>

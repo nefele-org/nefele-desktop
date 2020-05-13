@@ -46,14 +46,14 @@
                 <StackPane styleClass="stats-card" >
                     <VBox spacing="5">
 
-                        <Label text="STATS_CARD_PRIMARY_TITLE" styleClass="stats-card-title" />
+                        <Label userData="STATS_CARD_PRIMARY_TITLE" styleClass="stats-card-title, text-h2" />
                         <Separator orientation="HORIZONTAL"/>
 
                         <HBox spacing="5">
 
                                 <VBox styleClass="stats-card-box">
                                     <Pane styleClass="stats-card-box-header">
-                                        <Label text="STATS_CARD_PRIMARY_HEADER_1" />
+                                        <Label userData="STATS_CARD_PRIMARY_HEADER_1" />
                                     </Pane>
                                     <Pane styleClass="stats-card-box-content">
                                         <HBox spacing="10">
@@ -65,7 +65,7 @@
                                                 <Label text=" " styleClass="stats-card-text-spinner" fx:id="labelStoragePercentage" />
                                                 <Label text=" " fx:id="labelStorageOccupied" />
                                                 <HBox spacing="3">
-                                                    <Label text="WORD_OF" />
+                                                    <Label userData="WORD_OF" />
                                                     <Label text=" " fx:id="labelStorageFree" />
                                                 </HBox>
                                             </VBox>
@@ -75,7 +75,7 @@
 
                             <VBox styleClass="stats-card-box">
                                 <Pane styleClass="stats-card-box-header">
-                                    <Label text="STATS_CARD_PRIMARY_HEADER_2" />
+                                    <Label userData="STATS_CARD_PRIMARY_HEADER_2" />
                                 </Pane>
                                 <Pane styleClass="stats-card-box-content">
                                     <HBox spacing="10">
@@ -86,7 +86,7 @@
                                                     <MaterialDesignIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="HARDDISK" size="28.0"  />
                                                 </graphic>
                                                 <tooltip>
-                                                    <Tooltip text="STATS_CARD_HINT_TEMPORARY_CLEAN" />
+                                                    <Tooltip userData="STATS_CARD_HINT_TEMPORARY_CLEAN" />
                                                 </tooltip>
                                             </JFXButton>
                                         </StackPane>
@@ -94,7 +94,7 @@
                                             <Label text=" " styleClass="stats-card-text-spinner" fx:id="labelTemporaryFilesPercentage"/>
                                             <Label text=" " fx:id="labelTemporaryFilesOccupied" />
                                             <HBox spacing="3">
-                                                <Label text="WORD_OF" />
+                                                <Label userData="WORD_OF" />
                                                 <Label text=" " fx:id="labelTemporaryFilesFree" />
                                             </HBox>
                                         </VBox>
@@ -104,7 +104,7 @@
 
                             <VBox styleClass="stats-card-box">
                                 <Pane styleClass="stats-card-box-header">
-                                    <Label text="STATS_CARD_PRIMARY_HEADER_3" />
+                                    <Label userData="STATS_CARD_PRIMARY_HEADER_3" />
                                 </Pane>
                                 <Pane styleClass="stats-card-box-content">
                                     <HBox spacing="10">
@@ -115,7 +115,7 @@
                                                     <MaterialDesignIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="MEMORY" size="28.0" />
                                                 </graphic>
                                                 <tooltip>
-                                                    <Tooltip text="STATS_CARD_HINT_MEMORY_CLEAN" />
+                                                    <Tooltip userData="STATS_CARD_HINT_MEMORY_CLEAN" />
                                                 </tooltip>
                                             </JFXButton>
                                         </StackPane>
@@ -123,7 +123,7 @@
                                             <Label text=" " styleClass="stats-card-text-spinner" fx:id="labelSystemMemoryPercentage"/>
                                             <Label text=" " fx:id="labelSystemMemoryOccupied" />
                                             <HBox spacing="3">
-                                                <Label text="WORD_OF" />
+                                                <Label userData="WORD_OF" />
                                                 <Label text=" " fx:id="labelSystemMemoryFree" />
                                             </HBox>
                                         </VBox>
@@ -140,7 +140,7 @@
                 <StackPane styleClass="stats-card">
                     <VBox spacing="5">
 
-                        <Label text="STATS_CARD_SECONDARY_TITLE" styleClass="stats-card-title" />
+                        <Label userData="STATS_CARD_SECONDARY_TITLE" styleClass="stats-card-title, text-h2" />
                         <Separator orientation="HORIZONTAL"/>
 
                         <VBox styleClass="stats-card-box, stats-card-box-content" spacing="2">
@@ -164,9 +164,9 @@
                                 </left>
                                 <center>
                                     <VBox spacing="2" alignment="CENTER">
-                                        <Label text="STATS_CARD_SECONDARY_CONTENT_1"/>
-                                        <Label text="STATS_CARD_SECONDARY_CONTENT_2"/>
-                                        <Label text="WORD_TRASH"/>
+                                        <Label userData="STATS_CARD_SECONDARY_CONTENT_1"/>
+                                        <Label userData="STATS_CARD_SECONDARY_CONTENT_2"/>
+                                        <Label userData="WORD_TRASH"/>
                                     </VBox>
                                 </center>
                                 <right>
@@ -186,7 +186,7 @@
                     <VBox spacing="5">
 
                                         
-                        <Label text="STATS_CARD_TERTIARY_TITLE" styleClass="stats-card-title" />
+                        <Label userData="STATS_CARD_TERTIARY_TITLE" styleClass="stats-card-title , text-h2" />
                         <Separator orientation="HORIZONTAL"/>
 
                         <VBox styleClass="stats-card-box, stats-card-box-content" spacing="2" >
@@ -199,27 +199,27 @@
 
                                         <HBox spacing="5">
                                             <MaterialDesignIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="FILE" size="16.0"/>
-                                            <Label text="STATS_CARD_TERTIARY_CONTENT_1"/>
+                                            <Label userData="STATS_CARD_TERTIARY_CONTENT_1"/>
                                         </HBox>
 
                                         <HBox spacing="5">
                                             <MaterialDesignIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="FOLDER" size="16.0"/>
-                                            <Label text="STATS_CARD_TERTIARY_CONTENT_2"/>
+                                            <Label userData="STATS_CARD_TERTIARY_CONTENT_2"/>
                                         </HBox>
 
                                         <HBox spacing="5">
                                             <MaterialDesignIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="RECYCLE" size="16.0"/>
-                                            <Label text="WORD_TRASH"/>
+                                            <Label userData="WORD_TRASH"/>
                                         </HBox>
 
                                         <HBox spacing="5">
                                             <MaterialDesignIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="ARROW_DOWN_BOLD_CIRCLE_OUTLINE" size="16.0"/>
-                                            <Label text="STATS_CARD_TERTIARY_CONTENT_3" />
+                                            <Label userData="STATS_CARD_TERTIARY_CONTENT_3" />
                                         </HBox>
 
                                         <HBox spacing="5">
                                             <MaterialDesignIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="ARROW_UP_BOLD_CIRCLE_OUTLINE" size="16.0"/>
-                                            <Label text="STATS_CARD_TERTIARY_CONTENT_4"/>
+                                            <Label userData="STATS_CARD_TERTIARY_CONTENT_4"/>
                                         </HBox>
 
                                     </VBox>
@@ -232,27 +232,27 @@
 
                                         <HBox spacing="2">
                                             <Label text=" " fx:id="labelAllFilesNum" />
-                                            <Label text="WORD_FILES" />
+                                            <Label userData="WORD_FILES" />
                                         </HBox>
 
                                         <HBox spacing="2">
                                             <Label text=" " fx:id="labelAllFoldersNum" />
-                                            <Label text="WORD_FILES" />
+                                            <Label userData="WORD_FILES" />
                                         </HBox>
 
                                         <HBox spacing="2">
                                             <Label text=" " fx:id="labelTrashNum"/>
-                                            <Label text="WORD_FILES"/>
+                                            <Label userData="WORD_FILES"/>
                                         </HBox>
 
                                         <HBox spacing="2">
                                             <Label text=" " fx:id="labelIncomingSharesNum"/>
-                                            <Label text="WORD_FILES"/>
+                                            <Label userData="WORD_FILES"/>
                                         </HBox>
 
                                         <HBox spacing="2">
                                             <Label text=" " fx:id="labelOutgoingSharesNum"/>
-                                            <Label text="WORD_FILES"/>
+                                            <Label userData="WORD_FILES"/>
                                         </HBox>
 
                                          <padding>

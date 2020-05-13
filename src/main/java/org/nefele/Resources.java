@@ -77,7 +77,7 @@ public final class Resources {
         parent.getStylesheets().remove(css);
         parent.getStylesheets().add(css);
 
-        Application.log(Resources.class, "Loaded CSS %s", resource);
+        //Application.log(Resources.class, "Loaded CSS %s", resource);
 
     }
 

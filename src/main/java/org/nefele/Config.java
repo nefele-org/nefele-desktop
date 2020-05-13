@@ -151,7 +151,7 @@ public class Config {
         set(name, String.valueOf(value));
     }
 
-    public void SetBoolean(String name, Boolean value) {
+    public void setBoolean(String name, Boolean value) {
         set(name, value ? "1" : "0");
     }
 

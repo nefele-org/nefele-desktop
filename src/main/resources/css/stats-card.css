@@ -23,14 +23,13 @@
  */
 
 .stats-card {
-    -fx-background-color: derive(-nefele-theme-surface, 20%);
+    -fx-background-color: -nefele-theme-surface-hover;
     -fx-background-insets: 10 10;
     -fx-background-radius: 10;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 2, 1, 0, 0);
     -fx-text-fill: -nefele-theme-surface-text;
     -fx-padding: 30 20;
     -fx-pref-width: 420px;
-    -fx-font-size: 13;
 }
 
 .stats-card .stats-card-box {
@@ -41,25 +40,13 @@
     -fx-padding: 5 0;
 }
 
-.stats-card .stats-card-box .stats-card-box-content {
-
-}
-
-
-
-.stats-card .stats-spinner-box .glyph-icon {
-
-}
-
 .stats-card .stats-card-title {
-    -fx-font-size: 18;
     -fx-padding: 0 5;
 }
 
 .stats-card .stats-card-box .stats-card-box-content .stats-card-text-spinner {
-    -fx-font-size: 18;
+    -fx-font-size: 18px;
 }
-
 
 .stats-card .stats-card-box .stats-card-box-content .jfx-spinner .percentage {
     -fx-opacity: 0;

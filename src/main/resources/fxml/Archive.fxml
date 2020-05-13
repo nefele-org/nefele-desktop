@@ -45,21 +45,21 @@
                         <MaterialIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="ARROW_BACK" size="24.0" />
                      </graphic>
                      <tooltip>
-                        <Tooltip text="ARCHIVE_HINT_BACK"/>
+                        <Tooltip userData="ARCHIVE_HINT_BACK"/>
                      </tooltip></JFXButton>
                   <JFXButton contentDisplay="GRAPHIC_ONLY" fx:id="buttonForward" mnemonicParsing="false" text=" " styleClass="filebrowser-header-button">
                      <graphic>
                         <MaterialIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="ARROW_FORWARD" size="24.0" />
                      </graphic>
                      <tooltip>
-                        <Tooltip text="ARCHIVE_HINT_FORWARD"/>
+                        <Tooltip userData="ARCHIVE_HINT_FORWARD"/>
                      </tooltip></JFXButton>
                   <JFXButton contentDisplay="GRAPHIC_ONLY" fx:id="buttonHome" mnemonicParsing="false" text=" " styleClass="filebrowser-header-button">
                      <graphic>
                         <MaterialIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="HOME" size="24.0" />
                      </graphic>
                      <tooltip>
-                        <Tooltip text="ARCHIVE_HINT_HOME"/>
+                        <Tooltip userData="ARCHIVE_HINT_HOME"/>
                      </tooltip></JFXButton>
                   <JFXTextField fx:id="textFieldPath" editable="false" HBox.hgrow="ALWAYS" styleClass="filebrowser-text-field" >
                      <HBox.margin>
@@ -70,21 +70,21 @@
                         <MaterialDesignIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="FILE_PLUS" size="24.0" />
                      </graphic>
                      <tooltip>
-                     <Tooltip text="ARCHIVE_HINT_ADDFILE"/>
+                     <Tooltip userData="ARCHIVE_HINT_ADDFILE"/>
                   </tooltip></JFXButton>
                   <JFXButton contentDisplay="GRAPHIC_ONLY" fx:id="buttonAddFolder" mnemonicParsing="false" text=" " styleClass="filebrowser-header-button">
                      <graphic>
                         <MaterialIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="CREATE_NEW_FOLDER" size="24.0" />
                      </graphic>
                   <tooltip>
-                     <Tooltip text="ARCHIVE_HINT_ADDFOLDER"/>
+                     <Tooltip userData="ARCHIVE_HINT_ADDFOLDER"/>
                   </tooltip></JFXButton>
                   <JFXButton contentDisplay="GRAPHIC_ONLY" fx:id="buttonUpFolder" mnemonicParsing="false" text=" " styleClass="filebrowser-header-button">
                      <graphic>
                         <MaterialDesignIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="FOLDER_UPLOAD" size="24.0" />
                      </graphic>
                      <tooltip>
-                        <Tooltip text="ARCHIVE_HINT_UPFOLDER"/>
+                        <Tooltip userData="ARCHIVE_HINT_UPFOLDER"/>
                      </tooltip></JFXButton>
                </children>
             </HBox>

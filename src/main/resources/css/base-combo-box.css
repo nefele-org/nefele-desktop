@@ -22,50 +22,20 @@
  * THE SOFTWARE.
  */
 
-
-
-
-.label {
-    -fx-background-color: transparent;
-    -fx-text-fill: -nefele-theme-surface-text;
-}
-
-.text-shape {
-    -fx-background-color: transparent;
-    -fx-font-smoothing-type: lcd;
-    -fx-fill: -nefele-theme-surface-text;
-}
-
-.text-area {
+.combo-box {
     -fx-background-color: -nefele-theme-surface;
-    -fx-fill: -nefele-theme-surface;
-    -fx-text-fill: -nefele-theme-surface-text;
-    -fx-prompt-text-fill: derive(-nefele-theme-surface-text, 50%);
-    -fx-highlight-fill: -nefele-theme-secondary;
-    -fx-highlight-fill-text: -nefele-theme-secondary-text;
-    -fx-display-caret: true;
 }
 
-.text-field {
+.combo-box .list-cell {
+    -fx-text-fill: -nefele-theme-surface-text;
+}
+
+.combo-box .combo-box-popup .list-view .list-cell {
     -fx-background-color: -nefele-theme-surface;
     -fx-text-fill: -nefele-theme-surface-text;
-    -fx-prompt-text-fill: derive(-nefele-theme-surface-text, 50%);
-    -fx-highlight-fill: -nefele-theme-secondary;
-    -fx-highlight-fill-text: -nefele-theme-secondary-text;
-    -fx-display-caret: true;
-    -fx-alignment: center-left;
 }
 
-
-.text-h1 {
-    -fx-font-size: 2em;
+.combo-box .combo-box-popup .list-view .list-cell:hover {
+    -fx-background-color: -nefele-theme-primary;
+    -fx-text-fill: -nefele-theme-primary-text;
 }
-
-.text-h2 {
-    -fx-font-size: 1.4em;
-}
-
-.text-h3 {
-    -fx-font-size: 1.25em;
-}
-

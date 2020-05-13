@@ -1,0 +1,21 @@
+{
+  "-nefele-theme-primary"             :   "#BC5D2E",
+  "-nefele-theme-primary-variant"     :   "#DE9151",
+  "-nefele-theme-secondary"           :   "#BBB8B2",
+  "-nefele-theme-secondary-variant"   :   "#BBB8B2",
+  "-nefele-theme-background"          :   "#2E2E3A",
+  "-nefele-theme-surface"             :   "#2E2E3A",
+  "-nefele-theme-error"               :   "#811406",
+
+  "-nefele-theme-primary-text"        :   "#333333",
+  "-nefele-theme-secondary-text"      :   "#111111",
+  "-nefele-theme-background-text"     :   "#eeeeee",
+  "-nefele-theme-surface-text"        :   "#eeeeee",
+  "-nefele-theme-error-text"          :   "#111111",
+
+  "-nefele-theme-primary-hover"       :   "#C36B3B",
+  "-nefele-theme-secondary-hover"     :   "#A9A6A0",
+  "-nefele-theme-background-hover"    :   "#20202D",
+  "-nefele-theme-surface-hover"       :   "#20202D",
+  "-nefele-theme-error-hover"         :   "#8E2818"
+}

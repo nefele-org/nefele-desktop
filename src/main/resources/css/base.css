@@ -27,14 +27,30 @@
 @import "/css/base-text.css";
 @import "/css/base-progress.css";
 @import "/css/base-icon.css";
+@import "/css/base-slider.css";
 @import "/css/base-scrollbar.css";
+@import "/css/base-combo-box.css";
+@import "/css/base-check-box.css";
+@import "/css/base-tree-table-view.css";
+
+
+* {
+    -jfx-toggle-color: -nefele-theme-primary;
+    -jfx-untoggle-color: -nefele-theme-secondary;
+    -jfx-focus-color: -nefele-theme-primary;
+    -jfx-unfocus-color: transparent;
+    -jfx-disable-visual-focus: false;
+
+    -fx-focus-traversable: false;
+
+}
 
 
 .root {
+    -fx-font-family: "Segoe UI";
     -fx-background-color: -nefele-theme-surface;
     -fx-border-color: -nefele-theme-surface;
     -fx-text-fill: -nefele-theme-surface-text;
-    -fx-font-family: "Segoe UI";
 }
 
 .menu-bar {

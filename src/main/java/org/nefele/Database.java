@@ -24,6 +24,8 @@
 
 package org.nefele;
 
+import org.sqlite.SQLiteErrorCode;
+
 import java.sql.*;
 
 public class Database {
@@ -51,29 +53,42 @@ public class Database {
 
     public int query(String sql, DatabasePrepare onPrepare, DatabaseResult onResult) throws SQLException {
 
-        try(Connection conn = connect();
-            PreparedStatement  stmt = conn.prepareStatement(sql)) {
+        try {
 
-            if(onPrepare != null)
-                onPrepare.run(stmt);
+            try (Connection conn = connect();
+                 PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+                if (onPrepare != null)
+                    onPrepare.run(stmt);
 
 
+                if (onResult != null) {
 
-            if(onResult != null) {
+                    ResultSet rset = stmt.executeQuery();
 
-                ResultSet rset = stmt.executeQuery();
+                    while (rset.next())
+                        onResult.run(rset);
 
-                while(rset.next())
-                    onResult.run(rset);
+                    rset.close();
 
-                rset.close();
+                } else
+                    return stmt.executeUpdate();
 
-            } else
-                return stmt.executeUpdate();
+            }
 
+            return 0;
+
+        } catch (SQLException e) {
+
+            if(e.getErrorCode() == SQLiteErrorCode.SQLITE_BUSY.code)
+                return query(sql, onPrepare, onResult);
+
+            else if(e.getErrorCode() == SQLiteErrorCode.SQLITE_CORRUPT.code)
+                Application.panic(Database.class, "Database is gone, rest in peace :( (%s)", e.getMessage());
+
+            throw e;
         }
 
-        return 0;
 
     }
 

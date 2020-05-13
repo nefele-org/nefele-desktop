@@ -26,8 +26,12 @@ package org.nefele;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXTreeTableColumn;
+import com.jfoenix.controls.JFXTreeTableView;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
@@ -47,6 +51,12 @@ public class Locale {
 
     public static final String DEFAULT_LOCALE = "English";
     private final HashMap<String, String> map = new HashMap<>();
+    private final StringProperty language;
+
+
+    public Locale() {
+        this.language = new SimpleStringProperty(null);
+    }
 
 
     @SuppressWarnings("unchecked")
@@ -63,10 +73,19 @@ public class Locale {
             Application.panic(getClass(), e);
         }
 
-
+        language.set(id);
         Application.log(getClass(), "Loaded locale " + id);
 
     }
+
+    public String getLanguage() {
+        return language.get();
+    }
+
+    public StringProperty languageProperty() {
+        return language;
+    }
+
 
 
     public String get(String id) {
@@ -85,45 +104,80 @@ public class Locale {
 
         }
 
-        else if(parent instanceof Label) {
-
-            Label i = (Label) parent;
-
-            String translation;
-            if (!(translation = Application.getInstance().getLocale().get(i.getText())).equals(i.getText()))
-                i.setText(translation);
-
-        }
-
         else if(parent instanceof Text) {
 
             Text i = (Text) parent;
 
-            String translation;
-            if (!(translation = Application.getInstance().getLocale().get(i.getText())).equals(i.getText()))
-                i.setText(translation);
+            if(i.getUserData() != null) {
+
+                String translation;
+                if (!(translation = Application.getInstance().getLocale().get((String) i.getUserData())).equals(i.getUserData()))
+                    i.setText(translation);
+
+            }
+
+        }
+
+        else if(parent instanceof TableColumnBase) {
+
+            TableColumnBase<?, ?> i = (TableColumnBase<?, ?>) parent;
+
+            if(i.getUserData() != null) {
+
+                String translation;
+                if (!(translation = Application.getInstance().getLocale().get((String) i.getUserData())).equals(i.getUserData()))
+                    i.setText(translation);
+
+            }
 
         }
 
         else if(parent instanceof Control) {
 
-            Tooltip i = ((Control) parent).getTooltip();
+            Tooltip j = ((Control) parent).getTooltip();
 
-            if(Objects.nonNull(i)) {
+            if(Objects.nonNull(j)) {
 
-                String translation;
-                if (!(translation = Application.getInstance().getLocale().get(i.getText())).equals(i.getText()))
-                    i.setText(translation);
+                if(j.getUserData() != null) {
+
+                    String translation;
+                    if (!(translation = Application.getInstance().getLocale().get((String) j.getUserData())).equals(j.getUserData()))
+                        j.setText(translation);
+
+                }
 
             }
 
-            if(parent instanceof ScrollPane)
+
+            if(parent instanceof Labeled) {
+
+                Labeled i = (Labeled) parent;
+
+                if(i.getUserData() != null) {
+
+                    String translation;
+                    if (!(translation = Application.getInstance().getLocale().get((String) i.getUserData())).equals(i.getUserData()))
+                        i.setText(translation);
+
+                }
+
+            }
+
+            else if(parent instanceof TreeTableView) {
+                ((TreeTableView<?>) parent).getColumns()
+                        .stream()
+                        .filter(Objects::nonNull)
+                        .forEach(this::translate);
+            }
+
+            else if(parent instanceof ScrollPane)
                 translate(((ScrollPane) parent).getContent());
+
+
 
         }
 
 
     }
-
 
 }

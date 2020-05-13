@@ -24,6 +24,8 @@
 
 package org.nefele;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Scene;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -65,7 +67,7 @@ public final class Application extends javafx.application.Application implements
     private final ScheduledExecutorService scheduledExecutorService;
     private final Views views;
 
-    private Theme theme;
+    private final ObjectProperty<Theme> theme;
 
 
     public Application() {
@@ -78,6 +80,7 @@ public final class Application extends javafx.application.Application implements
         status = new Status();
         drives = new ArrayList<>();
         views = new Views();
+        theme = new SimpleObjectProperty<>(null);
         executorService = Executors.newCachedThreadPool();
         scheduledExecutorService = Executors.newScheduledThreadPool(16);
 
@@ -237,11 +240,15 @@ public final class Application extends javafx.application.Application implements
     }
 
     public Theme getTheme() {
-        return theme;
+        return theme.get();
     }
 
     public void setTheme(Theme theme) {
-        this.theme = theme;
+        this.theme.set(theme);
+    }
+
+    public ObjectProperty<Theme> themeProperty() {
+        return theme;
     }
 
 

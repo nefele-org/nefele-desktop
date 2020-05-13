@@ -30,35 +30,26 @@
   ~ THE SOFTWARE.
   -->
 
-<?import com.jfoenix.controls.JFXSpinner?>
-
-<fx:root minWidth="-Infinity" maxWidth="Infinity" minHeight="-Infinity" maxHeight="Infinity" styleClass="stats-card"
-         type="StackPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" >
-
-        <VBox spacing="5">
-
-            <Label text=" " styleClass="stats-card-title" fx:id="labelDriveName" />
-            <Separator orientation="HORIZONTAL"/>
-
-            <VBox styleClass="stats-card-box">
-
-                <HBox styleClass="stats-card-box-content" spacing="5">
-                    <JFXSpinner fx:id="spinner" />
-                    <Separator orientation="VERTICAL"/>
-                    <VBox spacing="2">
-                        <HBox spacing="5">
-                            <Label userData="STATSDRIVEINFO_CONTENT_1" />
-                            <Label text="" fx:id="labelSpaceAvailable" />
-                        </HBox>
-                        <HBox spacing="5">
-                            <Label userData="STATSDRIVEINFO_CONTENT_2" />
-                            <Label text="" fx:id="labelStatus"/>
-                        </HBox>
-                    </VBox>
-                </HBox>
-
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+<fx:root minWidth="-Infinity" maxWidth="Infinity" minHeight="-Infinity" maxHeight="Infinity"
+         type="StackPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
+         AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <VBox spacing="5" >
+        <Label fx:id="labelTitle" styleClass="text-h3" />
+        <HBox>
+            <VBox HBox.hgrow="ALWAYS" >
+                <Label fx:id="labelDescription" prefWidth="420" wrapText="true" />
             </VBox>
-
-        </VBox>
-
+            <VBox>
+                <StackPane fx:id="inputPane" />
+            </VBox>
+            <padding>
+                <Insets right="20" />
+            </padding>
+        </HBox>
+        <padding>
+            <Insets bottom="10" />
+        </padding>
+    </VBox>
 </fx:root>

@@ -115,7 +115,6 @@ public class NefelePane extends StackPane implements Initializable, Themeable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-
         toggleDarkMode.setOnMouseClicked(e -> {
 
             String currentStyle = Application.getInstance().getTheme().getStyleName();
@@ -129,11 +128,14 @@ public class NefelePane extends StackPane implements Initializable, Themeable {
             Application.getInstance().runThread(new Thread(() -> {
                 Application.getInstance().getConfig().set("app.ui.theme", Application.getInstance().getTheme().getStyleName());
                 Application.getInstance().getConfig().update();
-            }, "updateConfig()"));
+            }, "toggleDarkMode()::app.ui.theme"));
 
             Application.getInstance().getViews().update();
 
         });
+
+        Application.getInstance().themeProperty().addListener((v, o, n) ->
+            toggleDarkMode.setSelected(requireNonNull(n).getStyleName().contains("dark")));
 
 
         controlMinimize.setOnMouseClicked(e -> {
@@ -254,8 +256,6 @@ public class NefelePane extends StackPane implements Initializable, Themeable {
         Resources.getCSS(this, "/css/window-header-control-box.css");
         Resources.getCSS(this, "/css/window-pane.css");
         Resources.getCSS(this, "/css/status-bar.css");
-
-        tooltipDarkMode.setText("NEFELEPANE_HINT_DARKMODE");
 
 
         resizeHandle.setOnMouseReleased(e -> {
