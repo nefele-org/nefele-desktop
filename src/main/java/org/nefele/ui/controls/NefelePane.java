@@ -34,6 +34,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -254,7 +255,7 @@ public class NefelePane extends StackPane implements Initializable, Themeable {
         Resources.getCSS(this, "/css/window-pane.css");
         Resources.getCSS(this, "/css/status-bar.css");
 
-        tooltipDarkMode.setText(Application.getInstance().getLocale().get("NEFELEPANE_HINT_DARKMODE"));
+        tooltipDarkMode.setText("NEFELEPANE_HINT_DARKMODE");
 
 
         resizeHandle.setOnMouseReleased(e -> {
@@ -278,11 +279,18 @@ public class NefelePane extends StackPane implements Initializable, Themeable {
                 stage.setWidth(e.getSceneX());
                 stage.setHeight(e.getSceneY());
 
+
                 if(stage.getWidth() < stage.getMinWidth())
                     stage.setWidth(stage.getMinWidth());
 
                 if(stage.getHeight() < stage.getMinHeight())
                     stage.setHeight(stage.getMinHeight());
+
+                if(stage.getWidth() > Screen.getPrimary().getBounds().getWidth())
+                    stage.setWidth(Screen.getPrimary().getBounds().getWidth());
+
+                if(stage.getHeight() > Screen.getPrimary().getBounds().getHeight())
+                    stage.setHeight(Screen.getPrimary().getBounds().getHeight());
 
 
                 mouseResizing = true;

@@ -24,6 +24,7 @@
 
 package org.nefele.ui.scenes;
 
+import com.jfoenix.controls.JFXSpinner;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -42,7 +43,10 @@ import java.util.ResourceBundle;
 public class StatsDriveInfo extends StackPane implements Initializable, Themeable {
 
     //private final ObjectProperty<Drive> drive;
-
+    @FXML private JFXSpinner spinner;
+    @FXML private Label labelDriveName;
+    @FXML private Label labelSpaceAvailable;
+    @FXML private Label labelStatus;
 
     public StatsDriveInfo() {
 

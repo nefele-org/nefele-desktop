@@ -25,11 +25,22 @@
 package org.nefele;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jfoenix.controls.JFXButton;
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
+import javafx.beans.property.ObjectProperty;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.control.*;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 
+import java.beans.DesignMode;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class Locale {
 
@@ -57,8 +68,62 @@ public class Locale {
 
     }
 
+
     public String get(String id) {
         return map.getOrDefault(id, id);
     }
+
+
+    public <T> void translate(Object parent) {
+
+        if(parent instanceof Pane) {
+
+            ((Pane) parent).getChildren()
+                    .stream()
+                    .filter(Objects::nonNull)
+                    .forEach(this::translate);
+
+        }
+
+        else if(parent instanceof Label) {
+
+            Label i = (Label) parent;
+
+            String translation;
+            if (!(translation = Application.getInstance().getLocale().get(i.getText())).equals(i.getText()))
+                i.setText(translation);
+
+        }
+
+        else if(parent instanceof Text) {
+
+            Text i = (Text) parent;
+
+            String translation;
+            if (!(translation = Application.getInstance().getLocale().get(i.getText())).equals(i.getText()))
+                i.setText(translation);
+
+        }
+
+        else if(parent instanceof Control) {
+
+            Tooltip i = ((Control) parent).getTooltip();
+
+            if(Objects.nonNull(i)) {
+
+                String translation;
+                if (!(translation = Application.getInstance().getLocale().get(i.getText())).equals(i.getText()))
+                    i.setText(translation);
+
+            }
+
+            if(parent instanceof ScrollPane)
+                translate(((ScrollPane) parent).getContent());
+
+        }
+
+
+    }
+
 
 }

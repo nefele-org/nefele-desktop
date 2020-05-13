@@ -38,7 +38,6 @@ import org.nefele.ui.controls.NefelePane;
 import org.nefele.ui.dialog.BaseDialog;
 import org.nefele.ui.dialog.Dialogs;
 import org.nefele.ui.dialog.InfoDialog;
-
 import java.net.URL;
 import java.util.ResourceBundle;
 

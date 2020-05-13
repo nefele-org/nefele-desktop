@@ -59,3 +59,25 @@
 .stats-card .stats-card-box .stats-card-box-content .stats-card-text-spinner {
     -fx-font-size: 18;
 }
+
+
+.stats-card .stats-card-box .stats-card-box-content .jfx-spinner .percentage {
+    -fx-opacity: 0;
+}
+
+.stats-card .stats-card-box .stats-card-box-content .stats-spinner-button {
+    -fx-pref-width: 48;
+    -fx-pref-height: 48;
+    -fx-background-color: transparent;
+    -fx-background-radius: 24;
+    -fx-focus-traversable: false;
+}
+
+.stats-card .stats-card-box .stats-card-box-content .stats-spinner-button:hover {
+    -fx-cursor: hand;
+}
+
+.stats-card .stats-card-box .stats-card-box-content .stats-spinner-button .glyph-icon {
+    -fx-fill: derive(-nefele-theme-surface-text, 50%);
+}
+

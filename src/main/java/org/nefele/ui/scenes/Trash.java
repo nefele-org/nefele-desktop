@@ -55,10 +55,6 @@ public class Trash extends StackPane implements Initializable, Themeable {
     @FXML private JFXButton buttonEmpty;
     @FXML private FileBrowser fileBrowser;
 
-    @FXML private Tooltip tooltipForward;
-    @FXML private Tooltip tooltipBack;
-    @FXML private Tooltip tooltipHome;
-    @FXML private Tooltip tooltipEmpty;
 
     public Trash() {
         Resources.getFXML(this, "/fxml/Trash.fxml");
@@ -69,11 +65,11 @@ public class Trash extends StackPane implements Initializable, Themeable {
 
 
         buttonForward.setOnMouseClicked(e -> {
-            fileBrowser.browseHistory(-1);
+            fileBrowser.browseHistory(1);
         });
 
         buttonBack.setOnMouseClicked(e -> {
-            fileBrowser.browseHistory(1);
+            fileBrowser.browseHistory(-1);
         });
 
 
@@ -133,13 +129,6 @@ public class Trash extends StackPane implements Initializable, Themeable {
 
     @Override
     public void initializeInterface() {
-
-        tooltipForward.setText(Application.getInstance().getLocale().get("ARCHIVE_HINT_FORWARD"));
-        tooltipBack.setText(Application.getInstance().getLocale().get("ARCHIVE_HINT_BACK"));
-        tooltipHome.setText(Application.getInstance().getLocale().get("ARCHIVE_HINT_HOME"));
-        tooltipEmpty.setText(Application.getInstance().getLocale().get("TRASH_HINT_EMPTY"));
-
         Resources.getCSS(this, "/css/filebrowser-header.css");
-
     }
 }

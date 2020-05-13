@@ -28,6 +28,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.StackPane;
@@ -59,12 +60,6 @@ public class Archive extends StackPane implements Initializable, Themeable {
     @FXML private JFXButton buttonUpFolder;
     @FXML private FileBrowser fileBrowser;
 
-    @FXML private Tooltip tooltipForward;
-    @FXML private Tooltip tooltipBack;
-    @FXML private Tooltip tooltipHome;
-    @FXML private Tooltip tooltipAddFile;
-    @FXML private Tooltip tooltipAddFolder;
-    @FXML private Tooltip tooltipUpFolder;
 
     public Archive() {
         Resources.getFXML(this, "/fxml/Archive.fxml");
@@ -75,11 +70,11 @@ public class Archive extends StackPane implements Initializable, Themeable {
 
 
         buttonForward.setOnMouseClicked(e -> {
-            fileBrowser.browseHistory(-1);
+            fileBrowser.browseHistory(1);
         });
 
         buttonBack.setOnMouseClicked(e -> {
-            fileBrowser.browseHistory(1);
+            fileBrowser.browseHistory(-1);
         });
 
 
@@ -119,7 +114,11 @@ public class Archive extends StackPane implements Initializable, Themeable {
             ArrayList<FileBrowserItem> items = new ArrayList<>();
             ArrayList<MenuItem> menuItems = new ArrayList<>();
 
-            menuItems.add(new MenuItem("Blabla"));
+            menuItems.add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_OPEN")));
+            menuItems.add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_DOWNLOAD")));
+            menuItems.add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_RENAME")));
+            menuItems.add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_DELETE")));
+
 
             try {
 
@@ -153,15 +152,6 @@ public class Archive extends StackPane implements Initializable, Themeable {
 
     @Override
     public void initializeInterface() {
-
-        tooltipForward.setText(Application.getInstance().getLocale().get("ARCHIVE_HINT_FORWARD"));
-        tooltipBack.setText(Application.getInstance().getLocale().get("ARCHIVE_HINT_BACK"));
-        tooltipHome.setText(Application.getInstance().getLocale().get("ARCHIVE_HINT_HOME"));
-        tooltipAddFile.setText(Application.getInstance().getLocale().get("ARCHIVE_HINT_ADDFILE"));
-        tooltipAddFolder.setText(Application.getInstance().getLocale().get("ARCHIVE_HINT_ADDFOLDER"));
-        tooltipUpFolder.setText(Application.getInstance().getLocale().get("ARCHIVE_HINT_UPFOLDER"));
-
         Resources.getCSS(this, "/css/filebrowser-header.css");
-
     }
 }

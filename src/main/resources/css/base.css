@@ -41,6 +41,11 @@
     -fx-use-system-menu-bar: false;
 }
 
+.context-menu {
+    -fx-background-color: -nefele-theme-surface;
+    -fx-text-fill: -nefele-theme-surface-text;
+}
+
 .separator {
     -fx-background: ladder(-nefele-theme-surface, darkgray 50%, gray);
     -fx-border-radius: 2px;

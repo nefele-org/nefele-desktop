@@ -125,7 +125,7 @@ public class Docker extends VBox implements Initializable, Themeable {
         });
 
 
-        Platform.runLater(() -> setSelectedButton((DockerButton) getChildren().get(0)));
+        Platform.runLater(() -> setSelectedButton((DockerButton) getChildren().get(2)));
 
         Application.getInstance().getViews().add(this);
     }

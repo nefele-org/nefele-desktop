@@ -37,22 +37,22 @@
 
         <VBox spacing="5">
 
-            <Label text="Drive" styleClass="stats-card-title" />
+            <Label text=" " styleClass="stats-card-title" fx:id="labelDriveName" />
             <Separator orientation="HORIZONTAL"/>
 
             <VBox styleClass="stats-card-box">
 
                 <HBox styleClass="stats-card-box-content" spacing="5">
-                    <JFXSpinner />
+                    <JFXSpinner fx:id="spinner" />
                     <Separator orientation="VERTICAL"/>
                     <VBox spacing="2">
                         <HBox spacing="5">
-                            <Label text="Archiviazione:" />
-                            <Label text="10 / 20 GB" />
+                            <Label text="STATSDRIVEINFO_CONTENT_1" />
+                            <Label text="" fx:id="labelSpaceAvailable" />
                         </HBox>
                         <HBox spacing="5">
-                            <Label text="Stato:" />
-                            <Label text="Attivo" />
+                            <Label text="STATSDRIVEINFO_CONTENT_2" />
+                            <Label text="" fx:id="labelStatus"/>
                         </HBox>
                     </VBox>
                 </HBox>

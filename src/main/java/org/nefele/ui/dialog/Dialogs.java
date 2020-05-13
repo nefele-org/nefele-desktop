@@ -47,27 +47,22 @@ public final class Dialogs {
 
     public static int showMessageBox(String title, String message, int... buttons) {
         return showMessageBoxImpl(
-                new BaseDialog(title, message), buttons);
+                new BaseDialog(title, message), buttons.length > 0 ? buttons : new int[] { BaseDialog.DIALOG_OK });
     }
 
-    public static int showMessageBox(String title, String message) {
+    public static int showInfoBox(String title, String message, int... buttons) {
         return showMessageBoxImpl(
-                new BaseDialog(title, message), BaseDialog.DIALOG_OK);
+                new InfoDialog(title, message), buttons.length > 0 ? buttons : new int[] { BaseDialog.DIALOG_OK });
     }
 
-    public static int showInfoBox(String title, String message) {
+    public static int showErrorBox(String title, String message, int... buttons) {
         return showMessageBoxImpl(
-                new InfoDialog(title, message), BaseDialog.DIALOG_OK);
+                new ErrorDialog(title, message), buttons.length > 0 ? buttons : new int[] { BaseDialog.DIALOG_OK });
     }
 
-    public static int showErrorBox(String title, String message) {
+    public static int showWarningBox(String title, String message, int... buttons) {
         return showMessageBoxImpl(
-                new ErrorDialog(title, message), BaseDialog.DIALOG_OK);
-    }
-
-    public static int showWarningBox(String title, String message) {
-        return showMessageBoxImpl(
-                new WarningDialog(title, message), BaseDialog.DIALOG_OK);
+                new WarningDialog(title, message), buttons.length > 0 ? buttons : new int[] { BaseDialog.DIALOG_OK });
     }
 
 

@@ -30,6 +30,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
+import org.apache.http.impl.cookie.AbstractCookieAttributeHandler;
 import org.nefele.cloud.Drive;
 import org.nefele.core.Status;
 import org.nefele.ui.Theme;
@@ -42,6 +43,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -60,6 +62,7 @@ public final class Application extends javafx.application.Application implements
     private final AtomicBoolean running;
     private final ArrayList<Drive> drives;
     private final ExecutorService executorService;
+    private final ScheduledExecutorService scheduledExecutorService;
     private final Views views;
 
     private Theme theme;
@@ -76,8 +79,10 @@ public final class Application extends javafx.application.Application implements
         drives = new ArrayList<>();
         views = new Views();
         executorService = Executors.newCachedThreadPool();
+        scheduledExecutorService = Executors.newScheduledThreadPool(16);
 
     }
+
 
 
     @Override
@@ -144,11 +149,17 @@ public final class Application extends javafx.application.Application implements
 
             Application.log(Application.class, "Doing a genocide");
 
+            scheduledExecutorService.shutdown();
+            executorService.awaitTermination(1, TimeUnit.SECONDS);
+
+            Application.log(Application.class, "Scared threads are fleeing");
+
             executorService.shutdown();
-            executorService.awaitTermination(3, TimeUnit.SECONDS);
+            executorService.awaitTermination(1, TimeUnit.SECONDS);
+
 
         } catch (InterruptedException e) {
-            Application.panic(Application.class, "executorService.awaitTermination() " + e.getMessage());
+            Application.panic(Application.class, e);
         }
 
 
@@ -180,6 +191,15 @@ public final class Application extends javafx.application.Application implements
 
         executorService.execute(thread);
         Application.log(Application.class, "Submit new Thread #%d (%s)", thread.getId(), thread.getName());
+
+    }
+
+    public void runWorker(Thread thread, int delay, int interval, TimeUnit unit) {
+
+        requireNonNull(thread);
+
+        scheduledExecutorService.scheduleAtFixedRate(thread, delay, interval, unit);
+        Application.log(Application.class, "Submit new Worker #%d (%s)", thread.getId(), thread.getName());
 
     }
 
@@ -275,6 +295,17 @@ public final class Application extends javafx.application.Application implements
 
     public static void log(Class<?> className, String message, Object... args) {
         System.err.println(String.format("[%s] ", className.getName()) + String.format(message, args));
+    }
+
+
+    public static void garbageCollect() {
+
+        long m0 = Runtime.getRuntime().totalMemory();
+        Runtime.getRuntime().gc();
+        long m1 = Runtime.getRuntime().totalMemory();
+
+        Application.log(Application.class, "Garbage collected, %d MB freed", (m0 - m1) / 1024 / 1024);
+
     }
 
 }

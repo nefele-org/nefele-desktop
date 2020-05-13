@@ -52,6 +52,9 @@ public final class Views {
         parent.setStyle(Application.getInstance().getTheme().getStyle());
 
 
+        // translate()
+        Application.getInstance().getLocale().translate(parent);
+
         // initializeInterface()
         Platform.runLater(runnable);
 

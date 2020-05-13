@@ -133,6 +133,11 @@ public class Config {
         return get(name).map(o -> Integer.parseInt(o.toString()));
     }
 
+    public Optional<Long> getLong(String name) {
+        return get(name).map(o -> Long.parseLong(o.toString()));
+    }
+
+
     public Optional<Boolean> getBoolean(String name) {
         return get(name).map(o -> Boolean.parseBoolean(o.toString()));
     }
