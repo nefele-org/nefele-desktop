@@ -25,12 +25,17 @@
 package org.nefele.ui.scenes;
 
 import com.jfoenix.controls.*;
+import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Spinner;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
@@ -39,32 +44,44 @@ import org.nefele.Application;
 import org.nefele.Resources;
 import org.nefele.ui.Theme;
 import org.nefele.ui.Themeable;
+import org.nefele.ui.dialog.BaseDialog;
+import org.nefele.ui.dialog.Dialogs;
+import org.nefele.ui.dialog.ErrorDialog;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
 public class Settings extends StackPane implements Initializable, Themeable {
 
+    @FXML private ScrollPane scrollPane;
     @FXML private VBox contentPane;
     @FXML private JFXButton buttonAdvancedSettings;
     @FXML private BorderPane boxAdvancedSettings;
     @FXML private VBox headerAdvancedSettings;
     @FXML private VBox contentAdvancedSettings;
-
+    @FXML private VBox superPane;
+    @FXML private Hyperlink hyperlink;
+    @FXML private Label labelNefele;
+    @FXML private Label labelJava;
+    @FXML private Label labelJavaFX;
 
     private final ObservableList<SettingsRecord> records;
     private final ObservableList<SettingsAdvancedRecord> advancedRecord;
 
+    
     public Settings() {
 
         this.records = FXCollections.observableArrayList();
         this.advancedRecord = FXCollections.observableArrayList();
 
         Resources.getFXML(this, "/fxml/Settings.fxml");
+        
     }
 
     @Override
@@ -72,16 +89,21 @@ public class Settings extends StackPane implements Initializable, Themeable {
 
         buttonAdvancedSettings.setOnMouseClicked(e -> {
 
-            if(boxAdvancedSettings.getChildren().size() > 0)
-                boxAdvancedSettings.getChildren().clear();
-            else
-                boxAdvancedSettings.getChildren().add(headerAdvancedSettings);
+            if(boxAdvancedSettings.isVisible()) {
 
-            boxAdvancedSettings.requestLayout();
+                boxAdvancedSettings.setMaxHeight(0);
+                boxAdvancedSettings.setMinHeight(0);
+                boxAdvancedSettings.setVisible(false);
+
+            } else {
+
+                boxAdvancedSettings.setMaxHeight(Double.POSITIVE_INFINITY);
+                boxAdvancedSettings.setMinHeight(Double.NEGATIVE_INFINITY);
+                boxAdvancedSettings.setVisible(true);
+
+            }
 
         });
-
-
 
         getRecords().addListener((ListChangeListener<? super SettingsRecord>) change -> {
 
@@ -115,20 +137,7 @@ public class Settings extends StackPane implements Initializable, Themeable {
         getRecords().add(new SettingsRecord("app.ui.locale", "SETTINGS_LOCALE", "SETTINGS_LOCALE_DESCRIPTION",
                 new JFXComboBox<String>() {{
 
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(Resources.getStream(this, "/lang")));
-
-                    try {
-
-                        String res;
-                        while ((res = reader.readLine()) != null)
-                            getItems().add(res.substring(0, res.lastIndexOf(".")));
-
-                        reader.close();
-                        
-                    } catch (IOException e) {
-                        Application.panic(getClass(), e);
-                    }
-
+                    getItems().addAll(Application.getInstance().getLocale().list());
                     setValue(Application.getInstance().getLocale().getLanguage());
 
 
@@ -153,20 +162,7 @@ public class Settings extends StackPane implements Initializable, Themeable {
         getRecords().add(new SettingsRecord("app.ui.theme", "SETTINGS_THEME", "SETTINGS_THEME_DESCRIPTION",
                 new JFXComboBox<String>() {{
 
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(Resources.getStream(this, "/theme")));
-
-                    try {
-
-                        String res;
-                        while ((res = reader.readLine()) != null)
-                            getItems().add(res.substring(0, res.lastIndexOf(".")));
-
-                        reader.close();
-
-                    } catch (IOException e) {
-                        Application.panic(getClass(), e);
-                    }
-
+                    getItems().addAll(Application.getInstance().getTheme().list());
                     setValue(Application.getInstance().getTheme().getStyleName());
 
 
@@ -199,6 +195,11 @@ public class Settings extends StackPane implements Initializable, Themeable {
         getRecords().add(new SettingsRecord("app.ui.startup", "SETTINGS_STARTUP", "SETTINGS_STARTUP_DESCRIPTION",
                 new JFXToggleButton() {{
 
+                    this.setSelected(Application.getInstance().getConfig().getBoolean("app.ui.startup").orElse(false));
+                    this.setSize(8.0);
+                    this.setMinHeight(12);
+                    this.setMaxHeight(12);
+
                     this.selectedProperty().addListener((v, o, n) -> {
 
                         Application.getInstance().runThread(new Thread(() -> {
@@ -210,17 +211,18 @@ public class Settings extends StackPane implements Initializable, Themeable {
 
                     });
 
-                    this.setSelected(Application.getInstance().getConfig().getBoolean("app.ui.startup").orElse(false));
-                    this.setSize(8.0);
-                    this.setMinHeight(12);
-                    this.setMaxHeight(12);
-
                 }}
         ));
 
 
         getRecords().add(new SettingsRecord("core.mfs.shared", "SETTINGS_SHARED", "SETTINGS_SHARED_DESCRIPTION",
                 new JFXToggleButton() {{
+
+                    this.setSelected(Application.getInstance().getConfig().getBoolean("core.mfs.shared").orElse(false));
+                    this.setSize(8.0);
+                    this.setMinHeight(12);
+                    this.setMaxHeight(12);
+
 
                     this.selectedProperty().addListener((v, o, n) -> {
 
@@ -232,11 +234,6 @@ public class Settings extends StackPane implements Initializable, Themeable {
                         }, "updateSettings()::core.mfs.shared"));
 
                     });
-
-                    this.setSelected(Application.getInstance().getConfig().getBoolean("core.mfs.shared").orElse(false));
-                    this.setSize(8.0);
-                    this.setMinHeight(12);
-                    this.setMaxHeight(12);
 
                 }}
         ));
@@ -263,9 +260,25 @@ public class Settings extends StackPane implements Initializable, Themeable {
                 }}
         ));
 
-        Application.getInstance().getConfig().list().forEach((k, v) ->
-            getAdvancedRecords().add(new SettingsAdvancedRecord(k, (String) v)));
 
+
+        HashMap<String, Object> cache =  Application.getInstance().getConfig().list();
+
+        cache.keySet()
+                .stream()
+                .sorted()
+                .forEach(k -> {
+
+                    Object v = cache.get(k);
+
+                    getAdvancedRecords().add(new SettingsAdvancedRecord(k, v.toString()));
+                });
+
+
+
+        labelNefele.setText("v1.0 SNAPSHOT"); /* TODO... */
+        labelJava.setText(System.getProperty("java.version"));
+        labelJavaFX.setText(System.getProperty("javafx.runtime.version"));
 
         Application.getInstance().getViews().add(this);
     }

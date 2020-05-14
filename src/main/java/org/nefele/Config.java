@@ -24,6 +24,8 @@
 
 package org.nefele;
 
+import javafx.beans.property.IntegerProperty;
+
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Optional;
@@ -139,7 +141,7 @@ public class Config {
 
 
     public Optional<Boolean> getBoolean(String name) {
-        return get(name).map(o -> Boolean.parseBoolean(o.toString()));
+        return get(name).map(o -> Integer.parseInt(o.toString()) == 1);
     }
 
 

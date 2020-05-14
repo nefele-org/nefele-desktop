@@ -29,8 +29,11 @@ import javafx.scene.paint.Color;
 import org.nefele.Application;
 import org.nefele.Resources;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import static java.util.Objects.requireNonNull;
@@ -109,5 +112,26 @@ public class Theme {
 
     public String getLightMode() {
         return getStyleName().contains("dark") ? "dark" : "light";
+    }
+
+    public ArrayList<String> list() {
+
+        ArrayList<String> r = new ArrayList<>();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(Resources.getStream(this, "/theme")));
+
+        try {
+
+            String res;
+            while ((res = reader.readLine()) != null)
+                r.add(res.substring(0, res.lastIndexOf(".")));
+
+            reader.close();
+
+        } catch (IOException e) {
+            Application.panic(getClass(), e);
+        }
+
+        return r;
+
     }
 }

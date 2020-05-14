@@ -40,9 +40,12 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
 import java.beans.DesignMode;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -177,6 +180,28 @@ public class Locale {
 
         }
 
+
+    }
+
+
+    public ArrayList<String> list() {
+
+        ArrayList<String> r = new ArrayList<>();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(Resources.getStream(this, "/lang")));
+
+        try {
+
+            String res;
+            while ((res = reader.readLine()) != null)
+                r.add(res.substring(0, res.lastIndexOf(".")));
+
+            reader.close();
+
+        } catch (IOException e) {
+            Application.panic(getClass(), e);
+        }
+
+        return r;
 
     }
 

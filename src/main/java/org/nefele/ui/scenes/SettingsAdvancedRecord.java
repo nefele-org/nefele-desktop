@@ -31,6 +31,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
+import org.nefele.Application;
 import org.nefele.Resources;
 import org.nefele.ui.Themeable;
 import java.net.URL;
@@ -51,11 +52,16 @@ public class SettingsAdvancedRecord extends StackPane implements Initializable, 
         this.name = new SimpleStringProperty(requireNonNull(name));
         this.value = new SimpleStringProperty(requireNonNull(value));
 
+        Resources.getFXML(this, "/fxml/SettingsAdvancedRecord.fxml");
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Resources.getFXML(this, "/fxml/SettingsAdvancedRecord.fxml");
+
+        labelName.setText(getName());
+        textFieldValue.setText(getValue());
+
+        Application.getInstance().getViews().add(this);
     }
 
     @Override
@@ -74,4 +80,8 @@ public class SettingsAdvancedRecord extends StackPane implements Initializable, 
     public StringProperty valueProperty() { return value; }
 
     public void setValue(String value) { this.value.set(value); }
+
+    public JFXTextField getTextFieldValue() {
+        return textFieldValue;
+    }
 }

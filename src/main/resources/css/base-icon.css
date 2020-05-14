@@ -26,3 +26,9 @@
     -fx-background-color: transparent;
     -fx-fill: derive(-nefele-theme-surface-text, 50%)
 }
+
+.third-party-icon {
+    -fx-background-radius: 10;
+    -fx-background-insets: 10;
+    -fx-background-color: rgba(255, 255, 255, 0.75)
+}

@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
 <!--
   ~ The MIT License
   ~
@@ -30,27 +24,32 @@
   ~ THE SOFTWARE.
   -->
 
-<?import org.nefele.ui.scenes.SettingsRecord?>
 
-
-<?import javafx.geometry.Insets?>
 <?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXTreeTableView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <fx:root minWidth="-Infinity" maxWidth="Infinity" minHeight="-Infinity" maxHeight="Infinity"
          type="StackPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
          AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-    <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="ALWAYS" prefWidth="200" prefHeight="200">
 
-        <VBox spacing="24" >
+
+    <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="ALWAYS" prefWidth="200" prefHeight="200">
+
+        <VBox spacing="24" fx:id="superPane">
+
             <Label userData="SETTINGS_GENERAL" styleClass="text-h1" />
             <VBox fx:id="contentPane"/>
             <Separator />
 
-            <BorderPane>
-                <center>
-                    <JFXButton fx:id="buttonAdvancedSettings" userData="SETTINGS_ADVANCED_BUTTON" />
-                </center>
-            </BorderPane>
+            <VBox alignment="CENTER" >
+                <JFXButton fx:id="buttonAdvancedSettings" userData="SETTINGS_ADVANCED_BUTTON" />
+            </VBox>
 
             <BorderPane fx:id="boxAdvancedSettings">
                 <center>
@@ -60,14 +59,86 @@
 
                         <VBox spacing="5" fx:id="contentAdvancedSettings" />
 
-                        <Separator />
+                        <VBox spacing="24" alignment="CENTER" >
+                            <JFXButton fx:id="buttonApply" userData="SETTINGS_ADVANCED_BUTTON_APPLY"/>
+                            <Separator />
+                        </VBox>
+
                     </VBox>
 
                 </center>
             </BorderPane>
 
+            <VBox spacing="24">
+
+                <Label userData="SETTINGS_SYSTEM_INFO" styleClass="text-h1"/>
+
+                <VBox spacing="5">
+                    <HBox>
+
+                        <Pane>
+
+                            <FontAwesomeIconView glyphName="CLOUD" layoutX="14.0" layoutY="64" selectionFill="#571d1d"
+                                                 size="80"
+                                                 styleClass="header-awesome-logo-1"/>
+                            <FontAwesomeIconView glyphName="CLOUD" layoutX="28.0" layoutY="64" selectionFill="#f21c1c"
+                                                 size="80"
+                                                 styleClass="header-awesome-logo-2"/>
+
+                            <padding>
+                                <Insets top="32" left="32" right="0" bottom="32" />
+                            </padding>
+
+                        </Pane>
+
+
+                        <VBox spacing="5">
+                            <HBox spacing="2">
+                                <Label text="Nefele: " styleClass="text-bold" />
+                                <Label fx:id="labelNefele" styleClass=""/>
+                            </HBox>
+
+                            <HBox spacing="2">
+                                <Label text="Java: " styleClass="text-bold" />
+                                <Label fx:id="labelJava" styleClass="" />
+                            </HBox>
+
+                            <HBox spacing="2">
+                                <Label text="JavaFX: " styleClass="text-bold" />
+                                <Label fx:id="labelJavaFX" styleClass="" />
+                            </HBox>
+                        </VBox>
+
+                    </HBox>
+
+                </VBox>
+
+
+
+                <HBox alignment="CENTER"  >
+                    <HBox spacing="16" styleClass="third-party-icon">
+                        <ImageView fitWidth="48" fitHeight="48" cache="true"><Image backgroundLoading="true" url="/images/third-party/gradle.png" /></ImageView>
+                        <ImageView fitWidth="48" fitHeight="48" cache="true"><Image backgroundLoading="true" url="/images/third-party/gluon.png" /></ImageView>
+                        <ImageView fitWidth="48" fitHeight="48" cache="true"><Image backgroundLoading="true" url="/images/third-party/jfoenix.png" /></ImageView>
+                        <ImageView fitWidth="48" fitHeight="48" cache="true"><Image backgroundLoading="true" url="/images/third-party/font-awesome.png" /></ImageView>
+                        <ImageView fitWidth="48" fitHeight="48" cache="true"><Image backgroundLoading="true" url="/images/third-party/github.png" /></ImageView>
+                        <ImageView fitWidth="48" fitHeight="48" cache="true"><Image backgroundLoading="true" url="/images/third-party/stack-overflow.png" /></ImageView>
+
+                        <padding>
+                            <Insets top="16" bottom="16" left="32" right="32" />
+                        </padding>
+                    </HBox>
+                </HBox>
+
+                <VBox alignment="CENTER">
+                    <Label text="Copyright © 2020. Nefele-org" styleClass="text-h3" />
+                    <Hyperlink fx:id="hyperLink" text="https://github.com/nefele-org" />
+                </VBox>
+
+            </VBox>
+
             <padding>
-                <Insets right="10" left="10" top="10" bottom="10"/>
+                <Insets right="10" left="10" top="10" bottom="10" />
             </padding>
         </VBox>
     </ScrollPane>

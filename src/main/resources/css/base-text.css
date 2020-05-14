@@ -69,3 +69,11 @@
     -fx-font-size: 1.25em;
 }
 
+.text-error {
+    -fx-text-fill: -nefele-theme-error;
+}
+
+.text-bold {
+    -fx-font-weight: bold;
+}
+
