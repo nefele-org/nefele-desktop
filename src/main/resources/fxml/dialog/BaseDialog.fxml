@@ -36,7 +36,7 @@
       <top>
          <Pane prefHeight="51.0" prefWidth="300.0" BorderPane.alignment="CENTER">
             <ImageView fx:id="ivIcon" fitHeight="32.0" fitWidth="32.0" layoutX="20.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true" />
-            <Label fx:id="labelTitle" layoutX="60.0" layoutY="9.0" text="Label">
+            <Label fx:id="labelTitle" layoutX="60.0" layoutY="9.0" text=" ">
                <font>
                   <Font size="18.0" />
                </font>
@@ -59,7 +59,7 @@
                <Insets bottom="10.0" left="15.0" right="15.0"/>
             </BorderPane.margin>
 
-            <Text fx:id="textMessage" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-shape" text="Text"/>
+            <Text fx:id="textMessage" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-shape" text=" "/>
          </ScrollPane>
       </center>
    </BorderPane>

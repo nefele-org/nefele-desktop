@@ -41,13 +41,15 @@
     -jfx-unfocus-color: transparent;
     -jfx-disable-visual-focus: false;
 
+    -fx-font-smoothing-type: lcd;
     -fx-focus-traversable: false;
+
+    /*-fx-border-color: red;*/
 
 }
 
 
 .root {
-    -fx-font-family: "Segoe UI";
     -fx-background-color: -nefele-theme-surface;
     -fx-border-color: -nefele-theme-surface;
     -fx-text-fill: -nefele-theme-surface-text;

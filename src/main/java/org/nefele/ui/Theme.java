@@ -25,6 +25,9 @@
 package org.nefele.ui;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.scene.paint.Color;
 import org.nefele.Application;
 import org.nefele.Resources;
@@ -44,13 +47,16 @@ public class Theme {
     public static final String DEFAULT_THEME = "light";
 
     private final HashMap<String, String> map = new HashMap<>();
-    private final String style;
     private final String styleName;
+    private String style;
+    private String fontFamily;
+    private Integer fontSize;
 
 
 
     public Theme(String styleName) {
 
+        this.style = null;
         this.styleName = requireNonNull(styleName);
 
 
@@ -78,18 +84,10 @@ public class Theme {
         }
 
 
+        setFontFamily(Application.getInstance().getConfig().getString("app.ui.font-family").orElse("Segoe UI"));
+        setFontSize(Application.getInstance().getConfig().getInteger("app.ui.font-size").orElse(13));
 
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("* {\n");
-
-        for(String key : map.keySet())
-            sb.append(String.format("%s: %s;\n", key, map.get(key)));
-
-        sb.append("}\n");
-
-        this.style = sb.toString();
-
+        update();
 
         Application.log(getClass(), "Loaded theme %s", styleName);
 
@@ -102,6 +100,11 @@ public class Theme {
         return Color.web(requireNonNull(map.get(style)));
     }
 
+    public String getLightMode() {
+        return getStyleName().contains("dark") ? "dark" : "light";
+    }
+
+
     public String getStyle() {
         return style;
     }
@@ -110,8 +113,20 @@ public class Theme {
         return styleName;
     }
 
-    public String getLightMode() {
-        return getStyleName().contains("dark") ? "dark" : "light";
+    public String getFontFamily() {
+        return fontFamily;
+    }
+
+    public void setFontFamily(String fontFamily) {
+        this.fontFamily = fontFamily;
+    }
+
+    public Integer getFontSize() {
+        return fontSize;
+    }
+
+    public void setFontSize(Integer fontSize) {
+        this.fontSize = fontSize;
     }
 
     public ArrayList<String> list() {
@@ -132,6 +147,24 @@ public class Theme {
         }
 
         return r;
+
+    }
+
+
+    public void update() {
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("* {\n");
+
+        for(String key : map.keySet())
+            sb.append(String.format("%s: %s;\n", key, map.get(key)));
+
+        sb.append(String.format("-fx-font-family: \"%s\";\n", getFontFamily()));
+        sb.append(String.format("-fx-font-size: %dpx;\n", getFontSize()));
+        sb.append("}\n");
+
+        this.style = sb.toString();
 
     }
 }

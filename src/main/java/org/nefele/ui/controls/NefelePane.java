@@ -230,6 +230,10 @@ public class NefelePane extends StackPane implements Initializable, Themeable {
 
         modalProperty().setValue(MODAL_WINDOW);
 
+        controlExit.setFocusTraversable(false);
+        controlMinimize.setFocusTraversable(false);
+        controlMaximize.setFocusTraversable(false);
+
         toggleDarkMode.setSelected(Application.getInstance().getTheme().getStyleName().contains("dark"));
         toggleDarkMode.setFocusTraversable(false);
 

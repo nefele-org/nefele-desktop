@@ -32,6 +32,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
@@ -40,6 +41,7 @@ import javafx.scene.control.Spinner;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import org.nefele.Application;
 import org.nefele.Resources;
 import org.nefele.ui.Theme;
@@ -47,6 +49,7 @@ import org.nefele.ui.Themeable;
 import org.nefele.ui.dialog.BaseDialog;
 import org.nefele.ui.dialog.Dialogs;
 import org.nefele.ui.dialog.ErrorDialog;
+import org.nefele.ui.dialog.InfoDialog;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -56,6 +59,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
+import java.util.stream.Stream;
 
 public class Settings extends StackPane implements Initializable, Themeable {
 
@@ -70,6 +74,7 @@ public class Settings extends StackPane implements Initializable, Themeable {
     @FXML private Label labelNefele;
     @FXML private Label labelJava;
     @FXML private Label labelJavaFX;
+    @FXML private JFXButton buttonApply;
 
     private final ObservableList<SettingsRecord> records;
     private final ObservableList<SettingsAdvancedRecord> advancedRecord;
@@ -81,7 +86,7 @@ public class Settings extends StackPane implements Initializable, Themeable {
         this.advancedRecord = FXCollections.observableArrayList();
 
         Resources.getFXML(this, "/fxml/Settings.fxml");
-        
+
     }
 
     @Override
@@ -104,6 +109,7 @@ public class Settings extends StackPane implements Initializable, Themeable {
             }
 
         });
+
 
         getRecords().addListener((ListChangeListener<? super SettingsRecord>) change -> {
 
@@ -192,13 +198,68 @@ public class Settings extends StackPane implements Initializable, Themeable {
         ));
 
 
+        getRecords().add(new SettingsRecord("app.ui.font-family", "SETTINGS_FONT_FAMILY", "SETTINGS_FONT_FAMILY_DESCRIPTION",
+                new JFXComboBox<String>() {{
+
+                    getItems().addAll(Font.getFamilies());
+                    
+                    if(!getItems().contains("Segoe UI"))
+                        getItems().add("Segoe UI");
+
+                    setValue(Application.getInstance().getTheme().getFontFamily());
+
+
+
+                    valueProperty().addListener((v, o, n) -> {
+
+                        Application.getInstance().getTheme().setFontFamily(n);
+                        Application.getInstance().getTheme().update();
+                        Application.getInstance().getViews().update();
+
+                        Application.getInstance().runThread(new Thread(() -> {
+
+                            Application.getInstance().getConfig().setString("app.ui.font-family", n);
+                            Application.getInstance().getConfig().update();
+
+                        }, "updateSettings()::app.ui.font-family"));
+
+                    });
+                    
+                }}
+        ));
+
+
+        getRecords().add(new SettingsRecord("app.ui.font-size", "SETTINGS_FONT_SIZE", "SETTINGS_FONT_SIZE_DESCRIPTION",
+                new JFXSlider(8.0, 24.0, Application.getInstance().getTheme().getFontSize().doubleValue()) {{
+
+                    this.valueChangingProperty().addListener((v, o, n) -> {
+
+                        if(!n) {
+
+                            Application.getInstance().getTheme().setFontSize(((Double) getValue()).intValue());
+                            Application.getInstance().getTheme().update();
+                            Application.getInstance().getViews().update();
+
+                            Application.getInstance().runThread(new Thread(() -> {
+
+                                Application.getInstance().getConfig().setInteger("app.ui.font-size", ((Double) getValue()).intValue());
+                                Application.getInstance().getConfig().update();
+
+                            }, "updateSettings()::app.ui.font-size"));
+
+                        }
+                    });
+
+                }}
+        ));
+
+
         getRecords().add(new SettingsRecord("app.ui.startup", "SETTINGS_STARTUP", "SETTINGS_STARTUP_DESCRIPTION",
                 new JFXToggleButton() {{
 
                     this.setSelected(Application.getInstance().getConfig().getBoolean("app.ui.startup").orElse(false));
                     this.setSize(8.0);
-                    this.setMinHeight(12);
-                    this.setMaxHeight(12);
+
 
                     this.selectedProperty().addListener((v, o, n) -> {
 
@@ -220,8 +281,6 @@ public class Settings extends StackPane implements Initializable, Themeable {
 
                     this.setSelected(Application.getInstance().getConfig().getBoolean("core.mfs.shared").orElse(false));
                     this.setSize(8.0);
-                    this.setMinHeight(12);
-                    this.setMaxHeight(12);
 
 
                     this.selectedProperty().addListener((v, o, n) -> {
@@ -275,6 +334,24 @@ public class Settings extends StackPane implements Initializable, Themeable {
                 });
 
 
+        buttonApply.setOnMouseClicked(e ->{
+
+            if(Dialogs.showWarningBox("DIALOG_TITLE_WARNING","SETTINGS_DIALOG_DESCRIPTION",
+                    BaseDialog.DIALOG_NO, BaseDialog.DIALOG_YES) == BaseDialog.DIALOG_YES) {
+
+                getAdvancedRecords().forEach(item ->
+                    Application.getInstance().getConfig().set(item.getName(), item.getTextFieldValue().getText()));
+
+                Application.getInstance().getConfig().update();
+                Application.getInstance().exit();
+
+            }
+
+        });
+
+        boxAdvancedSettings.setMaxHeight(0);
+        boxAdvancedSettings.setMinHeight(0);
+        boxAdvancedSettings.setVisible(false);
 
         labelNefele.setText("v1.0 SNAPSHOT"); /* TODO... */
         labelJava.setText(System.getProperty("java.version"));

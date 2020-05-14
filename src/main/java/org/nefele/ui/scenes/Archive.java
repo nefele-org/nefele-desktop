@@ -106,7 +106,6 @@ public class Archive extends StackPane implements Initializable, Themeable {
         textFieldPath.textProperty().bind(fileBrowser.currentPathProperty());
         textFieldPath.setFocusTraversable(false);
 
-
         fileBrowser.setItemFactory(path -> {
 
             Application.log(fileBrowser.getClass(), "List %s", path);

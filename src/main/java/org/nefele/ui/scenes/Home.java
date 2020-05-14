@@ -24,10 +24,13 @@
 
 package org.nefele.ui.scenes;
 
+import com.jfoenix.controls.JFXNodesList;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 import org.nefele.Application;
 import org.nefele.Resources;
 import org.nefele.ui.Themeable;
@@ -38,8 +41,15 @@ import org.nefele.ui.controls.NefelePane;
 import org.nefele.ui.dialog.BaseDialog;
 import org.nefele.ui.dialog.Dialogs;
 import org.nefele.ui.dialog.InfoDialog;
+
+import javax.imageio.ImageIO;
+import javax.swing.text.html.ImageView;
+import java.awt.*;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import static java.util.Objects.requireNonNull;
 
 
 public class Home extends NefeleContentPane implements Initializable, Themeable {
@@ -72,13 +82,77 @@ public class Home extends NefeleContentPane implements Initializable, Themeable 
 
         ((NefelePane) getScene().getRoot()).setOnClosing(() -> {
 
-            if(Dialogs.showMessageBox(new InfoDialog("Esci da Nefele", "Vuoi uscire da nefele?"),
-                    BaseDialog.DIALOG_ABORT, BaseDialog.DIALOG_MINIMIZE, BaseDialog.DIALOG_EXIT) == BaseDialog.DIALOG_EXIT)
-                Application.getInstance().exit();
+            int e = Dialogs.showInfoBox("HOME_DIALOG_TITLE","HOME_DIALOG_DESCRIPTION",
+                    BaseDialog.DIALOG_ABORT, BaseDialog.DIALOG_MINIMIZE, BaseDialog.DIALOG_EXIT);
+
+            switch (e) {
+
+                case BaseDialog.DIALOG_ABORT:
+                case BaseDialog.DIALOG_CLOSED:
+                    break;
+
+                case BaseDialog.DIALOG_EXIT:
+                    Application.getInstance().exit();
+                    break;
+
+                case BaseDialog.DIALOG_MINIMIZE:
+
+                    if(!SystemTray.isSupported()) {
+                        Dialogs.showErrorBox("SYSTEM_TRAY_ERROR");
+                        return false;
+                    }
+
+                    Image trayImage = null;
+                    try {
+                        trayImage = ImageIO.read(Resources.getURL(this, "/images/trayicon.png"));
+                    } catch (IOException ioException) {
+                        Application.panic(getClass(), ioException);
+                    }
+
+
+                    PopupMenu popupMenu = new PopupMenu();
+                    
+                    popupMenu.add(new MenuItem(Application.getInstance().getLocale().get("SYSTEM_TRAY_SHOW")) {{
+                        addActionListener(e -> Platform.runLater(() -> ((Stage) getScene().getWindow()).show()));
+                    }});
+
+                    popupMenu.add(new MenuItem(Application.getInstance().getLocale().get("SYSTEM_TRAY_EXIT")) {{
+                        addActionListener(e -> Platform.runLater(() -> Application.getInstance().exit()));
+                    }});
+
+                    popupMenu.setName("Nefele");
+                    popupMenu.setLabel("Nefele");
+
+
+                    try {
+
+                        SystemTray.getSystemTray().add(new TrayIcon(requireNonNull(trayImage), "Nefele", popupMenu) {{
+
+                            setImageAutoSize(true);
+
+                            addActionListener(e -> Platform.runLater(() -> {
+
+                                ((Stage) getScene().getWindow()).show();
+                                SystemTray.getSystemTray().remove(this);
+
+                            }));
+
+                        }});
+
+                    } catch (AWTException awtException) {
+                        Dialogs.showErrorBox("SYSTEM_TRAY_ERROR");
+                        return false;
+                    }
+
+                    return true;
+
+
+            }
 
             return false;
 
         });
+
 
     }
 }

@@ -7,7 +7,7 @@
   "-nefele-theme-surface"             :   "#2F3E46",
   "-nefele-theme-error"               :   "#811406",
 
-  "-nefele-theme-primary-text"        :   "#111111",
+  "-nefele-theme-primary-text"        :   "#333333",
   "-nefele-theme-secondary-text"      :   "#111111",
   "-nefele-theme-background-text"     :   "#eeeeee",
   "-nefele-theme-surface-text"        :   "#eeeeee",

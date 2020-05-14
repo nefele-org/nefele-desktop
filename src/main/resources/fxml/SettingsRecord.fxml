@@ -41,8 +41,8 @@
             <VBox HBox.hgrow="ALWAYS" >
                 <Label fx:id="labelDescription" prefWidth="420" wrapText="true" />
             </VBox>
-            <VBox>
-                <StackPane fx:id="inputPane" />
+            <VBox alignment="TOP_RIGHT">
+                <StackPane fx:id="inputPane" styleClass="settings-input-pane" />
             </VBox>
             <padding>
                 <Insets right="20" />

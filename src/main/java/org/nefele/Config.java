@@ -71,10 +71,7 @@ public class Config {
 
 
     public void set(String name, Object value) {
-
         cache.put(name, value);
-        update();
-
     }
 
 

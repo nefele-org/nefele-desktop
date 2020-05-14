@@ -24,9 +24,11 @@
 
 package org.nefele;
 
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -130,11 +132,15 @@ public final class Application extends javafx.application.Application implements
         //transferQueue = new TransferQueue(config.getInteger("core.transfers.parallel").orElse(4));
 
 
+        Platform.setImplicitExit(false);
+
         stage.setScene(new Scene(new NefelePane(new Home())));
+        stage.getIcons().add(new Image(Resources.getURL(this, "/images/trayicon.png").toExternalForm()));
         stage.setMinWidth(600);
         stage.setMinHeight(400);
         stage.setWidth(1280);
         stage.setWidth(720);
+        stage.setTitle("Nefele");
         stage.initStyle(StageStyle.UNDECORATED);
         stage.show();
 

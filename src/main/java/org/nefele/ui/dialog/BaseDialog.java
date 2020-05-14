@@ -25,6 +25,7 @@
 package org.nefele.ui.dialog;
 
 import com.jfoenix.controls.JFXButton;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
@@ -43,6 +44,8 @@ import org.nefele.ui.Themeable;
 import org.nefele.ui.controls.NefeleContentPane;
 import org.nefele.ui.controls.NefelePane;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -69,7 +72,6 @@ public class BaseDialog extends Stage {
         @FXML private ImageView ivIcon;
         @FXML private ScrollPane scrollMessage;
 
-
         public MessagePane() {
             Resources.getFXML(this, "/fxml/dialog/BaseDialog.fxml");
         }
@@ -78,17 +80,15 @@ public class BaseDialog extends Stage {
         @Override
         public void initialize(URL url, ResourceBundle resourceBundle) {
 
-            labelTitle.setText(getTitle());
-            textMessage.setText(getMessage());
+            labelTitle.setUserData(getTitle());
+            textMessage.setUserData(getMessage());
 
             if(getIcon() != null)
                 ivIcon.setImage(getIcon());
 
-
             Application.getInstance().getViews().add(this);
 
         }
-
 
         @Override
         public void initializeInterface() {
@@ -249,4 +249,5 @@ public class BaseDialog extends Stage {
 
         super.close();
     }
+
 }

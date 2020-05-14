@@ -57,6 +57,10 @@
 }
 
 
+.text-bold {
+    -fx-font-weight: bold;
+}
+
 .text-h1 {
     -fx-font-size: 2em;
 }
@@ -73,7 +77,4 @@
     -fx-text-fill: -nefele-theme-error;
 }
 
-.text-bold {
-    -fx-font-weight: bold;
-}
 
