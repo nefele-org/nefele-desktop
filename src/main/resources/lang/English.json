@@ -20,7 +20,7 @@
     "SETTINGS_STARTUP_DESCRIPTION" : "Run Nefele on system startup",
     "SETTINGS_ADVANCED" : "Advanced",
     "SETTINGS_SYSTEM_INFO" : "Information",
-    "SETTINGS_ADVANCED_BUTTON" : "Show Advanced Settings",
+    "SETTINGS_ADVANCED_BUTTON" : "Advanced Settings",
     "SETTINGS_ADVANCED_BUTTON_APPLY" : "Apply",
     "SETTINGS_DIALOG_DESCRIPTION" : "Do you really want to apply changes? This action will be irreversible, changes will be applied on the next reboot.",
     "DIALOG_CONTINUE" : "Continue",

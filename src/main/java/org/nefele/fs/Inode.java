@@ -24,121 +24,157 @@
 
 package org.nefele.fs;
 
+import javafx.beans.property.BooleanProperty;
 import org.nefele.Application;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.time.Instant;
+import java.util.Objects;
 
 public class Inode {
 
-    private String path;
+    private final Long id;
+    private String name;
     private String mime;
-    private InputStream inputStream;
-    private Instant ctime;
-    private Instant atime;
-    private Instant mtime;
+    private Long size;
+    private Instant createdTime;
+    private Instant accessedTime;
+    private Instant modifiedTime;
+    private Boolean trashed;
+    private Instant deleteTime;
+    private Long parent;
 
 
-    public Inode() {
-
-        path = "";
-        mime = "text/plain";
-        inputStream = null;
-
-        ctime = Instant.now();
-        atime = Instant.now();
-        mtime = Instant.now();
-
-    }
-
-
-    public Inode setPath(String path) {
-        this.path = path;
-        return this;
-    }
-
-    public Inode setMime(String mime) {
+    public Inode(String name, String mime, Long size, Long createdTime, Long accessedTime, Long modifiedTime, Boolean trashed, Long deleteTime, Long id, Long parent) {
+        this.name = name;
         this.mime = mime;
-        return this;
+        this.size = size;
+        this.createdTime = Instant.ofEpochSecond(createdTime);
+        this.accessedTime = Instant.ofEpochSecond(accessedTime);
+        this.modifiedTime = Instant.ofEpochSecond(modifiedTime);
+        this.trashed = trashed;
+        this.deleteTime = Instant.ofEpochSecond(deleteTime);
+        this.id = id;
+        this.parent = parent;
     }
 
-    public Inode setData(InputStream inputStream) {
-        this.inputStream = inputStream;
-        return this;
+    public Inode(String name, String mime, Long id, Long parent) {
+        this.name = name;
+        this.mime = mime;
+        this.id = id;
+        this.parent = parent;
+        this.size = 0L;
+        this.createdTime = Instant.now();
+        this.accessedTime = Instant.now();
+        this.modifiedTime = Instant.now();
+        this.trashed = false;
+        this.deleteTime = Instant.now();
     }
 
-    public Inode setCreatedTime(Instant instant) {
-        this.ctime = instant;
-        return this;
+    public String getName() {
+        return name;
     }
 
-    public Inode setAccessedTime(Instant instant) {
-        this.atime = instant;
-        return this;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Inode setModifiedTime(Instant instant) {
-        this.mtime = instant;
-        return this;
+    public String getMime() {
+        return mime;
     }
 
-
-    public Inode create() throws IOException {
-
-        if(path == null)
-            throw new NullPointerException("path cannot be null");
-
-        try {
-
-            Application.getInstance().getDatabase().query(
-                    "INSERT INTO inodes (path, mime, ctime, atime, mtime) values (?, ?, ?, ?, ?)",
-                    s -> {
-                        s.setString(1, path);
-                        s.setString(2, mime);
-                        s.setLong(3, ctime.getEpochSecond());
-                        s.setLong(4, atime.getEpochSecond());
-                        s.setLong(5, mtime.getEpochSecond());
-                    },
-                    null
-            );
-
-        } catch (SQLException e) {
-            Application.log(e.getClass(), e.getLocalizedMessage());
-
-            throw new IOException(e.getMessage());
-        }
-
-        return this;
-
+    public void setMime(String mime) {
+        this.mime = mime;
     }
 
-
-    public Inode remove() throws IOException {
-
-        if(path == null)
-            throw new NullPointerException("path cannot be null");
-
-        try {
-
-            Application.getInstance().getDatabase().query(
-                    "DELETE FROM inodes WHERE path = ? AND mime = ?",
-                    s -> {
-                        s.setString(1, path);
-                        s.setString(2, mime);
-                    },
-                    null
-            );
-
-        } catch (SQLException e) {
-            Application.log(e.getClass(), e.getLocalizedMessage());
-
-            throw new IOException(e.getMessage());
-        }
-
-        return this;
-
+    public Long getSize() {
+        return size;
     }
 
+    public void setSize(Long size) {
+        this.size = size;
+    }
+
+    public Instant getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(Instant createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public Instant getAccessedTime() {
+        return accessedTime;
+    }
+
+    public void setAccessedTime(Instant accessedTime) {
+        this.accessedTime = accessedTime;
+    }
+
+    public Instant getModifiedTime() {
+        return modifiedTime;
+    }
+
+    public void setModifiedTime(Instant modifiedTime) {
+        this.modifiedTime = modifiedTime;
+    }
+
+    public Boolean getTrashed() {
+        return trashed;
+    }
+
+    public void setTrashed(Boolean trashed) {
+        this.trashed = trashed;
+    }
+
+    public Instant getDeleteTime() {
+        return deleteTime;
+    }
+
+    public void setDeleteTime(Instant deleteTime) {
+        this.deleteTime = deleteTime;
+    }
+
+    public Long getParent() {
+        return parent;
+    }
+
+    public void setParent(Long parent) {
+        this.parent = parent;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    @Override
+    public String toString() {
+        return "Inode{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", mime='" + mime + '\'' +
+                ", size=" + size +
+                ", createdTime=" + createdTime +
+                ", accessedTime=" + accessedTime +
+                ", modifiedTime=" + modifiedTime +
+                ", trashed=" + trashed +
+                ", deleteTime=" + deleteTime +
+                ", parent=" + parent +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Inode inode = (Inode) o;
+        return getId().equals(inode.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
+    }
 }

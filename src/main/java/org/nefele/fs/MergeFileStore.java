@@ -24,8 +24,12 @@
 
 package org.nefele.fs;
 
+import org.nefele.Application;
+import org.nefele.cloud.Drive;
+
 import java.io.IOException;
 import java.nio.file.FileStore;
+import java.nio.file.FileSystem;
 import java.nio.file.attribute.FileAttributeView;
 import java.nio.file.attribute.FileStoreAttributeView;
 
@@ -34,21 +38,20 @@ import static java.util.Objects.requireNonNull;
 
 public class MergeFileStore extends FileStore {
 
-    protected final MergeFileSystemState state;
+    public final MergeFileSystem fileSystem;
 
-    public MergeFileStore(MergeFileSystemState state) {
-        this.state = requireNonNull(state);
+    public MergeFileStore(MergeFileSystem fileSystem) {
+        this.fileSystem = fileSystem;
     }
-
 
     @Override
     public String name() {
-        return "MergeFileSystem";
+        return "cloud";
     }
 
     @Override
     public String type() {
-        return "MergeFileSystem";
+        return "mfs";
     }
 
     @Override
@@ -58,12 +61,22 @@ public class MergeFileStore extends FileStore {
 
     @Override
     public long getTotalSpace() throws IOException {
-        return state.getTotalSpace();
+
+        return Application.getInstance().getDrives()
+                .stream()
+                .mapToLong(Drive::getQuota)
+                .sum() * Application.getInstance().getConfig().getInteger("core.mfs.blocksize").orElse(Drive.DEFAULT_BLOCK_SIZE);
+
     }
 
     @Override
     public long getUsableSpace() throws IOException {
-        return state.getUsableSpace();
+
+        return getTotalSpace() - Application.getInstance().getDrives()
+                .stream()
+                .mapToLong(Drive::getBlocks)
+                .sum() * Application.getInstance().getConfig().getInteger("core.mfs.blocksize").orElse(Drive.DEFAULT_BLOCK_SIZE);
+
     }
 
     @Override
@@ -83,11 +96,11 @@ public class MergeFileStore extends FileStore {
 
     @Override
     public <V extends FileStoreAttributeView> V getFileStoreAttributeView(Class<V> aClass) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Object getAttribute(String s) throws IOException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 }

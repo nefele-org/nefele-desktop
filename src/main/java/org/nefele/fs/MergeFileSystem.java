@@ -24,12 +24,19 @@
 
 package org.nefele.fs;
 
+import org.nefele.utils.Tree;
+
+import java.awt.*;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.URI;
 import java.nio.file.*;
 import java.nio.file.attribute.UserPrincipalLookupService;
 import java.nio.file.spi.FileSystemProvider;
-import java.util.Set;
+import java.util.*;
+import java.util.function.BinaryOperator;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
@@ -39,20 +46,16 @@ public class MergeFileSystem extends FileSystem {
     public final static String PATH_SEPARATOR = "/";
     public final static Character PATH_SEPARATOR_CHAR = '/';
 
-    protected boolean open;
-    protected boolean readOnly;
-    protected FileSystemProvider provider;
+    private final FileSystemProvider provider;
+    private final FileStore fileStore;
+    private final MergeFileTree fileTree;
 
 
-    public MergeFileSystem(FileSystemProvider provider, URI uri) {
-
-        this.provider = requireNonNull(provider);
-
-        this.open = true;
-        this.readOnly = false;
-
+    public MergeFileSystem(FileSystemProvider provider) {
+        this.provider = provider;
+        this.fileStore = new MergeFileStore(this);
+        this.fileTree = new MergeFileTree();
     }
-
 
     @Override
     public FileSystemProvider provider() {
@@ -66,12 +69,12 @@ public class MergeFileSystem extends FileSystem {
 
     @Override
     public boolean isOpen() {
-        return open;
+        return true;
     }
 
     @Override
     public boolean isReadOnly() {
-        return readOnly;
+        return false;
     }
 
     @Override
@@ -81,12 +84,12 @@ public class MergeFileSystem extends FileSystem {
 
     @Override
     public Iterable<Path> getRootDirectories() {
-        return null;
+        return Collections.singleton(getPath(MergeFileSystem.PATH_SEPARATOR));
     }
 
     @Override
     public Iterable<FileStore> getFileStores() {
-        return null;
+        return Collections.singleton(fileStore);
     }
 
     @Override
@@ -96,22 +99,52 @@ public class MergeFileSystem extends FileSystem {
 
     @Override
     public Path getPath(String s, String... strings) {
-        return null;
+
+        if(!s.equals(MergeFileSystem.PATH_SEPARATOR))
+            throw new IllegalArgumentException("Path must be absolute!");
+
+
+        String path = new StringBuilder()
+                .append(s)
+                .append(String.join(MergeFileSystem.PATH_SEPARATOR, strings))
+                .toString();
+
+        return new MergePath(this, fileTree.resolve(strings), path, path);
+
     }
 
     @Override
     public PathMatcher getPathMatcher(String s) {
-        return null;
+
+        if(!s.contains(":"))
+            throw new IllegalArgumentException();
+
+        if(!s.startsWith("regex:"))
+            throw new UnsupportedOperationException();
+
+
+        Pattern pattern = Pattern.compile(s.substring(s.indexOf(":") + 1));
+
+        return path ->
+                pattern.matcher(path.toString()).matches();
+
     }
 
     @Override
     public UserPrincipalLookupService getUserPrincipalLookupService() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public WatchService newWatchService() throws IOException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
+    public FileStore getFileStore() {
+        return fileStore;
+    }
+
+    public MergeFileTree getFileTree() {
+        return fileTree;
+    }
 }

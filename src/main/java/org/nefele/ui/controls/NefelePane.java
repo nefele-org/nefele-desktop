@@ -143,13 +143,7 @@ public class NefelePane extends StackPane implements Initializable, Themeable {
         });
 
         controlExit.setOnMouseClicked(e -> {
-
-            if(getOnClosing() == null)
-                getScene().getWindow().hide();
-
-            else if(getOnClosing().closing())
-                getScene().getWindow().hide();
-
+            close();
         });
 
         controlMaximize.setOnMouseClicked(e -> {
@@ -403,5 +397,15 @@ public class NefelePane extends StackPane implements Initializable, Themeable {
 
     public void setOnClosing(NefelePaneClosingOperation onClosing) {
         this.onClosing.set(onClosing);
+    }
+
+    public void close() {
+
+        if(getOnClosing() == null)
+            getScene().getWindow().hide();
+
+        else if(getOnClosing().closing())
+            getScene().getWindow().hide();
+
     }
 }

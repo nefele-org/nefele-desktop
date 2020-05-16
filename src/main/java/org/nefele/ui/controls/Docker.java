@@ -24,6 +24,8 @@
 
 package org.nefele.ui.controls;
 
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXNodesList;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -35,13 +37,20 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Popup;
 import javafx.util.Duration;
 import org.nefele.Application;
 import org.nefele.Resources;
 import org.nefele.ui.Themeable;
+import org.nefele.ui.dialog.Dialogs;
 
+import java.awt.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -74,7 +83,12 @@ public class Docker extends VBox implements Initializable, Themeable {
                 if(change.wasAdded()) {
                     change.getAddedSubList().forEach(i -> {
                         getChildren().add(new DockerButton(i) {{
-                            setOnMouseClicked(e -> selectedButtonProperty().set(this));
+
+                            if(i.getIcon().equals("EXIT_TO_APP"))
+                                setOnMouseClicked(e -> ((NefelePane) getScene().getRoot()).close());
+                            else
+                                setOnMouseClicked(e -> selectedButtonProperty().set(this));
+
                         }});
                     });
                 }
@@ -99,15 +113,15 @@ public class Docker extends VBox implements Initializable, Themeable {
 
         selectedButton.addListener((v, o, n) -> {
 
-            requireNonNull(contentPane.get());
+            requireNonNull(getContentPane());
+            requireNonNull(n);
 
-            if(o != null) {
+
+            if (o != null) {
                 o.selectedProperty().setValue(false);
-                contentPane.get().getChildren().remove(o.getItem().getReference());
+                getContentPane().getChildren().remove(o.getItem().getReference());
             }
 
-
-            requireNonNull(n);
 
             n.selectedProperty().setValue(true);
             n.getItem().getReference().setOpacity(0);
@@ -115,12 +129,13 @@ public class Docker extends VBox implements Initializable, Themeable {
             getContentPane().getChildren().add(n.getItem().getReference());
 
 
-
             Timeline timeline = new Timeline();
             timeline.getKeyFrames().add(new KeyFrame(Duration.millis(200),
                     new KeyValue(n.getItem().getReference().opacityProperty(), 1, Interpolator.EASE_BOTH)));
 
             timeline.play();
+
+
 
         });
 
@@ -165,5 +180,6 @@ public class Docker extends VBox implements Initializable, Themeable {
     public ObservableList<DockerItem> getParents() {
         return parents;
     }
+
 
 }

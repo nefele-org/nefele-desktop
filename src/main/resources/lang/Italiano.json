@@ -21,7 +21,7 @@
     "SETTINGS_ADVANCED" : "Avanzate",
     "SETTINGS_SYSTEM_INFO" : "Informazioni",
     "SETTINGS_ADVANCED_BUTTON_APPLY" : "Applica",
-    "SETTINGS_ADVANCED_BUTTON" : "Mostra Impostazioni Avanzate",
+    "SETTINGS_ADVANCED_BUTTON" : "Impostazioni Avanzate",
     "SETTINGS_DIALOG_DESCRIPTION" : "Vuoi veramente applicare le modifiche? Questa azione sarà irreversibile, i cambiamenti verranno applicati al prossimo riavvio.",
     "DIALOG_CONTINUE" : "Continua",
     "DIALOG_OK" : "Ok",

@@ -175,7 +175,6 @@ public class FileBrowser extends ScrollPane implements Initializable, Themeable 
         });
 
 
-
         selectedCells.addListener((ListChangeListener<FileBrowserCell>) change -> {
 
             while(change.next()) {

@@ -39,7 +39,7 @@
          AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
 
-    <ScrollPane fx:id="scrollPane" fitToWidth="true" fitToHeight="true" prefWidth="200" prefHeight="200">
+        <ScrollPane fx:id="scrollPane" fitToWidth="true" fitToHeight="true" prefWidth="200" prefHeight="200" vbarPolicy="ALWAYS">
         <StackPane>
             <FlowPane fx:id="flowPane">
 

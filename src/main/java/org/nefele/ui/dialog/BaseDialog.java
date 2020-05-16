@@ -81,7 +81,11 @@ public class BaseDialog extends Stage {
         public void initialize(URL url, ResourceBundle resourceBundle) {
 
             labelTitle.setUserData(getTitle());
+            labelTitle.setText(getTitle());
+
             textMessage.setUserData(getMessage());
+            textMessage.setText(getMessage());
+
 
             if(getIcon() != null)
                 ivIcon.setImage(getIcon());
@@ -186,7 +190,7 @@ public class BaseDialog extends Stage {
         setTitle(title);
         setMessage(message);
 
-        initModality(Modality.WINDOW_MODAL);
+        initModality(Modality.APPLICATION_MODAL);
         initStyle(StageStyle.UNDECORATED);
 
     }

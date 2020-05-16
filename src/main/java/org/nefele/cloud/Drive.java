@@ -38,10 +38,27 @@ public class Drive {
 
     public static final Integer DEFAULT_BLOCK_SIZE = 4096;
 
+    public static final Integer DRIVE_STATUS_UNKNOWN = 0;
+    public static final Integer DRIVE_STATUS_CONNECTING = 1;
+    public static final Integer DRIVE_STATUS_READY = 2;
+    public static final Integer DRIVE_STATUS_DISCONNECTING = 3;
+    public static final Integer DRIVE_STATUS_DISCONNECTED = 4;
+    public static final Integer DRIVE_STATUS_ERROR = 100;
+
+    public static final Integer DRIVE_ERROR_OK = 0;
+    public static final Integer DRIVE_ERROR_EXPIRED = 1;
+    public static final Integer DRIVE_ERROR_LOGIN_FAIL = 2;
+    public static final Integer DRIVE_ERROR_UNREACHABLE = 3;
+    public static final Integer DRIVE_ERROR_UNKNOWN = 100;
+
+
+
     private final ReadOnlyIntegerProperty id;
     private final ReadOnlyStringProperty service;
     private final LongProperty quota;
     private final LongProperty blocks;
+    private final IntegerProperty status;
+    private final IntegerProperty error;
 
 
     public static Drive fromId(int id) throws SQLException {
@@ -70,6 +87,8 @@ public class Drive {
         this.service = new SimpleStringProperty(service);
         this.quota = new SimpleLongProperty(quota);
         this.blocks = new SimpleLongProperty(blocks);
+        this.status = new SimpleIntegerProperty(DRIVE_STATUS_UNKNOWN);
+        this.error = new SimpleIntegerProperty(DRIVE_ERROR_OK);
     }
 
 
@@ -111,5 +130,29 @@ public class Drive {
 
     public void setBlocks(long blocks) {
         this.blocks.set(blocks);
+    }
+
+    public int getStatus() {
+        return status.get();
+    }
+
+    public IntegerProperty statusProperty() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status.set(status);
+    }
+
+    public int getError() {
+        return error.get();
+    }
+
+    public IntegerProperty errorProperty() {
+        return error;
+    }
+
+    public void setError(int error) {
+        this.error.set(error);
     }
 }

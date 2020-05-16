@@ -24,99 +24,167 @@
 
 package org.nefele.fs;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.scene.Parent;
+import org.nefele.Application;
+import org.nefele.utils.Tree;
+
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.*;
+import java.util.Objects;
 
 public class MergePath implements Path {
 
+    private final MergeFileSystem fileSystem;
+    private final String path;
+    private final String absolutePath;
+    private final Tree<Inode> inode;
+
+    public MergePath(MergeFileSystem fileSystem, Tree<Inode> inode, String absolutePath, String path) {
+
+        this.fileSystem = fileSystem;
+        this.path = path;
+        this.absolutePath = absolutePath;
+        this.inode = inode;
+
+    }
+
     @Override
     public FileSystem getFileSystem() {
-        return null;
+        return fileSystem;
     }
 
     @Override
     public boolean isAbsolute() {
-        return false;
+        return path.startsWith(MergeFileSystem.PATH_SEPARATOR);
     }
 
     @Override
     public Path getRoot() {
-        return null;
+        return fileSystem.getRootDirectories().iterator().next();
     }
 
     @Override
     public Path getFileName() {
-        return null;
+         return new MergePath(fileSystem, inode, absolutePath, inode.getData().getName());
     }
 
     @Override
     public Path getParent() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public int getNameCount() {
-        return 0;
+        return 1;
     }
 
     @Override
     public Path getName(int i) {
-        return null;
+
+        if(i > 1)
+            throw new IndexOutOfBoundsException();
+
+        return getFileName();
+
+    }
+
+    public Tree<Inode> getInode() {
+        return inode;
     }
 
     @Override
     public Path subpath(int i, int i1) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean startsWith(Path path) {
-        return false;
+
+        if(!path.isAbsolute())
+            return false;
+
+        if(!isAbsolute())
+            return false;
+
+        return path.toString().startsWith(this.path);
     }
 
     @Override
     public boolean endsWith(Path path) {
-        return false;
+        return path.toString().endsWith(this.path);
     }
 
     @Override
     public Path normalize() {
-        return this;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Path resolve(Path path) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Path relativize(Path path) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public URI toUri() {
-        return null;
+
+        try {
+            return new URI(fileSystem.provider().getScheme(), "", absolutePath, null, null);
+        } catch (URISyntaxException ignored) { }
+
+        throw new IllegalArgumentException(path);
+
     }
 
     @Override
     public Path toAbsolutePath() {
-        return null;
+        return new MergePath(fileSystem, inode, absolutePath, absolutePath);
     }
 
     @Override
     public Path toRealPath(LinkOption... linkOptions) throws IOException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public WatchKey register(WatchService watchService, WatchEvent.Kind<?>[] kinds, WatchEvent.Modifier... modifiers) throws IOException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public int compareTo(Path path) {
-        return 0;
+
+        if(!path.isAbsolute())
+            return path.toString().charAt(0) - MergeFileSystem.PATH_SEPARATOR_CHAR;
+
+        return this.path.compareTo(path.toString());
+
+    }
+
+    @Override
+    public String toString() {
+        return path;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(path);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MergePath paths = (MergePath) o;
+        return getFileSystem().equals(paths.getFileSystem()) &&
+                path.equals(paths.path);
     }
 }

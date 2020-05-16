@@ -24,46 +24,32 @@
 
 package org.nefele.fs;
 
+import org.nefele.utils.Tree;
+
 import java.io.IOException;
 import java.net.URI;
+import java.nio.channels.FileChannel;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.FileAttributeView;
 import java.nio.file.spi.FileSystemProvider;
-import java.util.Map;
-import java.util.Set;
-
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 
 public class MergeFileSystemProvider extends FileSystemProvider {
 
-    private static final MergeFileSystemProvider instance = new MergeFileSystemProvider();
+    private final MergeFileSystem fileSystem;
 
-    static {
-
-        String packages = System.getProperty("java.protocol.handler.pkgs");
-
-        if(packages == null)
-            packages = "org.nefele.fs";
-        else
-            packages = packages + "|" + "org.nefele.fs";
-
-        System.setProperty("java.protocol.handler.pkgs", packages);
-
+    public MergeFileSystemProvider() {
+        this.fileSystem = new MergeFileSystem(this);
     }
-
-    public static MergeFileSystemProvider getInstance() {
-        return instance;
-    }
-
-
-
 
     @Override
     public String getScheme() {
-        return "nefele";
+        return "cloud";
     }
 
     @Override
@@ -73,12 +59,17 @@ public class MergeFileSystemProvider extends FileSystemProvider {
 
     @Override
     public FileSystem getFileSystem(URI uri) {
-        throw new UnsupportedOperationException();
+
+        if(uri.getScheme().equals(getScheme()))
+            return fileSystem;
+
+        throw new IllegalArgumentException();
+
     }
 
     @Override
     public Path getPath(URI uri) {
-        throw new UnsupportedOperationException();
+        return fileSystem.getPath(uri.getPath());
     }
 
     @Override
@@ -88,8 +79,51 @@ public class MergeFileSystemProvider extends FileSystemProvider {
 
     @Override
     public DirectoryStream<Path> newDirectoryStream(Path path, DirectoryStream.Filter<? super Path> filter) throws IOException {
-        // TODO: DirectoryStream
-        throw new UnsupportedOperationException();
+
+        if(!(path instanceof MergePath))
+            throw new IllegalArgumentException();
+
+
+        final Tree<Inode> inode = ((MergePath) path).getInode();
+
+        if(inode == null)
+            return null;
+
+
+        return new DirectoryStream<Path>() {
+
+            @Override
+            public Iterator<Path> iterator() {
+
+                return new Iterator<Path>() {
+
+                    private int index = 0;
+
+                    @Override
+                    public boolean hasNext() {
+                        return (index < inode.getChildren().size());
+                    }
+
+                    @Override
+                    public Path next() {
+
+                        Tree<Inode> entry = inode.getChildren().get(index++);
+
+                        return new MergePath(fileSystem, entry, fileSystem.getFileTree().toAbsolutePath(entry), entry.getData().getName());
+
+                    }
+
+                };
+
+            }
+
+            @Override
+            public void close() throws IOException {
+
+            }
+
+        };
+
     }
 
     @Override
@@ -114,7 +148,7 @@ public class MergeFileSystemProvider extends FileSystemProvider {
 
     @Override
     public boolean isSameFile(Path path, Path path1) throws IOException {
-        return false;
+        return path.toAbsolutePath().equals(path1.toAbsolutePath());
     }
 
     @Override
@@ -124,31 +158,39 @@ public class MergeFileSystemProvider extends FileSystemProvider {
 
     @Override
     public FileStore getFileStore(Path path) throws IOException {
-        return null;
+
+        if(!(path instanceof MergePath))
+            throw new IllegalArgumentException();
+
+        if(!(path.getFileSystem() instanceof MergeFileSystem))
+            throw new IllegalArgumentException();
+
+        return ((MergeFileSystem) path.getFileSystem()).getFileStore();
+
     }
 
     @Override
     public void checkAccess(Path path, AccessMode... accessModes) throws IOException {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public <V extends FileAttributeView> V getFileAttributeView(Path path, Class<V> aClass, LinkOption... linkOptions) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public <A extends BasicFileAttributes> A readAttributes(Path path, Class<A> aClass, LinkOption... linkOptions) throws IOException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Map<String, Object> readAttributes(Path path, String s, LinkOption... linkOptions) throws IOException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setAttribute(Path path, String s, Object o, LinkOption... linkOptions) throws IOException {
-
+        throw new UnsupportedOperationException();
     }
 }

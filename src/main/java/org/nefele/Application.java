@@ -37,12 +37,18 @@ import javazoom.jl.player.Player;
 import org.apache.http.impl.cookie.AbstractCookieAttributeHandler;
 import org.nefele.cloud.Drive;
 import org.nefele.core.Status;
+import org.nefele.fs.MergeFileSystem;
+import org.nefele.fs.MergeFileSystemProvider;
+import org.nefele.fs.MergeFileTree;
 import org.nefele.ui.Theme;
 import org.nefele.ui.Views;
 import org.nefele.ui.controls.NefelePane;
 import org.nefele.ui.dialog.Dialogs;
 import org.nefele.ui.scenes.Home;
 
+import java.awt.*;
+import java.net.URI;
+import java.nio.file.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
@@ -130,6 +136,21 @@ public final class Application extends javafx.application.Application implements
         }
 
         //transferQueue = new TransferQueue(config.getInteger("core.transfers.parallel").orElse(4));
+
+        MergeFileSystemProvider provider = new MergeFileSystemProvider();
+
+        FileSystem fileSystem = FileSystems.getFileSystem(URI.create("cloud:///"));
+
+        Path path = fileSystem.getPath("/");
+
+        Files.list(path).filter(Files::isDirectory).forEach(System.out::println);
+
+
+        System.out.println("path.toString() = " + path.toString());
+        System.out.println("path.isAbsolute() = " + path.isAbsolute());
+        System.out.println("path.getFileName().toString() = " + path.getFileName().toString());
+        System.out.println("path.toUri() = " + path.toUri());
+        System.out.println("path.getRoot().toString() = " + path.getRoot().toString());
 
 
         Platform.setImplicitExit(false);
@@ -280,8 +301,8 @@ public final class Application extends javafx.application.Application implements
         log(className, "PANIC! " + message, args);
 
         Dialogs.showErrorBox(
-                Application.getInstance().getLocale().get("DIALOG_PANIC_TITLE"),
-                Application.getInstance().getLocale().get("DIALOG_PANIC_MESSAGE")
+                "DIALOG_PANIC_TITLE",
+                "DIALOG_PANIC_MESSAGE"
         );
 
 

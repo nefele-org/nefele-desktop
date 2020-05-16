@@ -39,7 +39,7 @@
          AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
 
-    <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="ALWAYS" prefWidth="200" prefHeight="200">
+    <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" prefWidth="200" prefHeight="200">
 
         <VBox spacing="24" fx:id="superPane">
 
