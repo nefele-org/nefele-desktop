@@ -46,6 +46,7 @@ public class Mime {
         this.icon = new SimpleStringProperty(icon);
     }
 
+
     public String getExtension() {
         return extension.get();
     }
@@ -106,4 +107,6 @@ public class Mime {
     public int hashCode() {
         return Objects.hash(getType());
     }
+
+
 }

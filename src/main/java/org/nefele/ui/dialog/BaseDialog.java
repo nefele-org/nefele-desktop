@@ -86,7 +86,6 @@ public class BaseDialog extends Stage {
             textMessage.setUserData(getMessage());
             textMessage.setText(getMessage());
 
-
             if(getIcon() != null)
                 ivIcon.setImage(getIcon());
 

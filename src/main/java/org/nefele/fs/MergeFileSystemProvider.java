@@ -24,6 +24,7 @@
 
 package org.nefele.fs;
 
+import org.nefele.Application;
 import org.nefele.utils.Tree;
 
 import java.io.IOException;
@@ -31,6 +32,7 @@ import java.net.URI;
 import java.nio.channels.FileChannel;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributeView;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.FileAttributeView;
@@ -42,6 +44,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class MergeFileSystemProvider extends FileSystemProvider {
 
     private final MergeFileSystem fileSystem;
+
 
     public MergeFileSystemProvider() {
         this.fileSystem = new MergeFileSystem(this);
@@ -74,7 +77,12 @@ public class MergeFileSystemProvider extends FileSystemProvider {
 
     @Override
     public SeekableByteChannel newByteChannel(Path path, Set<? extends OpenOption> set, FileAttribute<?>... fileAttributes) throws IOException {
-        throw new UnsupportedOperationException();
+
+        if(!(path instanceof MergePath))
+            throw new IllegalArgumentException();
+
+        return new MergeFileChannel((MergePath) path);
+
     }
 
     @Override
@@ -128,12 +136,22 @@ public class MergeFileSystemProvider extends FileSystemProvider {
 
     @Override
     public void createDirectory(Path path, FileAttribute<?>... fileAttributes) throws IOException {
-        throw new UnsupportedOperationException();
+        
+        if(!(path instanceof MergePath))
+            throw new IllegalArgumentException();
+        
+        fileSystem.getFileStore().createDirectory((MergePath) path, fileAttributes);
+
     }
 
     @Override
     public void delete(Path path) throws IOException {
-        throw new UnsupportedOperationException();
+
+        if(!(path instanceof MergePath))
+            throw new IllegalArgumentException();
+
+        fileSystem.getFileStore().delete((MergePath) path);
+
     }
 
     @Override
@@ -176,12 +194,22 @@ public class MergeFileSystemProvider extends FileSystemProvider {
 
     @Override
     public <V extends FileAttributeView> V getFileAttributeView(Path path, Class<V> aClass, LinkOption... linkOptions) {
-        throw new UnsupportedOperationException();
+
+        if(aClass.isInstance(BasicFileAttributeView.class))
+            return (V) ((MergePath) path).getAttributeView();
+
+        return null;
+
     }
 
     @Override
     public <A extends BasicFileAttributes> A readAttributes(Path path, Class<A> aClass, LinkOption... linkOptions) throws IOException {
-        throw new UnsupportedOperationException();
+
+        if(aClass.equals(BasicFileAttributes.class))
+            return (A) ((MergePath) path).getAttributeView().readAttributes();
+
+        return null;
+
     }
 
     @Override

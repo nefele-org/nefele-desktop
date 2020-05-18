@@ -24,6 +24,8 @@
 
 package org.nefele.core;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -31,10 +33,12 @@ public final class Status {
 
     private final StringProperty text;
     private final StringProperty icon;
+    private final DoubleProperty loadingProgress;
 
     public Status() {
         this.text = new SimpleStringProperty("Andrà tutto bene!");
         this.icon = new SimpleStringProperty("WEATHER_SUNNY");
+        this.loadingProgress = new SimpleDoubleProperty(0.0);
     }
 
     public String getText() {
@@ -59,5 +63,17 @@ public final class Status {
 
     public void setIcon(String icon) {
         this.icon.set(icon);
+    }
+
+    public double getLoadingProgress() {
+        return loadingProgress.get();
+    }
+
+    public DoubleProperty loadingProgressProperty() {
+        return loadingProgress;
+    }
+
+    public void setLoadingProgress(double loadingProgress) {
+        this.loadingProgress.set(loadingProgress);
     }
 }

@@ -25,20 +25,47 @@
 package org.nefele;
 
 import javafx.beans.property.IntegerProperty;
+import org.nefele.cloud.Drive;
+import org.sqlite.SQLiteErrorCode;
 
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Config {
 
-    protected Database database;
-    protected HashMap<String, Object> cache;
+    private final Database database;
+    private final HashMap<String, Object> cache;
+
 
     public Config(Database database) {
+
         this.database = database;
         this.cache = new HashMap<>();
+
+        Application.addOnInitHandler(this::initialize);
+        Application.addOnExitHandler(this::update);
+
+    }
+
+
+    public void initialize() {
+
+        try {
+
+            database.query("SELECT name, value FROM config",
+                    null,
+                    r -> {
+                        cache.put(r.getString(1), r.getObject(2));
+                    }
+            );
+
+        } catch (SQLException e) {
+            Application.panic(getClass(), e);
+        }
+
     }
 
 
@@ -47,6 +74,9 @@ public class Config {
         Object cached;
         if((cached = cache.get(name)) != null)
             return Optional.of(cached);
+
+
+        Application.log(getClass(), "WARNING! %s not found in cache", name);
 
 
         AtomicReference<Optional<Object>> result = new AtomicReference<>();
@@ -62,7 +92,10 @@ public class Config {
                 cache.put(name, result.get().get());
 
         } catch (SQLException e) {
-            Application.log(e.getClass(), e.getLocalizedMessage());
+
+            if(e.getErrorCode() != SQLiteErrorCode.SQLITE_NOTFOUND.code)
+                Application.panic(getClass(), e);
+
         }
 
         return result.get();
@@ -76,36 +109,17 @@ public class Config {
 
 
     public HashMap<String, Object> list() {
-
-        try {
-
-            database.query("SELECT name, value FROM config",
-                    null,
-                    r -> {
-
-                        if(!cache.containsKey(r.getString(1)))
-                            cache.put(r.getString(1), r.getObject(2));
-
-                    }
-            );
-
-        } catch (SQLException e) {
-            Application.log(e.getClass(), e.getLocalizedMessage());
-        }
-
-
         return cache;
-
     }
 
 
-    public void update() {
+    public synchronized void update() {
 
         try {
 
-            for(String key : cache.keySet()) {
+            for (String key : cache.keySet()) {
 
-                if(get(key).isPresent()) {
+                if (get(key).isPresent()) {
                     database.query("UPDATE config SET value = ? WHERE name = ?",
                             s -> {
                                 s.setString(1, (String) get(key).get());
@@ -116,6 +130,7 @@ public class Config {
                 }
 
             }
+
 
         } catch (SQLException e) {
             Application.log(e.getClass(), e.getLocalizedMessage());

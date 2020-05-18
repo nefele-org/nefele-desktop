@@ -24,8 +24,9 @@
 
 package org.nefele.ui.controls;
 
+import java.nio.file.Path;
 import java.util.List;
 
 public interface FileBrowserItemFactory {
-    List<FileBrowserItem> call(String path);
+    List<FileBrowserItem> call(Path path);
 }

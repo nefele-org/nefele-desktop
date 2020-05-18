@@ -34,19 +34,18 @@
 <fx:root prefHeight="170.0" prefWidth="300.0" type="NefeleContentPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
    <BorderPane>
       <top>
-         <Pane prefHeight="51.0" prefWidth="300.0" BorderPane.alignment="CENTER">
-            <ImageView fx:id="ivIcon" fitHeight="32.0" fitWidth="32.0" layoutX="20.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true" />
-            <Label fx:id="labelTitle" layoutX="60.0" layoutY="9.0" text=" ">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
-         </Pane>
+         <HBox spacing="8" alignment="CENTER_LEFT">
+            <ImageView fx:id="ivIcon" fitHeight="32.0" fitWidth="32.0" />
+            <Label fx:id="labelTitle" text=" " styleClass="text-h2" />
+            <padding>
+               <Insets left="24" right="24" top="8" bottom="8" />
+            </padding>
+         </HBox>
       </top>
       <bottom>
-         <HBox fx:id="buttonHBox" nodeOrientation="RIGHT_TO_LEFT" prefHeight="35.0" prefWidth="300.0" BorderPane.alignment="CENTER" spacing="5">
+         <HBox fx:id="buttonHBox" nodeOrientation="RIGHT_TO_LEFT" prefHeight="36.0" BorderPane.alignment="CENTER" spacing="5">
             <BorderPane.margin>
-               <Insets left="15.0" right="15.0" />
+               <Insets left="16" right="16" />
             </BorderPane.margin>
             <opaqueInsets>
                <Insets />
@@ -56,7 +55,7 @@
       <center>
          <ScrollPane fx:id="scrollMessage" hbarPolicy="NEVER" BorderPane.alignment="CENTER_LEFT">
             <BorderPane.margin>
-               <Insets bottom="10.0" left="15.0" right="15.0"/>
+               <Insets bottom="10" left="16" right="16"/>
             </BorderPane.margin>
 
             <Text fx:id="textMessage" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-shape" text=" "/>

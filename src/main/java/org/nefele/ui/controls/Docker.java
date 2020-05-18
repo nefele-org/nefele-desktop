@@ -119,12 +119,14 @@ public class Docker extends VBox implements Initializable, Themeable {
 
             if (o != null) {
                 o.selectedProperty().setValue(false);
+                o.getItem().getReference().setVisible(false);
                 getContentPane().getChildren().remove(o.getItem().getReference());
             }
 
 
             n.selectedProperty().setValue(true);
             n.getItem().getReference().setOpacity(0);
+            n.getItem().getReference().setVisible(true);
 
             getContentPane().getChildren().add(n.getItem().getReference());
 
@@ -140,7 +142,17 @@ public class Docker extends VBox implements Initializable, Themeable {
         });
 
 
-        Platform.runLater(() -> setSelectedButton((DockerButton) getChildren().get(2)));
+
+
+
+        Platform.runLater(() -> {
+
+            if(getChildren().isEmpty())
+                Application.panic(getClass(), "Docker can not be empty!");
+
+            setSelectedButton((DockerButton) getChildren().get(2));
+
+        });
 
         Application.getInstance().getViews().add(this);
     }

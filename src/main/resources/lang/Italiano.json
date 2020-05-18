@@ -21,7 +21,8 @@
     "SETTINGS_ADVANCED" : "Avanzate",
     "SETTINGS_SYSTEM_INFO" : "Informazioni",
     "SETTINGS_ADVANCED_BUTTON_APPLY" : "Applica",
-    "SETTINGS_ADVANCED_BUTTON" : "Impostazioni Avanzate",
+    "SETTINGS_ADVANCED_BUTTON_SHOW" : "Mostra Impostazioni Avanzate",
+    "SETTINGS_ADVANCED_BUTTON_HIDE" : "Nascondi Impostazioni Avanzate",
     "SETTINGS_DIALOG_DESCRIPTION" : "Vuoi veramente applicare le modifiche? Questa azione sarà irreversibile, i cambiamenti verranno applicati al prossimo riavvio.",
     "DIALOG_CONTINUE" : "Continua",
     "DIALOG_OK" : "Ok",
@@ -45,7 +46,7 @@
     "ARCHIVE_HINT_FORWARD" : "Avanti",
     "ARCHIVE_HINT_BACK" : "Indietro",
     "ARCHIVE_HINT_HOME" : "Home",
-    "ARCHIVE_HINT_ADDFILE" : "Crea un file",
+    "ARCHIVE_HINT_UPFILE" : "Carica un file",
     "ARCHIVE_HINT_ADDFOLDER" : "Crea una cartella",
     "ARCHIVE_HINT_UPFOLDER" : "Carica una cartella",
     "TRASH_HINT_EMPTY" : "Svuota cestino",
@@ -79,5 +80,12 @@
     "HOME_DIALOG_DESCRIPTION" : "Sei sicuro di voler uscire da Nefele?",
     "SYSTEM_TRAY_ERROR" : "L'icona delle notifiche non è supportata dal sistema.",
     "SYSTEM_TRAY_SHOW" : "Apri",
-    "SYSTEM_TRAY_EXIT" : "Esci"
+    "SYSTEM_TRAY_EXIT" : "Esci",
+    "INPUTDIALOG_TITLE" : "Inserisci il nome della cartella",
+    "ARCHIVE_DIALOG_FOLDER_EMPTY" : "Il nome della cartella non può essere vuoto",
+    "ARCHIVE_DIALOG_FOLDER_INVALID_1" : "Il nome della cartella non è valido",
+    "ARCHIVE_DIALOG_FILE_NOTSELECTED" : "Il file non è stato selezionato",
+    "ARCHIVE_DIALOG_FILE_INVALID" : "Il file deve essere un file",
+    "ARCHIVE_DIALOG_FOLDER_NOTSELECTED" : "La cartella non è stata selezionata",
+    "ARCHIVE_DIALOG_FOLDER_INVALID_2" : "La cartella deve essere una cartella"
 }

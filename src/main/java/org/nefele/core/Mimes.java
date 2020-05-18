@@ -26,69 +26,34 @@ package org.nefele.core;
 
 import org.nefele.Application;
 
-import java.sql.SQLException;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
-
 public final class Mimes {
 
-    public static Optional<Mime> getByExtension(String extension) {
 
-        AtomicReference<Optional<Mime>> result = new AtomicReference<>(Optional.empty());
+    public static Mime getByExtension(String filename) {
 
-        try {
-
-            Application.getInstance().getDatabase().query(
-                    "SELECT * FROM mime WHERE extension = ?",
-                    s -> s.setString(1, extension),
-                    r -> {
-
-                        result.set(Optional.of(new Mime(
-                                r.getString(1),
-                                r.getString(2),
-                                r.getString(3),
-                                r.getString(4)
-                        )));
-
-                    }
-            );
-
-        } catch (SQLException e) {
-            Application.log(e.getClass(), e.getLocalizedMessage());
-        }
+        if(filename.contains("."))
+            filename = filename.substring(filename.lastIndexOf("."));
+        else
+            filename = "*";
 
 
-        return result.get();
+        final String extension = filename;
+
+        return Application.getInstance().getMimes()
+                .stream()
+                .filter(i -> i.getExtension().equals(extension))
+                .findFirst()
+                    .orElse(Mime.UNKNOWN);
 
     }
 
-    public static Optional<Mime> getByType(String type) {
+    public static Mime getByType(String type) {
 
-        AtomicReference<Optional<Mime>> result = new AtomicReference<>();
-
-        try {
-
-            Application.getInstance().getDatabase().query(
-                    "SELECT * FROM mime WHERE type = ?",
-                    s -> s.setString(1, type),
-                    r -> {
-
-                        result.set(Optional.of(new Mime(
-                                r.getString(1),
-                                r.getString(2),
-                                r.getString(3),
-                                r.getString(4)
-                        )));
-
-                    }
-            );
-
-        } catch (SQLException e) {
-            Application.log(e.getClass(), e.getLocalizedMessage());
-        }
-
-
-        return result.get();
+        return Application.getInstance().getMimes()
+                .stream()
+                .filter(i -> i.getType().equals(type))
+                .findFirst()
+                .orElse(Mime.UNKNOWN);
 
     }
 

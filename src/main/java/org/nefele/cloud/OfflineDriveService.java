@@ -24,72 +24,92 @@
 
 package org.nefele.cloud;
 
+import javafx.scene.Parent;
 import org.nefele.Application;
+import org.nefele.fs.Chunk;
+import org.nefele.fs.MergeFileSystem;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileAttribute;
 
-public class OfflineDriveService implements CloudService {
+public class OfflineDriveService extends Drive {
 
-    private long currentSpace;
+    public final static String SERVICE_ID = "offline-drive-service";
+
+    private final Path offlinePath;
 
 
-    OfflineDriveService() {
-        currentSpace = 0;
+    public OfflineDriveService(String id, String service) {
+        super(id, service);
+
+        this.offlinePath = Paths.get("offline-cloud-service", id);
+
     }
 
-
     @Override
-    public String getServiceName() {
-        return "offline-drive-service";
-    }
-
-    @Override
-    public InputStream readChunk(String id) {
-
-        InputStream inputStream = null;
+    OutputStream writeChunk(Chunk chunk) {
 
         try {
-            inputStream = new FileInputStream(new File(String.valueOf(Paths.get("offline-drive", id))));
+            return new FileOutputStream(new File(offlinePath.resolve(Paths.get(chunk.getId())).toString()));
         } catch (FileNotFoundException e) {
-            Application.log(e.getClass(), e.getMessage());
+            Application.panic(getClass(), e);
         }
 
-        return inputStream;
+        throw new IllegalStateException();
 
     }
 
     @Override
-    public OutputStream writeChunk(String id) {
+    InputStream readChunk(Chunk chunk) {
 
-        OutputStream outputStream = null;
+        try {
+            return new FileInputStream(new File(offlinePath.resolve(Paths.get(chunk.getId())).toString()));
+        } catch (FileNotFoundException e) {
+            Application.panic(getClass(), e);
+        }
+
+        throw new IllegalStateException();
+
+    }
+
+    @Override
+    Drive initialize() {
+
+        Application.log(getClass(), "Initializing %s", SERVICE_ID);
 
 
-        if(!Files.exists(Paths.get("offline-drive", id))) {
+        final Path path = offlinePath;
+
+        if(Files.notExists(path)) {
+
             try {
-                Files.createFile(Paths.get("offline-drive", id));
+                Files.createDirectory(path);
             } catch (IOException e) {
-                Application.log(e.getClass(), e.getLocalizedMessage());
+                Application.panic(getClass(), e);
             }
+
         }
+
 
         try {
-            outputStream = new FileOutputStream(new File(String.valueOf(Paths.get("offline-drive", id))));
-        } catch (FileNotFoundException e) {
-            Application.log(e.getClass(), e.getLocalizedMessage());
+
+            setChunks(Files.walk(path).count());
+
+        } catch (IOException e) {
+            Application.panic(getClass(), e);
         }
 
-        return outputStream;
 
+
+        return this;
     }
 
-
-
     @Override
-    public long getFreeSpace() {
-        return Long.MAX_VALUE;
+    Drive exit() {
+        return this;
     }
 
 }

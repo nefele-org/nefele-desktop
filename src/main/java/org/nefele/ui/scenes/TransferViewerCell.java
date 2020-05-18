@@ -115,11 +115,8 @@ public class TransferViewerCell extends StackPane implements Initializable, Them
 
         labelFileName.setText(getTransferInfo().getName());
 
-        if(getTransferInfo().getSpeed() / 1024 < 1024)
-            labelSpeed.setText(String.format("%d kB/s", getTransferInfo().getSpeed() / 1024));
-        else
-            labelSpeed.setText(String.format("%d Mb/s", getTransferInfo().getSpeed() / 1024 / 1024));
-
+        labelSpeed.setText( getTransferInfo().getSpeed() / 1024 < 1024 ? String.format("%d kB/s", getTransferInfo().getSpeed() / 1024)
+                                                                       : String.format("%d Mb/s", getTransferInfo().getSpeed() / 1024 / 1024));
 
         if(getTransferInfo().getRemainingTime() == -1)
             labelTime.setText("∞");

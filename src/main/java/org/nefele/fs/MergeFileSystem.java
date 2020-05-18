@@ -24,6 +24,7 @@
 
 package org.nefele.fs;
 
+import org.nefele.Application;
 import org.nefele.utils.Tree;
 
 import java.awt.*;
@@ -33,7 +34,9 @@ import java.net.URI;
 import java.nio.file.*;
 import java.nio.file.attribute.UserPrincipalLookupService;
 import java.nio.file.spi.FileSystemProvider;
+import java.sql.SQLException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.function.BinaryOperator;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -47,15 +50,49 @@ public class MergeFileSystem extends FileSystem {
     public final static Character PATH_SEPARATOR_CHAR = '/';
 
     private final FileSystemProvider provider;
-    private final FileStore fileStore;
+    private final MergeFileStore fileStore;
     private final MergeFileTree fileTree;
 
 
     public MergeFileSystem(FileSystemProvider provider) {
+
         this.provider = provider;
         this.fileStore = new MergeFileStore(this);
         this.fileTree = new MergeFileTree();
+
+        Application.getInstance().runWorker(
+                new Thread(this::synchronizeWorker, "MergeFileSystem::SynchronizeWorker()"), 3,
+                Application.getInstance().getConfig().getInteger("core.mfs.sync").orElse(5), TimeUnit.SECONDS);
+
+        Application.getInstance().addOnExitHandler(this::synchronizeWorker);
+
     }
+
+
+    private synchronized void synchronizeWorker() {
+        updateInode(getFileTree().getTree());
+    }
+
+
+    private void updateInode(Tree<Inode> tree) {
+
+        Inode inode = tree.getData();
+
+        if(inode.isDirty()) {
+
+            try {
+                Inode.put(inode);
+            } catch (IOException e) {
+                Application.panic(getClass(), e);
+            }
+
+            inode.setDirty(false);
+        }
+
+        tree.getChildren().forEach(this::updateInode);
+
+    }
+
 
     @Override
     public FileSystemProvider provider() {
@@ -100,16 +137,10 @@ public class MergeFileSystem extends FileSystem {
     @Override
     public Path getPath(String s, String... strings) {
 
-        if(!s.equals(MergeFileSystem.PATH_SEPARATOR))
+        if(!s.startsWith(MergeFileSystem.PATH_SEPARATOR))
             throw new IllegalArgumentException("Path must be absolute!");
 
-
-        String path = new StringBuilder()
-                .append(s)
-                .append(String.join(MergeFileSystem.PATH_SEPARATOR, strings))
-                .toString();
-
-        return new MergePath(this, fileTree.resolve(strings), path, path);
+        return new MergePath(this, fileTree.resolve(s.split(MergeFileSystem.PATH_SEPARATOR)), s, s);
 
     }
 
@@ -140,11 +171,12 @@ public class MergeFileSystem extends FileSystem {
         throw new UnsupportedOperationException();
     }
 
-    public FileStore getFileStore() {
+    public MergeFileStore getFileStore() {
         return fileStore;
     }
 
     public MergeFileTree getFileTree() {
         return fileTree;
     }
+
 }

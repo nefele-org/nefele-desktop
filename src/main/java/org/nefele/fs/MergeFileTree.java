@@ -27,6 +27,8 @@ package org.nefele.fs;
 import org.nefele.Application;
 import org.nefele.utils.Tree;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,19 +42,19 @@ public class MergeFileTree {
     public MergeFileTree() {
 
         tree = new Tree<>(
-                new Inode(MergeFileSystem.PATH_SEPARATOR, "directory", 1L, -1L)
+                new Inode(MergeFileSystem.PATH_SEPARATOR, "directory", "", "")
         );
 
         fetchNode(tree.getData().getId(), tree);
     }
 
 
-    private void fetchNode(Long parent, Tree<Inode> inodeTree) {
+    private void fetchNode(String parent, Tree<Inode> inodeTree) {
 
 
         try {
             Application.getInstance().getDatabase().query("SELECT * FROM inodes WHERE parent = ?",
-                    s -> s.setLong(1, parent),
+                    s -> s.setString(1, parent),
                     r -> {
                             inodeTree.add(new Inode(
                                     r.getString(1),
@@ -63,11 +65,12 @@ public class MergeFileTree {
                                     r.getLong(6),
                                     r.getBoolean(7),
                                     r.getLong(8),
-                                    r.getLong(9),
-                                    r.getLong(10)
+                                    r.getString(9),
+                                    r.getString(10)
                             ));
 
                     });
+
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -85,20 +88,42 @@ public class MergeFileTree {
         return tree;
     }
 
+
+
     public Tree<Inode> resolve(String[] paths) {
 
-        Tree<Inode> i = getTree();
+        Tree<Inode> tree = getTree();
 
-        for (String path : paths) {
+        for(int i = 0; i < paths.length; i++) {
 
-            requireNonNull(i);
+            final String path = paths[i];
 
-            if((i = i.findIf(j -> j.getData().getName().equals(path))) == null)
-                Application.panic(getClass(), "FileTree is broken or path is invalid: %s", String.join(MergeFileSystem.PATH_SEPARATOR, paths));
+            if(path.isEmpty())
+                continue;
+
+            Tree<Inode> child = requireNonNull(tree).findIf (
+                    j -> j.getData().getName().equals(path)
+            );
+
+            if(child == null) {
+
+                if(i != paths.length - 1)
+                    throw new IllegalStateException();
+
+                try {
+                    child = new Tree<>(tree, Inode.alloc(path, tree.getData().getId()));
+                } catch (IOException e) {
+                    throw new IllegalArgumentException();
+                }
+
+            }
+
+            tree = child;
 
         }
 
-        return requireNonNull(i);
+
+        return requireNonNull(tree);
 
     }
 
@@ -106,11 +131,11 @@ public class MergeFileTree {
 
         final ArrayList<String> names = new ArrayList<>();
 
-        for(; entry != null; entry = entry.getParent())
+        for(; entry != tree; entry = entry.getParent())
             names.add(entry.getData().getName());
 
         Collections.reverse(names);
 
-        return String.join(MergeFileSystem.PATH_SEPARATOR, names);
+        return MergeFileSystem.PATH_SEPARATOR + String.join(MergeFileSystem.PATH_SEPARATOR, names);
     }
 }

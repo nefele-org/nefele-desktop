@@ -25,6 +25,10 @@
 package org.nefele.ui.scenes;
 
 import com.jfoenix.controls.*;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
@@ -42,6 +46,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.util.Duration;
 import org.nefele.Application;
 import org.nefele.Resources;
 import org.nefele.ui.Theme;
@@ -107,6 +112,13 @@ public class Settings extends StackPane implements Initializable, Themeable {
                 boxAdvancedSettings.setVisible(true);
 
             }
+
+        });
+
+        boxAdvancedSettings.visibleProperty().addListener((v, o, n) ->{
+
+            buttonAdvancedSettings.setUserData( !n ? "SETTINGS_ADVANCED_BUTTON_SHOW" : "SETTINGS_ADVANCED_BUTTON_HIDE");
+            Application.getInstance().getViews().update();
 
         });
 
@@ -329,8 +341,8 @@ public class Settings extends StackPane implements Initializable, Themeable {
                 .forEach(k -> {
 
                     Object v = cache.get(k);
-
                     getAdvancedRecords().add(new SettingsAdvancedRecord(k, v.toString()));
+
                 });
 
 

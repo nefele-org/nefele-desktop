@@ -43,7 +43,12 @@ import org.nefele.ui.controls.NefelePane;
 import org.nefele.ui.dialog.BaseDialog;
 import org.nefele.ui.dialog.Dialogs;
 
+import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
+import java.nio.file.FileStore;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 
@@ -145,6 +150,22 @@ public class Stats extends StackPane implements Initializable, Themeable {
 
     }
 
+    private synchronized void updateStorage() {
+
+        FileSystem fileSystem = FileSystems.getFileSystem(URI.create("cloud:///"));
+        FileStore fileStore = fileSystem.getFileStores().iterator().next();
+
+        try {
+            spinnerStorage.setProgress((double) fileStore.getUsableSpace() / (double) fileStore.getTotalSpace());
+
+            labelStoragePercentage.setText(String.format("%d%%", (int) (spinnerStorage.getProgress() * 100.0)));
+            labelStorageOccupied.setText(String.format("%d GB", (int) (fileStore.getTotalSpace() - fileStore.getUsableSpace()) / 1024 / 1024 / 1024));
+            labelStorageFree.setText(String.format("%d GB", (int) (fileStore.getUsableSpace()) / 1024 / 1024 / 1024));
+
+        } catch (IOException ignored) { }
+
+    }
+
     private void updateWorker() {
 
         if(isVisible()) {
@@ -152,13 +173,10 @@ public class Stats extends StackPane implements Initializable, Themeable {
             Platform.runLater(() -> {
 
                 updateSystemMemory();
+                updateStorage();
 
-                spinnerStorage.setProgress(1);
+
                 spinnerTemporaryFiles.setProgress(0);
-
-                labelStoragePercentage.setText(String.format("%d%%", 0));
-                labelStorageOccupied.setText(String.format("%d GB", 0));
-                labelStorageFree.setText(String.format("%d GB", 0));
 
                 labelTemporaryFilesPercentage.setText(String.format("%d%%", 0));
                 labelTemporaryFilesOccupied.setText(String.format("%d GB", 0));

@@ -48,10 +48,6 @@
     -fx-font-size: 18px;
 }
 
-.stats-card .stats-card-box .stats-card-box-content .jfx-spinner .percentage {
-    -fx-opacity: 0;
-}
-
 .stats-card .stats-card-box .stats-card-box-content .stats-spinner-button {
     -fx-pref-width: 48;
     -fx-pref-height: 48;

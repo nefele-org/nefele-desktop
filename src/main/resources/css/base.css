@@ -31,7 +31,6 @@
 @import "/css/base-scrollbar.css";
 @import "/css/base-combo-box.css";
 @import "/css/base-check-box.css";
-@import "/css/base-tree-table-view.css";
 
 
 * {
@@ -42,7 +41,7 @@
     -jfx-disable-visual-focus: false;
 
     -fx-font-smoothing-type: lcd;
-    -fx-focus-traversable: false;
+    -fx-focus-traversable: false !important;
 
     /*-fx-border-color: red;*/
 

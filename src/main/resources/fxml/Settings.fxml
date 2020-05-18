@@ -48,7 +48,7 @@
             <Separator />
 
             <VBox alignment="CENTER" >
-                <JFXButton fx:id="buttonAdvancedSettings" userData="SETTINGS_ADVANCED_BUTTON" />
+                <JFXButton fx:id="buttonAdvancedSettings"  />
             </VBox>
 
             <BorderPane fx:id="boxAdvancedSettings">

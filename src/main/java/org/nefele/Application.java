@@ -29,28 +29,28 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
-import org.apache.http.impl.cookie.AbstractCookieAttributeHandler;
 import org.nefele.cloud.Drive;
+import org.nefele.cloud.Drives;
+import org.nefele.core.Mime;
+import org.nefele.core.Mimes;
 import org.nefele.core.Status;
-import org.nefele.fs.MergeFileSystem;
-import org.nefele.fs.MergeFileSystemProvider;
-import org.nefele.fs.MergeFileTree;
+import org.nefele.fs.Cache;
 import org.nefele.ui.Theme;
 import org.nefele.ui.Views;
 import org.nefele.ui.controls.NefelePane;
 import org.nefele.ui.dialog.Dialogs;
 import org.nefele.ui.scenes.Home;
+import org.nefele.ui.scenes.SplashScreen;
 
-import java.awt.*;
-import java.net.URI;
-import java.nio.file.*;
+
 import java.sql.SQLException;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -64,29 +64,36 @@ public final class Application extends javafx.application.Application implements
 
     public static Application instance = null;
 
-
     private final Database database;
     private final Config config;
     private final Locale locale;
     private final Status status;
     private final AtomicBoolean running;
+    private final Cache cache;
     private final ArrayList<Drive> drives;
+    private final ArrayList<Mime> mimes;
     private final ExecutorService executorService;
     private final ScheduledExecutorService scheduledExecutorService;
     private final Views views;
-
     private final ObjectProperty<Theme> theme;
+
+    private final static ArrayList<Runnable> onInitHandlers = new ArrayList<>();
+    private final static ArrayList<Runnable> onExitHandlers = new ArrayList<>();
+
 
 
     public Application() {
 
-        running = new AtomicBoolean(true);
+        instance = this;
 
+        running = new AtomicBoolean(true);
         database = new Database();
         config = new Config(database);
         locale = new Locale();
         status = new Status();
+        cache = new Cache();
         drives = new ArrayList<>();
+        mimes = new ArrayList<>();
         views = new Views();
         theme = new SimpleObjectProperty<>(null);
         executorService = Executors.newCachedThreadPool();
@@ -98,8 +105,6 @@ public final class Application extends javafx.application.Application implements
 
     @Override
     public void start(Stage stage) throws Exception {
-
-        instance = this;
 
         Application.log(Application.class, "Starting application");
         Application.log(Application.class, "Java: %s %s", System.getProperty("java.vendor"), System.getProperty("java.version"));
@@ -116,54 +121,114 @@ public final class Application extends javafx.application.Application implements
         Resources.getFont(this, "/font/segoeuii.ttf");
 
 
-        setTheme(new Theme(config.getString("app.ui.theme").orElse(Theme.DEFAULT_THEME)));
-        locale.setLanguage(config.getString("app.ui.locale").orElse(Locale.DEFAULT_LOCALE));
+        Application.addOnInitHandler(() ->
+                setTheme(new Theme(config.getString("app.ui.theme").orElse(Theme.DEFAULT_THEME))));
+
+        Application.addOnInitHandler(() ->
+                locale.setLanguage(config.getString("app.ui.locale").orElse(Locale.DEFAULT_LOCALE)));
 
 
-        try {
+        Application.addOnInitHandler(() -> {
 
-            final ArrayList<Integer> ids = new ArrayList<>();
+            try {
 
-            database.query("SELECT id FROM drives",
-                    null, r -> ids.add(r.getInt(1)));
+                final ArrayList<String> ids = new ArrayList<>();
 
-            for(int id : ids)
-                drives.add(Drive.fromId(id));
+                database.query("SELECT id FROM drives",
+                        null, r -> ids.add(r.getString(1)));
+
+                for(String id : ids)
+                    drives.add(Drives.fromId(id));
 
 
-        } catch (SQLException e) {
-            Application.panic(getClass(), e);
-        }
+            } catch (SQLException e) {
+                Application.panic(Drive.class, e);
+            }
+
+        });
+
+
+        Application.addOnInitHandler(() -> {
+
+            try {
+
+                Application.getInstance().getDatabase().query (
+                        "SELECT * FROM mime",
+                        null,
+                        r -> {
+
+                            getMimes().add(
+                                    new Mime(
+                                            r.getString(1),
+                                            r.getString(2),
+                                            r.getString(3),
+                                            r.getString(4))
+                            );
+
+                        }
+                );
+
+            } catch (SQLException e) {
+                Application.panic(Mimes.class, e);
+            }
+
+            Application.log(Mimes.class, "Loaded %d mimes", getMimes().size());
+
+
+        });
 
         //transferQueue = new TransferQueue(config.getInteger("core.transfers.parallel").orElse(4));
 
-        MergeFileSystemProvider provider = new MergeFileSystemProvider();
-
-        FileSystem fileSystem = FileSystems.getFileSystem(URI.create("cloud:///"));
-
-        Path path = fileSystem.getPath("/");
-
-        Files.list(path).filter(Files::isDirectory).forEach(System.out::println);
 
 
-        System.out.println("path.toString() = " + path.toString());
-        System.out.println("path.isAbsolute() = " + path.isAbsolute());
-        System.out.println("path.getFileName().toString() = " + path.getFileName().toString());
-        System.out.println("path.toUri() = " + path.toUri());
-        System.out.println("path.getRoot().toString() = " + path.getRoot().toString());
 
 
+
+        Application.log(getClass(), "Initialize interface");
         Platform.setImplicitExit(false);
 
-        stage.setScene(new Scene(new NefelePane(new Home())));
+
+        stage.setScene(new Scene(new SplashScreen()));
         stage.getIcons().add(new Image(Resources.getURL(this, "/images/trayicon.png").toExternalForm()));
-        stage.setMinWidth(600);
-        stage.setMinHeight(400);
-        stage.setWidth(1280);
-        stage.setWidth(720);
+        stage.setWidth(400);
+        stage.setHeight(250);
         stage.setTitle("Nefele");
         stage.initStyle(StageStyle.UNDECORATED);
+        stage.centerOnScreen();
+        stage.setAlwaysOnTop(true);
         stage.show();
+
+
+        Application.getInstance().runThread(new Thread(() -> {
+
+            Application.log(getClass(), "Initialize services");
+
+
+            double max = onInitHandlers.size();
+            double cur = 0.0;
+
+            for(Runnable i : onInitHandlers) {
+
+                cur += 1.0;
+                getStatus().setLoadingProgress(cur / max);
+
+                i.run();
+
+            }
+
+
+            Platform.runLater(() -> {
+
+                stage.setScene(new Scene(new NefelePane(new Home())));
+                stage.setAlwaysOnTop(false);
+                stage.setMinWidth(600);
+                stage.setMinHeight(400);
+                stage.setWidth(800);
+                stage.setHeight(480);
+
+            });
+
+        }, "Application::Loading"));
 
 
     }
@@ -171,7 +236,8 @@ public final class Application extends javafx.application.Application implements
     @Override
     public void stop() throws Exception {
 
-        Application.log(Application.class, "Preparing to exit...");
+        Application.log(Application.class, "Preparing to exit in a friendly way...");
+        Application.onExitHandlers.forEach(Runnable::run);
 
         running.set(false);
 
@@ -197,6 +263,7 @@ public final class Application extends javafx.application.Application implements
 
         super.stop();
         System.exit(0);
+
     }
 
     @Override
@@ -233,6 +300,14 @@ public final class Application extends javafx.application.Application implements
 
     }
 
+    public static void addOnInitHandler(Runnable e) {
+        onInitHandlers.add(e);
+    }
+
+    public static void addOnExitHandler(Runnable e) {
+        onExitHandlers.add(e);
+    }
+
 
     public boolean isRunning() {
         return running.get();
@@ -258,12 +333,20 @@ public final class Application extends javafx.application.Application implements
         return status;
     }
 
-//    public TransferQueue getTransferQueue() {
+    public Cache getCache() {
+        return cache;
+    }
+
+    //    public TransferQueue getTransferQueue() {
 //        return transferQueue;
 //    }
 
     public ArrayList<Drive> getDrives() {
         return drives;
+    }
+
+    public ArrayList<Mime> getMimes() {
+        return mimes;
     }
 
     public Theme getTheme() {
@@ -328,7 +411,7 @@ public final class Application extends javafx.application.Application implements
     }
 
     public static void log(Class<?> className, String message, Object... args) {
-        System.err.println(String.format("[%s] ", className.getName()) + String.format(message, args));
+        System.err.println(String.format("[%s] (%s) %s", Date.from(Instant.now()).toString(), className.getName(), String.format(message, args)));
     }
 
 

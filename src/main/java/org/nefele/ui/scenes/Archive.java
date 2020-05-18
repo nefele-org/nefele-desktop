@@ -28,25 +28,34 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.Tooltip;
 import javafx.scene.layout.StackPane;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
+import javafx.util.Pair;
 import org.nefele.Application;
 import org.nefele.Resources;
 import org.nefele.core.Mime;
 import org.nefele.core.Mimes;
+import org.nefele.fs.MergePath;
 import org.nefele.ui.Themeable;
 import org.nefele.ui.controls.FileBrowser;
 import org.nefele.ui.controls.FileBrowserItem;
+import org.nefele.ui.controls.FileBrowserItemFactory;
+import org.nefele.ui.dialog.BaseDialog;
+import org.nefele.ui.dialog.Dialogs;
 
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class Archive extends StackPane implements Initializable, Themeable {
@@ -55,7 +64,7 @@ public class Archive extends StackPane implements Initializable, Themeable {
     @FXML private JFXButton buttonForward;
     @FXML private JFXButton buttonBack;
     @FXML private JFXButton buttonHome;
-    @FXML private JFXButton buttonAddFile;
+    @FXML private JFXButton buttonUpFile;
     @FXML private JFXButton buttonAddFolder;
     @FXML private JFXButton buttonUpFolder;
     @FXML private FileBrowser fileBrowser;
@@ -68,6 +77,7 @@ public class Archive extends StackPane implements Initializable, Themeable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        textFieldPath.setFocusTraversable(false);
 
         buttonForward.setOnMouseClicked(e -> {
             fileBrowser.browseHistory(1);
@@ -79,74 +89,158 @@ public class Archive extends StackPane implements Initializable, Themeable {
 
 
         buttonHome.setOnMouseClicked(e -> {
-            fileBrowser.setCurrentPath("/");
+            fileBrowser.setCurrentPath(Path.of(URI.create("cloud:///")));
         });
 
 
-        buttonAddFile.setOnMouseClicked(e -> {
-            /* TODO ... */
-            //fileBrowser.getItems().add(new FileBrowserItem());
+        buttonUpFile.setOnMouseClicked(e -> {
+
+            FileChooser fileChooser = new FileChooser();
+            File file = fileChooser.showOpenDialog(getScene().getWindow());
+
+
+            if(file == null)
+                Dialogs.showErrorBox("ARCHIVE_DIALOG_FILE_NOTSELECTED");
+
+            else if(!file.isFile())
+                Dialogs.showErrorBox("ARCHIVE_DIALOG_FILE_INVALID");
+
+            else {
+
+                try {
+
+                    Path path = MergePath.get("cloud", fileBrowser.getCurrentPath().toString(), file.getName());
+
+                    Files.createFile(path);
+                    Files.write(path, Files.readAllBytes(file.toPath()));
+
+                    fileBrowser.update();
+
+                } catch (IOException io) {
+                    Dialogs.showErrorBox(io.getLocalizedMessage());
+                }
+
+            }
+
         });
 
 
-        buttonAddFolder.setOnMouseClicked( e -> {
-            /* TODO ... */
-            // fileBrowser.getItems().add(new FileBrowserItem());
+        buttonAddFolder.setOnMouseClicked(e -> {
+
+            Pair<String, Integer> p = Dialogs.showInputBox("INPUTDIALOG_TITLE", BaseDialog.DIALOG_OK);
+
+            if(p.getValue() == BaseDialog.DIALOG_OK) {
+
+                if(p.getKey().trim().isEmpty()) {
+                    Dialogs.showErrorBox("ARCHIVE_DIALOG_FOLDER_EMPTY");
+
+                }else if(new File(p.getKey().trim()).isFile()) {
+                    Dialogs.showErrorBox("ARCHIVE_DIALOG_FOLDER_INVALID_1");
+
+                } else {
+
+                    try {
+
+                        Files.createDirectory(
+                                MergePath.get("cloud", fileBrowser.getCurrentPath().toString(), p.getKey()));
+
+                        fileBrowser.update();
+
+                    } catch (IOException io) {
+                        Dialogs.showErrorBox(io.getLocalizedMessage());
+                    }
+
+                }
+
+            }
+
         });
+
+
 
 
         buttonUpFolder.setOnMouseClicked(e -> {
 
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.showOpenDialog((Stage) getScene().getWindow());
+            DirectoryChooser fileChooser = new DirectoryChooser();
+            File file = fileChooser.showDialog(getScene().getWindow());
 
 
-    });
+            if(file == null)
+                Dialogs.showErrorBox("ARCHIVE_DIALOG_FOLDER_NOTSELECTED");
 
-        textFieldPath.textProperty().bind(fileBrowser.currentPathProperty());
-        textFieldPath.setFocusTraversable(false);
+            else if(!file.isDirectory())
+                Dialogs.showErrorBox("ARCHIVE_DIALOG_FOLDER_INVALID_2");
 
-        fileBrowser.setItemFactory(path -> {
+            else {
 
-            Application.log(fileBrowser.getClass(), "List %s", path);
+                try {
 
-            ArrayList<FileBrowserItem> items = new ArrayList<>();
-            ArrayList<MenuItem> menuItems = new ArrayList<>();
+                    Files.createDirectory(
+                            MergePath.get("cloud", fileBrowser.getCurrentPath().toString(), file.getName()));
 
-            menuItems.add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_OPEN")));
-            menuItems.add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_DOWNLOAD")));
-            menuItems.add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_RENAME")));
-            menuItems.add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_DELETE")));
+                    fileBrowser.update();
 
+                } catch (IOException io) {
+                    Dialogs.showErrorBox(io.getLocalizedMessage());
+                }
 
-            try {
-
-                Files.list(Paths.get(path)).filter(Files::isDirectory).forEach(i ->
-                        items.add(new FileBrowserItem(Mime.FOLDER, i.getFileName().toString())));
-
-                Files.list(Paths.get(path)).filter(p -> !Files.isDirectory(p)).forEach(i -> {
-
-                    Mime mime = Mime.UNKNOWN;
-                    String filename = i.getFileName().toString();
-
-                    if(filename.contains("."))
-                        mime = Mimes.getByExtension(filename.substring(filename.lastIndexOf(".")))
-                                .orElse(Mimes.getByExtension("*")
-                                .orElse(Mime.UNKNOWN));
-
-                    items.add(new FileBrowserItem(mime, filename));
-
-                });
-
-            } catch (IOException ignored) { }
-
-            items.forEach(i -> i.setMenuItems(menuItems));
-            return items;
+            }
 
         });
 
+
+        fileBrowser.currentPathProperty().addListener(
+                (v, o, n) -> textFieldPath.setText(n.toUri().toString()));
+
+
+        fileBrowser.setItemFactory(new FileBrowserItemFactory() {
+
+            private final FileSystem fileSystem = FileSystems.getFileSystem(URI.create("cloud:///"));
+
+            private final ArrayList<MenuItem> menuItems = new ArrayList<>() {{
+                add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_OPEN")));
+                add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_DOWNLOAD")));
+                add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_RENAME")));
+                add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_DELETE")));
+            }};
+
+
+            @Override
+            public List<FileBrowserItem> call(Path path) {
+
+                ArrayList<FileBrowserItem> items = new ArrayList<>();
+
+                try {
+
+                    Files.list(path).filter(Files::isDirectory).forEach(i ->
+                            items.add(new FileBrowserItem(Mime.FOLDER, i.getFileName().toString())));
+
+                    Files.list(path).filter(p -> !Files.isDirectory(p)).forEach(i -> {
+
+                        String filename = i.getFileName().toString();
+                        Mime mime = Mimes.getByExtension(filename);
+
+                        items.add(new FileBrowserItem(mime, filename));
+
+                    });
+
+                } catch (IOException ignored) { }
+
+
+                items.forEach(i -> i.setMenuItems(menuItems));
+                return items;
+
+            }
+
+        });
+
+
+
+        fileBrowser.setCurrentPath(Path.of(URI.create("cloud:///")));
         fileBrowser.update();
+
         Application.getInstance().getViews().add(this);
+
     }
 
     @Override

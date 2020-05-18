@@ -32,7 +32,6 @@
 
 .text-shape {
     -fx-background-color: transparent;
-    -fx-font-smoothing-type: lcd;
     -fx-fill: -nefele-theme-surface-text;
 }
 

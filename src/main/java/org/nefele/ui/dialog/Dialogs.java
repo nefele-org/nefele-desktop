@@ -24,6 +24,8 @@
 
 package org.nefele.ui.dialog;
 
+import com.jfoenix.controls.JFXButton;
+import javafx.util.Pair;
 import org.nefele.Application;
 
 import java.lang.reflect.InvocationTargetException;
@@ -63,6 +65,18 @@ public final class Dialogs {
     public static int showWarningBox(String title, String message, int... buttons) {
         return showMessageBoxImpl(
                 new WarningDialog(title, message), buttons.length > 0 ? buttons : new int[] { BaseDialog.DIALOG_OK });
+    }
+
+    public static Pair<String, Integer> showInputBox(String title, int... buttons) {
+
+        InputDialog inputDialog = new InputDialog(title);
+
+        for(int i : buttons)
+            inputDialog.getButtons().add(i);
+
+        inputDialog.showAndWait();
+        return inputDialog.getDialogResult();
+
     }
 
 

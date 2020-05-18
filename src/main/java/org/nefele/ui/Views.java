@@ -46,50 +46,79 @@ public final class Views {
     }
 
 
-    private synchronized <T extends Parent> void updateView(T parent, Runnable runnable) {
+    private <T extends Parent> void updateView(T parent, Runnable runnable) {
 
-        parent.setStyle(null);
-        parent.setStyle(Application.getInstance().getTheme().getStyle());
+        if(Platform.isFxApplicationThread()) {
 
+            parent.setStyle(null);
+            parent.setStyle(Application.getInstance().getTheme().getStyle());
 
-        // translate()
-        Platform.runLater(() -> Application.getInstance().getLocale().translate(parent));
+        } else {
 
-        // initializeInterface()
-        Platform.runLater(runnable);
+            Platform.runLater(() -> {
+                parent.setStyle(null);
+                parent.setStyle(Application.getInstance().getTheme().getStyle());
+            });
+
+        }
+
+        Platform.runLater(() -> {
+
+            // translate()
+            Application.getInstance().getLocale().translate(parent);
+
+            // initializeInterface()
+            runnable.run();
+
+        });
 
     }
 
 
 
-    public synchronized void update() {
+    public void update() {
 
-        registeredViews.forEach(i ->
-                updateView(i.getKey(), i.getValue()));
+        Application.getInstance().runThread(new Thread(() -> {
+
+            synchronized (registeredViews) {
+
+                registeredViews.forEach(i ->
+                        updateView(i.getKey(), i.getValue()));
+
+            }
+
+        }, "Views::update()"));
 
     }
 
 
 
-    public synchronized <T extends Parent & Themeable> void add(T themeable) {
+    public <T extends Parent & Themeable> void add(T themeable) {
         add(themeable, themeable::initializeInterface);
     }
 
-    public synchronized <T extends Parent> void add(T parent, Runnable runnable) {
+    public <T extends Parent> void add(T parent, Runnable runnable) {
 
-        if(registeredViews.add(new Pair<>(parent, runnable)))
-            Application.log(getClass(), "Registered View %s", parent.getClass().getName());
+        synchronized (registeredViews) {
+
+            if (registeredViews.add(new Pair<>(parent, runnable)))
+                Application.log(getClass(), "Registered View %s", parent.getClass().getName());
+
+        }
 
         Resources.getCSS(parent, "/css/base.css");
         updateView(parent, runnable);
 
     }
 
-    public synchronized void remove(Parent parent) {
+    public void remove(Parent parent) {
 
-        if(registeredViews.removeIf(i -> i.getKey().equals(parent)))
-            Application.log(getClass(), "Unregistered View %s", parent.getClass().getName());
+        synchronized (registeredViews) {
 
+            if (registeredViews.removeIf(i -> i.getKey().equals(parent)))
+                Application.log(getClass(), "Unregistered View %s", parent.getClass().getName());
+
+        }
     }
 
 }

@@ -34,7 +34,13 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributeView;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileAttributeView;
+import java.nio.file.attribute.FileTime;
 import java.util.Objects;
+
+import static java.util.Objects.requireNonNull;
 
 public class MergePath implements Path {
 
@@ -42,13 +48,94 @@ public class MergePath implements Path {
     private final String path;
     private final String absolutePath;
     private final Tree<Inode> inode;
+    private final BasicFileAttributeView attributeView;
 
     public MergePath(MergeFileSystem fileSystem, Tree<Inode> inode, String absolutePath, String path) {
+
+        if(!requireNonNull(absolutePath).startsWith(MergeFileSystem.PATH_SEPARATOR))
+            throw new IllegalArgumentException(absolutePath);
 
         this.fileSystem = fileSystem;
         this.path = path;
         this.absolutePath = absolutePath;
         this.inode = inode;
+
+        this.attributeView = new BasicFileAttributeView() {
+
+            private final Inode inode = getInode().getData();
+
+            @Override
+            public String name() {
+                return inode.getName();
+            }
+
+            @Override
+            public BasicFileAttributes readAttributes() throws IOException {
+                return new BasicFileAttributes() {
+
+                    @Override
+                    public FileTime lastModifiedTime() {
+                        return FileTime.from(inode.getModifiedTime());
+                    }
+
+                    @Override
+                    public FileTime lastAccessTime() {
+                        return FileTime.from(inode.getAccessedTime());
+                    }
+
+                    @Override
+                    public FileTime creationTime() {
+                        return FileTime.from(inode.getCreatedTime());
+                    }
+
+                    @Override
+                    public boolean isRegularFile() {
+                        return !inode.getMime().equals("directory");
+                    }
+
+                    @Override
+                    public boolean isDirectory() {
+                        return inode.getMime().equals("directory");
+                    }
+
+                    @Override
+                    public boolean isSymbolicLink() {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean isOther() {
+                        return false;
+                    }
+
+                    @Override
+                    public long size() {
+                        return inode.getSize();
+                    }
+
+                    @Override
+                    public Object fileKey() {
+                        return inode;
+                    }
+                };
+            }
+
+            @Override
+            public void setTimes(FileTime mtime, FileTime atime, FileTime ctime) throws IOException {
+
+                if(mtime != null)
+                    inode.setModifiedTime(mtime.toInstant());
+
+                if(atime != null)
+                    inode.setAccessedTime(atime.toInstant());
+
+                if(ctime != null)
+                    inode.setCreatedTime(ctime.toInstant());
+
+                inode.invalidate();
+
+            }
+        };
 
     }
 
@@ -96,6 +183,10 @@ public class MergePath implements Path {
         return inode;
     }
 
+    public BasicFileAttributeView getAttributeView() {
+        return attributeView;
+    }
+
     @Override
     public Path subpath(int i, int i1) {
         throw new UnsupportedOperationException();
@@ -140,7 +231,7 @@ public class MergePath implements Path {
             return new URI(fileSystem.provider().getScheme(), "", absolutePath, null, null);
         } catch (URISyntaxException ignored) { }
 
-        throw new IllegalArgumentException(path);
+        throw new IllegalArgumentException(absolutePath);
 
     }
 
@@ -186,5 +277,21 @@ public class MergePath implements Path {
         MergePath paths = (MergePath) o;
         return getFileSystem().equals(paths.getFileSystem()) &&
                 path.equals(paths.path);
+    }
+
+
+    public static Path get(String scheme, String... strings) {
+
+        String path = String
+                .join(MergeFileSystem.PATH_SEPARATOR, strings)
+                .replace("//", MergeFileSystem.PATH_SEPARATOR)
+                .trim();
+
+        try {
+            return Path.of(new URI(scheme, "", path, null));
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException();
+        }
+
     }
 }

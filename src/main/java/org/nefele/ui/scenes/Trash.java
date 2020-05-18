@@ -40,8 +40,10 @@ import org.nefele.ui.controls.FileBrowser;
 import org.nefele.ui.controls.FileBrowserItem;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -74,7 +76,7 @@ public class Trash extends StackPane implements Initializable, Themeable {
 
 
         buttonHome.setOnMouseClicked(e -> {
-            fileBrowser.setCurrentPath("/");
+            fileBrowser.setCurrentPath(Path.of(URI.create("cloud:///")));
         });
 
         buttonEmpty.setOnMouseClicked(e -> {
@@ -84,7 +86,7 @@ public class Trash extends StackPane implements Initializable, Themeable {
 
 
 
-        textFieldPath.textProperty().bind(fileBrowser.currentPathProperty());
+        textFieldPath.textProperty().bind(fileBrowser.currentPathProperty().asString());
         textFieldPath.setFocusTraversable(false);
 
 
@@ -99,18 +101,13 @@ public class Trash extends StackPane implements Initializable, Themeable {
 
             try {
 
-                Files.list(Paths.get(path)).filter(Files::isDirectory).forEach(i ->
+                Files.list(path).filter(Files::isDirectory).forEach(i ->
                         items.add(new FileBrowserItem(Mime.FOLDER, i.getFileName().toString())));
 
-                Files.list(Paths.get(path)).filter(p -> !Files.isDirectory(p)).forEach(i -> {
+                Files.list(path).filter(p -> !Files.isDirectory(p)).forEach(i -> {
 
-                    Mime mime = Mime.UNKNOWN;
                     String filename = i.getFileName().toString();
-
-                    if(filename.contains("."))
-                        mime = Mimes.getByExtension(filename.substring(filename.lastIndexOf(".")))
-                                .orElse(Mimes.getByExtension("*")
-                                        .orElse(Mime.UNKNOWN));
+                    Mime mime = Mimes.getByExtension(filename);
 
                     items.add(new FileBrowserItem(mime, filename));
 
@@ -123,6 +120,7 @@ public class Trash extends StackPane implements Initializable, Themeable {
 
         });
 
+        fileBrowser.setCurrentPath(Path.of(URI.create("cloud:///")));
         fileBrowser.update();
         Application.getInstance().getViews().add(this);
     }

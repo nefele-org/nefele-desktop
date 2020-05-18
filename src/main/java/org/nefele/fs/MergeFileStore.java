@@ -25,13 +25,21 @@
 package org.nefele.fs;
 
 import org.nefele.Application;
+import org.nefele.Database;
 import org.nefele.cloud.Drive;
+import org.nefele.cloud.Drives;
+import org.nefele.core.Mime;
+import org.nefele.utils.Tree;
+import org.sqlite.SQLiteErrorCode;
 
+import javax.xml.crypto.Data;
 import java.io.IOException;
-import java.nio.file.FileStore;
-import java.nio.file.FileSystem;
+import java.nio.file.*;
+import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.FileAttributeView;
 import java.nio.file.attribute.FileStoreAttributeView;
+import java.sql.SQLException;
+import java.time.Instant;
 
 import static java.util.Objects.requireNonNull;
 
@@ -65,7 +73,7 @@ public class MergeFileStore extends FileStore {
         return Application.getInstance().getDrives()
                 .stream()
                 .mapToLong(Drive::getQuota)
-                .sum() * Application.getInstance().getConfig().getInteger("core.mfs.blocksize").orElse(Drive.DEFAULT_BLOCK_SIZE);
+                .sum() * Chunk.getSize();
 
     }
 
@@ -74,8 +82,8 @@ public class MergeFileStore extends FileStore {
 
         return getTotalSpace() - Application.getInstance().getDrives()
                 .stream()
-                .mapToLong(Drive::getBlocks)
-                .sum() * Application.getInstance().getConfig().getInteger("core.mfs.blocksize").orElse(Drive.DEFAULT_BLOCK_SIZE);
+                .mapToLong(Drive::getChunks)
+                .sum() * Chunk.getSize();
 
     }
 
@@ -102,5 +110,37 @@ public class MergeFileStore extends FileStore {
     @Override
     public Object getAttribute(String s) throws IOException {
         throw new UnsupportedOperationException();
+    }
+
+    public void createDirectory(MergePath path, FileAttribute<?>... fileAttributes) throws IOException {
+
+        Inode inode = path.getInode().getData();
+
+        inode.setMime(Mime.FOLDER.getType());
+        inode.invalidate();
+
+    }
+
+    public void delete(MergePath path) throws IOException {
+
+        Inode inode = path.getInode().getData();
+
+        if(inode.getMime().equals(Mime.FOLDER.getType())) {
+
+            if(path.getInode().getChildren().size() > 0)
+                throw new DirectoryNotEmptyException(path.toString());
+
+        }
+
+
+        if(path.getInode().getParent() == null)
+            Application.panic(getClass(), "Can not remove root directory!");
+
+
+        // TODO: remove data ...
+        Inode.free(inode);
+
+        path.getInode().getParent().remove(path.getInode());
+
     }
 }

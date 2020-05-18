@@ -47,9 +47,14 @@ public class Tree<T> {
     }
 
     public Tree(Tree<T> parent, T data) {
+
         this.data = new AtomicReference<>(data);
         this.parent = new AtomicReference<>(parent);
         this.children = new ArrayList<>();
+
+        if(parent != null)
+            parent.add(this);
+
     }
 
     @SafeVarargs
@@ -60,15 +65,7 @@ public class Tree<T> {
     }
 
     public final Tree<T> add(T data) {
-
-        Tree<T> child = new Tree<>(this, data);
-
-        synchronized (children) {
-            children.add(child);
-        }
-
-        return child;
-
+        return new Tree<>(this, data);
     }
 
     @SafeVarargs

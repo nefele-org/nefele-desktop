@@ -24,15 +24,5 @@
 
 package org.nefele.cloud;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-
-public interface CloudService {
-
-    String getServiceName();
-    long getFreeSpace();
-
-    InputStream readChunk(String id);
-    OutputStream writeChunk(String id);
-
+public class DriveFullException extends RuntimeException {
 }
