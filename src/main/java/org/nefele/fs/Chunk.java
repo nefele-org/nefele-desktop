@@ -117,34 +117,34 @@ public class Chunk {
         Drive drive = Drives.nextAllocatable();
         String id = UUID.randomUUID().toString();
 
-        try {
+//        try {
 
-            Application.getInstance().getDatabase().query (
-
-                    "INSERT INTO chunks (id, offset, inode, drive, hash) VALUES (?, ?, ?, ?, ?)",
-                    s -> {
-
-                        s.setString(1, id);
-                        s.setLong(2, offset);
-                        s.setString(3, inode);
-                        s.setString(4, drive.getId());
-                        s.setString(5, "");
-
-                    },
-                    null
-            );
+//            Application.getInstance().getDatabase().query (
+//
+//                    "INSERT INTO chunks (id, offset, inode, drive, hash) VALUES (?, ?, ?, ?, ?)",
+//                    s -> {
+//
+//                        s.setString(1, id);
+//                        s.setLong(2, offset);
+//                        s.setString(3, inode);
+//                        s.setString(4, drive.getId());
+//                        s.setString(5, "");
+//
+//                    },
+//                    null
+//            );
 
             drive.setChunks(drive.getChunks() + 1L);
             drive.invalidate();
 
             return new Chunk(id, offset, drive, "");
 
-        } catch (SQLException e) {
-            Application.panic(Chunk.class, e);
-        }
+//        } catch (SQLException e) {
+//            Application.panic(Chunk.class, e);
+//        }
 
-        throw new IllegalStateException();
-
+//        throw new IllegalStateException();
+//
     }
 
     public static long getSize() {

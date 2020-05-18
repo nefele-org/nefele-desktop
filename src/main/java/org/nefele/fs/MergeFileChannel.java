@@ -132,7 +132,7 @@ public class MergeFileChannel extends FileChannel {
             long size = blocksize;
 
             if(position % blocksize != 0)
-                throw new IOException();
+                throw new IOException("position is not aligned");
 
             if(byteBuffer.remaining() < size)
                 size = byteBuffer.remaining();

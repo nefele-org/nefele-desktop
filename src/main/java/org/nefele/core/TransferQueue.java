@@ -24,6 +24,8 @@
 
 package org.nefele.core;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.util.Pair;
 import org.nefele.Application;
 
@@ -34,41 +36,36 @@ import java.util.concurrent.*;
 
 public class TransferQueue {
 
-    public final static int TRANSFER_QUEUE_INTERVAL = 100;
+    public final static int TRANSFER_QUEUE_INTERVAL = 1000;
 
-    private final ArrayList<Pair<TransferInfo, Future<Integer>>> transferQueue;
+    private final ObservableList<Pair<TransferInfo, Future<Integer>>> transferQueue;
     private final TransferExecutorService executorService;
-    private TransferInfoListener newTransferListener;
-    private TransferInfoListener updateTransferListener;
 
 
-    public TransferQueue(int parallelMax) {
+    public TransferQueue() {
+
+        this.transferQueue = FXCollections.observableArrayList();
+        this.executorService = new TransferExecutorService(0, 2147483647, 365L, TimeUnit.DAYS, new SynchronousQueue<Runnable>());
+
+        Application.addOnInitHandler(this::initialize);
+
+    }
+
+    public void initialize() {
+
+        int parallelMax = Application.getInstance().getConfig()
+                .getInteger("core.transfers.parallel")
+                .orElse(4);
 
         Application.log(this.getClass(), "Parallels transfer set to " + parallelMax);
         Application.log(this.getClass(), "Fixed-Rate set to " + TRANSFER_QUEUE_INTERVAL);
 
-
-        this.transferQueue = new ArrayList<>();
-        this.executorService = new TransferExecutorService(0, 2147483647, 365L, TimeUnit.DAYS, new SynchronousQueue<Runnable>());
         this.executorService.setMaximumThreadActiveCount(parallelMax);
 
-        Timer timerUpdate = new Timer("Transfer Queue", true);
 
-        timerUpdate.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                updateTransferQueue();
-            }
-        }, 0, TRANSFER_QUEUE_INTERVAL);
+        Application.getInstance().runWorker(new Thread(
+                this::updateTransferQueue, "TransferQueue::updateQueue()"), 0, TRANSFER_QUEUE_INTERVAL, TimeUnit.MILLISECONDS);
 
-    }
-
-    public void addNewTransferListener(TransferInfoListener e) {
-        this.newTransferListener = e;
-    }
-
-    public void addUpdateTransferListener(TransferInfoListener e) {
-        this.updateTransferListener = e;
     }
 
 
@@ -76,18 +73,8 @@ public class TransferQueue {
 
         Future<Integer> future;
 
-        if (!i.isParallel()) {
-            future = executorService.submit(i::execute);
-        }
-        else {
-
-            synchronized (transferQueue) {
-                transferQueue.add(new Pair<>(i, (future = executorService.submit(i::execute))));
-            }
-
-            if (newTransferListener != null)
-                newTransferListener.run(i);
-
+        synchronized (transferQueue) {
+            transferQueue.add(new Pair<>(i, (future = executorService.submit(i::execute))));
         }
 
         return future;
@@ -123,9 +110,6 @@ public class TransferQueue {
 
                 i.getKey().updateSpeed();
 
-                if (updateTransferListener != null)
-                    updateTransferListener.run(i.getKey());
-
             }
 
 
@@ -142,4 +126,7 @@ public class TransferQueue {
         return executorService.getCurrentThreadActiveCount();
     }
 
+    public ObservableList<Pair<TransferInfo, Future<Integer>>> getTransferQueue() {
+        return transferQueue;
+    }
 }

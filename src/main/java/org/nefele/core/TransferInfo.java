@@ -24,16 +24,18 @@
 
 package org.nefele.core;
 
+import javafx.beans.property.*;
+import org.nefele.fs.Inode;
+
 import java.time.Instant;
 import java.time.temporal.TemporalAccessor;
 
-public class TransferInfo {
+import static java.util.Objects.requireNonNull;
+
+public abstract class TransferInfo {
 
     public final static int TRANSFER_TYPE_DOWNLOAD = 0;
     public final static int TRANSFER_TYPE_UPLOAD = 1;
-    public final static int TRANSFER_TYPE_COMMAND = 2;
-    public final static int TRANSFER_TYPE_DOWNLOAD_GROUP = 3;
-    public final static int TRANSFER_TYPE_UPLOAD_GROUP = 4;
 
     public final static int TRANSFER_STATUS_READY = 0;
     public final static int TRANSFER_STATUS_RUNNING = 1;
@@ -44,89 +46,107 @@ public class TransferInfo {
     public final static int TRANSFER_STATUS_RESUME = 6;
 
 
-    protected String name;
-    protected int size;
-    protected int progress;
-    protected int type;
-    protected int status;
-    protected int speed;
-    protected boolean parallel;
-    protected Instant startTime;
+    private final ReadOnlyStringProperty name;
+    private final ReadOnlyLongProperty size;
+    private final ReadOnlyIntegerProperty type;
+    private final LongProperty progress;
+    private final IntegerProperty status;
+    private final IntegerProperty speed;
+    private final ReadOnlyObjectProperty<Inode> inode;
 
-    private int lastProgress = 0;
+    private long lastProgress = 0;
 
 
-    public TransferInfo(String name, int size, int type, boolean parallel) {
-        this.name = name;
-        this.parallel = parallel;
-        this.size = size;
-        this.progress = 0;
-        this.type = type;
-        this.startTime = Instant.now();
-        this.status = TRANSFER_STATUS_READY;
+
+    public TransferInfo(Inode inode, int type) {
+
+        requireNonNull(inode);
+
+        this.name = new SimpleStringProperty(inode.getName());
+        this.size =  new SimpleLongProperty(inode.getSize());
+        this.type = new SimpleIntegerProperty(type);
+        this.progress = new SimpleLongProperty(0L);
+        this.status = new SimpleIntegerProperty(TRANSFER_STATUS_READY);
+        this.speed = new SimpleIntegerProperty(0);
+        this.inode = new SimpleObjectProperty<>(inode);
+
     }
 
-
-    public synchronized Integer execute() {
-        return getStatus();
-    }
+    public abstract Integer execute();
 
 
     public String getName() {
+        return name.get();
+    }
+
+    public ReadOnlyStringProperty nameProperty() {
         return name;
     }
 
-    public int getSize() {
+    public long getSize() {
+        return size.get();
+    }
+
+    public ReadOnlyLongProperty sizeProperty() {
         return size;
     }
 
-    public int getProgress() {
-        return progress;
+    public int getType() {
+        return type.get();
     }
 
-    public int getType() {
+    public ReadOnlyIntegerProperty typeProperty() {
         return type;
     }
 
+    public long getProgress() {
+        return progress.get();
+    }
+
+    public LongProperty progressProperty() {
+        return progress;
+    }
+
+    public void setProgress(long progress) {
+        this.progress.set(progress);
+    }
+
     public int getStatus() {
+        return status.get();
+    }
+
+    public IntegerProperty statusProperty() {
         return status;
     }
 
+    public void setStatus(int status) {
+        this.status.set(status);
+    }
+
     public int getSpeed() {
+        return speed.get();
+    }
+
+    public IntegerProperty speedProperty() {
         return speed;
     }
 
-    public int getRemainingTime() {
-
-        if(speed == 0)
-            return -1;
-
-        return (((size - progress) / speed)) + 1;
-
+    public void setSpeed(int speed) {
+        this.speed.set(speed);
     }
 
-    public boolean isParallel() {
-        return parallel;
+    public Inode getInode() {
+        return inode.get();
     }
 
-    public Instant getStartTime() {
-        return startTime;
+    public ReadOnlyObjectProperty<Inode> inodeProperty() {
+        return inode;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
-    public void setProgress(int progress) {
-        this.progress = progress;
-    }
 
     public final void updateSpeed() {
-
-        speed += (int) ((progress - lastProgress) * (1000.0 / (double) TransferQueue.TRANSFER_QUEUE_INTERVAL));
-        speed /= 2;
-
-        lastProgress = progress;
+        setSpeed(getSpeed() + (int) (getProgress() - lastProgress));
+        lastProgress = getProgress();
     }
 
 

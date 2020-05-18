@@ -50,7 +50,7 @@ public class OfflineDriveService extends Drive {
     }
 
     @Override
-    OutputStream writeChunk(Chunk chunk) {
+    public OutputStream writeChunk(Chunk chunk) {
 
         try {
             return new FileOutputStream(new File(offlinePath.resolve(Paths.get(chunk.getId())).toString()));
@@ -63,7 +63,7 @@ public class OfflineDriveService extends Drive {
     }
 
     @Override
-    InputStream readChunk(Chunk chunk) {
+    public InputStream readChunk(Chunk chunk) {
 
         try {
             return new FileInputStream(new File(offlinePath.resolve(Paths.get(chunk.getId())).toString()));
@@ -76,7 +76,7 @@ public class OfflineDriveService extends Drive {
     }
 
     @Override
-    Drive initialize() {
+    public Drive initialize() {
 
         Application.log(getClass(), "Initializing %s", SERVICE_ID);
 
@@ -108,7 +108,7 @@ public class OfflineDriveService extends Drive {
     }
 
     @Override
-    Drive exit() {
+    public Drive exit() {
         return this;
     }
 

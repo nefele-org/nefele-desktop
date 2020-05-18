@@ -40,7 +40,7 @@ import java.util.Map;
 
 public final class Cache {
 
-    private final static String CPATH = "cache";
+    private final static String CACHE_PATH = "cache";
 
     private final Map<String, File> cache;
     private long currentSize;
@@ -58,16 +58,16 @@ public final class Cache {
 
     public void initialize() {
 
-        if (Files.notExists(Paths.get(CPATH))) {
+        if (Files.notExists(Paths.get(CACHE_PATH))) {
 
-            if (!new File(CPATH).mkdir())
+            if (!new File(CACHE_PATH).mkdir())
                 Application.panic(getClass(), "Could not create cache directory!");
 
         }
 
         try {
 
-            currentSize = Files.walk(Paths.get(CPATH))
+            currentSize = Files.walk(Paths.get(CACHE_PATH))
                                .map(Path::toFile)
                                .mapToLong(File::length)
                                .sum();
@@ -86,7 +86,7 @@ public final class Cache {
         byteBuffer.get(bytes);
 
 
-        Path path = Paths.get(CPATH, chunk.getId());
+        Path path = Paths.get(CACHE_PATH, chunk.getId());
 
         if(Files.exists(path))
             Files.delete(path);
@@ -97,6 +97,8 @@ public final class Cache {
         chunk.setCached(true);
         chunk.setHash(Hash.fromFile(path.toFile()));
         chunk.invalidate();
+
+        cache.put(chunk.getId(), path.toFile());
 
     }
 
@@ -110,7 +112,7 @@ public final class Cache {
 
                 if (chunk.isCached()) {
 
-                    Path path = Paths.get(CPATH, chunk.getId());
+                    Path path = Paths.get(CACHE_PATH, chunk.getId());
 
                     currentSize -= path.toFile().length();
                     Files.delete(path);
@@ -125,6 +127,9 @@ public final class Cache {
 
     }
 
+    public boolean verify(Chunk chunk) {
+        return true;
+    }
 
     public boolean exist(String id) {
         return cache.containsKey(id);
@@ -134,5 +139,14 @@ public final class Cache {
         return currentSize;
     }
 
+
+    public InputStream read(Chunk chunk) throws FileNotFoundException {
+
+        if(exist(chunk.getId()))
+            return new FileInputStream(Paths.get(CACHE_PATH, chunk.getId()).toString());
+
+        throw new FileNotFoundException();
+
+    }
 }
 

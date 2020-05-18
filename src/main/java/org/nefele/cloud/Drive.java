@@ -77,10 +77,10 @@ public abstract class Drive {
     }
 
 
-    abstract OutputStream writeChunk(Chunk chunk);
-    abstract InputStream readChunk(Chunk chunk);
-    abstract Drive initialize();
-    abstract Drive exit();
+    public abstract OutputStream writeChunk(Chunk chunk);
+    public abstract InputStream readChunk(Chunk chunk);
+    public abstract Drive initialize();
+    public abstract Drive exit();
 
 
 
@@ -120,9 +120,7 @@ public abstract class Drive {
         this.quota.set(quota);
     }
 
-    public long getChunks() {
-        return chunks.get();
-    }
+    public long getChunks() { return chunks.get(); }
 
     public LongProperty chunksProperty() {
         return chunks;

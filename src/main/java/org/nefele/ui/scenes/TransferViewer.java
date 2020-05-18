@@ -24,6 +24,7 @@
 
 package org.nefele.ui.scenes;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -32,6 +33,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.util.Pair;
 import org.nefele.Application;
 import org.nefele.Resources;
 import org.nefele.core.TransferInfo;
@@ -39,38 +41,40 @@ import org.nefele.ui.Themeable;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.Future;
 
 public class TransferViewer extends StackPane implements Initializable, Themeable {
 
-    private final ObservableList<TransferInfo> transfers;
 
     @FXML private ScrollPane transferPane;
     @FXML private VBox cellPane;
 
 
     public TransferViewer() {
-
-        transfers = FXCollections.observableArrayList();
-
         Resources.getFXML(this, "/fxml/TransferViewer.fxml");
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        getTransfers().addListener((ListChangeListener<? super TransferInfo>) change -> {
+        Application.getInstance()
+                .getTransferQueue()
+                .getTransferQueue().addListener((ListChangeListener<? super Pair<TransferInfo, Future<Integer>>>) change -> {
 
             while(change.next()) {
 
                 if(change.wasRemoved())
-                    /* TODO... */;
+                    Platform.runLater(() ->
+                            change.getRemoved().forEach(i -> cellPane.getChildren().removeIf(j -> ((TransferViewerCell) j).getTransferInfo() == i.getKey())));
 
                 if(change.wasAdded())
-                    /* TODO... */;
+                    Platform.runLater(() ->
+                            change.getAddedSubList().forEach(i -> cellPane.getChildren().add(new TransferViewerCell(i.getKey()))));
 
             }
 
         });
+
 
         Application.getInstance().getViews().add(this);
     }
@@ -78,12 +82,6 @@ public class TransferViewer extends StackPane implements Initializable, Themeabl
     @Override
     public void initializeInterface() {
         Resources.getCSS(this, "/css/transferviewer-cell.css");
-
-        cellPane.getChildren().add(new TransferViewerCell(null)); /* TODO: Remove */
-
     }
 
-    public ObservableList<TransferInfo> getTransfers() {
-        return transfers;
-    }
 }

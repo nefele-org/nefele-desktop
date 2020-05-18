@@ -27,6 +27,7 @@ package org.nefele.ui.scenes;
 import com.jfoenix.controls.JFXProgressBar;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -56,6 +57,7 @@ public class TransferViewerCell extends StackPane implements Initializable, Them
     @FXML private Label labelSpeed;
     @FXML private Label labelFileName;
 
+    
     public TransferViewerCell(TransferInfo transferInfo) {
 
         this.transferInfo = new SimpleObjectProperty<>(transferInfo);
@@ -72,19 +74,63 @@ public class TransferViewerCell extends StackPane implements Initializable, Them
 
         buttonPauseResume.setOnMouseClicked( e -> {
 
-            getTransferInfo().setStatus(
+            getTransferInfo().setStatus (
                     getTransferInfo().getStatus() == TransferInfo.TRANSFER_STATUS_RUNNING
                         ? TransferInfo.TRANSFER_STATUS_PAUSED
-                        : TransferInfo.TRANSFER_STATUS_RUNNING
+                        : TransferInfo.TRANSFER_STATUS_RESUME
             );
 
-            buttonPauseResume.setGlyphName(
+            buttonPauseResume.setGlyphName (
                     getTransferInfo().getStatus() == TransferInfo.TRANSFER_STATUS_RUNNING
                             ? "PLAY"
                             : "PAUSE"
             );
 
         });
+        
+
+        getTransferInfo().speedProperty().addListener((v, o, n) ->
+                Platform.runLater(() -> {
+                    labelSpeed.setText(
+                            getTransferInfo().getSpeed() / 1024 < 1024
+                                    ? String.format("%d kB/s", n.intValue() / 1024)
+                                    : String.format("%d Mb/s", n.intValue() / 1024 / 1024)
+                    );
+                }));
+
+
+        getTransferInfo().progressProperty().addListener((v, o, n) -> {
+
+            Platform.runLater(() -> {
+
+                long remainingTime = 0L;
+
+                if(getTransferInfo().getSpeed() > 0)
+                    remainingTime = ((getTransferInfo().getSize() - n.longValue()) / getTransferInfo().getSpeed() + 1);
+
+
+                if(remainingTime == 0)
+                    labelTime.setText("∞");
+
+                else if(remainingTime < 60)
+                    labelTime.setText(String.format("%d s", remainingTime));
+
+                else
+                    labelTime.setText(String.format("%d s", remainingTime));
+
+            });
+
+        });
+
+
+        progressStatus.progressProperty().bind (
+                getTransferInfo().progressProperty()
+                        .divide(getTransferInfo().sizeProperty())
+        );
+
+
+        labelFileName.textProperty().bind(getTransferInfo().nameProperty());
+
 
 
         Application.getInstance().getViews().add(this);
@@ -92,9 +138,7 @@ public class TransferViewerCell extends StackPane implements Initializable, Them
 
 
     @Override
-    public void initializeInterface() {
-
-    }
+    public void initializeInterface() { }
 
     public TransferInfo getTransferInfo() {
         return transferInfo.get();
@@ -106,25 +150,6 @@ public class TransferViewerCell extends StackPane implements Initializable, Them
 
     public void setTransferInfo(TransferInfo transferInfo) {
         this.transferInfo.set(transferInfo);
-    }
-
-
-    private void setInfo(){
-
-        progressStatus.setProgress((double)getTransferInfo().getProgress()/(double)getTransferInfo().getSize());
-
-        labelFileName.setText(getTransferInfo().getName());
-
-        labelSpeed.setText( getTransferInfo().getSpeed() / 1024 < 1024 ? String.format("%d kB/s", getTransferInfo().getSpeed() / 1024)
-                                                                       : String.format("%d Mb/s", getTransferInfo().getSpeed() / 1024 / 1024));
-
-        if(getTransferInfo().getRemainingTime() == -1)
-            labelTime.setText("∞");
-        else if(getTransferInfo().getRemainingTime() < 60)
-            labelTime.setText(String.format("%d s", getTransferInfo().getRemainingTime()));
-        else
-            labelTime.setText(String.format("%d s", getTransferInfo().getRemainingTime() / 60 + 1));
-
     }
 
 }

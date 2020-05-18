@@ -26,6 +26,7 @@ package org.nefele.ui.scenes;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.MenuItem;
@@ -37,6 +38,7 @@ import org.nefele.Application;
 import org.nefele.Resources;
 import org.nefele.core.Mime;
 import org.nefele.core.Mimes;
+import org.nefele.core.UploadTransferInfo;
 import org.nefele.fs.MergePath;
 import org.nefele.ui.Themeable;
 import org.nefele.ui.controls.FileBrowser;
@@ -48,6 +50,7 @@ import org.nefele.ui.dialog.Dialogs;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+import java.lang.management.PlatformManagedObject;
 import java.net.URI;
 import java.net.URL;
 import java.nio.file.FileSystem;
@@ -57,6 +60,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutionException;
 
 public class Archive extends StackPane implements Initializable, Themeable {
 
@@ -107,18 +111,34 @@ public class Archive extends StackPane implements Initializable, Themeable {
 
             else {
 
-                try {
+                Application.getInstance().runThread(new Thread(() -> {
 
-                    Path path = MergePath.get("cloud", fileBrowser.getCurrentPath().toString(), file.getName());
+                    try {
 
-                    Files.createFile(path);
-                    Files.write(path, Files.readAllBytes(file.toPath()));
+                        Path path = MergePath.get("cloud", fileBrowser.getCurrentPath().toString(), file.getName());
 
-                    fileBrowser.update();
+                        Files.createFile(path);
+                        Files.write(path, Files.readAllBytes(file.toPath()));
 
-                } catch (IOException io) {
-                    Dialogs.showErrorBox(io.getLocalizedMessage());
-                }
+                        Application.getInstance().getTransferQueue().enqueue(
+                                new UploadTransferInfo(((MergePath) path).getInode().getData())).get();
+
+                    } catch (IOException io) {
+
+                        Application.panic(getClass(), io);
+                        Application.log(getClass(), "WARNING! %s when uploading file: %s", io.getClass().getName(), io.getMessage());
+
+                        Platform.runLater(() ->
+                                Dialogs.showErrorBox("FILE_UPLOAD_ERROR"));
+
+                    } catch (InterruptedException | ExecutionException ignored) {
+                        // ignored...
+                    } finally {
+                        Platform.runLater(fileBrowser::update);
+                    }
+
+                }, "Archive::uploadFile()"));
+
 
             }
 

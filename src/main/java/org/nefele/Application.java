@@ -33,11 +33,13 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
+import javazoom.jl.player.advanced.AdvancedPlayer;
 import org.nefele.cloud.Drive;
 import org.nefele.cloud.Drives;
 import org.nefele.core.Mime;
 import org.nefele.core.Mimes;
 import org.nefele.core.Status;
+import org.nefele.core.TransferQueue;
 import org.nefele.fs.Cache;
 import org.nefele.ui.Theme;
 import org.nefele.ui.Views;
@@ -70,6 +72,7 @@ public final class Application extends javafx.application.Application implements
     private final Status status;
     private final AtomicBoolean running;
     private final Cache cache;
+    private final TransferQueue transferQueue;
     private final ArrayList<Drive> drives;
     private final ArrayList<Mime> mimes;
     private final ExecutorService executorService;
@@ -92,6 +95,7 @@ public final class Application extends javafx.application.Application implements
         locale = new Locale();
         status = new Status();
         cache = new Cache();
+        transferQueue = new TransferQueue();
         drives = new ArrayList<>();
         mimes = new ArrayList<>();
         views = new Views();
@@ -177,7 +181,6 @@ public final class Application extends javafx.application.Application implements
 
         });
 
-        //transferQueue = new TransferQueue(config.getInteger("core.transfers.parallel").orElse(4));
 
 
 
@@ -337,9 +340,9 @@ public final class Application extends javafx.application.Application implements
         return cache;
     }
 
-    //    public TransferQueue getTransferQueue() {
-//        return transferQueue;
-//    }
+    public TransferQueue getTransferQueue() {
+        return transferQueue;
+    }
 
     public ArrayList<Drive> getDrives() {
         return drives;

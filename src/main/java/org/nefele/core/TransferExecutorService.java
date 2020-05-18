@@ -24,6 +24,8 @@
 
 package org.nefele.core;
 
+import org.nefele.Application;
+
 import java.util.ArrayDeque;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -31,7 +33,6 @@ import java.util.concurrent.*;
 
 public class TransferExecutorService extends ThreadPoolExecutor {
 
-    protected final static int TRANSFER_EXECUTOR_WORKER_INTERVAL = 250;
 
     protected int maximumThreadActiveCount = 4;
     protected ArrayDeque<RunnableFuture<?>> pendingTask = new ArrayDeque<>();
@@ -41,27 +42,23 @@ public class TransferExecutorService extends ThreadPoolExecutor {
     public TransferExecutorService(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue) {
         super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
 
-
-        new Timer(getClass().getName(), true).scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                updatePool();
-            }
-        }, 0, TRANSFER_EXECUTOR_WORKER_INTERVAL);
+        Application.addOnInitHandler(this::initalize);
+        Application.addOnExitHandler(this::exit);
 
     }
 
+    public void initalize() {
 
+        Application.getInstance().runWorker(new Thread(
+                this::updatePool, "TransferExecutorService::updatePool()"), 0, 250, TimeUnit.MILLISECONDS);
 
-    @Override
-    public Future<?> submit(Runnable task) {
-        return super.submit(task);
     }
 
-    @Override
-    public <T> Future<T> submit(Runnable task, T result) {
-        return super.submit(task, result);
+    public void exit() {
+        shutdown();
     }
+
+
 
     @Override
     public <T> Future<T> submit(Callable<T> task) {
