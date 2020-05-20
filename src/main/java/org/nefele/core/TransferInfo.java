@@ -25,10 +25,9 @@
 package org.nefele.core;
 
 import javafx.beans.property.*;
-import org.nefele.fs.Inode;
-
-import java.time.Instant;
-import java.time.temporal.TemporalAccessor;
+import org.nefele.fs.MergeFileSystem;
+import org.nefele.fs.MergeNode;
+import org.nefele.fs.MergePath;
 
 import static java.util.Objects.requireNonNull;
 
@@ -52,23 +51,29 @@ public abstract class TransferInfo {
     private final LongProperty progress;
     private final IntegerProperty status;
     private final IntegerProperty speed;
-    private final ReadOnlyObjectProperty<Inode> inode;
+    private final ReadOnlyObjectProperty<MergePath> path;
+    private final ReadOnlyObjectProperty<MergeFileSystem> fileSystem;
 
     private long lastProgress = 0;
 
 
 
-    public TransferInfo(Inode inode, int type) {
+    public TransferInfo(MergePath path, int type) {
 
-        requireNonNull(inode);
+        requireNonNull(path);
 
-        this.name = new SimpleStringProperty(inode.getName());
-        this.size =  new SimpleLongProperty(inode.getSize());
+        if(!(path.getFileSystem() instanceof MergeFileSystem))
+            throw new IllegalArgumentException();
+
+
+        this.name = new SimpleStringProperty(path.getFileName().toString());
+        this.size =  new SimpleLongProperty(path.getInode().getData().getSize());
         this.type = new SimpleIntegerProperty(type);
         this.progress = new SimpleLongProperty(0L);
         this.status = new SimpleIntegerProperty(TRANSFER_STATUS_READY);
         this.speed = new SimpleIntegerProperty(0);
-        this.inode = new SimpleObjectProperty<>(inode);
+        this.path = new SimpleObjectProperty<>(path);
+        this.fileSystem = new SimpleObjectProperty<>((MergeFileSystem) path.getFileSystem());
 
     }
 
@@ -135,17 +140,24 @@ public abstract class TransferInfo {
         this.speed.set(speed);
     }
 
-    public Inode getInode() {
-        return inode.get();
+    public MergePath getPath() {
+        return path.get();
     }
 
-    public ReadOnlyObjectProperty<Inode> inodeProperty() {
-        return inode;
+    public ReadOnlyObjectProperty<MergePath> pathProperty() {
+        return path;
     }
 
+    public MergeFileSystem getFileSystem() {
+        return fileSystem.get();
+    }
+
+    public ReadOnlyObjectProperty<MergeFileSystem> fileSystemProperty() {
+        return fileSystem;
+    }
 
     public final void updateSpeed() {
-        setSpeed(getSpeed() + (int) (getProgress() - lastProgress));
+        setSpeed((int) (getProgress() - lastProgress));
         lastProgress = getProgress();
     }
 

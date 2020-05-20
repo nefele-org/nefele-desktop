@@ -25,13 +25,12 @@
 package org.nefele.core;
 
 import org.nefele.Application;
+import org.nefele.Service;
 
 import java.util.ArrayDeque;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.*;
 
-public class TransferExecutorService extends ThreadPoolExecutor {
+public class TransferExecutorService extends ThreadPoolExecutor implements Service {
 
 
     protected int maximumThreadActiveCount = 4;
@@ -42,22 +41,9 @@ public class TransferExecutorService extends ThreadPoolExecutor {
     public TransferExecutorService(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue) {
         super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
 
-        Application.addOnInitHandler(this::initalize);
-        Application.addOnExitHandler(this::exit);
+        Application.getInstance().addService(this);
 
     }
-
-    public void initalize() {
-
-        Application.getInstance().runWorker(new Thread(
-                this::updatePool, "TransferExecutorService::updatePool()"), 0, 250, TimeUnit.MILLISECONDS);
-
-    }
-
-    public void exit() {
-        shutdown();
-    }
-
 
 
     @Override
@@ -102,4 +88,23 @@ public class TransferExecutorService extends ThreadPoolExecutor {
             startThread(pendingTask.pop());
 
     }
+
+    @Override
+    public void initialize(Application app) {
+
+        Application.getInstance().runWorker(new Thread(
+                this::updatePool, "TransferExecutorService::updatePool()"), 0, 250, TimeUnit.MILLISECONDS);
+
+    }
+
+    @Override
+    public void synchronize(Application app) {
+        updatePool();
+    }
+
+    @Override
+    public void exit(Application app) {
+        shutdown();
+    }
+
 }

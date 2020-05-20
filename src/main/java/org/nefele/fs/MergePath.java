@@ -24,19 +24,14 @@
 
 package org.nefele.fs;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.scene.Parent;
-import org.nefele.Application;
 import org.nefele.utils.Tree;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributeView;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.nio.file.attribute.FileAttributeView;
 import java.nio.file.attribute.FileTime;
 import java.util.Objects;
 
@@ -47,22 +42,25 @@ public class MergePath implements Path {
     private final MergeFileSystem fileSystem;
     private final String path;
     private final String absolutePath;
-    private final Tree<Inode> inode;
+    private final Tree<MergeNode> inode;
     private final BasicFileAttributeView attributeView;
 
-    public MergePath(MergeFileSystem fileSystem, Tree<Inode> inode, String absolutePath, String path) {
+
+    public MergePath(MergeFileSystem fileSystem, Tree<MergeNode> inode, String absolutePath, String path) {
 
         if(!requireNonNull(absolutePath).startsWith(MergeFileSystem.PATH_SEPARATOR))
             throw new IllegalArgumentException(absolutePath);
+
 
         this.fileSystem = fileSystem;
         this.path = path;
         this.absolutePath = absolutePath;
         this.inode = inode;
 
+
         this.attributeView = new BasicFileAttributeView() {
 
-            private final Inode inode = getInode().getData();
+            private final MergeNode inode = getInode().getData();
 
             @Override
             public String name() {
@@ -179,7 +177,7 @@ public class MergePath implements Path {
 
     }
 
-    public Tree<Inode> getInode() {
+    public Tree<MergeNode> getInode() {
         return inode;
     }
 

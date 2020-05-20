@@ -7,8 +7,11 @@
 
 <fx:root type="JFXButton" alignment="CENTER" contentDisplay="CENTER" prefHeight="64.0" prefWidth="64.0" text=" " xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" styleClass="docker-button" >
    <graphic>
+
       <MaterialDesignIconView fx:id="icon" size="28.0" />
+
    </graphic>
+
    <tooltip>
       <Tooltip fx:id="tooltip"/>
    </tooltip>

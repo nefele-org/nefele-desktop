@@ -24,17 +24,14 @@
 
 package org.nefele;
 
-import javafx.beans.property.IntegerProperty;
-import org.nefele.cloud.Drive;
 import org.sqlite.SQLiteErrorCode;
 
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class Config {
+public class Config implements Service {
 
     private final Database database;
     private final HashMap<String, Object> cache;
@@ -45,28 +42,11 @@ public class Config {
         this.database = database;
         this.cache = new HashMap<>();
 
-        Application.addOnInitHandler(this::initialize);
-        Application.addOnExitHandler(this::update);
+        Application.getInstance().addService(this);
 
     }
 
 
-    public void initialize() {
-
-        try {
-
-            database.query("SELECT name, value FROM config",
-                    null,
-                    r -> {
-                        cache.put(r.getString(1), r.getObject(2));
-                    }
-            );
-
-        } catch (SQLException e) {
-            Application.panic(getClass(), e);
-        }
-
-    }
 
 
     public Optional<Object> get(String name) {
@@ -83,7 +63,7 @@ public class Config {
 
         try {
 
-            database.query("SELECT value FROM config WHERE name = ?",
+            database.fetch("SELECT value FROM config WHERE name = ?",
                     s -> s.setString(1, name),
                     r -> result.set(Optional.of(r.getObject(1)))
             );
@@ -120,12 +100,11 @@ public class Config {
             for (String key : cache.keySet()) {
 
                 if (get(key).isPresent()) {
-                    database.query("UPDATE config SET value = ? WHERE name = ?",
+                    database.update("UPDATE config SET value = ? WHERE name = ?",
                             s -> {
                                 s.setString(1, (String) get(key).get());
                                 s.setString(2, key);
-                            },
-                            null
+                            }, false
                     );
                 }
 
@@ -167,6 +146,37 @@ public class Config {
 
     public void setBoolean(String name, Boolean value) {
         set(name, value ? "1" : "0");
+    }
+
+
+
+
+    @Override
+    public void initialize(Application app) {
+
+        try {
+
+            database.fetch("SELECT name, value FROM config",
+                    null,
+                    r -> {
+                        cache.put(r.getString(1), r.getObject(2));
+                    }
+            );
+
+        } catch (SQLException e) {
+            Application.panic(getClass(), e);
+        }
+
+    }
+
+    @Override
+    public void synchronize(Application app) {
+        update();
+    }
+
+    @Override
+    public void exit(Application app) {
+        synchronize(app);
     }
 
 }

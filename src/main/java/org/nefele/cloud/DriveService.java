@@ -25,17 +25,39 @@
 package org.nefele.cloud;
 
 import org.nefele.Application;
+import org.nefele.Service;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
-public final class Drives {
 
-    public static Drive fromId(String id) {
 
-        return Application.getInstance().getDrives()
+public final class DriveService implements Service {
+
+    private final static DriveService instance = new DriveService();
+
+    public static DriveService getInstance() {
+        return instance;
+    }
+
+
+
+    private final ArrayList<Drive> drives;
+
+    private DriveService() {
+        drives = new ArrayList<>();
+    }
+
+
+
+
+
+    public Drive fromId(String id) {
+
+        return getDrives()
                 .stream()
                 .filter(i -> i.getId().equals(id))
                 .findFirst()
@@ -47,7 +69,7 @@ public final class Drives {
 
                     try {
 
-                        Application.getInstance().getDatabase().query (
+                        Application.getInstance().getDatabase().fetch (
                                 "SELECT * FROM drives WHERE id = ?",
                                 s -> s.setString(1, id),
                                 r -> {
@@ -79,15 +101,51 @@ public final class Drives {
     }
 
 
-    public static Drive nextAllocatable() {
+    public Drive nextAllocatable() {
 
-        if(Application.getInstance().getDrives().stream().mapToLong(i -> i.getQuota() - i.getChunks()).sum() == 0)
+        if(getDrives().stream().mapToLong(i -> i.getQuota() - i.getChunks()).sum() == 0)
             throw new DriveFullException();
 
-        return Application.getInstance().getDrives()
+        return getDrives()
                 .stream()
-                .max((a, b) -> Long.compare(a.getQuota() - a.getChunks(), b.getQuota() - b.getChunks()))
+                .max(Comparator.comparingLong(a -> a.getQuota() - a.getChunks()))
                 .get();
+
+    }
+
+    public ArrayList<Drive> getDrives() {
+        return drives;
+    }
+
+
+    @Override
+    public void initialize(Application app) {
+
+        try {
+
+            final ArrayList<String> ids = new ArrayList<>();
+
+            app.getDatabase().fetch(
+                    "SELECT id FROM drives",
+                    null, r -> ids.add(r.getString(1)));
+
+            for(String id : ids)
+                getDrives().add(fromId(id));
+
+
+        } catch (SQLException e) {
+            Application.panic(Drive.class, e);
+        }
+
+    }
+
+    @Override
+    public void synchronize(Application app) {
+
+    }
+
+    @Override
+    public void exit(Application app) {
 
     }
 

@@ -24,29 +24,34 @@
 
 package org.nefele.fs;
 
-import com.fasterxml.jackson.databind.util.ByteBufferBackedInputStream;
 import org.nefele.Application;
-import org.nefele.utils.Hash;
 
-import java.awt.image.DataBufferByte;
-import java.io.*;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
-import java.nio.channels.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.WritableByteChannel;
+import java.time.Instant;
 
 public class MergeFileChannel extends FileChannel {
 
     private final MergePath path;
-    private final Inode inode;
+    private final MergeNode inode;
+    private final MergeFileSystem fileSystem;
     private long position;
 
     public MergeFileChannel(MergePath path) {
+
+        if(!(path.getFileSystem() instanceof MergeFileSystem))
+            throw new IllegalArgumentException();
+
         this.path = path;
         this.inode = path.getInode().getData();
+        this.fileSystem = (MergeFileSystem) path.getFileSystem();
         this.position = 0;
+
     }
 
 
@@ -122,7 +127,7 @@ public class MergeFileChannel extends FileChannel {
     @Override
     public int write(ByteBuffer byteBuffer, long position) throws IOException {
 
-        long blocksize = Chunk.getSize();
+        long blocksize = MergeChunk.getSize();
         long initpos = position;
 
 
@@ -131,35 +136,42 @@ public class MergeFileChannel extends FileChannel {
             long block = position / blocksize;
             long size = blocksize;
 
-            if(position % blocksize != 0)
+            if (position % blocksize != 0)
                 throw new IOException("position is not aligned");
 
-            if(byteBuffer.remaining() < size)
+            if (byteBuffer.remaining() < size)
                 size = byteBuffer.remaining();
 
 
-            Chunk chunk;
+            MergeChunk chunk;
 
-            if(inode.getChunks().size() > block)
-                chunk = inode.getChunks().get((int) block);
+            if (inode.getChunks().size() > block) {
 
-            else {
+                chunk = inode.getChunks()
+                        .stream()
+                        .filter(i -> i.getOffset() == block)
+                        .findFirst()
+                        .get();
 
-                chunk = Chunk.alloc(inode.getId(), block);
+            } else {
 
-                inode.getChunks().add(chunk);
+                chunk = fileSystem.getCache().alloc(inode, block);
+
                 inode.setSize(inode.getSize() + size);
+                inode.setAccessedTime(Instant.now());
+                inode.setModifiedTime(Instant.now());
                 inode.invalidate();
 
             }
 
 
-            Application.getInstance().getCache()
-                    .write(chunk, byteBuffer, (int) size);
+            fileSystem.getCache()
+                    .write(chunk, byteBuffer.limit(Math.min(byteBuffer.capacity(), (int) blocksize)));
 
             position += size;
 
         }
+
 
 
         return (int) (position - initpos);

@@ -28,13 +28,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.util.Pair;
 import org.nefele.Application;
+import org.nefele.Service;
 
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.*;
 
-public class TransferQueue {
+public class TransferQueue implements Service {
 
     public final static int TRANSFER_QUEUE_INTERVAL = 1000;
 
@@ -47,26 +45,10 @@ public class TransferQueue {
         this.transferQueue = FXCollections.observableArrayList();
         this.executorService = new TransferExecutorService(0, 2147483647, 365L, TimeUnit.DAYS, new SynchronousQueue<Runnable>());
 
-        Application.addOnInitHandler(this::initialize);
+        Application.getInstance().addService(this);
 
     }
 
-    public void initialize() {
-
-        int parallelMax = Application.getInstance().getConfig()
-                .getInteger("core.transfers.parallel")
-                .orElse(4);
-
-        Application.log(this.getClass(), "Parallels transfer set to " + parallelMax);
-        Application.log(this.getClass(), "Fixed-Rate set to " + TRANSFER_QUEUE_INTERVAL);
-
-        this.executorService.setMaximumThreadActiveCount(parallelMax);
-
-
-        Application.getInstance().runWorker(new Thread(
-                this::updateTransferQueue, "TransferQueue::updateQueue()"), 0, TRANSFER_QUEUE_INTERVAL, TimeUnit.MILLISECONDS);
-
-    }
 
 
     public Future<Integer> enqueue(TransferInfo i) {
@@ -129,4 +111,35 @@ public class TransferQueue {
     public ObservableList<Pair<TransferInfo, Future<Integer>>> getTransferQueue() {
         return transferQueue;
     }
+
+
+
+    @Override
+    public void initialize(Application app) {
+
+        int parallelMax = Application.getInstance().getConfig()
+                .getInteger("core.transfers.parallel")
+                .orElse(4);
+
+        Application.log(this.getClass(), "Parallels transfer set to " + parallelMax);
+        Application.log(this.getClass(), "Fixed-Rate set to " + TRANSFER_QUEUE_INTERVAL);
+
+        this.executorService.setMaximumThreadActiveCount(parallelMax);
+
+
+        Application.getInstance().runWorker(new Thread(
+                this::updateTransferQueue, "TransferQueue::updateQueue()"), 0, TRANSFER_QUEUE_INTERVAL, TimeUnit.MILLISECONDS);
+
+    }
+
+    @Override
+    public void synchronize(Application app) {
+
+    }
+
+    @Override
+    public void exit(Application app) {
+
+    }
+
 }

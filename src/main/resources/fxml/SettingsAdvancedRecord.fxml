@@ -38,12 +38,15 @@
          AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
     <HBox>
+
         <VBox HBox.hgrow="ALWAYS" >
              <Label fx:id="labelName"/>
         </VBox>
+
         <VBox>
             <JFXTextField fx:id="textFieldValue"/>
         </VBox>
+
         <padding>
             <Insets right="20" />
         </padding>

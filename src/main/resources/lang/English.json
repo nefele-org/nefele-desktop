@@ -87,5 +87,6 @@
     "ARCHIVE_DIALOG_FILE_NOTSELECTED" : "The file was not selected",
     "ARCHIVE_DIALOG_FILE_INVALID" : "The file must be a file",
     "ARCHIVE_DIALOG_FOLDER_NOTSELECTED" : "The folder has not been selected",
-    "ARCHIVE_DIALOG_FOLDER_INVALID_2" : "The folder must be a folder"
+    "ARCHIVE_DIALOG_FOLDER_INVALID_2" : "The folder must be a folder",
+    "TRANSFERVIEWER_TRANSFER_NULL" : "No download or upload in progress now"
 }

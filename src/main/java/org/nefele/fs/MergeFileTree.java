@@ -25,11 +25,13 @@
 package org.nefele.fs;
 
 import org.nefele.Application;
+import org.nefele.core.Mime;
+import org.nefele.core.Mimes;
 import org.nefele.utils.Tree;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -37,62 +39,46 @@ import static java.util.Objects.requireNonNull;
 
 public class MergeFileTree {
 
-    private final Tree<Inode> tree;
+    private final Tree<MergeNode> tree;
+    private final MergeFileSystem fileSystem;
 
-    public MergeFileTree() {
+    public MergeFileTree(MergeFileSystem fileSystem) {
 
-        tree = new Tree<>(
-                new Inode(MergeFileSystem.PATH_SEPARATOR, "directory", "", "")
+        this.tree = new Tree<>(
+                new MergeNode(MergeFileSystem.ROOT, "directory", 0, Instant.now(), Instant.now(), Instant.now(), false, Instant.now(), "", "")
         );
+
+        this.fileSystem = fileSystem;
 
         fetchNode(tree.getData().getId(), tree);
     }
 
 
-    private void fetchNode(String parent, Tree<Inode> inodeTree) {
+    private void fetchNode(String parent, Tree<MergeNode> inodeTree) {
 
-
-        try {
-            Application.getInstance().getDatabase().query("SELECT * FROM inodes WHERE parent = ?",
-                    s -> s.setString(1, parent),
-                    r -> {
-                            inodeTree.add(new Inode(
-                                    r.getString(1),
-                                    r.getString(2),
-                                    r.getLong(3),
-                                    r.getLong(4),
-                                    r.getLong(5),
-                                    r.getLong(6),
-                                    r.getBoolean(7),
-                                    r.getLong(8),
-                                    r.getString(9),
-                                    r.getString(10)
-                            ));
-
-                    });
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        fileSystem.getCache().getInodes()
+                .values()
+                .stream()
+                .filter(i -> i.getParent().equals(parent))
+                .forEach(inodeTree::add);
 
         inodeTree.getChildren()
                 .stream()
                 .filter(i -> i.getData().getMime().equals("directory"))
                 .forEach(i -> fetchNode(i.getData().getId(), i));
 
-
-
     }
 
-    public Tree<Inode> getTree() {
+
+    public Tree<MergeNode> getTree() {
         return tree;
     }
 
 
 
-    public Tree<Inode> resolve(String[] paths) {
+    public Tree<MergeNode> resolve(String[] paths) {
 
-        Tree<Inode> tree = getTree();
+        Tree<MergeNode> tree = getTree();
 
         for(int i = 0; i < paths.length; i++) {
 
@@ -101,7 +87,7 @@ public class MergeFileTree {
             if(path.isEmpty())
                 continue;
 
-            Tree<Inode> child = requireNonNull(tree).findIf (
+            Tree<MergeNode> child = requireNonNull(tree).findIf (
                     j -> j.getData().getName().equals(path)
             );
 
@@ -110,11 +96,7 @@ public class MergeFileTree {
                 if(i != paths.length - 1)
                     throw new IllegalStateException();
 
-                try {
-                    child = new Tree<>(tree, Inode.alloc(path, tree.getData().getId()));
-                } catch (IOException e) {
-                    throw new IllegalArgumentException();
-                }
+                child = new Tree<>(tree, fileSystem.getCache().alloc(tree.getData(), path, Mime.UNKNOWN.getType()));
 
             }
 
@@ -127,7 +109,7 @@ public class MergeFileTree {
 
     }
 
-    public String toAbsolutePath(Tree<Inode> entry) {
+    public String toAbsolutePath(Tree<MergeNode> entry) {
 
         final ArrayList<String> names = new ArrayList<>();
 

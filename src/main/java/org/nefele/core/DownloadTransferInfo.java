@@ -25,8 +25,9 @@
 package org.nefele.core;
 
 import org.nefele.Application;
-import org.nefele.fs.Chunk;
-import org.nefele.fs.Inode;
+import org.nefele.fs.MergeChunk;
+import org.nefele.fs.MergeFileSystem;
+import org.nefele.fs.MergePath;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,8 +38,8 @@ public class DownloadTransferInfo extends TransferInfo {
     private static final int DOWNLOAD_BLOCK_SIZE = 65536;
 
 
-    public DownloadTransferInfo(Inode inode) {
-        super(inode, TRANSFER_TYPE_DOWNLOAD);
+    public DownloadTransferInfo(MergePath path) {
+        super(path, TRANSFER_TYPE_DOWNLOAD);
     }
 
 
@@ -49,7 +50,7 @@ public class DownloadTransferInfo extends TransferInfo {
 
 
         // TODO: deep copy array
-        for(Chunk chunk : getInode().getChunks()) {
+        for(MergeChunk chunk : getPath().getInode().getData().getChunks()) {
 
             if(getStatus() == TRANSFER_STATUS_CANCELED)
                 break;
@@ -64,49 +65,41 @@ public class DownloadTransferInfo extends TransferInfo {
             }
 
 
-            if(chunk.isCached()) {
+            if(!getFileSystem().getCache().isCached(chunk)) {
 
-                if(Application.getInstance().getCache().verify(chunk))
-                    continue;
+                try {
 
-            }
+                    InputStream inputStream = chunk.getDrive().readChunk(chunk);
+                    assert inputStream != null;
 
-            try {
-
-                InputStream inputStream = chunk.getDrive().readChunk(chunk);
-                assert inputStream != null;
-
-                ByteBuffer byteBuffer = ByteBuffer.allocate(inputStream.available());
+                    ByteBuffer byteBuffer = ByteBuffer.allocate(inputStream.available());
 
 
-                while(inputStream.available() > 0) {
+                    while (inputStream.available() > 0) {
 
-                    byte[] bytes;
-                    if(inputStream.available() < DOWNLOAD_BLOCK_SIZE)
-                        bytes = new byte[inputStream.available()];
-                    else
-                        bytes = new byte[DOWNLOAD_BLOCK_SIZE];
+                        byte[] bytes = new byte[Math.min(DOWNLOAD_BLOCK_SIZE, inputStream.available())];
+
+                        if (inputStream.read(bytes) > 0)
+                            byteBuffer.put(bytes);
+
+                        setProgress(getProgress() + bytes.length);
+
+                    }
+
+                    byteBuffer.rewind();
+                    getFileSystem().getCache().write(chunk, byteBuffer);
+
+                } catch (IOException e) {
+
+                    // TODO: handle error
 
 
-                    if(inputStream.read(bytes) > 0)
-                        byteBuffer.put(bytes);
+                    Application.log(getClass(), "WARNING! %s, something wrong, transfer canceled!", e.getClass().getName(), e.getMessage());
 
-                    setProgress(getProgress() + bytes.length);
+                    setStatus(TRANSFER_STATUS_ERROR);
+                    return getStatus();
 
                 }
-
-                byteBuffer.rewind();
-                Application.getInstance().getCache().write(chunk, byteBuffer, byteBuffer.capacity());
-
-            } catch (IOException e) {
-
-                // TODO: handle error
-
-
-                Application.log(getClass(), "WARNING! %s, something wrong, transfer canceled!", e.getClass().getName(), e.getMessage());
-
-                setStatus(TRANSFER_STATUS_ERROR);
-                return getStatus();
 
             }
 

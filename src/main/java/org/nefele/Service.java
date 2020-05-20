@@ -22,7 +22,12 @@
  * THE SOFTWARE.
  */
 
-package org.nefele.fs;
+package org.nefele;
 
-public class MergeRegularFile {
+public interface Service {
+
+    void initialize(Application app);
+    void synchronize(Application app);
+    void exit(Application app);
+
 }

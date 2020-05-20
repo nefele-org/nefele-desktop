@@ -11,16 +11,18 @@
          xmlns="http://javafx.com/javafx/10.0.2-internal"
          xmlns:fx="http://javafx.com/fxml/1">
 
-
     <BorderPane>
+
         <left>
             <Docker fx:id="dockerPane" />
         </left>
+
         <center>
             <AnchorPane fx:id="contentPane">
                 <padding><Insets top="10" right="25" bottom="10" left="10"/></padding>
             </AnchorPane>
         </center>
+
     </BorderPane>
 
 </fx:root>

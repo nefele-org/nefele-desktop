@@ -25,16 +25,9 @@
 package org.nefele.cloud;
 
 import javafx.beans.property.*;
-import org.nefele.Application;
-import org.nefele.fs.Chunk;
-
+import org.nefele.fs.MergeChunk;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.sql.SQLException;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.AtomicReference;
-
-import static java.util.Objects.requireNonNull;
 
 public abstract class Drive {
 
@@ -77,8 +70,8 @@ public abstract class Drive {
     }
 
 
-    public abstract OutputStream writeChunk(Chunk chunk);
-    public abstract InputStream readChunk(Chunk chunk);
+    public abstract OutputStream writeChunk(MergeChunk chunk);
+    public abstract InputStream readChunk(MergeChunk chunk);
     public abstract Drive initialize();
     public abstract Drive exit();
 

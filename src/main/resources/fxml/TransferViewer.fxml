@@ -31,16 +31,28 @@
 <?import javafx.scene.layout.BorderPane?>
 
 
+<?import javafx.scene.control.Label?>
 <fx:root minWidth="-Infinity" maxWidth="Infinity" minHeight="-Infinity" maxHeight="Infinity"
          type="StackPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
          AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
-    <ScrollPane fx:id="transferPane" fitToWidth="true" fitToHeight="true" prefWidth="200" prefHeight="200">
-        <BorderPane>
-            <center>
-                <VBox fx:id="cellPane" />
-            </center>
-        </BorderPane>
-    </ScrollPane>
+    <BorderPane>
+        <center>
+            <StackPane>
+
+                <ScrollPane fx:id="transferPane" fitToWidth="true" fitToHeight="true" prefWidth="200" prefHeight="200">
+                    <BorderPane>
+                        <center>
+                            <VBox fx:id="cellPane" />
+                        </center>
+                    </BorderPane>
+                </ScrollPane>
+
+                <Label fx:id="labelInfo"  userData="TRANSFERVIEWER_TRANSFER_NULL" alignment="CENTER" styleClass="text-h2"/>
+
+            </StackPane>
+        </center>
+    </BorderPane>
+
 </fx:root>
 

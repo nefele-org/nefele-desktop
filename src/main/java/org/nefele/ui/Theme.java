@@ -25,9 +25,6 @@
 package org.nefele.ui;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.scene.paint.Color;
 import org.nefele.Application;
 import org.nefele.Resources;
@@ -167,4 +164,6 @@ public class Theme {
         this.style = sb.toString();
 
     }
+
+
 }

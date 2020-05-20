@@ -26,6 +26,8 @@ package org.nefele;
 
 import org.sqlite.SQLiteErrorCode;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.*;
 
 public class Database {
@@ -49,14 +51,17 @@ public class Database {
 
     }
 
-    
 
-    public int query(String sql, DatabasePrepare onPrepare, DatabaseResult onResult) throws SQLException {
+
+    public void fetch(String sql, DatabasePrepare onPrepare, DatabaseResult onResult) throws SQLException {
 
         try {
 
             try (Connection conn = connect();
                  PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+                stmt.setFetchSize(5000);
+
 
                 if (onPrepare != null)
                     onPrepare.run(stmt);
@@ -71,25 +76,64 @@ public class Database {
 
                     rset.close();
 
-                } else
-                    return stmt.executeUpdate();
+                }
 
             }
 
-            return 0;
 
         } catch (SQLException e) {
 
             if(e.getErrorCode() == SQLiteErrorCode.SQLITE_BUSY.code)
-                return query(sql, onPrepare, onResult);
+                fetch(sql, onPrepare, onResult);
 
             else if(e.getErrorCode() == SQLiteErrorCode.SQLITE_CORRUPT.code)
                 Application.panic(Database.class, "Database is gone, rest in peace :( (%s)", e.getMessage());
 
-            throw e;
+            else
+                throw e;
         }
 
 
     }
+
+
+    public int update(String sql, DatabasePrepare onPrepare, boolean batch) throws SQLException {
+
+        try {
+
+            try (Connection conn = connect();
+                 PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+                if (onPrepare != null)
+                    onPrepare.run(stmt);
+
+                if(batch)
+                    stmt.executeBatch();
+                else
+                    return stmt.executeUpdate();
+
+                return 0;
+
+            }
+
+        } catch (SQLException e) {
+
+            if(e.getErrorCode() == SQLiteErrorCode.SQLITE_BUSY.code)
+                return update(sql, onPrepare, batch);
+
+            else if(e.getErrorCode() == SQLiteErrorCode.SQLITE_CORRUPT.code)
+                Application.panic(Database.class, "Database is gone, rest in peace :( (%s)", e.getMessage());
+
+            else
+                throw e;
+
+        }
+
+
+        throw new IllegalStateException();
+
+    }
+
+
 
 }

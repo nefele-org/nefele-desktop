@@ -25,33 +25,23 @@
 package org.nefele;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXTreeTableColumn;
-import com.jfoenix.controls.JFXTreeTableView;
-import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
-import java.beans.DesignMode;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;
 
-public class Locale {
+public class Locale implements Service {
 
 
     public static final String DEFAULT_LOCALE = "English";
@@ -204,6 +194,21 @@ public class Locale {
         }
 
         return r;
+
+    }
+
+    @Override
+    public void initialize(Application app) {
+        app.getLocale().setLanguage(app.getConfig().getString("app.ui.locale").orElse(Locale.DEFAULT_LOCALE));
+    }
+
+    @Override
+    public void synchronize(Application app) {
+
+    }
+
+    @Override
+    public void exit(Application app) {
 
     }
 

@@ -24,23 +24,23 @@
 
 package org.nefele.core;
 
-import javazoom.jl.player.advanced.AdvancedPlayer;
 import org.nefele.Application;
-import org.nefele.fs.Chunk;
-import org.nefele.fs.Inode;
+import org.nefele.fs.MergeChunk;
+import org.nefele.fs.MergeFileSystem;
+import org.nefele.fs.MergeNode;
+import org.nefele.fs.MergePath;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.ByteBuffer;
+
 
 public class UploadTransferInfo extends TransferInfo {
 
     private static final int UPLOAD_BLOCK_SIZE = 65536;
 
-
-    public UploadTransferInfo(Inode inode) {
-        super(inode, TRANSFER_TYPE_UPLOAD);
+    public UploadTransferInfo(MergePath path) {
+        super(path, TRANSFER_TYPE_UPLOAD);
     }
 
 
@@ -51,7 +51,7 @@ public class UploadTransferInfo extends TransferInfo {
 
 
         // TODO: deep copy array
-        for(Chunk chunk : getInode().getChunks()) {
+        for(MergeChunk chunk : getPath().getInode().getData().getChunks()) {
 
             if(getStatus() == TRANSFER_STATUS_CANCELED)
                 break;
@@ -66,7 +66,7 @@ public class UploadTransferInfo extends TransferInfo {
             }
 
 
-            if(!chunk.isCached()) {
+            if(!getFileSystem().getCache().isCached(chunk)) {
 
                 Application.log(getClass(), "WARNING! chunk %s is not cached, something wrong!", chunk.getId());
 
@@ -78,17 +78,12 @@ public class UploadTransferInfo extends TransferInfo {
             try {
 
                 OutputStream outputStream = chunk.getDrive().writeChunk(chunk);
-                InputStream inputStream = Application.getInstance().getCache().read(chunk);
+                InputStream inputStream = getFileSystem().getCache().read(chunk);
 
 
                 while(inputStream.available() > 0) {
 
-                    byte[] bytes;
-                    if(inputStream.available() < UPLOAD_BLOCK_SIZE)
-                        bytes = new byte[inputStream.available()];
-                    else
-                        bytes = new byte[UPLOAD_BLOCK_SIZE];
-
+                    byte[] bytes = new byte[Math.min(UPLOAD_BLOCK_SIZE, inputStream.available())];
 
                     if(inputStream.read(bytes) > 0)
                         outputStream.write(bytes);
@@ -102,7 +97,7 @@ public class UploadTransferInfo extends TransferInfo {
 
                 // TODO: handle error
 
-                Application.panic(getClass(), e);
+
                 Application.log(getClass(), "WARNING! %s, something wrong, transfer canceled!", e.getClass().getName(), e.getMessage());
 
                 setStatus(TRANSFER_STATUS_ERROR);

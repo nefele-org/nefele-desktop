@@ -33,14 +33,10 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
-import javazoom.jl.player.advanced.AdvancedPlayer;
-import org.nefele.cloud.Drive;
-import org.nefele.cloud.Drives;
-import org.nefele.core.Mime;
+import org.nefele.cloud.DriveService;
 import org.nefele.core.Mimes;
 import org.nefele.core.Status;
 import org.nefele.core.TransferQueue;
-import org.nefele.fs.Cache;
 import org.nefele.ui.Theme;
 import org.nefele.ui.Views;
 import org.nefele.ui.controls.NefelePane;
@@ -48,8 +44,6 @@ import org.nefele.ui.dialog.Dialogs;
 import org.nefele.ui.scenes.Home;
 import org.nefele.ui.scenes.SplashScreen;
 
-
-import java.sql.SQLException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
@@ -71,17 +65,13 @@ public final class Application extends javafx.application.Application implements
     private final Locale locale;
     private final Status status;
     private final AtomicBoolean running;
-    private final Cache cache;
     private final TransferQueue transferQueue;
-    private final ArrayList<Drive> drives;
-    private final ArrayList<Mime> mimes;
+    private final ArrayList<Service> services;
     private final ExecutorService executorService;
     private final ScheduledExecutorService scheduledExecutorService;
     private final Views views;
     private final ObjectProperty<Theme> theme;
 
-    private final static ArrayList<Runnable> onInitHandlers = new ArrayList<>();
-    private final static ArrayList<Runnable> onExitHandlers = new ArrayList<>();
 
 
 
@@ -90,16 +80,17 @@ public final class Application extends javafx.application.Application implements
         instance = this;
 
         running = new AtomicBoolean(true);
+        services = new ArrayList<>();
+
         database = new Database();
         config = new Config(database);
         locale = new Locale();
         status = new Status();
-        cache = new Cache();
         transferQueue = new TransferQueue();
-        drives = new ArrayList<>();
-        mimes = new ArrayList<>();
+
         views = new Views();
         theme = new SimpleObjectProperty<>(null);
+
         executorService = Executors.newCachedThreadPool();
         scheduledExecutorService = Executors.newScheduledThreadPool(16);
 
@@ -125,64 +116,9 @@ public final class Application extends javafx.application.Application implements
         Resources.getFont(this, "/font/segoeuii.ttf");
 
 
-        Application.addOnInitHandler(() ->
-                setTheme(new Theme(config.getString("app.ui.theme").orElse(Theme.DEFAULT_THEME))));
-
-        Application.addOnInitHandler(() ->
-                locale.setLanguage(config.getString("app.ui.locale").orElse(Locale.DEFAULT_LOCALE)));
-
-
-        Application.addOnInitHandler(() -> {
-
-            try {
-
-                final ArrayList<String> ids = new ArrayList<>();
-
-                database.query("SELECT id FROM drives",
-                        null, r -> ids.add(r.getString(1)));
-
-                for(String id : ids)
-                    drives.add(Drives.fromId(id));
-
-
-            } catch (SQLException e) {
-                Application.panic(Drive.class, e);
-            }
-
-        });
-
-
-        Application.addOnInitHandler(() -> {
-
-            try {
-
-                Application.getInstance().getDatabase().query (
-                        "SELECT * FROM mime",
-                        null,
-                        r -> {
-
-                            getMimes().add(
-                                    new Mime(
-                                            r.getString(1),
-                                            r.getString(2),
-                                            r.getString(3),
-                                            r.getString(4))
-                            );
-
-                        }
-                );
-
-            } catch (SQLException e) {
-                Application.panic(Mimes.class, e);
-            }
-
-            Application.log(Mimes.class, "Loaded %d mimes", getMimes().size());
-
-
-        });
-
-
-
+        addService(getLocale());
+        addService(DriveService.getInstance());
+        addService(Mimes.getInstance());
 
 
 
@@ -202,22 +138,40 @@ public final class Application extends javafx.application.Application implements
         stage.show();
 
 
-        Application.getInstance().runThread(new Thread(() -> {
+
+        runThread(new Thread(() -> {
+
+
+            Application.log(getClass(), "Initialize theme");
+
+            setTheme(new Theme(getConfig().getString("app.ui.theme").orElse(Theme.DEFAULT_THEME)));
+
+
 
             Application.log(getClass(), "Initialize services");
 
-
-            double max = onInitHandlers.size();
+            double max = services.size();
             double cur = 0.0;
 
-            for(Runnable i : onInitHandlers) {
+            for(Service i : services) {
 
                 cur += 1.0;
                 getStatus().setLoadingProgress(cur / max);
 
-                i.run();
+
+                Application.log(getClass(), "Loading %s", i.getClass().getName());
+
+                i.initialize(this);
 
             }
+
+
+            runWorker(new Thread(() -> {
+                services.forEach(i -> {
+                    i.synchronize(Application.this);
+                });
+            }, "Service::synchronize()"), 3, 3, TimeUnit.SECONDS);
+
 
 
             Platform.runLater(() -> {
@@ -240,9 +194,18 @@ public final class Application extends javafx.application.Application implements
     public void stop() throws Exception {
 
         Application.log(Application.class, "Preparing to exit in a friendly way...");
-        Application.onExitHandlers.forEach(Runnable::run);
+
+
+        for(Service i : services) {
+
+            Application.log(getClass(), "Unloading %s", i.getClass().getName());
+
+            i.exit(this);
+
+        }
 
         running.set(false);
+
 
         try {
 
@@ -303,12 +266,9 @@ public final class Application extends javafx.application.Application implements
 
     }
 
-    public static void addOnInitHandler(Runnable e) {
-        onInitHandlers.add(e);
-    }
-
-    public static void addOnExitHandler(Runnable e) {
-        onExitHandlers.add(e);
+    public <T extends Service> void addService(T e) {
+        Application.log(getClass(), "Added service %s", e.getClass().getName());
+        services.add(e);
     }
 
 
@@ -336,20 +296,8 @@ public final class Application extends javafx.application.Application implements
         return status;
     }
 
-    public Cache getCache() {
-        return cache;
-    }
-
     public TransferQueue getTransferQueue() {
         return transferQueue;
-    }
-
-    public ArrayList<Drive> getDrives() {
-        return drives;
-    }
-
-    public ArrayList<Mime> getMimes() {
-        return mimes;
     }
 
     public Theme getTheme() {

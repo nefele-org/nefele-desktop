@@ -25,11 +25,21 @@
 package org.nefele.ui.scenes;
 
 import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
+import javafx.beans.binding.Binding;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -48,6 +58,7 @@ public class TransferViewer extends StackPane implements Initializable, Themeabl
 
     @FXML private ScrollPane transferPane;
     @FXML private VBox cellPane;
+    @FXML private Label labelInfo;
 
 
     public TransferViewer() {
@@ -75,6 +86,13 @@ public class TransferViewer extends StackPane implements Initializable, Themeabl
 
         });
 
+
+
+        labelInfo.visibleProperty().bind(
+                Bindings.when(Bindings.isEmpty(cellPane.getChildren()))
+                    .then(true)
+                    .otherwise(false)
+        );
 
         Application.getInstance().getViews().add(this);
     }

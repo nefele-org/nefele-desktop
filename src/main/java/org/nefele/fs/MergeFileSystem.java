@@ -25,21 +25,14 @@
 package org.nefele.fs;
 
 import org.nefele.Application;
-import org.nefele.utils.Tree;
+import org.nefele.Service;
 
-import java.awt.*;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.net.URI;
 import java.nio.file.*;
 import java.nio.file.attribute.UserPrincipalLookupService;
 import java.nio.file.spi.FileSystemProvider;
-import java.sql.SQLException;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
-import java.util.function.BinaryOperator;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
@@ -48,50 +41,25 @@ public class MergeFileSystem extends FileSystem {
 
     public final static String PATH_SEPARATOR = "/";
     public final static Character PATH_SEPARATOR_CHAR = '/';
+    public final static String ROOT = "/";
 
     private final FileSystemProvider provider;
     private final MergeFileStore fileStore;
     private final MergeFileTree fileTree;
+    private final MergeCache cache;
 
 
     public MergeFileSystem(FileSystemProvider provider) {
 
         this.provider = provider;
+        this.cache = new MergeCache();
         this.fileStore = new MergeFileStore(this);
-        this.fileTree = new MergeFileTree();
+        this.fileTree = new MergeFileTree(this);
 
-        Application.getInstance().runWorker(
-                new Thread(this::synchronizeWorker, "MergeFileSystem::SynchronizeWorker()"), 3,
-                Application.getInstance().getConfig().getInteger("core.mfs.sync").orElse(5), TimeUnit.SECONDS);
-
-        Application.getInstance().addOnExitHandler(this::synchronizeWorker);
+        Application.getInstance().addService(cache);
 
     }
 
-
-    private synchronized void synchronizeWorker() {
-        updateInode(getFileTree().getTree());
-    }
-
-
-    private void updateInode(Tree<Inode> tree) {
-
-        Inode inode = tree.getData();
-
-        if(inode.isDirty()) {
-
-            try {
-                Inode.put(inode);
-            } catch (IOException e) {
-                Application.panic(getClass(), e);
-            }
-
-            inode.setDirty(false);
-        }
-
-        tree.getChildren().forEach(this::updateInode);
-
-    }
 
 
     @Override
@@ -179,4 +147,7 @@ public class MergeFileSystem extends FileSystem {
         return fileTree;
     }
 
+    public MergeCache getCache() {
+        return cache;
+    }
 }

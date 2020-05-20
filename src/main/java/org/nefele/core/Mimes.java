@@ -25,11 +25,33 @@
 package org.nefele.core;
 
 import org.nefele.Application;
+import org.nefele.Service;
 
-public final class Mimes {
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+public final class Mimes implements Service {
+
+    private final static Mimes instance = new Mimes();
+
+    public static Mimes getInstance() {
+        return instance;
+    }
 
 
-    public static Mime getByExtension(String filename) {
+
+    private final ArrayList<Mime> mimes;
+
+    private Mimes() {
+        mimes = new ArrayList<>();
+    }
+
+    public ArrayList<Mime> getMimes() {
+        return mimes;
+    }
+
+
+    public Mime getByExtension(String filename) {
 
         if(filename.contains("."))
             filename = filename.substring(filename.lastIndexOf("."));
@@ -39,7 +61,7 @@ public final class Mimes {
 
         final String extension = filename;
 
-        return Application.getInstance().getMimes()
+        return getMimes()
                 .stream()
                 .filter(i -> i.getExtension().equals(extension))
                 .findFirst()
@@ -47,13 +69,55 @@ public final class Mimes {
 
     }
 
-    public static Mime getByType(String type) {
+    public Mime getByType(String type) {
 
-        return Application.getInstance().getMimes()
+        return getMimes()
                 .stream()
                 .filter(i -> i.getType().equals(type))
                 .findFirst()
                 .orElse(Mime.UNKNOWN);
+
+    }
+
+
+
+    @Override
+    public void initialize(Application app) {
+
+        try {
+
+            Application.getInstance().getDatabase().fetch (
+                    "SELECT * FROM mime",
+                    null,
+                    r -> {
+
+                        getMimes().add(
+                                new Mime(
+                                        r.getString(1),
+                                        r.getString(2),
+                                        r.getString(3),
+                                        r.getString(4))
+                        );
+
+                    }
+            );
+
+        } catch (SQLException e) {
+            Application.panic(Mimes.class, e);
+        }
+
+        Application.log(Mimes.class, "Loaded %d mimes", getMimes().size());
+
+
+    }
+
+    @Override
+    public void synchronize(Application app) {
+
+    }
+
+    @Override
+    public void exit(Application app) {
 
     }
 

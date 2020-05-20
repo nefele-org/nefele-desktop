@@ -24,16 +24,12 @@
 
 package org.nefele.cloud;
 
-import javafx.scene.Parent;
 import org.nefele.Application;
-import org.nefele.fs.Chunk;
-import org.nefele.fs.MergeFileSystem;
-
+import org.nefele.fs.MergeChunk;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.attribute.FileAttribute;
 
 public class OfflineDriveService extends Drive {
 
@@ -50,7 +46,7 @@ public class OfflineDriveService extends Drive {
     }
 
     @Override
-    public OutputStream writeChunk(Chunk chunk) {
+    public OutputStream writeChunk(MergeChunk chunk) {
 
         try {
             return new FileOutputStream(new File(offlinePath.resolve(Paths.get(chunk.getId())).toString()));
@@ -63,7 +59,7 @@ public class OfflineDriveService extends Drive {
     }
 
     @Override
-    public InputStream readChunk(Chunk chunk) {
+    public InputStream readChunk(MergeChunk chunk) {
 
         try {
             return new FileInputStream(new File(offlinePath.resolve(Paths.get(chunk.getId())).toString()));

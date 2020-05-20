@@ -29,6 +29,7 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -57,7 +58,6 @@ public class TransferViewerCell extends StackPane implements Initializable, Them
     @FXML private Label labelSpeed;
     @FXML private Label labelFileName;
 
-    
     public TransferViewerCell(TransferInfo transferInfo) {
 
         this.transferInfo = new SimpleObjectProperty<>(transferInfo);
@@ -106,7 +106,7 @@ public class TransferViewerCell extends StackPane implements Initializable, Them
                 long remainingTime = 0L;
 
                 if(getTransferInfo().getSpeed() > 0)
-                    remainingTime = ((getTransferInfo().getSize() - n.longValue()) / getTransferInfo().getSpeed() + 1);
+                    remainingTime = ((getTransferInfo().getSize() - n.longValue()) / (getTransferInfo().getSpeed()) + 1);
 
 
                 if(remainingTime == 0)
@@ -123,11 +123,12 @@ public class TransferViewerCell extends StackPane implements Initializable, Them
         });
 
 
-        progressStatus.progressProperty().bind (
-                getTransferInfo().progressProperty()
-                        .divide(getTransferInfo().sizeProperty())
-        );
 
+        getTransferInfo().progressProperty().addListener((v, o, n) -> {
+            Platform.runLater(() -> {
+                progressStatus.setProgress((double) n / (double) getTransferInfo().getSize());
+            });
+        });
 
         labelFileName.textProperty().bind(getTransferInfo().nameProperty());
 

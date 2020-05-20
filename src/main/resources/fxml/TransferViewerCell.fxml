@@ -8,10 +8,14 @@
 <?import javafx.scene.layout.*?>
 
 <fx:root minHeight="80" prefHeight="80" type="StackPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
+
     <BorderPane>
+
         <center>
+
             <VBox alignment="CENTER_LEFT">
                 <BorderPane>
+
                     <left>
                         <HBox spacing="15" alignment="CENTER" >
                             <FontAwesomeIconView fx:id="iconOperation" glyphName="DOWNLOAD" size="32.0" />
@@ -24,6 +28,7 @@
                                 </VBox>
                         </HBox>
                     </left>
+
                     <right>
                         <HBox alignment="CENTER" spacing="40">
                             <HBox alignment="CENTER" spacing="5">
@@ -37,10 +42,14 @@
                             </HBox>
                         </HBox>
                     </right>
+
                     <padding><Insets left="20" right="20" /></padding>
                 </BorderPane>
+
             </VBox>
+
         </center>
+
         <bottom>
             <AnchorPane>
                 <JFXProgressBar fx:id="progressStatus" progress="0.5" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" />

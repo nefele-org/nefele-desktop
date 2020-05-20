@@ -5,9 +5,11 @@
 <?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
 
 <fx:root type="BorderPane" styleClass="filebrowser-cell" prefHeight="64.0" prefWidth="64.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
+
    <center>
       <MaterialDesignIconView fx:id="icon" glyphName="FOLDER" size="36" BorderPane.alignment="CENTER"/>
    </center>
+
    <bottom>
       <Label fx:id="label" text="Label" BorderPane.alignment="CENTER">
          <tooltip>
@@ -15,4 +17,5 @@
          </tooltip>
       </Label>
    </bottom>
+
 </fx:root>

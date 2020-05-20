@@ -6,21 +6,21 @@
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-
-
-<?import de.jensd.fx.glyphs.materialicons.MaterialIconView?>
 <?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tooltip?>
+
 <fx:root prefHeight="400.0" prefWidth="600.0" type="StackPane"
          xmlns="http://javafx.com/javafx/10.0.2-internal"
          xmlns:fx="http://javafx.com/fxml/1" styleClass="window-background, window-border">
 
     <BorderPane>
+
         <top>
+
           <BorderPane fx:id="headerPane">
+
               <left>
                   <Pane fx:id="awesomeLogo">
                       <FontAwesomeIconView glyphName="CLOUD" layoutX="14.0" layoutY="40.0" selectionFill="#571d1d"
@@ -31,11 +31,12 @@
                                            styleClass="header-awesome-logo-2"/>
                   </Pane>
               </left>
-              <right>
 
+              <right>
                   <HBox spacing="25">
+
                       <Pane>
-                          <HBox alignment="BASELINE_CENTER">
+                        <HBox alignment="BASELINE_CENTER">
                               <JFXToggleButton fx:id="toggleDarkMode" size="7.5" text="">
                                   <tooltip>
                                       <Tooltip fx:id="tooltipDarkMode" userData="NEFELEPANE_HINT_DARKMODE"/>
@@ -45,7 +46,9 @@
                                                    size="18.0"/>
                           </HBox>
                       </Pane>
+
                       <Pane>
+
                           <HBox>
                               <JFXButton fx:id="controlMinimize" contentDisplay="GRAPHIC_ONLY"
                                          styleClass="header-control-button, header-control-button-minimize" text="">
@@ -53,6 +56,7 @@
                                         <MaterialDesignIconView glyphName="WINDOW_MINIMIZE" size="18.0" />
                                   </graphic>
                               </JFXButton>
+                              
                               <JFXButton fx:id="controlMaximize" contentDisplay="GRAPHIC_ONLY"
                                          styleClass="header-control-button, header-control-button-maximize" text="">
                                   <graphic>
@@ -66,6 +70,7 @@
                                   </graphic>
                               </JFXButton>
                           </HBox>
+
                           <HBox.margin>
                               <Insets top="10.0"/>
                           </HBox.margin>
@@ -74,30 +79,37 @@
                       <BorderPane.margin>
                           <Insets right="5.0"/>
                       </BorderPane.margin>
+
                   </HBox>
               </right>
+
               <bottom>
                   <Separator BorderPane.alignment="CENTER"/>
               </bottom>
           </BorderPane>
+
         </top>
+
         <center>
             <StackPane fx:id="contentPaneContainer"/>
         </center>
+
         <bottom>
             <BorderPane>
+
                 <left>
                     <HBox fx:id="statusBar" styleClass="status-bar" alignment="BOTTOM_LEFT">
                         <MaterialDesignIconView fx:id="statusIcon" size="16"/>
                         <Label fx:id="statusText" />
                     </HBox>
                 </left>
+
                 <right>
-
                     <MaterialDesignIconView fx:id="resizeHandle" glyphName="RESIZE_BOTTOM_RIGHT" size="24.0" />
-
                 </right>
+
             </BorderPane>
         </bottom>
+
     </BorderPane>
 </fx:root>

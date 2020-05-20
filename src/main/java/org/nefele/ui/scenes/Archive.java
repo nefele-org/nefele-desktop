@@ -121,7 +121,7 @@ public class Archive extends StackPane implements Initializable, Themeable {
                         Files.write(path, Files.readAllBytes(file.toPath()));
 
                         Application.getInstance().getTransferQueue().enqueue(
-                                new UploadTransferInfo(((MergePath) path).getInode().getData())).get();
+                                new UploadTransferInfo((MergePath) path)).get();
 
                     } catch (IOException io) {
 
@@ -238,7 +238,7 @@ public class Archive extends StackPane implements Initializable, Themeable {
                     Files.list(path).filter(p -> !Files.isDirectory(p)).forEach(i -> {
 
                         String filename = i.getFileName().toString();
-                        Mime mime = Mimes.getByExtension(filename);
+                        Mime mime = Mimes.getInstance().getByExtension(filename);
 
                         items.add(new FileBrowserItem(mime, filename));
 

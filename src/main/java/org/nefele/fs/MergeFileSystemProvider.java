@@ -92,7 +92,7 @@ public class MergeFileSystemProvider extends FileSystemProvider {
             throw new IllegalArgumentException();
 
 
-        final Tree<Inode> inode = ((MergePath) path).getInode();
+        final Tree<MergeNode> inode = ((MergePath) path).getInode();
 
         if(inode == null)
             return null;
@@ -115,7 +115,7 @@ public class MergeFileSystemProvider extends FileSystemProvider {
                     @Override
                     public Path next() {
 
-                        Tree<Inode> entry = inode.getChildren().get(index++);
+                        Tree<MergeNode> entry = inode.getChildren().get(index++);
 
                         return new MergePath(fileSystem, entry, fileSystem.getFileTree().toAbsolutePath(entry), entry.getData().getName());
 

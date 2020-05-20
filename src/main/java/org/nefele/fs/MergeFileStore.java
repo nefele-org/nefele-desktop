@@ -25,21 +25,15 @@
 package org.nefele.fs;
 
 import org.nefele.Application;
-import org.nefele.Database;
 import org.nefele.cloud.Drive;
-import org.nefele.cloud.Drives;
+import org.nefele.cloud.DriveService;
 import org.nefele.core.Mime;
-import org.nefele.utils.Tree;
-import org.sqlite.SQLiteErrorCode;
 
-import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.FileAttributeView;
 import java.nio.file.attribute.FileStoreAttributeView;
-import java.sql.SQLException;
-import java.time.Instant;
 
 import static java.util.Objects.requireNonNull;
 
@@ -70,20 +64,20 @@ public class MergeFileStore extends FileStore {
     @Override
     public long getTotalSpace() throws IOException {
 
-        return Application.getInstance().getDrives()
+        return DriveService.getInstance().getDrives()
                 .stream()
                 .mapToLong(Drive::getQuota)
-                .sum() * Chunk.getSize();
+                .sum() * MergeChunk.getSize();
 
     }
 
     @Override
     public long getUsableSpace() throws IOException {
 
-        return getTotalSpace() - Application.getInstance().getDrives()
+        return getTotalSpace() - DriveService.getInstance().getDrives()
                 .stream()
                 .mapToLong(Drive::getChunks)
-                .sum() * Chunk.getSize();
+                .sum() * MergeChunk.getSize();
 
     }
 
@@ -114,7 +108,7 @@ public class MergeFileStore extends FileStore {
 
     public void createDirectory(MergePath path, FileAttribute<?>... fileAttributes) throws IOException {
 
-        Inode inode = path.getInode().getData();
+        MergeNode inode = path.getInode().getData();
 
         inode.setMime(Mime.FOLDER.getType());
         inode.invalidate();
@@ -123,7 +117,7 @@ public class MergeFileStore extends FileStore {
 
     public void delete(MergePath path) throws IOException {
 
-        Inode inode = path.getInode().getData();
+        MergeNode inode = path.getInode().getData();
 
         if(inode.getMime().equals(Mime.FOLDER.getType())) {
 
@@ -137,8 +131,7 @@ public class MergeFileStore extends FileStore {
             Application.panic(getClass(), "Can not remove root directory!");
 
 
-        // TODO: remove data ...
-        Inode.free(inode);
+        fileSystem.getCache().free(inode);
 
         path.getInode().getParent().remove(path.getInode());
 

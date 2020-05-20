@@ -13,48 +13,66 @@
          type="StackPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
          AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
     <children>
+
         <BorderPane>
+
             <top>
+
                 <HBox BorderPane.alignment="TOP_CENTER">
                     <children>
+
                         <JFXButton contentDisplay="GRAPHIC_ONLY" fx:id="buttonBack" mnemonicParsing="false" text=" " styleClass="filebrowser-header-button">
                             <graphic>
                                 <MaterialIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="ARROW_BACK" size="24.0" />
                             </graphic>
                             <tooltip>
                                 <Tooltip userData="ARCHIVE_HINT_BACK"/>
-                            </tooltip></JFXButton>
+                            </tooltip>
+                        </JFXButton>
+
                         <JFXButton contentDisplay="GRAPHIC_ONLY" fx:id="buttonForward" mnemonicParsing="false" text=" " styleClass="filebrowser-header-button">
                             <graphic>
                                 <MaterialIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="ARROW_FORWARD" size="24.0" />
                             </graphic>
                             <tooltip>
                                 <Tooltip userData="ARCHIVE_HINT_FORWARD"/>
-                            </tooltip></JFXButton>
+                            </tooltip>
+                        </JFXButton>
+
                         <JFXButton contentDisplay="GRAPHIC_ONLY" fx:id="buttonHome" mnemonicParsing="false" text=" " styleClass="filebrowser-header-button">
                             <graphic>
                                 <MaterialIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="HOME" size="24.0" />
                             </graphic>
                             <tooltip>
                                 <Tooltip userData="ARCHIVE_HINT_HOME"/>
-                            </tooltip></JFXButton>
+                            </tooltip>
+                        </JFXButton>
+
                         <JFXTextField fx:id="textFieldPath" editable="false" HBox.hgrow="ALWAYS" styleClass="filebrowser-text-field" >
                             <HBox.margin>
                                 <Insets left="10.0" right="10.0" />
-                            </HBox.margin></JFXTextField>
+                            </HBox.margin>
+                        </JFXTextField>
+
                         <JFXButton contentDisplay="GRAPHIC_ONLY" fx:id="buttonEmpty" mnemonicParsing="false" text=" " styleClass="filebrowser-header-button">
                             <graphic>
                                 <MaterialIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="DELETE_FOREVER" size="24.0" />
                             </graphic>
                             <tooltip>
                                 <Tooltip userData="TRASH_HINT_EMPTY"/>
-                            </tooltip></JFXButton>
+                            </tooltip>
+                        </JFXButton>
+
                     </children>
                 </HBox>
+
             </top>
+
             <center>
                 <FileBrowser fx:id="fileBrowser" />
             </center>
+
         </BorderPane>
+
     </children>
 </fx:root>

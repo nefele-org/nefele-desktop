@@ -25,6 +25,7 @@
 package org.nefele.ui.dialog;
 
 import com.jfoenix.controls.JFXButton;
+import javafx.application.Platform;
 import javafx.util.Pair;
 import org.nefele.Application;
 
@@ -34,10 +35,16 @@ public final class Dialogs {
 
     private static <T extends BaseDialog> int showMessageBoxImpl(BaseDialog baseDialog, int... buttons) {
 
+        if(!Platform.isFxApplicationThread())
+            throw new IllegalStateException("Wrong thread for MessageBox!");
+
+
         for(int i : buttons)
             baseDialog.getButtons().add(i);
 
         baseDialog.showAndWait();
+
+
         return baseDialog.getDialogResult();
 
     }
