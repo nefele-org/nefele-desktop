@@ -55,13 +55,13 @@ public abstract class Drive {
     private boolean dirty;
 
 
-    public Drive(String id, String service) {
+    public Drive(String id, String service, long quota, long blocks) {
 
         this.id = new SimpleStringProperty(id);
         this.service = new SimpleStringProperty(service);
 
-        this.quota = new SimpleLongProperty(0L);
-        this.chunks = new SimpleLongProperty(0L);
+        this.quota = new SimpleLongProperty(quota);
+        this.chunks = new SimpleLongProperty(blocks);
         this.status = new SimpleIntegerProperty(STATUS_UNKNOWN);
         this.error = new SimpleIntegerProperty(ERROR_OK);
 
@@ -79,6 +79,10 @@ public abstract class Drive {
 
     public void invalidate() {
         dirty = true;
+    }
+
+    protected void validate() {
+        dirty = false;
     }
 
     public boolean isDirty() {

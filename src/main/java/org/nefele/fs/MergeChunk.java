@@ -78,6 +78,11 @@ public class MergeChunk implements Invalidatable {
     }
 
     @Override
+    public void validate() {
+        dirty = true;
+    }
+
+    @Override
     public boolean isDirty() {
         return dirty;
     }

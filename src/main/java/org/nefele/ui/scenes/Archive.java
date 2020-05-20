@@ -47,9 +47,7 @@ import org.nefele.ui.controls.FileBrowserItemFactory;
 import org.nefele.ui.dialog.BaseDialog;
 import org.nefele.ui.dialog.Dialogs;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.lang.management.PlatformManagedObject;
 import java.net.URI;
 import java.net.URL;
@@ -118,7 +116,16 @@ public class Archive extends StackPane implements Initializable, Themeable {
                         Path path = MergePath.get("cloud", fileBrowser.getCurrentPath().toString(), file.getName());
 
                         Files.createFile(path);
-                        Files.write(path, Files.readAllBytes(file.toPath()));
+
+                        OutputStream writer = Files.newOutputStream(path);
+                        InputStream reader = Files.newInputStream(file.toPath());
+
+                        while(reader.available() > 0)
+                            writer.write(reader.readNBytes(4194304));
+
+                        writer.close();
+                        reader.close();
+
 
                         Application.getInstance().getTransferQueue().enqueue(
                                 new UploadTransferInfo((MergePath) path)).get();

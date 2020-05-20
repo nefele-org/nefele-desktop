@@ -42,15 +42,15 @@ import java.util.ResourceBundle;
 
 public class StatsDriveInfo extends StackPane implements Initializable, Themeable {
 
-    //private final ObjectProperty<Drive> drive;
+    private final ObjectProperty<Drive> drive;
     @FXML private JFXSpinner spinner;
     @FXML private Label labelDriveName;
     @FXML private Label labelSpaceAvailable;
     @FXML private Label labelStatus;
 
-    public StatsDriveInfo() {
+    public StatsDriveInfo(Drive drive) {
 
-        //this.drive = new SimpleObjectProperty<>(drive);
+        this.drive = new SimpleObjectProperty<>(drive);
 
         Resources.getFXML(this, "/fxml/StatsDriveInfo.fxml");
     }
@@ -65,12 +65,12 @@ public class StatsDriveInfo extends StackPane implements Initializable, Themeabl
 
     }
 
-//    public Drive getDrive() {
-//        return drive.get();
-//    }
-//
-//    public ObjectProperty<Drive> driveProperty() {
-//        return drive;
-//    }
+    public Drive getDrive() {
+        return drive.get();
+    }
+
+    public ObjectProperty<Drive> driveProperty() {
+        return drive;
+    }
 
 }

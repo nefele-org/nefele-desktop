@@ -5,6 +5,6 @@ vendor
 .idea/workspace.xml
 .idea/misc.xml
 .gradle
-/build/
-/cache/
-/offline-cloud-service/
+build
+cache
+offline-cloud-service

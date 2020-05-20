@@ -47,10 +47,7 @@ import org.nefele.ui.scenes.SplashScreen;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.util.Objects.requireNonNull;
@@ -71,6 +68,8 @@ public final class Application extends javafx.application.Application implements
     private final ScheduledExecutorService scheduledExecutorService;
     private final Views views;
     private final ObjectProperty<Theme> theme;
+
+    private ScheduledFuture<?> serviceWorker = null;
 
 
 
@@ -158,15 +157,13 @@ public final class Application extends javafx.application.Application implements
                 cur += 1.0;
                 getStatus().setLoadingProgress(cur / max);
 
-
                 Application.log(getClass(), "Loading %s", i.getClass().getName());
-
                 i.initialize(this);
 
             }
 
 
-            runWorker(new Thread(() -> {
+            serviceWorker = runWorker(new Thread(() -> {
                 services.forEach(i -> {
                     i.synchronize(Application.this);
                 });
@@ -196,12 +193,12 @@ public final class Application extends javafx.application.Application implements
         Application.log(Application.class, "Preparing to exit in a friendly way...");
 
 
+        if(serviceWorker != null)
+            serviceWorker.cancel(true);
+
         for(Service i : services) {
-
             Application.log(getClass(), "Unloading %s", i.getClass().getName());
-
             i.exit(this);
-
         }
 
         running.set(false);
@@ -257,12 +254,12 @@ public final class Application extends javafx.application.Application implements
 
     }
 
-    public void runWorker(Thread thread, int delay, int interval, TimeUnit unit) {
+    public ScheduledFuture<?> runWorker(Thread thread, int delay, int interval, TimeUnit unit) {
 
         requireNonNull(thread);
 
-        scheduledExecutorService.scheduleAtFixedRate(thread, delay, interval, unit);
         Application.log(Application.class, "Submit new Worker #%d (%s)", thread.getId(), thread.getName());
+        return scheduledExecutorService.scheduleAtFixedRate(thread, delay, interval, unit);
 
     }
 

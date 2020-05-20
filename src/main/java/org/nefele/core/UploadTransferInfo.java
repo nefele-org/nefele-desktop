@@ -49,6 +49,7 @@ public class UploadTransferInfo extends TransferInfo {
 
         setStatus(TransferInfo.TRANSFER_STATUS_RUNNING);
 
+        Application.log(getClass(), "Started UploadTransferInfo() for %s (size: %d)", getPath().toString(), getPath().getInode().getData().getSize());
 
         // TODO: deep copy array
         for(MergeChunk chunk : getPath().getInode().getData().getChunks()) {
@@ -83,14 +84,25 @@ public class UploadTransferInfo extends TransferInfo {
 
                 while(inputStream.available() > 0) {
 
+                    if(getStatus() == TRANSFER_STATUS_CANCELED)
+                        break;
+
+
                     byte[] bytes = new byte[Math.min(UPLOAD_BLOCK_SIZE, inputStream.available())];
 
                     if(inputStream.read(bytes) > 0)
                         outputStream.write(bytes);
 
+                    try {
+                        Thread.sleep(10);
+                    } catch (InterruptedException ignored) { }
+
                     setProgress(getProgress() + bytes.length);
 
                 }
+
+                outputStream.close();
+                inputStream.close();
 
 
             } catch (IOException e) {

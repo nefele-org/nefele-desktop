@@ -37,6 +37,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import org.nefele.Application;
 import org.nefele.Resources;
+import org.nefele.cloud.DriveService;
 import org.nefele.fs.MergeFileSystem;
 import org.nefele.ui.Themeable;
 import org.nefele.ui.controls.NefelePane;
@@ -111,7 +112,7 @@ public class Stats extends StackPane implements Initializable, Themeable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        //Application.getInstance().getDrives().forEach(i -> cells.add(new StatsCell(i)));
+        DriveService.getInstance().getDrives().forEach(i -> cells.add(new StatsDriveInfo(i)));
 
 
         buttonSystemMemoryClean.setOnMouseClicked(e -> {

@@ -26,5 +26,6 @@ package org.nefele;
 
 public interface Invalidatable {
     void invalidate();
+    void validate();
     boolean isDirty();
 }

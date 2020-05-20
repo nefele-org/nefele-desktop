@@ -102,13 +102,6 @@ public class MergeCache implements Service {
             fileChannel.write(byteBuffer, offset);
             fileChannel.close();
 
-//            RandomAccessFile file = new RandomAccessFile(path.resolve(Path.of(chunk.getId())).toFile(), "rw");
-//            file.seek(offset);
-//            int p = byteBuffer.remaining();
-//            byte[] b = new byte[byteBuffer.remaining()];
-//            byteBuffer.put(b);
-//            file.write(b);
-//            file.close();
 
             chunk.setHash(String.format("%d", System.nanoTime()));
             chunk.invalidate();
@@ -307,8 +300,9 @@ public class MergeCache implements Service {
                             s.setLong(8, node.getDeletedTime().getEpochSecond());
                             s.setString(9, node.getId());
                             s.setString(10, node.getParent());
-
                             s.addBatch();
+
+                            node.validate();
 
                         }
 
@@ -331,8 +325,9 @@ public class MergeCache implements Service {
                             s.setString(3, chunk.getInode().getId());
                             s.setString(4, chunk.getDrive().getId());
                             s.setString(5, chunk.getHash());
-
                             s.addBatch();
+
+                            chunk.validate();
 
                         }
 

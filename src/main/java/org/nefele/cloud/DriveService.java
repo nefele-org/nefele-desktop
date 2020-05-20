@@ -25,6 +25,7 @@
 package org.nefele.cloud;
 
 import org.nefele.Application;
+import org.nefele.Database;
 import org.nefele.Service;
 
 import java.sql.SQLException;
@@ -88,7 +89,7 @@ public final class DriveService implements Service {
                     switch (service.get()) {
 
                         case OfflineDriveService.SERVICE_ID:
-                            return new OfflineDriveService(id, service.get())
+                            return new OfflineDriveService(id, service.get(), quota.get(), blocks.get())
                                     .initialize();
 
                         default:
@@ -142,11 +143,44 @@ public final class DriveService implements Service {
     @Override
     public void synchronize(Application app) {
 
+        try {
+
+            Application.getInstance().getDatabase().update(
+                    "INSERT OR REPLACE INTO drives (id, service, quota, chunks) VALUES (?, ?, ?, ?)",
+                    s -> {
+                        drives
+                                .stream()
+                                .filter(Drive::isDirty)
+                                .forEach(i -> {
+
+                                    try {
+
+                                        s.setString(1, i.getId());
+                                        s.setString(2, i.getService());
+                                        s.setLong(3, i.getQuota());
+                                        s.setLong(4, i.getChunks());
+                                        s.addBatch();
+
+                                        i.validate();
+
+                                    } catch (SQLException e) {
+                                        Application.panic(getClass(), e);
+                                    }
+
+                                });
+                    }, true
+            );
+
+        } catch (SQLException e) {
+            Application.panic(getClass(), e);
+        }
+
+
     }
 
     @Override
     public void exit(Application app) {
-
+        synchronize(app);
     }
 
 }

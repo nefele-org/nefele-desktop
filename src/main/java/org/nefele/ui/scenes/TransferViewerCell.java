@@ -112,11 +112,11 @@ public class TransferViewerCell extends StackPane implements Initializable, Them
                 if(remainingTime == 0)
                     labelTime.setText("∞");
 
-                else if(remainingTime < 60)
+                else if(remainingTime < 60L)
                     labelTime.setText(String.format("%d s", remainingTime));
 
                 else
-                    labelTime.setText(String.format("%d s", remainingTime));
+                    labelTime.setText(String.format("%d m", remainingTime / 60));
 
 
                 progressStatus.setProgress((n.doubleValue()) / Long.valueOf(getTransferInfo().getSize()).doubleValue());

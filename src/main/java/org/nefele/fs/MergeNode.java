@@ -150,6 +150,11 @@ public class MergeNode implements Invalidatable {
     }
 
     @Override
+    public void validate() {
+        dirty = false;
+    }
+
+    @Override
     public boolean isDirty() {
         return dirty;
     }

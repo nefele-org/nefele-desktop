@@ -139,27 +139,19 @@ public class MergeFileChannel extends FileChannel {
 
             long block = position / blocksize;
             long offset = position % blocksize;
-            long size = blocksize;
-
-            if (byteBuffer.remaining() < size)
-                size = byteBuffer.remaining();
+            long size = Math.min(byteBuffer.remaining(), blocksize);
 
 
-            MergeChunk chunk;
-
-            if (inode.getChunks().size() > block) {
-
-                chunk = inode.getChunks()
+            MergeChunk chunk = inode.getChunks()
                         .stream()
                         .filter(i -> i.getOffset() == block)
                         .findFirst()
-                        .get();
+                        .orElseGet(() -> fileSystem.getCache().alloc(inode, block));
 
-            } else {
 
-                chunk = fileSystem.getCache().alloc(inode, block);
+            if(inode.getSize() < position + size) {
 
-                inode.setSize(inode.getSize() + size);
+                inode.setSize(position + size);
                 inode.setAccessedTime(Instant.now());
                 inode.setModifiedTime(Instant.now());
                 inode.invalidate();
@@ -168,6 +160,7 @@ public class MergeFileChannel extends FileChannel {
 
             fileSystem.getCache()
                     .write(chunk, byteBuffer, offset);
+
 
             position += size;
 

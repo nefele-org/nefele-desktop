@@ -38,8 +38,8 @@ public class OfflineDriveService extends Drive {
     private final Path offlinePath;
 
 
-    public OfflineDriveService(String id, String service) {
-        super(id, service);
+    public OfflineDriveService(String id, String service, long quota, long blocks) {
+        super(id, service, quota, blocks);
 
         this.offlinePath = Paths.get("offline-cloud-service", id);
 
@@ -75,6 +75,16 @@ public class OfflineDriveService extends Drive {
     public Drive initialize() {
 
         Application.log(getClass(), "Initializing %s", SERVICE_ID);
+
+
+
+        try {
+
+            if(Files.notExists(Path.of("offline-cloud-service")))
+                Files.createDirectory(Path.of("offline-cloud-service"));
+
+        } catch (IOException e) { }
+
 
 
         final Path path = offlinePath;
