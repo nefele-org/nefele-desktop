@@ -118,17 +118,13 @@ public class TransferViewerCell extends StackPane implements Initializable, Them
                 else
                     labelTime.setText(String.format("%d s", remainingTime));
 
+
+                progressStatus.setProgress((n.doubleValue()) / Long.valueOf(getTransferInfo().getSize()).doubleValue());
+
             });
 
         });
 
-
-
-        getTransferInfo().progressProperty().addListener((v, o, n) -> {
-            Platform.runLater(() -> {
-                progressStatus.setProgress((double) n / (double) getTransferInfo().getSize());
-            });
-        });
 
         labelFileName.textProperty().bind(getTransferInfo().nameProperty());
 

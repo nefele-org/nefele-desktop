@@ -15,9 +15,9 @@ import static java.util.Objects.requireNonNull;
 
 public class FileBrowserItem {
 
-    protected ObjectProperty<Mime> mime;
-    protected StringProperty text;
-    protected List<MenuItem> menuItems;
+    private final ObjectProperty<Mime> mime;
+    private final StringProperty text;
+    private List<MenuItem> menuItems;
 
     public FileBrowserItem(Mime mime, String text) {
         this.mime = new SimpleObjectProperty<>(requireNonNull(mime));

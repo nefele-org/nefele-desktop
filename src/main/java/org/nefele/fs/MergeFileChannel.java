@@ -131,13 +131,15 @@ public class MergeFileChannel extends FileChannel {
         long initpos = position;
 
 
+        if(blocksize < 8192L)
+            throw new IllegalStateException();
+
+
         while(byteBuffer.hasRemaining()) {
 
             long block = position / blocksize;
+            long offset = position % blocksize;
             long size = blocksize;
-
-            if (position % blocksize != 0)
-                throw new IOException("position is not aligned");
 
             if (byteBuffer.remaining() < size)
                 size = byteBuffer.remaining();
@@ -164,9 +166,8 @@ public class MergeFileChannel extends FileChannel {
 
             }
 
-
             fileSystem.getCache()
-                    .write(chunk, byteBuffer.limit(Math.min(byteBuffer.capacity(), (int) blocksize)));
+                    .write(chunk, byteBuffer, offset);
 
             position += size;
 

@@ -170,7 +170,7 @@ public final class Application extends javafx.application.Application implements
                 services.forEach(i -> {
                     i.synchronize(Application.this);
                 });
-            }, "Service::synchronize()"), 3, 3, TimeUnit.SECONDS);
+            }, "Service::synchronize()"), 10, 10, TimeUnit.SECONDS);
 
 
 

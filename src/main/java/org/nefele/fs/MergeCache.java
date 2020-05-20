@@ -30,8 +30,10 @@ import org.nefele.cloud.Drive;
 import org.nefele.cloud.DriveFullException;
 import org.nefele.cloud.DriveService;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
@@ -78,18 +80,35 @@ public class MergeCache implements Service {
 
 
 
-    public void write(MergeChunk chunk, ByteBuffer byteBuffer) throws IOException {
+    public void write(MergeChunk chunk, ByteBuffer byteBuffer, long offset) throws IOException {
 
         try {
 
-            FileChannel fileChannel = (FileChannel) Files.newByteChannel(path.resolve(Path.of(chunk.getId())),
-                    StandardOpenOption.CREATE,
-                    StandardOpenOption.TRUNCATE_EXISTING,
-                    StandardOpenOption.WRITE);
+            FileChannel fileChannel;
 
-            fileChannel.write(byteBuffer);
+            if(offset == 0L) {
+
+                fileChannel = (FileChannel) Files.newByteChannel(path.resolve(Path.of(chunk.getId())),
+                        StandardOpenOption.CREATE,
+                        StandardOpenOption.TRUNCATE_EXISTING,
+                        StandardOpenOption.WRITE);
+
+            } else {
+
+                fileChannel = (FileChannel) Files.newByteChannel(path.resolve(Path.of(chunk.getId())),
+                        StandardOpenOption.WRITE);
+            }
+
+            fileChannel.write(byteBuffer, offset);
             fileChannel.close();
 
+//            RandomAccessFile file = new RandomAccessFile(path.resolve(Path.of(chunk.getId())).toFile(), "rw");
+//            file.seek(offset);
+//            int p = byteBuffer.remaining();
+//            byte[] b = new byte[byteBuffer.remaining()];
+//            byteBuffer.put(b);
+//            file.write(b);
+//            file.close();
 
             chunk.setHash(String.format("%d", System.nanoTime()));
             chunk.invalidate();

@@ -87,7 +87,7 @@ public class DownloadTransferInfo extends TransferInfo {
                     }
 
                     byteBuffer.rewind();
-                    getFileSystem().getCache().write(chunk, byteBuffer);
+                    getFileSystem().getCache().write(chunk, byteBuffer, 0);
 
                 } catch (IOException e) {
 
