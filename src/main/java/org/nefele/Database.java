@@ -32,10 +32,17 @@ import java.sql.*;
 
 public class Database {
 
-    protected final static String CONNECTION_URL = "jdbc:sqlite:nefele.db";
+    private final String CONNECTION_URL;
+
+    public Database() {
+
+        CONNECTION_URL = String.format("jdbc:sqlite:%s",
+                Paths.get(System.getProperty("user.home"), ".nefele", "nefele.db"));
+
+    }
 
 
-    protected Connection connect() {
+    private Connection connect() {
 
         Connection connection = null;
         try {

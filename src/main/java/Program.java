@@ -24,6 +24,11 @@
 
 import org.nefele.Application;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 
 public class Program {
 
@@ -34,6 +39,31 @@ public class Program {
 
 
     public static void main(String[] args) {
+
+        try {
+
+
+            if(System.getProperty("user.home").isEmpty())
+                throw new IllegalStateException("USER_HOME is not set");
+
+
+            Path dataPath = Paths.get(System.getProperty("user.home"), ".nefele");
+
+            if(Files.notExists(dataPath))
+                Files.createDirectory(dataPath);
+
+            if (Files.notExists(dataPath.resolve(Paths.get("cache"))))
+                Files.createDirectory(dataPath.resolve(Paths.get("cache")));
+
+            if(Files.notExists(dataPath.resolve(Paths.get("nefele.db"))))
+                Files.write(dataPath.resolve(Paths.get("nefele.db")), Program.class.getResourceAsStream("/setup/nefele.db").readAllBytes());
+
+
+        } catch(IOException e) {
+            System.err.println(String.format("Fatal error: %s %s", e.getClass().getName(), e.getMessage()));
+            e.printStackTrace();
+        }
+
         javafx.application.Application.launch(Application.class, args);
     }
 

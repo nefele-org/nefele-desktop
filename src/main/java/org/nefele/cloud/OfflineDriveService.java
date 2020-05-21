@@ -41,7 +41,7 @@ public class OfflineDriveService extends Drive {
     public OfflineDriveService(String id, String service, long quota, long blocks) {
         super(id, service, quota, blocks);
 
-        this.offlinePath = Paths.get("offline-cloud-service", id);
+        this.offlinePath = Paths.get(System.getProperty("user.home"), ".nefele", SERVICE_ID, id);
 
     }
 
@@ -74,14 +74,14 @@ public class OfflineDriveService extends Drive {
     @Override
     public Drive initialize() {
 
-        Application.log(getClass(), "Initializing %s", SERVICE_ID);
+        Application.log(getClass(), "Initializing %s %s", SERVICE_ID, getId());
 
 
 
         try {
 
-            if(Files.notExists(Path.of("offline-cloud-service")))
-                Files.createDirectory(Path.of("offline-cloud-service"));
+            if(Files.notExists(offlinePath))
+                Files.createDirectory(offlinePath);
 
         } catch (IOException e) { }
 

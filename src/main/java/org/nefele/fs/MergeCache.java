@@ -62,7 +62,7 @@ public class MergeCache implements Service {
         this.chunks = new HashMap<>();
         this.dustChunks = new ArrayList<>();
         this.dustNodes = new ArrayList<>();
-        this.path = Paths.get("cache");
+        this.path = Paths.get(System.getProperty("user.home"), ".nefele", "cache");
 
         /* FIXME */
         initialize(null);
