@@ -3,6 +3,8 @@
     "CONTEXT_MENU_DOWNLOAD" : "Scarica",
     "CONTEXT_MENU_RENAME" : "Rinomina",
     "CONTEXT_MENU_DELETE" : "Elimina",
+    "CONTEXT_MENU_RESTORE" : "Ripristina",
+    "CONTEXT_MENU_TRASH" : "Cestina",
     "ERROR_DIRECTORY_NOT_EMPTY" : "La cartella selezionata non è vuota",
     "ERROR_FILE_DELETE" : "Si è verificato un errore durante l'eliminazione di un file e/o cartella",
     "SETTINGS_GENERAL" : "Generale",
@@ -93,9 +95,11 @@
     "TRANSFERVIEWER_TRANSFER_NULL" : "Nessun download e/o upload in corso",
     "STATS_STATUS_UNKNOWN" : "Sconosciuto",
     "STATS_STATUS_CONNECTING" : "Connesso",
-    "STATS_STATUS_READY" : "Pronto",
+    "STATS_STATUS_READY" : "Attivo",
     "STATS_STATUS_DISCONNECTING" : "Disconnesione in corso...",
     "STATS_STATUS_DISCONNECTED" : "Disconnesso",
     "STATS_STATUS_ERROR" : "Errore",
-    "TRANSFERVIEWER_TRANSFER_PREPARED" : "In preparazione..."
+    "STATS_STATUS_DISABLED" : "Disattivato dall'utente",
+    "TRANSFERVIEWER_TRANSFER_PREPARED" : "In preparazione...",
+    "ERROR_FILE_UPLOAD" : "Si è verificato un errore durante l'upload del file e/o cartella"
 }

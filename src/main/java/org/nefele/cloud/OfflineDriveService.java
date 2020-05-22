@@ -34,13 +34,14 @@ import java.nio.file.Paths;
 public class OfflineDriveService extends Drive {
 
     public final static String SERVICE_ID = "offline-drive-service";
+    public final static String SERVICE_DEFAULT_DESCRIPTION = "Offline Cloud";
 
     private final Path drivePath;
     private final Path servicePath;
 
 
-    public OfflineDriveService(String id, String service, long quota, long blocks) {
-        super(id, service, quota, blocks);
+    public OfflineDriveService(String id, String service, String description, long quota, long blocks) {
+        super(id, service, description, quota, blocks);
 
         this.servicePath = Paths.get(System.getProperty("user.home"), ".nefele", SERVICE_ID);
         this.drivePath = Paths.get(System.getProperty("user.home"), ".nefele", SERVICE_ID, id);

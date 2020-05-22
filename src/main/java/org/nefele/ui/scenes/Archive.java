@@ -43,6 +43,7 @@ import org.nefele.core.Mime;
 import org.nefele.core.Mimes;
 import org.nefele.core.UploadTransferInfo;
 import org.nefele.fs.MergeFileSystem;
+import org.nefele.fs.MergeFiles;
 import org.nefele.fs.MergePath;
 import org.nefele.ui.Themeable;
 import org.nefele.ui.controls.FileBrowser;
@@ -93,7 +94,7 @@ public class Archive extends StackPane implements Initializable, Themeable {
 
 
         buttonHome.setOnMouseClicked(e -> {
-            fileBrowser.setCurrentPath(Path.of(URI.create("cloud:///")));
+            fileBrowser.setCurrentPath(Path.of(URI.create("nefele:///")));
         });
 
 
@@ -115,7 +116,7 @@ public class Archive extends StackPane implements Initializable, Themeable {
 
                     try {
 
-                        Path path = MergePath.get("cloud", fileBrowser.getCurrentPath().toString(), file.getName());
+                        Path path = MergePath.get("nefele", fileBrowser.getCurrentPath().toString(), file.getName());
 
                         Application.getInstance().getTransferQueue().enqueue(
                                 new UploadTransferInfo((MergePath) path, file)).get();
@@ -151,7 +152,7 @@ public class Archive extends StackPane implements Initializable, Themeable {
                     try {
 
                         Files.createDirectory(
-                                MergePath.get("cloud", fileBrowser.getCurrentPath().toString(), p.getKey()));
+                                MergePath.get("nefele", fileBrowser.getCurrentPath().toString(), p.getKey()));
 
                         fileBrowser.update();
 
@@ -185,7 +186,7 @@ public class Archive extends StackPane implements Initializable, Themeable {
                 try {
 
                     Files.createDirectory(
-                            MergePath.get("cloud", fileBrowser.getCurrentPath().toString(), file.getName()));
+                            MergePath.get("nefele", fileBrowser.getCurrentPath().toString(), file.getName()));
 
                     fileBrowser.update();
 
@@ -204,7 +205,7 @@ public class Archive extends StackPane implements Initializable, Themeable {
 
         fileBrowser.setItemFactory(new FileBrowserItemFactory() {
 
-            private final FileSystem fileSystem = FileSystems.getFileSystem(URI.create("cloud:///"));
+            private final FileSystem fileSystem = FileSystems.getFileSystem(URI.create("nefele:///"));
 
             private final ArrayList<MenuItem> folderMenuItems = new ArrayList<>() {{
 
@@ -218,13 +219,13 @@ public class Archive extends StackPane implements Initializable, Themeable {
                     );
                 }});
 
-                add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_DELETE")) {{
+                add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_TRASH")) {{
                     setOnAction(e -> {
 
                         fileBrowser.getSelectedItems().forEach(i -> {
 
                             try {
-                                Files.delete(MergePath.get(
+                                MergeFiles.moveToTrash(MergePath.get(
                                         fileBrowser.getCurrentPath().toUri().getScheme(),
                                         fileBrowser.getCurrentPath().toString(),
                                         i.getText()
@@ -317,7 +318,7 @@ public class Archive extends StackPane implements Initializable, Themeable {
 
 
 
-        fileBrowser.setCurrentPath(Path.of(URI.create("cloud:///")));
+        fileBrowser.setCurrentPath(Path.of(URI.create("nefele:///")));
         fileBrowser.update();
 
         Application.getInstance().getViews().add(this);

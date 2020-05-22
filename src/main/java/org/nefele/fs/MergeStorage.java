@@ -30,12 +30,10 @@ import org.nefele.Application;
 import org.nefele.Service;
 import org.nefele.cloud.Drive;
 import org.nefele.cloud.DriveFullException;
+import org.nefele.cloud.DriveNotFoundException;
 import org.nefele.cloud.DriveService;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.RandomAccessFile;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
@@ -268,15 +266,29 @@ public class MergeStorage implements Service {
                     "SELECT * FROM chunks", null,
                     r -> {
 
-                        MergeChunk chunk = new MergeChunk(
-                                r.getString("id"),
-                                r.getLong("offset"),
-                                getInodes().get(r.getString("inode")),
-                                DriveService.getInstance().fromId(r.getString("drive")),
-                                r.getString("hash")
-                        );
 
-                        getChunks().put(chunk.getId(), chunk);
+                        try {
+
+                            Drive drive = DriveService.getInstance().fromId(r.getString("drive"));
+                            MergeNode inode = getInodes().get(r.getString("inode"));
+
+
+                            if(inode == null)
+                                throw new FileNotFoundException();
+
+                            MergeChunk chunk = new MergeChunk(
+                                    r.getString("id"),
+                                    r.getLong("offset"),
+                                    inode,
+                                    drive,
+                                    r.getString("hash")
+                            );
+
+                            getChunks().put(chunk.getId(), chunk);
+
+                        } catch (DriveNotFoundException | FileNotFoundException e) {
+                            Application.log(getClass(), "WARNING! Chunk %s has been orphaned or invalid: %s", r.getString("id"), e.getClass().getName());
+                        }
 
                     }
             );

@@ -42,12 +42,12 @@
 
                     <left>
                         <HBox spacing="15" alignment="CENTER" >
-                            <FontAwesomeIconView fx:id="iconOperation" glyphName="DOWNLOAD" size="32.0" />
+                            <FontAwesomeIconView fx:id="iconOperation" glyphName="SERVER" size="32.0" />
                                <VBox>
                                         <Label fx:id="labelFileName" text="NomeFile " styleClass="transferviewer-label-filename" />
                                         <HBox alignment="CENTER_LEFT" spacing="5">
                                             <MaterialDesignIconView fx:id="iconTransfer" glyphName="TWITTER_RETWEET" size="16.0" />
-                                            <Label fx:id="labelSpeed" />
+                                            <Label fx:id="labelSpeed" styleClass="text-small"/>
                                         </HBox>
                                 </VBox>
                         </HBox>

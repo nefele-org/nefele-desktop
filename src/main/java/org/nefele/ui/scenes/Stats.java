@@ -132,8 +132,6 @@ public class Stats extends StackPane implements Initializable, Themeable {
         DriveService.getInstance().getDrives().forEach(i -> cells.add(new StatsDriveInfo(i)));
 
 
-
-
         buttonSystemMemoryClean.setOnMouseClicked(e -> {
 
             Application.garbageCollect();
@@ -174,7 +172,7 @@ public class Stats extends StackPane implements Initializable, Themeable {
 
     private synchronized void updateStorage() {
 
-        final FileSystem fileSystem = FileSystems.getFileSystem(URI.create("cloud:///"));
+        final FileSystem fileSystem = FileSystems.getFileSystem(URI.create("nefele:///"));
         final FileStore fileStore = fileSystem.getFileStores().iterator().next();
 
 
@@ -202,7 +200,7 @@ public class Stats extends StackPane implements Initializable, Themeable {
                 updateSystemMemory();
                 updateStorage();
 
-                final MergeFileSystem fileSystem = (MergeFileSystem) FileSystems.getFileSystem(URI.create("cloud:///"));
+                final MergeFileSystem fileSystem = (MergeFileSystem) FileSystems.getFileSystem(URI.create("nefele:///"));
                 final MergeFileStore fileStore = fileSystem.getFileStore();
 
 
@@ -240,7 +238,7 @@ public class Stats extends StackPane implements Initializable, Themeable {
 
 
                 labelAvailablePercentage.textProperty().bind(Bindings.createIntegerBinding(() ->
-                        (int) ((1.0 - spinnerStorage.getProgress()) * 100.0), spinnerStorage.progressProperty())
+                        (int) (((1.0 - spinnerStorage.getProgress()) * 100.0) + 0.5), spinnerStorage.progressProperty())
                         .asString("%d %%"));
 
                 labelAvailableSpace.textProperty().bind(ExtraBindings.createSizeBinding(fileStore::getUsableSpace, ""));
@@ -264,7 +262,8 @@ public class Stats extends StackPane implements Initializable, Themeable {
                 labelAllFilesDim.textProperty().bind(ExtraBindings.createSizeBinding(() ->
                         Files.walk(fileSystem.getPath(MergeFileSystem.ROOT))
                                 .filter(Files::isRegularFile)
-                                .mapToLong(i -> i.toFile().length()).sum(), ""
+                                .mapToLong(i -> i.toFile().length())
+                                .sum(), ""
                 ));
 
 
@@ -279,7 +278,8 @@ public class Stats extends StackPane implements Initializable, Themeable {
                 labelAllFoldersDim.textProperty().bind(ExtraBindings.createSizeBinding(() ->
                         Files.walk(fileSystem.getPath(MergeFileSystem.ROOT))
                                 .filter(Files::isDirectory)
-                                .mapToLong(i -> i.toFile().length()).sum(), ""
+                                .mapToLong(i -> i.toFile().length())
+                                .sum(), ""
                 ));
 
 
@@ -292,8 +292,9 @@ public class Stats extends StackPane implements Initializable, Themeable {
 
 
                 labelIncomingSharesNum.textProperty().bind(Bindings.size(
-                        Application.getInstance().getTransferQueue().getTransferQueue().filtered(i -> i.getKey().getType() == TransferInfo.TRANSFER_TYPE_UPLOAD)
-                ).asString());
+                        Application.getInstance().getTransferQueue().getTransferQueue().filtered(i ->
+                                i.getKey().getType() == TransferInfo.TRANSFER_TYPE_UPLOAD)).asString());
+
 
                 labelIncomingSharesDim.textProperty().bind(ExtraBindings.createSizeBinding(() ->
                         Application.getInstance().getTransferQueue().getTransferQueue()
@@ -306,8 +307,9 @@ public class Stats extends StackPane implements Initializable, Themeable {
 
 
                 labelOutgoingSharesNum.textProperty().bind(Bindings.size(
-                        Application.getInstance().getTransferQueue().getTransferQueue().filtered(i -> i.getKey().getType() == TransferInfo.TRANSFER_TYPE_DOWNLOAD)
-                ).asString());
+                        Application.getInstance().getTransferQueue().getTransferQueue().filtered(i ->
+                                i.getKey().getType() == TransferInfo.TRANSFER_TYPE_DOWNLOAD)).asString());
+
 
                 labelOutgoingSharesDim.textProperty().bind(ExtraBindings.createSizeBinding(() ->
                         Application.getInstance().getTransferQueue().getTransferQueue()
@@ -316,6 +318,7 @@ public class Stats extends StackPane implements Initializable, Themeable {
                             .mapToLong(i -> i.getKey().getSize())
                             .sum(), ""
                 ));
+
 
             });
 

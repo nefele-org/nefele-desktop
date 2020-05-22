@@ -74,8 +74,8 @@ public class TransferQueue implements Service {
                 switch (i.getKey().getStatus()) {
 
                     case TransferInfo.TRANSFER_STATUS_COMPLETED:
-                    case TransferInfo.TRANSFER_STATUS_CANCELED:
-                    case TransferInfo.TRANSFER_STATUS_ERROR:
+                    //case TransferInfo.TRANSFER_STATUS_CANCELED:
+                    //case TransferInfo.TRANSFER_STATUS_ERROR:
 
                         if (!i.getValue().isCancelled() || !i.getValue().isDone())
                             i.getValue().cancel(true);
@@ -97,10 +97,7 @@ public class TransferQueue implements Service {
 
 
             Platform.runLater(() ->
-                transferQueue.removeIf((j) ->
-                    (j.getKey().getStatus() == TransferInfo.TRANSFER_STATUS_COMPLETED) ||
-                    (j.getKey().getStatus() == TransferInfo.TRANSFER_STATUS_CANCELED)  ||
-                    (j.getKey().getStatus() == TransferInfo.TRANSFER_STATUS_ERROR))
+                transferQueue.removeIf((j) -> j.getValue().isDone())
             );
 
         }

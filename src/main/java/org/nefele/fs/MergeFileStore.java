@@ -48,7 +48,7 @@ public class MergeFileStore extends FileStore {
 
     @Override
     public String name() {
-        return "cloud";
+        return "nefele";
     }
 
     @Override
@@ -119,25 +119,35 @@ public class MergeFileStore extends FileStore {
 
     public void delete(MergePath path) throws IOException {
 
-        MergeNode inode = path.getInode().getData();
-
-        if(inode.getMime().equals(Mime.FOLDER.getType())) {
-
-            if(path.getInode().getChildren().size() > 0)
-                throw new DirectoryNotEmptyException(path.toString());
-
-        }
-
+        if(!path.getInode().getChildren().isEmpty())
+            throw new DirectoryNotEmptyException(path.toString());
 
         if(path.getInode().getParent() == null)
-            Application.panic(getClass(), "Can not remove root directory!");
+            throw new IOException("Can not delete root directory!");
 
 
-        fileSystem.getStorage().free(inode);
+        fileSystem.getStorage()
+                .free(path.getInode().getData());
+
         path.getInode().getParent().remove(path.getInode());
-
 
         Application.log(getClass(), "Deleted %s", path.toString());
 
+    }
+
+
+    public void moveToTrash(MergePath path) throws IOException {
+
+        if(!path.getInode().getChildren().isEmpty())
+            throw new DirectoryNotEmptyException(path.toString());
+
+        if(path.getInode().getParent() == null)
+            throw new IOException("Can not move to trash root directory!");
+
+
+        path.getInode().getData().setTrashed(true);
+        path.getInode().getData().invalidate();
+
+        Application.log(getClass(), "Moved to trash %s", path.toString());
     }
 }

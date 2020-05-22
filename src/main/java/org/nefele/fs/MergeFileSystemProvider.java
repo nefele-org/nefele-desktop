@@ -52,7 +52,7 @@ public class MergeFileSystemProvider extends FileSystemProvider {
 
     @Override
     public String getScheme() {
-        return "cloud";
+        return "nefele";
     }
 
     @Override

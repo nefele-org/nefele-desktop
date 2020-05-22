@@ -25,6 +25,7 @@
 package org.nefele.ui.scenes;
 
 import com.jfoenix.controls.JFXProgressBar;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import javafx.application.Platform;
@@ -97,8 +98,6 @@ public class TransferViewerCell extends StackPane implements Initializable, Them
 
         });
 
-
-
         getTransferInfo().progressProperty().addListener((v, o, n) -> {
 
             Platform.runLater(() -> {
@@ -116,7 +115,6 @@ public class TransferViewerCell extends StackPane implements Initializable, Them
             });
 
         });
-
 
         labelFileName.textProperty().bind(getTransferInfo().nameProperty());
 

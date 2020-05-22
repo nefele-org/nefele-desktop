@@ -22,62 +22,35 @@
  * THE SOFTWARE.
  */
 
+package org.nefele.fs;
 
+import java.io.IOException;
+import java.nio.file.DirectoryNotEmptyException;
+import java.nio.file.Path;
 
+public final class MergeFiles {
 
-.label {
-    -fx-background-color: transparent;
-    -fx-text-fill: -nefele-theme-surface-text;
+    public static boolean isTrashed(Path path) {
+
+        if(path instanceof MergePath)
+            return ((MergePath) path).getInode().getData().isTrashed();
+
+        return false;
+
+    }
+
+    public static void moveToTrash(Path path) throws IOException {
+
+        if(path instanceof MergePath) {
+            if (path.getFileSystem() instanceof MergeFileSystem) {
+                ((MergeFileSystem) path.getFileSystem())
+                        .getFileStore()
+                        .moveToTrash((MergePath) path);
+
+            }
+        }
+        throw new IOException();
+
+    }
+
 }
-
-.text-shape {
-    -fx-background-color: transparent;
-    -fx-fill: -nefele-theme-surface-text;
-}
-
-.text-area {
-    -fx-background-color: -nefele-theme-surface;
-    -fx-fill: -nefele-theme-surface;
-    -fx-text-fill: -nefele-theme-surface-text;
-    -fx-prompt-text-fill: derive(-nefele-theme-surface-text, 50%);
-    -fx-highlight-fill: -nefele-theme-secondary;
-    -fx-highlight-fill-text: -nefele-theme-secondary-text;
-    -fx-display-caret: true;
-}
-
-.text-field {
-    -fx-background-color: -nefele-theme-surface;
-    -fx-text-fill: -nefele-theme-surface-text;
-    -fx-prompt-text-fill: derive(-nefele-theme-surface-text, 50%);
-    -fx-highlight-fill: -nefele-theme-secondary;
-    -fx-highlight-fill-text: -nefele-theme-secondary-text;
-    -fx-display-caret: true;
-    -fx-alignment: center-left;
-}
-
-
-.text-bold {
-    -fx-font-weight: bold;
-}
-
-.text-h1 {
-    -fx-font-size: 2em;
-}
-
-.text-h2 {
-    -fx-font-size: 1.4em;
-}
-
-.text-h3 {
-    -fx-font-size: 1.25em;
-}
-
-.text-error {
-    -fx-text-fill: -nefele-theme-error;
-}
-
-.text-small {
-    -fx-font-size: 0.8em;
-}
-
-

@@ -38,6 +38,7 @@ public abstract class Drive {
     public static final int STATUS_READY = 2;
     public static final int STATUS_DISCONNECTING = 3;
     public static final int STATUS_DISCONNECTED = 4;
+    public static final int STATUS_DISABLED = 5;
     public static final int STATUS_ERROR = 100;
 
     public static final int ERROR_OK = 0;
@@ -50,6 +51,7 @@ public abstract class Drive {
 
     private final ReadOnlyStringProperty id;
     private final ReadOnlyStringProperty service;
+    private final StringProperty description;
     private final LongProperty quota;
     private final LongProperty chunks;
     private final IntegerProperty status;
@@ -57,11 +59,11 @@ public abstract class Drive {
     private boolean dirty;
 
 
-    public Drive(String id, String service, long quota, long blocks) {
+    public Drive(String id, String service, String description, long quota, long blocks) {
 
         this.id = new SimpleStringProperty(id);
         this.service = new SimpleStringProperty(service);
-
+        this.description = new SimpleStringProperty(description);
         this.quota = new SimpleLongProperty(quota);
         this.chunks = new SimpleLongProperty(blocks);
         this.status = new SimpleIntegerProperty(STATUS_UNKNOWN);
@@ -152,5 +154,17 @@ public abstract class Drive {
 
     public void setError(int error) {
         this.error.set(error);
+    }
+
+    public String getDescription() {
+        return description.get();
+    }
+
+    public StringProperty descriptionProperty() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description.set(description);
     }
 }

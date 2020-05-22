@@ -333,7 +333,7 @@ public class Settings extends StackPane implements Initializable, Themeable {
 
 
 
-        HashMap<String, Object> cache =  Application.getInstance().getConfig().list();
+        HashMap<String, Object> cache = Application.getInstance().getConfig().list();
 
         cache.keySet()
                 .stream()

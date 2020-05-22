@@ -3,6 +3,8 @@
     "CONTEXT_MENU_DOWNLOAD" : "Download",
     "CONTEXT_MENU_RENAME" : "Rename",
     "CONTEXT_MENU_DELETE" : "Delete",
+    "CONTEXT_MENU_RESTORE" : "Restore",
+    "CONTEXT_MENU_TRASH" : "Move to Trash",
     "ERROR_DIRECTORY_NOT_EMPTY" : "Selected folder is not empty",
     "ERROR_FILE_DELETE" : "An error occurred while deleting a file or folder",
     "SETTINGS_GENERAL" : "General",
@@ -97,5 +99,7 @@
     "STATS_STATUS_DISCONNECTING" : "Disconnecting...",
     "STATS_STATUS_DISCONNECTED" : "Disconnected",
     "STATS_STATUS_ERROR" : "Error",
-    "TRANSFERVIEWER_TRANSFER_PREPARED" : "Preparing..."
+    "STATS_STATUS_DISABLED" : "Disabled by user",
+    "TRANSFERVIEWER_TRANSFER_PREPARED" : "Preparing...",
+    "ERROR_FILE_UPLOAD" : "An error occurred while uploading the file or folder"
 }

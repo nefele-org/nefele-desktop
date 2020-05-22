@@ -26,6 +26,8 @@ package org.nefele.ui.scenes;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
+import javafx.application.Platform;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.MenuItem;
@@ -35,17 +37,20 @@ import org.nefele.Application;
 import org.nefele.Resources;
 import org.nefele.core.Mime;
 import org.nefele.core.Mimes;
+import org.nefele.fs.MergeFiles;
+import org.nefele.fs.MergePath;
 import org.nefele.ui.Themeable;
 import org.nefele.ui.controls.FileBrowser;
 import org.nefele.ui.controls.FileBrowserItem;
+import org.nefele.ui.controls.FileBrowserItemFactory;
+import org.nefele.ui.dialog.Dialogs;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class Trash extends StackPane implements Initializable, Themeable {
@@ -65,6 +70,7 @@ public class Trash extends StackPane implements Initializable, Themeable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        textFieldPath.setFocusTraversable(false);
 
         buttonForward.setOnMouseClicked(e -> {
             fileBrowser.browseHistory(1);
@@ -76,7 +82,7 @@ public class Trash extends StackPane implements Initializable, Themeable {
 
 
         buttonHome.setOnMouseClicked(e -> {
-            fileBrowser.setCurrentPath(Path.of(URI.create("cloud:///")));
+            fileBrowser.setCurrentPath(Path.of(URI.create("trash:///")));
         });
 
         buttonEmpty.setOnMouseClicked(e -> {
@@ -85,43 +91,96 @@ public class Trash extends StackPane implements Initializable, Themeable {
 
 
 
+        fileBrowser.currentPathProperty().addListener(
+                (v, o, n) -> textFieldPath.setText(n.toUri().toString()));
 
-        textFieldPath.textProperty().bind(fileBrowser.currentPathProperty().asString());
-        textFieldPath.setFocusTraversable(false);
+
+        fileBrowser.setItemFactory(new FileBrowserItemFactory() {
+
+            private final FileSystem fileSystem = FileSystems.getFileSystem(URI.create("nefele:///"));
+
+            private final ArrayList<MenuItem> menuItems = new ArrayList<>() {{
+
+                add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_RESTORE")) {{
+                    setOnAction(Event::consume);
+                }});
+
+                add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_DELETE")) {{
+                    setOnAction(e -> {
+
+                        fileBrowser.getSelectedItems().forEach(i -> {
+
+                            try {
+                                Files.delete(MergePath.get(
+                                        fileBrowser.getCurrentPath().toUri().getScheme(),
+                                        fileBrowser.getCurrentPath().toString(),
+                                        i.getText()
+                                ));
+
+                            } catch (DirectoryNotEmptyException io) {
+                                Platform.runLater(() -> Dialogs.showErrorBox("ERROR_DIRECTORY_NOT_EMPTY"));
+                            } catch (IOException io) {
+                                Platform.runLater(() -> Dialogs.showErrorBox("ERROR_FILE_DELETE"));
+                            }
+
+                        });
+
+                        fileBrowser.update();
+
+                    });
+                }});
+
+            }};
 
 
-        fileBrowser.setItemFactory(path -> {
 
-            Application.log(fileBrowser.getClass(), "List %s", path);
 
-            ArrayList<FileBrowserItem> items = new ArrayList<>();
-            ArrayList<MenuItem> menuItems = new ArrayList<>();
+            @Override
+            public List<FileBrowserItem> call(Path path) {
 
-            menuItems.add(new MenuItem("Blabla"));
+                final ArrayList<FileBrowserItem> items = new ArrayList<>();
 
-            try {
 
-                Files.list(path).filter(Files::isDirectory).forEach(i ->
-                        items.add(new FileBrowserItem(Mime.FOLDER, i.getFileName().toString())));
+                try {
 
-                Files.list(path).filter(p -> !Files.isDirectory(p)).forEach(i -> {
 
-                    String filename = i.getFileName().toString();
-                    Mime mime = Mimes.getInstance().getByExtension(filename);
+                    Files.list(path)
+                            .filter(MergeFiles::isTrashed)
+                            .filter(Files::isDirectory).forEach(i ->
+                                items.add(new FileBrowserItem(Mime.FOLDER, i.getFileName().toString()) {{
+                                    setMenuItems(menuItems);
+                                }})
 
-                    items.add(new FileBrowserItem(mime, filename));
+                    );
 
-                });
+                    Files.list(path)
+                            .filter(MergeFiles::isTrashed)
+                            .filter(p -> !Files.isDirectory(p)).forEach(i -> {
 
-            } catch (IOException ignored) { }
+                                String filename = i.getFileName().toString();
+                                Mime mime = Mimes.getInstance().getByExtension(filename);
 
-            items.forEach(i -> i.setMenuItems(menuItems));
-            return items;
+                                items.add(new FileBrowserItem(mime, filename) {{
+                                    setMenuItems(menuItems);
+                                }});
+
+                    });
+
+                } catch (IOException ignored) { }
+
+
+                return items;
+
+            }
 
         });
 
-        fileBrowser.setCurrentPath(Path.of(URI.create("cloud:///")));
+
+
+        fileBrowser.setCurrentPath(Path.of(URI.create("nefele:///")));
         fileBrowser.update();
+
+
         Application.getInstance().getViews().add(this);
     }
 

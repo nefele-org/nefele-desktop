@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.util.concurrent.CancellationException;
 
 
 public class UploadTransferInfo extends TransferInfo {
@@ -85,7 +86,7 @@ public class UploadTransferInfo extends TransferInfo {
             if(io instanceof DriveFullException)
                 Platform.runLater(() -> Dialogs.showErrorBox("DRIVE_FULL_EXCEPTION"));
             else
-                Platform.runLater(() -> Dialogs.showErrorBox("FILE_UPLOAD_ERROR"));
+                Platform.runLater(() -> Dialogs.showErrorBox("ERROR_FILE_UPLOAD"));
 
             return getStatus();
 
@@ -97,23 +98,26 @@ public class UploadTransferInfo extends TransferInfo {
         Application.log(getClass(), "Started UploadTransferInfo() for %s (size: %d)", getPath().toString(), getSize());
 
 
+
         // TODO: deep copy array
-        for(MergeChunk chunk : getPath().getInode().getData().getChunks()) {
+        for (MergeChunk chunk : getPath().getInode().getData().getChunks()) {
 
-            if(getStatus() == TRANSFER_STATUS_CANCELED)
-                break;
+            if (getStatus() == TRANSFER_STATUS_PAUSED) {
 
-            if(getStatus() == TRANSFER_STATUS_PAUSED) {
-
-                while (getStatus() != TRANSFER_STATUS_RESUME)
+                while (getStatus() == TRANSFER_STATUS_PAUSED)
                     Thread.yield();
 
-                setStatus(TRANSFER_STATUS_RUNNING);
+                if(getStatus() == TRANSFER_STATUS_RESUME)
+                    setStatus(TRANSFER_STATUS_RUNNING);
 
             }
 
+            if (getStatus() == TRANSFER_STATUS_CANCELED)
+                break;
 
-            if(!getFileSystem().getStorage().isCached(chunk)) {
+
+
+            if (!getFileSystem().getStorage().isCached(chunk)) {
 
                 Application.log(getClass(), "WARNING! chunk %s is not cached, something wrong!", chunk.getId());
 
@@ -128,20 +132,21 @@ public class UploadTransferInfo extends TransferInfo {
                 InputStream inputStream = getFileSystem().getStorage().read(chunk);
 
 
-                while(inputStream.available() > 0) {
+                while (inputStream.available() > 0) {
 
-                    if(getStatus() == TRANSFER_STATUS_CANCELED)
+                    if (getStatus() == TRANSFER_STATUS_CANCELED)
                         break;
 
 
                     byte[] bytes = new byte[Math.min(UPLOAD_BLOCK_SIZE, inputStream.available())];
 
-                    if(inputStream.read(bytes) > 0)
+                    if (inputStream.read(bytes) > 0)
                         outputStream.write(bytes);
 
                     try {
                         Thread.sleep(10);
-                    } catch (InterruptedException ignored) { }
+                    } catch (InterruptedException ignored) {
+                    }
 
 
                     Platform.runLater(() -> setProgress(getProgress() + bytes.length));
@@ -179,6 +184,7 @@ public class UploadTransferInfo extends TransferInfo {
 
         setStatus(TRANSFER_STATUS_COMPLETED);
         return getStatus();
+
 
     }
 

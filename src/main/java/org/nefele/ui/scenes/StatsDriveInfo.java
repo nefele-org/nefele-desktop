@@ -78,6 +78,9 @@ public class StatsDriveInfo extends StackPane implements Initializable, Themeabl
                 case Drive.STATUS_ERROR:
                     return (Application.getInstance().getLocale().get("STATS_STATUS_ERROR"));
 
+                case Drive.STATUS_DISABLED:
+                    return (Application.getInstance().getLocale().get("STATS_STATUS_DISABLED"));
+
                 case Drive.STATUS_UNKNOWN:
                 default:
                     return (Application.getInstance().getLocale().get("STATS_STATUS_UNKNOWN"));
@@ -88,7 +91,7 @@ public class StatsDriveInfo extends StackPane implements Initializable, Themeabl
         }, getDrive().statusProperty()));
 
 
-        labelDriveName.textProperty().bind(getDrive().serviceProperty());
+        labelDriveName.textProperty().bind(getDrive().descriptionProperty());
 
 
         labelSpaceAvailable.textProperty().bind(

@@ -27,6 +27,7 @@ package org.nefele.cloud;
 import org.nefele.Application;
 import org.nefele.Database;
 import org.nefele.Service;
+import org.sqlite.SQLiteErrorCode;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -65,6 +66,7 @@ public final class DriveService implements Service {
                 .orElseGet(() -> {
 
                     final AtomicReference<String> service = new AtomicReference<>();
+                    final AtomicReference<String> description = new AtomicReference<>();
                     final AtomicLong quota = new AtomicLong();
                     final AtomicLong blocks = new AtomicLong();
 
@@ -77,11 +79,17 @@ public final class DriveService implements Service {
                                     service.set(r.getString(2));
                                     quota.set(r.getLong(3));
                                     blocks.set(r.getLong(4));
+                                    description.set(r.getString(5));
                                 }
                         );
 
                     } catch (SQLException e) {
+
+                        if(e.getErrorCode() == SQLiteErrorCode.SQLITE_NOTFOUND.code)
+                            throw new DriveNotFoundException(id);
+
                         Application.panic(Drive.class, e);
+
                     }
 
 
@@ -89,7 +97,7 @@ public final class DriveService implements Service {
                     switch (service.get()) {
 
                         case OfflineDriveService.SERVICE_ID:
-                            return new OfflineDriveService(id, service.get(), quota.get(), blocks.get())
+                            return new OfflineDriveService(id, service.get(), description.get(), quota.get(), blocks.get())
                                     .initialize();
 
                         default:
@@ -104,11 +112,20 @@ public final class DriveService implements Service {
 
     public Drive nextAllocatable() {
 
-        if(getDrives().stream().mapToLong(i -> i.getQuota() - i.getChunks()).sum() == 0)
+        if (getDrives()
+                .stream()
+                .noneMatch(i -> i.getStatus() == Drive.STATUS_READY))
+            throw new DriveNotFoundException("No drive ready or available");
+
+        if(getDrives()
+                .stream()
+                .filter(i -> i.getStatus() == Drive.STATUS_READY)
+                .mapToLong(i -> i.getQuota() - i.getChunks()).sum() == 0)
             throw new DriveFullException();
 
         return getDrives()
                 .stream()
+                .filter(i -> i.getStatus() == Drive.STATUS_READY)
                 .max(Comparator.comparingLong(a -> a.getQuota() - a.getChunks()))
                 .get();
 
@@ -146,7 +163,7 @@ public final class DriveService implements Service {
         try {
 
             Application.getInstance().getDatabase().update(
-                    "INSERT OR REPLACE INTO drives (id, service, quota, chunks) VALUES (?, ?, ?, ?)",
+                    "INSERT OR REPLACE INTO drives (id, service, description, quota, chunks) VALUES (?, ?, ?, ?, ?)",
                     s -> {
                         drives
                                 .stream()
@@ -157,8 +174,9 @@ public final class DriveService implements Service {
 
                                         s.setString(1, i.getId());
                                         s.setString(2, i.getService());
-                                        s.setLong(3, i.getQuota());
-                                        s.setLong(4, i.getChunks());
+                                        s.setString(3, i.getDescription());
+                                        s.setLong(4, i.getQuota());
+                                        s.setLong(5, i.getChunks());
                                         s.addBatch();
 
                                         i.validate();
