@@ -46,8 +46,8 @@ public abstract class TransferInfo {
 
 
     private final ReadOnlyStringProperty name;
-    private final ReadOnlyLongProperty size;
     private final ReadOnlyIntegerProperty type;
+    private final LongProperty size;
     private final LongProperty progress;
     private final IntegerProperty status;
     private final IntegerProperty speed;
@@ -92,8 +92,12 @@ public abstract class TransferInfo {
         return size.get();
     }
 
-    public ReadOnlyLongProperty sizeProperty() {
+    public LongProperty sizeProperty() {
         return size;
+    }
+
+    public void setSize(long size) {
+        this.size.setValue(size);
     }
 
     public int getType() {

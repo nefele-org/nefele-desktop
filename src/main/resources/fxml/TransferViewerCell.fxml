@@ -7,6 +7,30 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<!--
+  ~ The MIT License
+  ~
+  ~ Copyright (c) 2020 Nefele <https://github.com/nefele-org>
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in
+  ~ all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  ~ THE SOFTWARE.
+  -->
+
 <fx:root minHeight="80" prefHeight="80" type="StackPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
 
     <BorderPane>
@@ -23,7 +47,7 @@
                                         <Label fx:id="labelFileName" text="NomeFile " styleClass="transferviewer-label-filename" />
                                         <HBox alignment="CENTER_LEFT" spacing="5">
                                             <MaterialDesignIconView fx:id="iconTransfer" glyphName="TWITTER_RETWEET" size="16.0" />
-                                            <Label fx:id="labelSpeed" text="Vel. KB/s " />
+                                            <Label fx:id="labelSpeed" />
                                         </HBox>
                                 </VBox>
                         </HBox>
@@ -34,7 +58,7 @@
                             <HBox alignment="CENTER" spacing="5">
                                 <MaterialDesignIconView fx:id="iconHistory" glyphName="TIMELAPSE" size="16.0" />
                                 <Label text="&lt;" />
-                                <Label fx:id="labelTime" text="0" />
+                                <Label fx:id="labelTime" text="∞" />
                             </HBox>
                             <HBox alignment="CENTER">
                                 <FontAwesomeIconView fx:id="buttonClose" glyphName="CLOSE" size="18.0" styleClass="transferviewer-icon-close" />
@@ -52,7 +76,7 @@
 
         <bottom>
             <AnchorPane>
-                <JFXProgressBar fx:id="progressStatus" progress="0.5" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" />
+                <JFXProgressBar fx:id="progressStatus" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" />
             </AnchorPane>
         </bottom>
     </BorderPane>

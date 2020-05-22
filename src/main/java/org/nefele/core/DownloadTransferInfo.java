@@ -26,7 +26,6 @@ package org.nefele.core;
 
 import org.nefele.Application;
 import org.nefele.fs.MergeChunk;
-import org.nefele.fs.MergeFileSystem;
 import org.nefele.fs.MergePath;
 
 import java.io.IOException;
@@ -65,7 +64,7 @@ public class DownloadTransferInfo extends TransferInfo {
             }
 
 
-            if(!getFileSystem().getCache().isCached(chunk)) {
+            if(!getFileSystem().getStorage().isCached(chunk)) {
 
                 try {
 
@@ -87,7 +86,7 @@ public class DownloadTransferInfo extends TransferInfo {
                     }
 
                     byteBuffer.rewind();
-                    getFileSystem().getCache().write(chunk, byteBuffer, 0);
+                    getFileSystem().getStorage().write(chunk, byteBuffer, 0);
 
                 } catch (IOException e) {
 

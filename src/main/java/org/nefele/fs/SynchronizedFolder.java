@@ -34,11 +34,11 @@ import java.util.ArrayList;
 
 public class SynchronizedFolder {
 
-    protected Path root;
-    protected String cloudPath;
-    protected WatchService watchService;
+    private Path root;
+    private String cloudPath;
+    private WatchService watchService;
 
-    protected ArrayList<Path> registered;
+    private ArrayList<Path> registered;
 
 
     public SynchronizedFolder(Path path, String cloudPath) throws IOException {
@@ -74,7 +74,7 @@ public class SynchronizedFolder {
         return root;
     }
 
-    protected void worker() {
+    private void worker() {
 
         do {
 
@@ -135,7 +135,7 @@ public class SynchronizedFolder {
     }
 
 
-    protected String resolve(Path watchable, Path entry) throws IOException {
+    private String resolve(Path watchable, Path entry) throws IOException {
 
         Path resolved = watchable.resolve(entry);
         Path relative = root.relativize(resolved);
@@ -152,7 +152,7 @@ public class SynchronizedFolder {
 
     }
 
-    protected void register(Path path) throws IOException {
+    private void register(Path path) throws IOException {
 
         if(registered.contains(path))
             return;

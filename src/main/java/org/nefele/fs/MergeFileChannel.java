@@ -24,8 +24,6 @@
 
 package org.nefele.fs;
 
-import org.nefele.Application;
-
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
@@ -146,7 +144,7 @@ public class MergeFileChannel extends FileChannel {
                         .stream()
                         .filter(i -> i.getOffset() == block)
                         .findFirst()
-                        .orElseGet(() -> fileSystem.getCache().alloc(inode, block));
+                        .orElseGet(() -> fileSystem.getStorage().alloc(inode, block));
 
 
             if(inode.getSize() < position + size) {
@@ -158,7 +156,7 @@ public class MergeFileChannel extends FileChannel {
 
             }
 
-            fileSystem.getCache()
+            fileSystem.getStorage()
                     .write(chunk, byteBuffer, offset);
 
 

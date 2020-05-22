@@ -24,32 +24,78 @@
 
 package org.nefele.core;
 
+import javafx.application.Platform;
 import org.nefele.Application;
+import org.nefele.cloud.DriveFullException;
 import org.nefele.fs.MergeChunk;
-import org.nefele.fs.MergeFileSystem;
-import org.nefele.fs.MergeNode;
 import org.nefele.fs.MergePath;
+import org.nefele.ui.dialog.Dialogs;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 
 
 public class UploadTransferInfo extends TransferInfo {
 
     private static final int UPLOAD_BLOCK_SIZE = 65536;
+    private static final int PREPARE_BLOCK_SIZE = 4194304;
 
-    public UploadTransferInfo(MergePath path) {
+    private final File localFile;
+
+
+
+    public UploadTransferInfo(MergePath path, File localFile) {
         super(path, TRANSFER_TYPE_UPLOAD);
+        this.localFile = localFile;
     }
 
 
     @Override
     public Integer execute() {
 
-        setStatus(TransferInfo.TRANSFER_STATUS_RUNNING);
+        setSize(localFile.length());
+        setStatus(TRANSFER_STATUS_READY);
 
-        Application.log(getClass(), "Started UploadTransferInfo() for %s (size: %d)", getPath().toString(), getPath().getInode().getData().getSize());
+
+        Application.log(getClass(), "Prepare UploadTransferInfo() for %s (size: %d)", getPath().toString(), getSize());
+
+        try {
+
+            Files.createFile(getPath());
+
+            OutputStream writer = Files.newOutputStream(getPath());
+            InputStream reader = Files.newInputStream(localFile.toPath());
+
+            while (reader.available() > 0)
+                writer.write(reader.readNBytes(PREPARE_BLOCK_SIZE));
+
+            writer.close();
+            reader.close();
+
+
+        } catch (DriveFullException | IOException io) {
+
+            setStatus(TRANSFER_STATUS_ERROR);
+            Application.log(getClass(), "WARNING! %s when uploading file %s: %s", io.getClass().getName(), localFile.toString(), io.getMessage());
+
+
+            if(io instanceof DriveFullException)
+                Platform.runLater(() -> Dialogs.showErrorBox("DRIVE_FULL_EXCEPTION"));
+            else
+                Platform.runLater(() -> Dialogs.showErrorBox("FILE_UPLOAD_ERROR"));
+
+            return getStatus();
+
+        }
+
+
+
+        setStatus(TRANSFER_STATUS_RUNNING);
+        Application.log(getClass(), "Started UploadTransferInfo() for %s (size: %d)", getPath().toString(), getSize());
+
 
         // TODO: deep copy array
         for(MergeChunk chunk : getPath().getInode().getData().getChunks()) {
@@ -67,7 +113,7 @@ public class UploadTransferInfo extends TransferInfo {
             }
 
 
-            if(!getFileSystem().getCache().isCached(chunk)) {
+            if(!getFileSystem().getStorage().isCached(chunk)) {
 
                 Application.log(getClass(), "WARNING! chunk %s is not cached, something wrong!", chunk.getId());
 
@@ -79,7 +125,7 @@ public class UploadTransferInfo extends TransferInfo {
             try {
 
                 OutputStream outputStream = chunk.getDrive().writeChunk(chunk);
-                InputStream inputStream = getFileSystem().getCache().read(chunk);
+                InputStream inputStream = getFileSystem().getStorage().read(chunk);
 
 
                 while(inputStream.available() > 0) {
@@ -97,7 +143,8 @@ public class UploadTransferInfo extends TransferInfo {
                         Thread.sleep(10);
                     } catch (InterruptedException ignored) { }
 
-                    setProgress(getProgress() + bytes.length);
+
+                    Platform.runLater(() -> setProgress(getProgress() + bytes.length));
 
                 }
 
@@ -120,8 +167,17 @@ public class UploadTransferInfo extends TransferInfo {
         }
 
 
-        setStatus(TRANSFER_STATUS_COMPLETED);
+        try {
 
+            if (getStatus() == TRANSFER_STATUS_CANCELED)
+                Files.delete(getPath());  /* FIXME: delete() destroy everything including your machine */
+
+        } catch (IOException e) {
+            Application.log(getClass(), "WARNING! could not delete %s: %s %s", getPath().toString(), e.getClass().getName(), e.getMessage());
+        }
+
+
+        setStatus(TRANSFER_STATUS_COMPLETED);
         return getStatus();
 
     }

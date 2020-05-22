@@ -25,7 +25,6 @@
 package org.nefele.fs;
 
 import org.nefele.Application;
-import org.nefele.Service;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -46,17 +45,17 @@ public class MergeFileSystem extends FileSystem {
     private final FileSystemProvider provider;
     private final MergeFileStore fileStore;
     private final MergeFileTree fileTree;
-    private final MergeCache cache;
+    private final MergeStorage storage;
 
 
     public MergeFileSystem(FileSystemProvider provider) {
 
         this.provider = provider;
-        this.cache = new MergeCache();
+        this.storage = new MergeStorage();
         this.fileStore = new MergeFileStore(this);
         this.fileTree = new MergeFileTree(this);
 
-        Application.getInstance().addService(cache);
+        Application.getInstance().addService(storage);
 
     }
 
@@ -147,7 +146,7 @@ public class MergeFileSystem extends FileSystem {
         return fileTree;
     }
 
-    public MergeCache getCache() {
-        return cache;
+    public MergeStorage getStorage() {
+        return storage;
     }
 }

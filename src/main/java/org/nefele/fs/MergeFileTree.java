@@ -24,13 +24,9 @@
 
 package org.nefele.fs;
 
-import org.nefele.Application;
 import org.nefele.core.Mime;
-import org.nefele.core.Mimes;
 import org.nefele.utils.Tree;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -56,7 +52,7 @@ public class MergeFileTree {
 
     private void fetchNode(String parent, Tree<MergeNode> inodeTree) {
 
-        fileSystem.getCache().getInodes()
+        fileSystem.getStorage().getInodes()
                 .values()
                 .stream()
                 .filter(i -> i.getParent().equals(parent))
@@ -96,7 +92,7 @@ public class MergeFileTree {
                 if(i != paths.length - 1)
                     throw new IllegalStateException();
 
-                child = new Tree<>(tree, fileSystem.getCache().alloc(tree.getData(), path, Mime.UNKNOWN.getType()));
+                child = new Tree<>(tree, fileSystem.getStorage().alloc(tree.getData(), path, Mime.UNKNOWN.getType()));
 
             }
 

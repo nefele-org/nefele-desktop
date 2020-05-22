@@ -205,7 +205,7 @@ public class InputDialog extends Stage {
 
 
 
-    protected void exitWithDialogResult(Pair<String, Integer> dialogResult) {
+    private void exitWithDialogResult(Pair<String, Integer> dialogResult) {
         this.dialogResult = dialogResult;
         this.close();
     }

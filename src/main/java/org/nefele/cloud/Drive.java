@@ -26,23 +26,25 @@ package org.nefele.cloud;
 
 import javafx.beans.property.*;
 import org.nefele.fs.MergeChunk;
+import org.nefele.fs.MergeFileSystem;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 
 public abstract class Drive {
 
-    public static final Integer STATUS_UNKNOWN = 0;
-    public static final Integer STATUS_CONNECTING = 1;
-    public static final Integer STATUS_READY = 2;
-    public static final Integer STATUS_DISCONNECTING = 3;
-    public static final Integer STATUS_DISCONNECTED = 4;
-    public static final Integer STATUS_ERROR = 100;
+    public static final int STATUS_UNKNOWN = 0;
+    public static final int STATUS_CONNECTING = 1;
+    public static final int STATUS_READY = 2;
+    public static final int STATUS_DISCONNECTING = 3;
+    public static final int STATUS_DISCONNECTED = 4;
+    public static final int STATUS_ERROR = 100;
 
-    public static final Integer ERROR_OK = 0;
-    public static final Integer ERROR_EXPIRED = 1;
-    public static final Integer ERROR_LOGIN_FAIL = 2;
-    public static final Integer ERROR_UNREACHABLE = 3;
-    public static final Integer ERROR_UNKNOWN = 100;
+    public static final int ERROR_OK = 0;
+    public static final int ERROR_EXPIRED = 1;
+    public static final int ERROR_LOGIN_FAIL = 2;
+    public static final int ERROR_UNREACHABLE = 3;
+    public static final int ERROR_UNKNOWN = 100;
 
 
 
@@ -72,6 +74,7 @@ public abstract class Drive {
 
     public abstract OutputStream writeChunk(MergeChunk chunk);
     public abstract InputStream readChunk(MergeChunk chunk);
+    public abstract void removeChunk(MergeChunk chunk);
     public abstract Drive initialize();
     public abstract Drive exit();
 

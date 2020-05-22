@@ -32,19 +32,26 @@
 
 <?import com.jfoenix.controls.JFXSpinner?>
 
+<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
 <fx:root minWidth="-Infinity" maxWidth="Infinity" minHeight="-Infinity" maxHeight="Infinity" styleClass="stats-card"
          type="StackPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" >
 
         <VBox spacing="5">
 
-            <Label text=" " styleClass="stats-card-title" fx:id="labelDriveName" />
+            <Label text=" " styleClass="stats-card-title, text-h2" fx:id="labelDriveName" />
             <Separator orientation="HORIZONTAL"/>
 
             <VBox styleClass="stats-card-box">
 
                 <HBox styleClass="stats-card-box-content" spacing="5">
-                    <JFXSpinner fx:id="spinner" />
+
+                    <StackPane alignment="CENTER" styleClass="stats-spinner-box">
+                        <JFXSpinner fx:id="spinner" />
+                        <MaterialDesignIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="LAYERS" size="28.0"  />
+                    </StackPane>
+
                     <Separator orientation="VERTICAL"/>
+
                     <VBox spacing="2">
                         <HBox spacing="5">
                             <Label userData="STATSDRIVEINFO_CONTENT_1" />
@@ -55,6 +62,7 @@
                             <Label text="" fx:id="labelStatus"/>
                         </HBox>
                     </VBox>
+
                 </HBox>
 
             </VBox>

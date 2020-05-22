@@ -25,13 +25,11 @@
 package org.nefele.ui.controls;
 
 import javafx.application.Platform;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableSet;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
@@ -67,7 +65,10 @@ import static java.util.Objects.requireNonNull;
 public class FileBrowser extends ScrollPane implements Initializable, Themeable {
 
     private final ObjectProperty<Path> currentPath;
+
     private final ObservableList<FileBrowserItem> items;
+    private final ObjectProperty<FileBrowserItem> selectedItem;
+    private final HashSet<FileBrowserItem> selectedItems;
 
     private final ObservableList<FileBrowserCell> cells;
     private final ObservableList<FileBrowserCell> selectedCells;
@@ -96,6 +97,9 @@ public class FileBrowser extends ScrollPane implements Initializable, Themeable 
         this.cells = FXCollections.observableArrayList();
         this.selectedCells = FXCollections.observableArrayList();
         this.executorService = Executors.newSingleThreadExecutor();
+
+        this.selectedItems = new HashSet<>();
+        this.selectedItem = new SimpleObjectProperty<>(null);
 
         this.historyBack = new Stack<>();
         this.historyForward = new ArrayDeque<>();
@@ -151,7 +155,7 @@ public class FileBrowser extends ScrollPane implements Initializable, Themeable 
 
                             try {
                                 countDownLatch.await();
-                            } catch (InterruptedException ignored) {}
+                            } catch (InterruptedException ignored) { }
 
                         });
 
@@ -183,11 +187,15 @@ public class FileBrowser extends ScrollPane implements Initializable, Themeable 
 
             while(change.next()) {
 
-                if(change.wasRemoved())
+                if(change.wasRemoved()) {
                     change.getRemoved().forEach(i -> i.selectedProperty().set(false));
+                    change.getRemoved().forEach(i -> selectedItems.remove(i.getItem()));
+                }
 
-                if(change.wasAdded())
+                if(change.wasAdded()) {
                     change.getAddedSubList().forEach(i -> i.selectedProperty().set(true));
+                    change.getAddedSubList().forEach(i -> selectedItems.add(i.getItem()));
+                }
 
             }
 
@@ -273,7 +281,7 @@ public class FileBrowser extends ScrollPane implements Initializable, Themeable 
     }
 
 
-    protected void onMousePressed(MouseEvent e) {
+    private void onMousePressed(MouseEvent e) {
 
         Duration mouseDelta = Duration.between(lastMousePressed, Instant.now());
         lastMousePressed = Instant.now();
@@ -331,6 +339,8 @@ public class FileBrowser extends ScrollPane implements Initializable, Themeable 
 
                     if (e.isSecondaryButtonDown()) {
 
+                        selectedItem.set(i.getItem());
+
                         contextMenu.getItems().clear();
                         contextMenu.getItems().addAll(i.getItem().getMenuItems());
                         contextMenu.show(this, e.getScreenX(), e.getScreenY());
@@ -343,14 +353,11 @@ public class FileBrowser extends ScrollPane implements Initializable, Themeable 
 
                     if (e.isPrimaryButtonDown()) {
 
-                        if(i.getItem().getMime().equals(Mime.FOLDER)) {
+                        selectedItem.set(i.getItem());
 
-                            historyForward.clear();
+                        if(!i.getItem().getMenuItems().isEmpty())
+                            i.getItem().getMenuItems().get(0).fire();
 
-                            setCurrentPath(
-                                    MergePath.get(getCurrentPath().toUri().getScheme(), getCurrentPath().toString(), i.getItem().getText()));
-
-                        }
                     }
 
                 }
@@ -381,7 +388,7 @@ public class FileBrowser extends ScrollPane implements Initializable, Themeable 
 
     }
 
-    protected void onMouseDragged(MouseEvent e) {
+    private void onMouseDragged(MouseEvent e) {
 
         if(selectionRectangle != null) {
 
@@ -414,7 +421,7 @@ public class FileBrowser extends ScrollPane implements Initializable, Themeable 
 
     }
 
-    protected void onMouseReleased(MouseEvent e) {
+    private void onMouseReleased(MouseEvent e) {
 
         if(selectionRectangle != null) {
 
@@ -423,6 +430,20 @@ public class FileBrowser extends ScrollPane implements Initializable, Themeable 
 
         }
 
+    }
+
+
+    public HashSet<FileBrowserItem> getSelectedItems() {
+        return selectedItems;
+    }
+
+    public FileBrowserItem getSelectedItem() {
+        return selectedItem.get();
+    }
+
+    public void browse(Path path) {
+        historyForward.clear();
+        setCurrentPath(path);
     }
 
 }

@@ -70,6 +70,7 @@ public final class Application extends javafx.application.Application implements
     private final ObjectProperty<Theme> theme;
 
     private ScheduledFuture<?> serviceWorker = null;
+    private Stage primaryStage;
 
 
 
@@ -99,6 +100,8 @@ public final class Application extends javafx.application.Application implements
 
     @Override
     public void start(Stage stage) throws Exception {
+
+        primaryStage = stage;
 
         Application.log(Application.class, "Starting application");
         Application.log(Application.class, "Java: %s %s", System.getProperty("java.vendor"), System.getProperty("java.version"));
@@ -190,43 +193,51 @@ public final class Application extends javafx.application.Application implements
     @Override
     public void stop() throws Exception {
 
-        Application.log(Application.class, "Preparing to exit in a friendly way...");
+        if(getPrimaryStage() != null)
+            getPrimaryStage().hide();
 
 
-        if(serviceWorker != null)
-            serviceWorker.cancel(true);
+        new Thread(() -> {
 
-        for(Service i : services) {
-            Application.log(getClass(), "Unloading %s", i.getClass().getName());
-            i.exit(this);
-        }
+            Application.log(Application.class, "Preparing to exit in a friendly way...");
 
-        running.set(false);
+            if (serviceWorker != null)
+                serviceWorker.cancel(true);
 
 
-        try {
+            for (Service i : services) {
+                Application.log(getClass(), "Unloading %s", i.getClass().getName());
+                i.exit(this);
+            }
 
-            Application.log(Application.class, "Doing a genocide");
-
-            scheduledExecutorService.shutdown();
-            executorService.awaitTermination(1, TimeUnit.SECONDS);
-
-            Application.log(Application.class, "Scared threads are fleeing");
-
-            executorService.shutdown();
-            executorService.awaitTermination(1, TimeUnit.SECONDS);
+            running.set(false);
 
 
-        } catch (InterruptedException e) {
-            Application.panic(Application.class, e);
-        }
+            try {
+
+                Application.log(Application.class, "Doing a genocide");
+
+                scheduledExecutorService.shutdown();
+                executorService.awaitTermination(1, TimeUnit.SECONDS);
+
+                Application.log(Application.class, "Scared threads are fleeing");
+
+                executorService.shutdown();
+                executorService.awaitTermination(1, TimeUnit.SECONDS);
 
 
-        Application.log(Application.class, "Goodbye!");
+            } catch (InterruptedException e) {
+                Application.panic(Application.class, e);
+            }
+
+
+            Application.log(Application.class, "Goodbye!");
+            System.exit(0);
+
+        }).start();
+
 
         super.stop();
-        System.exit(0);
-
     }
 
     @Override
@@ -295,6 +306,10 @@ public final class Application extends javafx.application.Application implements
 
     public TransferQueue getTransferQueue() {
         return transferQueue;
+    }
+
+    public Stage getPrimaryStage() {
+        return primaryStage;
     }
 
     public Theme getTheme() {

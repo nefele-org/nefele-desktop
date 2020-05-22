@@ -24,6 +24,7 @@
 
 package org.nefele.core;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.util.Pair;
@@ -90,15 +91,17 @@ public class TransferQueue implements Service {
 
                 }
 
-                i.getKey().updateSpeed();
+                Platform.runLater(() -> i.getKey().updateSpeed());
 
             }
 
 
-            transferQueue.removeIf((j) ->
-                            (j.getKey().getStatus() == TransferInfo.TRANSFER_STATUS_COMPLETED) ||
-                            (j.getKey().getStatus() == TransferInfo.TRANSFER_STATUS_CANCELED)  ||
-                            (j.getKey().getStatus() == TransferInfo.TRANSFER_STATUS_ERROR));
+            Platform.runLater(() ->
+                transferQueue.removeIf((j) ->
+                    (j.getKey().getStatus() == TransferInfo.TRANSFER_STATUS_COMPLETED) ||
+                    (j.getKey().getStatus() == TransferInfo.TRANSFER_STATUS_CANCELED)  ||
+                    (j.getKey().getStatus() == TransferInfo.TRANSFER_STATUS_ERROR))
+            );
 
         }
 

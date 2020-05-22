@@ -33,9 +33,9 @@ import java.util.concurrent.*;
 public class TransferExecutorService extends ThreadPoolExecutor implements Service {
 
 
-    protected int maximumThreadActiveCount = 4;
-    protected ArrayDeque<RunnableFuture<?>> pendingTask = new ArrayDeque<>();
-    protected ArrayDeque<RunnableFuture<?>> runningTask = new ArrayDeque<>();
+    private int maximumThreadActiveCount = 4;
+    private ArrayDeque<RunnableFuture<?>> pendingTask = new ArrayDeque<>();
+    private ArrayDeque<RunnableFuture<?>> runningTask = new ArrayDeque<>();
 
 
     public TransferExecutorService(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue) {
@@ -73,14 +73,14 @@ public class TransferExecutorService extends ThreadPoolExecutor implements Servi
     }
 
 
-    protected void startThread(RunnableFuture<?> runnableFuture) {
+    private void startThread(RunnableFuture<?> runnableFuture) {
 
         runningTask.add(runnableFuture);
         execute(runnableFuture);
 
     }
 
-    protected void updatePool() {
+    private void updatePool() {
 
         runningTask.removeIf(RunnableFuture::isDone);
 

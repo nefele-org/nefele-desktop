@@ -113,6 +113,8 @@ public class MergeFileStore extends FileStore {
         inode.setMime(Mime.FOLDER.getType());
         inode.invalidate();
 
+        Application.log(getClass(), "Created directory %s", path.toString());
+
     }
 
     public void delete(MergePath path) throws IOException {
@@ -131,9 +133,11 @@ public class MergeFileStore extends FileStore {
             Application.panic(getClass(), "Can not remove root directory!");
 
 
-        fileSystem.getCache().free(inode);
-
+        fileSystem.getStorage().free(inode);
         path.getInode().getParent().remove(path.getInode());
+
+
+        Application.log(getClass(), "Deleted %s", path.toString());
 
     }
 }

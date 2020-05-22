@@ -24,6 +24,8 @@
 
 package org.nefele.fs;
 
+import javafx.beans.property.LongProperty;
+import javafx.beans.property.SimpleLongProperty;
 import org.nefele.Application;
 import org.nefele.Service;
 import org.nefele.cloud.Drive;
@@ -48,7 +50,7 @@ import java.util.UUID;
 
 ;
 
-public class MergeCache implements Service {
+public class MergeStorage implements Service {
 
     private final HashMap<String, MergeNode> inodes;
     private final HashMap<String, MergeChunk> chunks;
@@ -56,7 +58,8 @@ public class MergeCache implements Service {
     private final ArrayList<MergeNode> dustNodes;
     private final Path path;
 
-    public MergeCache() {
+
+    public MergeStorage() {
 
         this.inodes = new HashMap<>();
         this.chunks = new HashMap<>();
@@ -64,7 +67,7 @@ public class MergeCache implements Service {
         this.dustNodes = new ArrayList<>();
         this.path = Paths.get(System.getProperty("user.home"), ".nefele", "cache");
 
-        /* FIXME */
+        /* FIXME: Service registered too late */
         initialize(null);
 
     }
@@ -134,6 +137,10 @@ public class MergeCache implements Service {
             chunk.getInode().getChunks().remove(chunk);
             chunk.getInode().invalidate();
 
+            chunk.getDrive().removeChunk(chunk);
+            chunk.getDrive().setChunks(chunk.getDrive().getChunks() - 1L);
+            chunk.getDrive().invalidate();
+
             if(isCached(chunk))
                 Files.delete(path.resolve(Path.of(chunk.getId())));
 
@@ -151,7 +158,10 @@ public class MergeCache implements Service {
         try {
 
             getInodes().remove(node.getId());
-            node.getChunks().forEach(this::free);
+
+            while (!node.getChunks().isEmpty())
+                free(node.getChunks().get(0));
+
 
         } finally {
             dustNodes.add(node);
@@ -200,9 +210,18 @@ public class MergeCache implements Service {
     }
 
 
-
     public boolean isCached(MergeChunk chunk) {
         return Files.exists(path.resolve(Path.of(chunk.getId())));
+    }
+
+
+    public long getCurrentSize() {
+
+        return getChunks().values()
+                .stream()
+                .filter(this::isCached)
+                .count() * MergeChunk.getSize();
+
     }
 
 
@@ -374,7 +393,20 @@ public class MergeCache implements Service {
 
     @Override
     public void exit(Application app) {
+
         synchronize(app);
+
+
+        try {
+
+            Files.list(path).forEach(p -> {
+                try {
+                    Files.delete(p);
+                } catch (IOException ignored) { }
+            });
+
+        } catch (IOException ignored) { }
+
     }
 
 

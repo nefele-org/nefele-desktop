@@ -24,11 +24,14 @@
 
 package org.nefele.ui.scenes;
 
+import com.fasterxml.jackson.databind.type.PlaceholderForType;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import javafx.application.Platform;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.StackPane;
 import javafx.stage.DirectoryChooser;
@@ -39,6 +42,7 @@ import org.nefele.Resources;
 import org.nefele.core.Mime;
 import org.nefele.core.Mimes;
 import org.nefele.core.UploadTransferInfo;
+import org.nefele.fs.MergeFileSystem;
 import org.nefele.fs.MergePath;
 import org.nefele.ui.Themeable;
 import org.nefele.ui.controls.FileBrowser;
@@ -51,13 +55,11 @@ import java.io.*;
 import java.lang.management.PlatformManagedObject;
 import java.net.URI;
 import java.net.URL;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 
 public class Archive extends StackPane implements Initializable, Themeable {
@@ -115,30 +117,10 @@ public class Archive extends StackPane implements Initializable, Themeable {
 
                         Path path = MergePath.get("cloud", fileBrowser.getCurrentPath().toString(), file.getName());
 
-                        Files.createFile(path);
-
-                        OutputStream writer = Files.newOutputStream(path);
-                        InputStream reader = Files.newInputStream(file.toPath());
-
-                        while(reader.available() > 0)
-                            writer.write(reader.readNBytes(4194304));
-
-                        writer.close();
-                        reader.close();
-
-
                         Application.getInstance().getTransferQueue().enqueue(
-                                new UploadTransferInfo((MergePath) path)).get();
+                                new UploadTransferInfo((MergePath) path, file)).get();
 
-                    } catch (IOException io) {
-
-                        Application.panic(getClass(), io);
-                        Application.log(getClass(), "WARNING! %s when uploading file: %s", io.getClass().getName(), io.getMessage());
-
-                        Platform.runLater(() ->
-                                Dialogs.showErrorBox("FILE_UPLOAD_ERROR"));
-
-                    } catch (InterruptedException | ExecutionException ignored) {
+                    } catch (InterruptedException | ExecutionException | CancellationException ignored) {
                         // ignored...
                     } finally {
                         Platform.runLater(fileBrowser::update);
@@ -224,37 +206,109 @@ public class Archive extends StackPane implements Initializable, Themeable {
 
             private final FileSystem fileSystem = FileSystems.getFileSystem(URI.create("cloud:///"));
 
-            private final ArrayList<MenuItem> menuItems = new ArrayList<>() {{
-                add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_OPEN")));
-                add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_DOWNLOAD")));
-                add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_RENAME")));
-                add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_DELETE")));
+            private final ArrayList<MenuItem> folderMenuItems = new ArrayList<>() {{
+
+                add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_OPEN")) {{
+                    setOnAction(e ->
+                        fileBrowser.browse(MergePath.get(
+                                fileBrowser.getCurrentPath().toUri().getScheme(),
+                                fileBrowser.getCurrentPath().toString(),
+                                fileBrowser.getSelectedItem().getText()
+                        ))
+                    );
+                }});
+
+                add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_DELETE")) {{
+                    setOnAction(e -> {
+
+                        fileBrowser.getSelectedItems().forEach(i -> {
+
+                            try {
+                                Files.delete(MergePath.get(
+                                        fileBrowser.getCurrentPath().toUri().getScheme(),
+                                        fileBrowser.getCurrentPath().toString(),
+                                        i.getText()
+                                ));
+
+                            } catch (DirectoryNotEmptyException io) {
+                                Platform.runLater(() -> Dialogs.showErrorBox("ERROR_DIRECTORY_NOT_EMPTY"));
+                            } catch (IOException io) {
+                                Platform.runLater(() -> Dialogs.showErrorBox("ERROR_FILE_DELETE"));
+                            }
+
+                        });
+
+                        fileBrowser.update();
+
+                    });
+                }});
+
             }};
+
+            private final ArrayList<MenuItem> fileMenuItems = new ArrayList<>() {{
+
+                add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_DOWNLOAD")) {{
+                    setOnAction(Event::consume);
+                }});
+
+                add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_DELETE")) {{
+                    setOnAction(e -> {
+
+                        fileBrowser.getSelectedItems().forEach(i -> {
+
+                            try {
+                                Files.delete(MergePath.get(
+                                        fileBrowser.getCurrentPath().toUri().getScheme(),
+                                        fileBrowser.getCurrentPath().toString(),
+                                        i.getText()
+                                ));
+
+                            } catch (DirectoryNotEmptyException io) {
+                                Platform.runLater(() -> Dialogs.showErrorBox("ERROR_DIRECTORY_NOT_EMPTY"));
+                            } catch (IOException io) {
+                                Platform.runLater(() -> Dialogs.showErrorBox("ERROR_FILE_DELETE"));
+                            }
+
+                        });
+
+                        fileBrowser.update();
+
+                    });
+                }});
+
+            }};
+
 
 
             @Override
             public List<FileBrowserItem> call(Path path) {
 
-                ArrayList<FileBrowserItem> items = new ArrayList<>();
+                final ArrayList<FileBrowserItem> items = new ArrayList<>();
+
 
                 try {
 
+
                     Files.list(path).filter(Files::isDirectory).forEach(i ->
-                            items.add(new FileBrowserItem(Mime.FOLDER, i.getFileName().toString())));
+                            items.add(new FileBrowserItem(Mime.FOLDER, i.getFileName().toString()) {{
+                                setMenuItems(folderMenuItems);
+                            }})
+                    );
 
                     Files.list(path).filter(p -> !Files.isDirectory(p)).forEach(i -> {
 
                         String filename = i.getFileName().toString();
                         Mime mime = Mimes.getInstance().getByExtension(filename);
 
-                        items.add(new FileBrowserItem(mime, filename));
+                        items.add(new FileBrowserItem(mime, filename) {{
+                            setMenuItems(fileMenuItems);
+                        }});
 
                     });
 
                 } catch (IOException ignored) { }
 
 
-                items.forEach(i -> i.setMenuItems(menuItems));
                 return items;
 
             }

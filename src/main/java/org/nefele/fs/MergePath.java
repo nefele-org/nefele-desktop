@@ -26,6 +26,7 @@ package org.nefele.fs;
 
 import org.nefele.utils.Tree;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -241,6 +242,11 @@ public class MergePath implements Path {
     @Override
     public Path toRealPath(LinkOption... linkOptions) throws IOException {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public File toFile() {
+        return new MergeFile(this);
     }
 
     @Override

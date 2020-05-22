@@ -29,7 +29,6 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -39,6 +38,7 @@ import org.nefele.Application;
 import org.nefele.Resources;
 import org.nefele.core.TransferInfo;
 import org.nefele.ui.Themeable;
+import org.nefele.utils.ExtraBindings;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -65,12 +65,14 @@ public class TransferViewerCell extends StackPane implements Initializable, Them
         Resources.getFXML(this, "fxml/TransferViewerCell.fxml");
     }
 
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         buttonClose.setOnMouseClicked( e -> {
             getTransferInfo().setStatus(TransferInfo.TRANSFER_STATUS_CANCELED);
         });
+
 
         buttonPauseResume.setOnMouseClicked( e -> {
 
@@ -80,46 +82,36 @@ public class TransferViewerCell extends StackPane implements Initializable, Them
                         : TransferInfo.TRANSFER_STATUS_RESUME
             );
 
+        });
+
+
+
+
+        getTransferInfo().statusProperty().addListener((v, o, n) -> {
+
             buttonPauseResume.setGlyphName (
-                    getTransferInfo().getStatus() == TransferInfo.TRANSFER_STATUS_RUNNING
-                            ? "PLAY"
-                            : "PAUSE"
+                   n.intValue() == TransferInfo.TRANSFER_STATUS_RUNNING
+                            ? "PAUSE"
+                            : "PLAY"
             );
 
         });
-        
 
-        getTransferInfo().speedProperty().addListener((v, o, n) ->
-                Platform.runLater(() -> {
-                    labelSpeed.setText(
-                            getTransferInfo().getSpeed() / 1024 < 1024
-                                    ? String.format("%d kB/s", n.intValue() / 1024)
-                                    : String.format("%d Mb/s", n.intValue() / 1024 / 1024)
-                    );
-                }));
 
 
         getTransferInfo().progressProperty().addListener((v, o, n) -> {
 
             Platform.runLater(() -> {
 
-                long remainingTime = 0L;
+                progressStatus.setProgress(getTransferInfo().getStatus() == TransferInfo.TRANSFER_STATUS_READY
+                                ? JFXProgressBar.INDETERMINATE_PROGRESS
+                                : (n.doubleValue()) / Long.valueOf(getTransferInfo().getSize()).doubleValue()
+                );
 
-                if(getTransferInfo().getSpeed() > 0)
-                    remainingTime = ((getTransferInfo().getSize() - n.longValue()) / (getTransferInfo().getSpeed()) + 1);
-
-
-                if(remainingTime == 0)
-                    labelTime.setText("∞");
-
-                else if(remainingTime < 60L)
-                    labelTime.setText(String.format("%d s", remainingTime));
-
-                else
-                    labelTime.setText(String.format("%d m", remainingTime / 60));
-
-
-                progressStatus.setProgress((n.doubleValue()) / Long.valueOf(getTransferInfo().getSize()).doubleValue());
+                iconOperation.setGlyphName(getTransferInfo().getType() == TransferInfo.TRANSFER_TYPE_DOWNLOAD
+                                            ? "DOWNLOAD"
+                                            : "UPLOAD"
+                );
 
             });
 
@@ -128,6 +120,18 @@ public class TransferViewerCell extends StackPane implements Initializable, Them
 
         labelFileName.textProperty().bind(getTransferInfo().nameProperty());
 
+        labelSpeed.textProperty().bind(ExtraBindings.createSizeBinding(() ->
+                (long) getTransferInfo().getSpeed(), "/s", getTransferInfo().speedProperty()));
+
+
+        labelTime.textProperty().bind(ExtraBindings.createTimeBinding(() -> {
+
+            if(getTransferInfo().getSpeed() > 0)
+                return (int) ((getTransferInfo().getSize() - getTransferInfo().getProgress()) / (getTransferInfo().getSpeed()) + 1);
+            else
+                return 0;
+
+        }, getTransferInfo().progressProperty()));
 
 
         Application.getInstance().getViews().add(this);

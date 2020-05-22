@@ -35,13 +35,15 @@ public class OfflineDriveService extends Drive {
 
     public final static String SERVICE_ID = "offline-drive-service";
 
-    private final Path offlinePath;
+    private final Path drivePath;
+    private final Path servicePath;
 
 
     public OfflineDriveService(String id, String service, long quota, long blocks) {
         super(id, service, quota, blocks);
 
-        this.offlinePath = Paths.get(System.getProperty("user.home"), ".nefele", SERVICE_ID, id);
+        this.servicePath = Paths.get(System.getProperty("user.home"), ".nefele", SERVICE_ID);
+        this.drivePath = Paths.get(System.getProperty("user.home"), ".nefele", SERVICE_ID, id);
 
     }
 
@@ -49,7 +51,7 @@ public class OfflineDriveService extends Drive {
     public OutputStream writeChunk(MergeChunk chunk) {
 
         try {
-            return new FileOutputStream(new File(offlinePath.resolve(Paths.get(chunk.getId())).toString()));
+            return new FileOutputStream(new File(drivePath.resolve(Paths.get(chunk.getId())).toString()));
         } catch (FileNotFoundException e) {
             Application.panic(getClass(), e);
         }
@@ -62,12 +64,21 @@ public class OfflineDriveService extends Drive {
     public InputStream readChunk(MergeChunk chunk) {
 
         try {
-            return new FileInputStream(new File(offlinePath.resolve(Paths.get(chunk.getId())).toString()));
+            return new FileInputStream(new File(drivePath.resolve(Paths.get(chunk.getId())).toString()));
         } catch (FileNotFoundException e) {
             Application.panic(getClass(), e);
         }
 
         throw new IllegalStateException();
+
+    }
+
+    @Override
+    public void removeChunk(MergeChunk chunk) {
+
+        try {
+            Files.delete(drivePath.resolve(Paths.get(chunk.getId())));
+        } catch (IOException ignored) { }
 
     }
 
@@ -80,35 +91,24 @@ public class OfflineDriveService extends Drive {
 
         try {
 
-            if(Files.notExists(offlinePath))
-                Files.createDirectory(offlinePath);
+            if(Files.notExists(servicePath))
+                Files.createDirectory(servicePath);
 
-        } catch (IOException e) { }
-
-
-
-        final Path path = offlinePath;
-
-        if(Files.notExists(path)) {
-
-            try {
-                Files.createDirectory(path);
-            } catch (IOException e) {
-                Application.panic(getClass(), e);
-            }
-
-        }
-
-
-        try {
-
-            setChunks(Files.walk(path).count());
+            if(Files.notExists(drivePath))
+                Files.createDirectory(drivePath);
 
         } catch (IOException e) {
             Application.panic(getClass(), e);
         }
 
 
+        try {
+
+            setChunks(Files.list(drivePath).count());
+
+        } catch (IOException e) {
+            Application.panic(getClass(), e);
+        }
 
         return this;
     }

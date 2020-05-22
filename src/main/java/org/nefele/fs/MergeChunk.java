@@ -72,6 +72,7 @@ public class MergeChunk implements Invalidatable {
     }
 
 
+
     @Override
     public void invalidate() {
         dirty = true;
