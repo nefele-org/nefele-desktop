@@ -26,7 +26,7 @@ package org.nefele.fs;
 
 import org.nefele.Application;
 import org.nefele.cloud.Drive;
-import org.nefele.cloud.DriveService;
+import org.nefele.cloud.Drives;
 import org.nefele.core.Mime;
 
 import java.io.IOException;
@@ -64,7 +64,7 @@ public class MergeFileStore extends FileStore {
     @Override
     public long getTotalSpace() throws IOException {
 
-        return DriveService.getInstance().getDrives()
+        return Drives.getInstance().getDrives()
                 .stream()
                 .mapToLong(Drive::getQuota)
                 .sum() * MergeChunk.getSize();
@@ -74,7 +74,7 @@ public class MergeFileStore extends FileStore {
     @Override
     public long getUsableSpace() throws IOException {
 
-        return getTotalSpace() - DriveService.getInstance().getDrives()
+        return getTotalSpace() - Drives.getInstance().getDrives()
                 .stream()
                 .mapToLong(Drive::getChunks)
                 .sum() * MergeChunk.getSize();
@@ -145,8 +145,8 @@ public class MergeFileStore extends FileStore {
             throw new IOException("Can not move to trash root directory!");
 
 
-        path.getInode().getData().setTrashed(true);
-        path.getInode().getData().invalidate();
+        //path.getInode().getData().setTrashed(true);
+        //path.getInode().getData().invalidate();
 
         Application.log(getClass(), "Moved to trash %s", path.toString());
     }

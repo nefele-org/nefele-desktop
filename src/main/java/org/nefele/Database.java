@@ -128,8 +128,11 @@ public class Database {
             if(e.getErrorCode() == SQLiteErrorCode.SQLITE_BUSY.code)
                 return update(sql, onPrepare, batch);
 
+            else if(e.getErrorCode() == SQLiteErrorCode.SQLITE_LOCKED.code)
+                return update(sql, onPrepare, batch);
+
             else if(e.getErrorCode() == SQLiteErrorCode.SQLITE_CORRUPT.code)
-                Application.panic(Database.class, "Database is gone, rest in peace :( (%s)", e.getMessage());
+                Application.panic(Database.class, "Database is gone, rest in peace :( (%s)", e.getMessage(), e.getErrorCode());
 
             else
                 throw e;

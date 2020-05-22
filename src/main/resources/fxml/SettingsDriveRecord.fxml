@@ -30,32 +30,49 @@
   ~ THE SOFTWARE.
   -->
 
-<?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
-<?import com.jfoenix.controls.JFXCheckBox?>
 <?import com.jfoenix.controls.JFXSlider?>
 <?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
+<?import com.jfoenix.controls.JFXToggleButton?>
 <fx:root minWidth="-Infinity" maxWidth="Infinity" minHeight="-Infinity" maxHeight="Infinity"
          type="StackPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
          AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
     <HBox>
 
-        <VBox HBox.hgrow="ALWAYS" >
-            <Label fx:id="labelName"/>
-        </VBox>
+            <VBox HBox.hgrow="ALWAYS">
 
-        <VBox>
-            <JFXSlider fx:id="sliderChunk"/>
-        </VBox>
+                <HBox spacing="20" alignment="CENTER_LEFT" >
 
-        <VBox>
-            <JFXCheckBox fx:id="checkBoxState"/>
-        </VBox>
+                    <VBox VBox.vgrow="ALWAYS" >
+                        <StackPane>
+                            <MaterialDesignIconView text=" " glyphName="LAYERS" size="28.0" />
+                        </StackPane>
+                    </VBox>
 
-        <VBox>
-            <MaterialDesignIconView fx:id="buttonDelete"/>
-        </VBox>
+                    <Label fx:id="labelName" styleClass="text-h3" HBox.hgrow="ALWAYS"/>
+
+                </HBox>
+
+            </VBox>
+
+            <VBox>
+
+                <HBox spacing="20" alignment="CENTER_RIGHT">
+
+                    <VBox>
+                        <JFXSlider fx:id="sliderChunks"/>
+                    </VBox>
+
+                    <VBox styleClass="settings-input-pane">
+                        <JFXToggleButton fx:id="toggleState" size="8.0"/>
+                    </VBox>
+
+                    <MaterialDesignIconView fx:id="buttonDelete" glyphName="CLOSE" size="18.0" styleClass="transferviewer-icon-close" />
+
+                </HBox>
+
+            </VBox>
 
         <padding>
             <Insets right="20" />

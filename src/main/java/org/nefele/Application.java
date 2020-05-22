@@ -33,7 +33,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
-import org.nefele.cloud.DriveService;
+import org.nefele.cloud.Drives;
 import org.nefele.core.Mimes;
 import org.nefele.core.Status;
 import org.nefele.core.TransferQueue;
@@ -119,7 +119,7 @@ public final class Application extends javafx.application.Application implements
 
 
         addService(getLocale());
-        addService(DriveService.getInstance());
+        addService(Drives.getInstance());
         addService(Mimes.getInstance());
 
 
@@ -181,7 +181,7 @@ public final class Application extends javafx.application.Application implements
                 stage.setMinWidth(600);
                 stage.setMinHeight(400);
                 stage.setWidth(800);
-                stage.setHeight(480);
+                stage.setHeight(400);
 
             });
 

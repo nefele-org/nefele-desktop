@@ -72,17 +72,16 @@ public class TransferViewer extends StackPane implements Initializable, Themeabl
                 .getTransferQueue()
                 .getTransferQueue().addListener((ListChangeListener<? super Pair<TransferInfo, Future<Integer>>>) change -> {
 
-            while(change.next()) {
 
-                if(change.wasRemoved())
-                    Platform.runLater(() ->
-                            change.getRemoved().forEach(i -> cellPane.getChildren().removeIf(j -> ((TransferViewerCell) j).getTransferInfo() == i.getKey())));
+                    while (change.next()) {
 
-                if(change.wasAdded())
-                    Platform.runLater(() ->
-                            change.getAddedSubList().forEach(i -> cellPane.getChildren().add(new TransferViewerCell(i.getKey()))));
+                        if (change.wasRemoved())
+                            Platform.runLater(() -> change.getRemoved().forEach(i -> cellPane.getChildren().removeIf(j -> ((TransferViewerCell) j).getTransferInfo() == i.getKey())));
 
-            }
+                        if (change.wasAdded())
+                            Platform.runLater(() -> change.getAddedSubList().forEach(i -> cellPane.getChildren().add(new TransferViewerCell(i.getKey()))));
+
+                    }
 
         });
 

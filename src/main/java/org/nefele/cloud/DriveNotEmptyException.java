@@ -22,35 +22,7 @@
  * THE SOFTWARE.
  */
 
-package org.nefele.fs;
+package org.nefele.cloud;
 
-import java.io.IOException;
-import java.nio.file.DirectoryNotEmptyException;
-import java.nio.file.Path;
-
-public final class MergeFiles {
-
-    public static boolean isTrashed(Path path) {
-
-        if(path instanceof MergePath)
-            return ((MergePath) path).getInode().getData().isTrashed();
-
-        return false;
-
-    }
-
-    public static void moveToTrash(Path path) throws IOException {
-
-        if(path instanceof MergePath) {
-            if (path.getFileSystem() instanceof MergeFileSystem) {
-                ((MergeFileSystem) path.getFileSystem())
-                        .getFileStore()
-                        .moveToTrash((MergePath) path);
-
-            }
-        }
-        throw new IOException();
-
-    }
-
+public class DriveNotEmptyException extends RuntimeException {
 }

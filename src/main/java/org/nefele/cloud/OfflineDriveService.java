@@ -84,10 +84,16 @@ public class OfflineDriveService extends Drive {
     }
 
     @Override
+    public long getMaxQuota() {
+        return 512L;
+    }
+
+    @Override
     public Drive initialize() {
 
         Application.log(getClass(), "Initializing %s %s", SERVICE_ID, getId());
 
+        setStatus(STATUS_CONNECTING);
 
 
         try {
@@ -111,6 +117,7 @@ public class OfflineDriveService extends Drive {
             Application.panic(getClass(), e);
         }
 
+        setStatus(STATUS_READY);
         return this;
     }
 

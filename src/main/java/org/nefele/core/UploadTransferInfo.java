@@ -27,6 +27,7 @@ package org.nefele.core;
 import javafx.application.Platform;
 import org.nefele.Application;
 import org.nefele.cloud.DriveFullException;
+import org.nefele.cloud.DriveNotFoundException;
 import org.nefele.fs.MergeChunk;
 import org.nefele.fs.MergePath;
 import org.nefele.ui.dialog.Dialogs;
@@ -77,7 +78,7 @@ public class UploadTransferInfo extends TransferInfo {
             reader.close();
 
 
-        } catch (DriveFullException | IOException io) {
+        } catch (IOException | DriveFullException | DriveNotFoundException io) {
 
             setStatus(TRANSFER_STATUS_ERROR);
             Application.log(getClass(), "WARNING! %s when uploading file %s: %s", io.getClass().getName(), localFile.toString(), io.getMessage());
@@ -144,9 +145,8 @@ public class UploadTransferInfo extends TransferInfo {
                         outputStream.write(bytes);
 
                     try {
-                        Thread.sleep(10);
-                    } catch (InterruptedException ignored) {
-                    }
+                        Thread.sleep(10); // FIXME: used only for testing
+                    } catch (InterruptedException ignored) { }
 
 
                     Platform.runLater(() -> setProgress(getProgress() + bytes.length));

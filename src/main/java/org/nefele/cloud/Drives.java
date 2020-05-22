@@ -25,7 +25,6 @@
 package org.nefele.cloud;
 
 import org.nefele.Application;
-import org.nefele.Database;
 import org.nefele.Service;
 import org.sqlite.SQLiteErrorCode;
 
@@ -37,11 +36,11 @@ import java.util.concurrent.atomic.AtomicReference;
 
 
 
-public final class DriveService implements Service {
+public final class Drives implements Service {
 
-    private final static DriveService instance = new DriveService();
+    private final static Drives instance = new Drives();
 
-    public static DriveService getInstance() {
+    public static Drives getInstance() {
         return instance;
     }
 
@@ -49,7 +48,7 @@ public final class DriveService implements Service {
 
     private final ArrayList<Drive> drives;
 
-    private DriveService() {
+    private Drives() {
         drives = new ArrayList<>();
     }
 

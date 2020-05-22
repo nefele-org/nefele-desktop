@@ -26,14 +26,19 @@ package org.nefele.ui.scenes;
 
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXSlider;
+import com.jfoenix.controls.JFXToggleButton;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
-import javafx.beans.property.*;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import org.nefele.Application;
 import org.nefele.Resources;
+import org.nefele.cloud.Drive;
 import org.nefele.ui.Themeable;
 
 import java.net.URL;
@@ -41,22 +46,20 @@ import java.util.ResourceBundle;
 
 import static java.util.Objects.requireNonNull;
 
+
+
 public class SettingsDriveRecord extends StackPane implements Initializable, Themeable {
+    
+    private final ReadOnlyObjectProperty<Drive> drive;
 
     @FXML private Label labelName;
-    @FXML private JFXSlider sliderChunk;
-    @FXML private JFXCheckBox checkBoxState;
+    @FXML private JFXToggleButton toggleState;
     @FXML private MaterialDesignIconView buttonDelete;
+    @FXML private JFXSlider sliderChunks;
 
-    private final StringProperty name;
-    private final BooleanProperty state;
-    private final IntegerProperty value;
+    public SettingsDriveRecord(Drive drive) {
 
-    public SettingsDriveRecord(String name, boolean state, Integer value ) {
-
-        this.name = new SimpleStringProperty(requireNonNull(name));
-        this.state = new SimpleBooleanProperty(requireNonNull(state));
-        this.value = new SimpleIntegerProperty(requireNonNull(value));
+        this.drive = new SimpleObjectProperty<>(requireNonNull(drive));
 
         Resources.getFXML(this, "/fxml/SettingsDriveRecord.fxml");
     }
@@ -64,47 +67,38 @@ public class SettingsDriveRecord extends StackPane implements Initializable, The
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        labelName.textProperty().bind(getDrive().descriptionProperty());
+
+
+        toggleState.setSelected(getDrive().getStatus() == Drive.STATUS_READY);
+
+        toggleState.selectedProperty().addListener((v, o, n) -> {
+            getDrive().setStatus(n ? Drive.STATUS_READY : Drive.STATUS_DISABLED);
+            getDrive().invalidate();
+        });
+
+
+        buttonDelete.setOnMouseClicked(e -> {
+            /* TODO...*/
+        });
+
+        sliderChunks.setMin(1.0);
+        sliderChunks.setMax(getDrive().getMaxQuota());
+        sliderChunks.setValue(getDrive().getQuota());
+
         Application.getInstance().getViews().add(this);
     }
 
     @Override
     public void initializeInterface() {
-
+        Resources.getCSS(this, "/css/transferviewer-cell.css");
     }
 
-    public String getName() {
-        return name.get();
+    public Drive getDrive() {
+        return drive.get();
     }
 
-    public StringProperty nameProperty() {
-        return name;
-    }
-
-    public boolean isActive() {
-        return state.get();
-    }
-
-    public BooleanProperty stateProperty() {
-        return state;
-    }
-
-    public void setName(String name) {
-        this.name.set(name);
-    }
-
-    public void setValue(boolean state) {
-        this.state.set(state);
-    }
-
-    public int getValue() {
-        return value.get();
-    }
-
-    public IntegerProperty valueProperty() {
-        return value;
-    }
-
-    public void setValue(int value) {
-        this.value.set(value);
+    public ReadOnlyObjectProperty<Drive> driveProperty() {
+        return drive;
     }
 }

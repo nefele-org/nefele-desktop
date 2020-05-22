@@ -77,6 +77,7 @@ public abstract class Drive {
     public abstract OutputStream writeChunk(MergeChunk chunk);
     public abstract InputStream readChunk(MergeChunk chunk);
     public abstract void removeChunk(MergeChunk chunk);
+    public abstract long getMaxQuota();
     public abstract Drive initialize();
     public abstract Drive exit();
 

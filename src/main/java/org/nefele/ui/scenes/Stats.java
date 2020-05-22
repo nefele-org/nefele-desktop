@@ -26,7 +26,6 @@ package org.nefele.ui.scenes;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXSpinner;
-import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -40,7 +39,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import org.nefele.Application;
 import org.nefele.Resources;
-import org.nefele.cloud.DriveService;
+import org.nefele.cloud.Drives;
 import org.nefele.core.TransferInfo;
 import org.nefele.fs.MergeFileStore;
 import org.nefele.fs.MergeFileSystem;
@@ -83,18 +82,12 @@ public class Stats extends StackPane implements Initializable, Themeable {
     
     @FXML private Label labelAvailablePercentage;
     @FXML private Label labelAvailableSpace;
-    
-    @FXML private Label labelTrashPercentage;
-    @FXML private Label labelTrashSpace;
 
     @FXML private Label labelAllFilesNum;
     @FXML private Label labelAllFilesDim;
     
     @FXML private Label labelAllFoldersNum;
     @FXML private Label labelAllFoldersDim;
-    
-    @FXML private Label labelTrashNum;
-    @FXML private Label labelTrashDim;
 
     @FXML private Label labelIncomingSharesNum;
     @FXML private Label labelIncomingSharesDim;
@@ -129,7 +122,7 @@ public class Stats extends StackPane implements Initializable, Themeable {
         });
 
 
-        DriveService.getInstance().getDrives().forEach(i -> cells.add(new StatsDriveInfo(i)));
+        Drives.getInstance().getDrives().forEach(i -> cells.add(new StatsDriveInfo(i)));
 
 
         buttonSystemMemoryClean.setOnMouseClicked(e -> {
@@ -246,13 +239,6 @@ public class Stats extends StackPane implements Initializable, Themeable {
 
 
 
-
-                labelTrashPercentage.setText(String.format("%d%%", 0)); /* TODO... */
-                labelTrashSpace.setText(String.format("%d GB", 0)); /* TODO... */
-
-
-
-
                 labelAllFilesNum.textProperty().bind(Bindings.createStringBinding(() ->
                         String.valueOf(Files.walk(fileSystem.getPath(MergeFileSystem.ROOT))
                                 .filter(Files::isRegularFile)
@@ -281,12 +267,6 @@ public class Stats extends StackPane implements Initializable, Themeable {
                                 .mapToLong(i -> i.toFile().length())
                                 .sum(), ""
                 ));
-
-
-
-
-                labelTrashNum.setText(String.format("%d", 0)); /* TODO... */
-                labelTrashDim.setText(String.format("%d GB", 0)); /* TODO... */
 
 
 

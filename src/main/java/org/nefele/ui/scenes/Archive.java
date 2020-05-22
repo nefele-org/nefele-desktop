@@ -42,8 +42,6 @@ import org.nefele.Resources;
 import org.nefele.core.Mime;
 import org.nefele.core.Mimes;
 import org.nefele.core.UploadTransferInfo;
-import org.nefele.fs.MergeFileSystem;
-import org.nefele.fs.MergeFiles;
 import org.nefele.fs.MergePath;
 import org.nefele.ui.Themeable;
 import org.nefele.ui.controls.FileBrowser;
@@ -53,7 +51,6 @@ import org.nefele.ui.dialog.BaseDialog;
 import org.nefele.ui.dialog.Dialogs;
 
 import java.io.*;
-import java.lang.management.PlatformManagedObject;
 import java.net.URI;
 import java.net.URL;
 import java.nio.file.*;
@@ -62,6 +59,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
+
+
 
 public class Archive extends StackPane implements Initializable, Themeable {
 
@@ -145,20 +144,24 @@ public class Archive extends StackPane implements Initializable, Themeable {
                     Dialogs.showErrorBox("ARCHIVE_DIALOG_FOLDER_EMPTY");
 
                 }else if(new File(p.getKey().trim()).isFile()) {
-                    Dialogs.showErrorBox("ARCHIVE_DIALOG_FOLDER_INVALID_1");
+                    Dialogs.showErrorBox("ARCHIVE_DIALOG_FOLDER_INVALID_NAME");
 
                 } else {
 
-                    try {
+                    Application.getInstance().runThread(new Thread(() -> {
 
-                        Files.createDirectory(
-                                MergePath.get("nefele", fileBrowser.getCurrentPath().toString(), p.getKey()));
+                        try {
 
-                        fileBrowser.update();
+                            Files.createDirectory(
+                                    MergePath.get("nefele", fileBrowser.getCurrentPath().toString(), p.getKey()));
 
-                    } catch (IOException io) {
-                        Dialogs.showErrorBox(io.getLocalizedMessage());
-                    }
+                        } catch (IOException io) {
+                            Platform.runLater(() -> Dialogs.showErrorBox("ARCHIVE_DIALOG_FOLDER_CREATE_FAIL"));
+                        } finally {
+                            Platform.runLater(fileBrowser::update);
+                        }
+
+                    }, "Archive::addFolder()"));
 
                 }
 
@@ -179,20 +182,39 @@ public class Archive extends StackPane implements Initializable, Themeable {
                 Dialogs.showErrorBox("ARCHIVE_DIALOG_FOLDER_NOTSELECTED");
 
             else if(!file.isDirectory())
-                Dialogs.showErrorBox("ARCHIVE_DIALOG_FOLDER_INVALID_2");
+                Dialogs.showErrorBox("ARCHIVE_DIALOG_FOLDER_INVALID");
 
             else {
 
-                try {
+                Application.getInstance().runThread(new Thread(() -> {
 
-                    Files.createDirectory(
-                            MergePath.get("nefele", fileBrowser.getCurrentPath().toString(), file.getName()));
+                    try {
 
-                    fileBrowser.update();
+                        Files.walk(file.toPath()).forEach(path -> {
 
-                } catch (IOException io) {
-                    Dialogs.showErrorBox(io.getLocalizedMessage());
-                }
+                            Path cloudPath = MergePath.get("nefele", fileBrowser.getCurrentPath().toString(), file.toPath().getParent().relativize(path).toString());
+
+                            try {
+
+                                if (Files.isDirectory(path))
+                                    Files.createDirectory(cloudPath);
+
+                                else
+                                    Application.getInstance().getTransferQueue().enqueue(
+                                            new UploadTransferInfo((MergePath) cloudPath, path.toFile()));
+
+                            } catch (IOException ignored) { }
+
+                        });
+
+
+                    } catch (IOException ignored) {
+                        Platform.runLater(() -> Dialogs.showErrorBox("ARCHIVE_DIALOG_FOLDER_UPLOAD_FAIL"));
+                    } finally {
+                        Platform.runLater(fileBrowser::update);
+                    }
+
+                }, "Archive::uploadFolder()"));
 
             }
 
@@ -219,13 +241,13 @@ public class Archive extends StackPane implements Initializable, Themeable {
                     );
                 }});
 
-                add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_TRASH")) {{
+                add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_DELETE")) {{
                     setOnAction(e -> {
 
                         fileBrowser.getSelectedItems().forEach(i -> {
 
                             try {
-                                MergeFiles.moveToTrash(MergePath.get(
+                                Files.delete(MergePath.get(
                                         fileBrowser.getCurrentPath().toUri().getScheme(),
                                         fileBrowser.getCurrentPath().toString(),
                                         i.getText()
@@ -290,22 +312,24 @@ public class Archive extends StackPane implements Initializable, Themeable {
                 try {
 
 
-                    Files.list(path).filter(Files::isDirectory).forEach(i ->
-                            items.add(new FileBrowserItem(Mime.FOLDER, i.getFileName().toString()) {{
-                                setMenuItems(folderMenuItems);
-                            }})
+                    Files.list(path)
+                            .filter(Files::isDirectory).forEach(i ->
+                                items.add(new FileBrowserItem(Mime.FOLDER, i.getFileName().toString()) {{
+                                    setMenuItems(folderMenuItems);
+                                }})
                     );
 
-                    Files.list(path).filter(p -> !Files.isDirectory(p)).forEach(i -> {
+                    Files.list(path)
+                            .filter(p -> !Files.isDirectory(p)).forEach(i -> {
 
-                        String filename = i.getFileName().toString();
-                        Mime mime = Mimes.getInstance().getByExtension(filename);
+                                String filename = i.getFileName().toString();
+                                Mime mime = Mimes.getInstance().getByExtension(filename);
 
-                        items.add(new FileBrowserItem(mime, filename) {{
-                            setMenuItems(fileMenuItems);
-                        }});
-
-                    });
+                                items.add(new FileBrowserItem(mime, filename) {{
+                                    setMenuItems(fileMenuItems);
+                                }});
+                            }
+                    );
 
                 } catch (IOException ignored) { }
 

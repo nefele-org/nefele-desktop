@@ -45,101 +45,120 @@
 
             <Label userData="SETTINGS_GENERAL" styleClass="text-h1" />
             <VBox fx:id="contentPane"/>
-            <Separator />
 
-            <VBox alignment="CENTER" >
-                <JFXButton fx:id="buttonAdvancedSettings"  />
-            </VBox>
+                <Separator />
 
-            <BorderPane fx:id="boxAdvancedSettings">
-                <center>
 
-                    <VBox spacing="24" fx:id="headerAdvancedSettings">
-                        <Label userData="SETTINGS_ADVANCED" styleClass="text-h1" />
+                <BorderPane>
+                    <center>
 
-                        <VBox spacing="5" fx:id="contentAdvancedSettings" />
+                        <VBox spacing="24">
 
-                        <VBox spacing="24" alignment="CENTER" >
-                            <JFXButton fx:id="buttonApply" userData="SETTINGS_ADVANCED_BUTTON_APPLY"/>
-                            <Separator />
+                            <Label userData="SETTINGS_CLOUD" styleClass="text-h1" />
+
+                            <VBox spacing="5" fx:id="contentDrivePane"/>
+
                         </VBox>
+
+                    </center>
+                </BorderPane>
+
+
+                <Separator />
+
+                <VBox alignment="CENTER" >
+                    <JFXButton fx:id="buttonAdvancedSettings"  />
+                </VBox>
+
+                <BorderPane fx:id="boxAdvancedSettings">
+                    <center>
+
+                        <VBox spacing="24" fx:id="headerAdvancedSettings">
+                            <Label userData="SETTINGS_ADVANCED" styleClass="text-h1" />
+
+                            <VBox spacing="5" fx:id="contentAdvancedSettings" />
+
+                            <VBox spacing="24" alignment="CENTER" >
+                                <JFXButton fx:id="buttonApply" userData="SETTINGS_ADVANCED_BUTTON_APPLY"/>
+                                <Separator />
+                            </VBox>
+
+                        </VBox>
+
+                    </center>
+                </BorderPane>
+
+                <VBox spacing="24">
+
+                    <Label userData="SETTINGS_SYSTEM_INFO" styleClass="text-h1"/>
+
+                    <VBox spacing="5">
+                        <HBox>
+
+                            <Pane>
+
+                                <FontAwesomeIconView glyphName="CLOUD" layoutX="14.0" layoutY="64" selectionFill="#571d1d"
+                                                     size="80"
+                                                     styleClass="header-awesome-logo-1"/>
+                                <FontAwesomeIconView glyphName="CLOUD" layoutX="28.0" layoutY="64" selectionFill="#f21c1c"
+                                                     size="80"
+                                                     styleClass="header-awesome-logo-2"/>
+
+                                <padding>
+                                    <Insets top="32" left="32" right="0" bottom="32" />
+                                </padding>
+
+                            </Pane>
+
+
+                            <VBox spacing="5">
+                                <HBox spacing="2">
+                                    <Label text="Nefele: " styleClass="text-bold" />
+                                    <Label fx:id="labelNefele" styleClass=""/>
+                                </HBox>
+
+                                <HBox spacing="2">
+                                    <Label text="Java: " styleClass="text-bold" />
+                                    <Label fx:id="labelJava" styleClass="" />
+                                </HBox>
+
+                                <HBox spacing="2">
+                                    <Label text="JavaFX: " styleClass="text-bold" />
+                                    <Label fx:id="labelJavaFX" styleClass="" />
+                                </HBox>
+                            </VBox>
+
+                        </HBox>
 
                     </VBox>
 
-                </center>
-            </BorderPane>
 
-            <VBox spacing="24">
 
-                <Label userData="SETTINGS_SYSTEM_INFO" styleClass="text-h1"/>
-
-                <VBox spacing="5">
-                    <HBox>
-
-                        <Pane>
-
-                            <FontAwesomeIconView glyphName="CLOUD" layoutX="14.0" layoutY="64" selectionFill="#571d1d"
-                                                 size="80"
-                                                 styleClass="header-awesome-logo-1"/>
-                            <FontAwesomeIconView glyphName="CLOUD" layoutX="28.0" layoutY="64" selectionFill="#f21c1c"
-                                                 size="80"
-                                                 styleClass="header-awesome-logo-2"/>
+                    <HBox alignment="CENTER"  >
+                        <HBox spacing="16" styleClass="third-party-icon">
+                            <ImageView fitWidth="48" fitHeight="48" cache="true"><Image backgroundLoading="true" url="/images/third-party/gradle.png" /></ImageView>
+                            <ImageView fitWidth="48" fitHeight="48" cache="true"><Image backgroundLoading="true" url="/images/third-party/gluon.png" /></ImageView>
+                            <ImageView fitWidth="48" fitHeight="48" cache="true"><Image backgroundLoading="true" url="/images/third-party/jfoenix.png" /></ImageView>
+                            <ImageView fitWidth="48" fitHeight="48" cache="true"><Image backgroundLoading="true" url="/images/third-party/font-awesome.png" /></ImageView>
+                            <ImageView fitWidth="48" fitHeight="48" cache="true"><Image backgroundLoading="true" url="/images/third-party/github.png" /></ImageView>
+                            <ImageView fitWidth="48" fitHeight="48" cache="true"><Image backgroundLoading="true" url="/images/third-party/stack-overflow.png" /></ImageView>
 
                             <padding>
-                                <Insets top="32" left="32" right="0" bottom="32" />
+                                <Insets top="16" bottom="16" left="32" right="32" />
                             </padding>
-
-                        </Pane>
-
-
-                        <VBox spacing="5">
-                            <HBox spacing="2">
-                                <Label text="Nefele: " styleClass="text-bold" />
-                                <Label fx:id="labelNefele" styleClass=""/>
-                            </HBox>
-
-                            <HBox spacing="2">
-                                <Label text="Java: " styleClass="text-bold" />
-                                <Label fx:id="labelJava" styleClass="" />
-                            </HBox>
-
-                            <HBox spacing="2">
-                                <Label text="JavaFX: " styleClass="text-bold" />
-                                <Label fx:id="labelJavaFX" styleClass="" />
-                            </HBox>
-                        </VBox>
-
+                        </HBox>
                     </HBox>
+
+                    <VBox alignment="CENTER">
+                        <Label text="Copyright © 2020. Nefele-org" styleClass="text-h3" />
+                        <Hyperlink fx:id="hyperLink" text="https://github.com/nefele-org" />
+                    </VBox>
 
                 </VBox>
 
-
-
-                <HBox alignment="CENTER"  >
-                    <HBox spacing="16" styleClass="third-party-icon">
-                        <ImageView fitWidth="48" fitHeight="48" cache="true"><Image backgroundLoading="true" url="/images/third-party/gradle.png" /></ImageView>
-                        <ImageView fitWidth="48" fitHeight="48" cache="true"><Image backgroundLoading="true" url="/images/third-party/gluon.png" /></ImageView>
-                        <ImageView fitWidth="48" fitHeight="48" cache="true"><Image backgroundLoading="true" url="/images/third-party/jfoenix.png" /></ImageView>
-                        <ImageView fitWidth="48" fitHeight="48" cache="true"><Image backgroundLoading="true" url="/images/third-party/font-awesome.png" /></ImageView>
-                        <ImageView fitWidth="48" fitHeight="48" cache="true"><Image backgroundLoading="true" url="/images/third-party/github.png" /></ImageView>
-                        <ImageView fitWidth="48" fitHeight="48" cache="true"><Image backgroundLoading="true" url="/images/third-party/stack-overflow.png" /></ImageView>
-
-                        <padding>
-                            <Insets top="16" bottom="16" left="32" right="32" />
-                        </padding>
-                    </HBox>
-                </HBox>
-
-                <VBox alignment="CENTER">
-                    <Label text="Copyright © 2020. Nefele-org" styleClass="text-h3" />
-                    <Hyperlink fx:id="hyperLink" text="https://github.com/nefele-org" />
-                </VBox>
-
-            </VBox>
-
-            <padding>
-                <Insets right="10" left="10" top="10" bottom="10" />
-            </padding>
+                <padding>
+                    <Insets right="10" left="10" top="10" bottom="10" />
+                </padding>
         </VBox>
     </ScrollPane>
 </fx:root>

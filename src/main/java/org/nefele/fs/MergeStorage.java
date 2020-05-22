@@ -24,14 +24,12 @@
 
 package org.nefele.fs;
 
-import javafx.beans.property.LongProperty;
-import javafx.beans.property.SimpleLongProperty;
 import org.nefele.Application;
 import org.nefele.Service;
 import org.nefele.cloud.Drive;
 import org.nefele.cloud.DriveFullException;
 import org.nefele.cloud.DriveNotFoundException;
-import org.nefele.cloud.DriveService;
+import org.nefele.cloud.Drives;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -174,7 +172,7 @@ public class MergeStorage implements Service {
 
         try {
 
-            Drive drive = DriveService.getInstance().nextAllocatable();
+            Drive drive = Drives.getInstance().nextAllocatable();
             MergeChunk chunk = new MergeChunk(generateId(), offset, node, drive, "");
 
             getChunks().put(chunk.getId(), chunk);
@@ -197,7 +195,7 @@ public class MergeStorage implements Service {
     public MergeNode alloc(MergeNode parent, String name, String mime) {
 
         MergeNode node = new MergeNode(
-                name, mime, 0L, Instant.now(), Instant.now(), Instant.now(), false, Instant.now(), generateId(), parent.getId()
+                name, mime, 0L, Instant.now(), Instant.now(), Instant.now(), generateId(), parent.getId()
         );
 
         node.invalidate();
@@ -250,8 +248,6 @@ public class MergeStorage implements Service {
                                 Instant.ofEpochSecond(r.getLong("ctime")),
                                 Instant.ofEpochSecond(r.getLong("atime")),
                                 Instant.ofEpochSecond(r.getLong("mtime")),
-                                r.getInt("trash") != 0,
-                                Instant.ofEpochSecond(r.getLong("dtime")),
                                 r.getString("id"),
                                 r.getString("parent")
                         );
@@ -269,7 +265,7 @@ public class MergeStorage implements Service {
 
                         try {
 
-                            Drive drive = DriveService.getInstance().fromId(r.getString("drive"));
+                            Drive drive = Drives.getInstance().fromId(r.getString("drive"));
                             MergeNode inode = getInodes().get(r.getString("inode"));
 
 
@@ -312,7 +308,7 @@ public class MergeStorage implements Service {
         try {
 
             Application.getInstance().getDatabase().update (
-                    "INSERT OR REPLACE INTO inodes (name, mime, size, ctime, atime, mtime, trash, dtime, id, parent) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    "INSERT OR REPLACE INTO inodes (name, mime, size, ctime, atime, mtime, id, parent) values (?, ?, ?, ?, ?, ?, ?, ?)",
 
                     s -> {
 
@@ -327,10 +323,8 @@ public class MergeStorage implements Service {
                             s.setLong(4, node.getCreatedTime().getEpochSecond());
                             s.setLong(5, node.getAccessedTime().getEpochSecond());
                             s.setLong(6, node.getModifiedTime().getEpochSecond());
-                            s.setInt(7, node.isTrashed() ? 1 : 0);
-                            s.setLong(8, node.getDeletedTime().getEpochSecond());
-                            s.setString(9, node.getId());
-                            s.setString(10, node.getParent());
+                            s.setString(7, node.getId());
+                            s.setString(8, node.getParent());
                             s.addBatch();
 
                             node.validate();

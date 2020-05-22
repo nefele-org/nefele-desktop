@@ -48,6 +48,7 @@
             <VBox alignment="TOP_RIGHT">
                 <StackPane fx:id="inputPane" styleClass="settings-input-pane" />
             </VBox>
+
             <padding>
                 <Insets right="20" />
             </padding>

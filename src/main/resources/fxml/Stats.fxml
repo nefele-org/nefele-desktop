@@ -156,24 +156,18 @@
                                             <MaterialDesignIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="CIRCLE" size="16.0"/>
                                             <Label text=" " fx:id="labelAvailablePercentage"/>
                                         </HBox>
-                                        <HBox spacing="5">
-                                            <MaterialDesignIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="RECYCLE" size="16.0"/>
-                                            <Label text=" " fx:id="labelTrashPercentage"/>
-                                        </HBox>
                                     </VBox>
                                 </left>
                                 <center>
                                     <VBox spacing="2" alignment="CENTER">
                                         <Label userData="STATS_CARD_SECONDARY_CONTENT_1"/>
                                         <Label userData="STATS_CARD_SECONDARY_CONTENT_2"/>
-                                        <Label userData="WORD_TRASH"/>
                                     </VBox>
                                 </center>
                                 <right>
                                     <VBox spacing="2">
                                         <Label text=" " fx:id="labelCloudDriveSpace" />
                                         <Label text=" " fx:id="labelAvailableSpace"/>
-                                        <Label text=" " fx:id="labelTrashSpace"/>
                                     </VBox>
                                 </right>
                             </BorderPane>
@@ -208,11 +202,6 @@
                                         </HBox>
 
                                         <HBox spacing="5">
-                                            <MaterialDesignIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="RECYCLE" size="16.0"/>
-                                            <Label userData="WORD_TRASH"/>
-                                        </HBox>
-
-                                        <HBox spacing="5">
                                             <MaterialDesignIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="ARROW_DOWN_BOLD_CIRCLE_OUTLINE" size="16.0"/>
                                             <Label userData="STATS_CARD_TERTIARY_CONTENT_3" />
                                         </HBox>
@@ -241,11 +230,6 @@
                                         </HBox>
 
                                         <HBox spacing="2">
-                                            <Label text=" " fx:id="labelTrashNum"/>
-                                            <Label userData="WORD_FILES"/>
-                                        </HBox>
-
-                                        <HBox spacing="2">
                                             <Label text=" " fx:id="labelIncomingSharesNum"/>
                                             <Label userData="WORD_FILES"/>
                                         </HBox>
@@ -269,7 +253,6 @@
 
                                         <Label text=" " fx:id="labelAllFilesDim"/>
                                         <Label text=" " fx:id="labelAllFoldersDim"/>
-                                        <Label text=" " fx:id="labelTrashDim"/>
                                         <Label text=" " fx:id="labelIncomingSharesDim"/>
                                         <Label text=" " fx:id="labelOutgoingSharesDim"/>
 

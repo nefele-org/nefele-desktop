@@ -25,51 +25,35 @@
 package org.nefele.ui.scenes;
 
 import com.jfoenix.controls.*;
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
-import javafx.application.Platform;
-import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Spinner;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.util.Duration;
 import org.nefele.Application;
 import org.nefele.Resources;
+import org.nefele.cloud.Drives;
 import org.nefele.ui.Theme;
 import org.nefele.ui.Themeable;
 import org.nefele.ui.dialog.BaseDialog;
 import org.nefele.ui.dialog.Dialogs;
-import org.nefele.ui.dialog.ErrorDialog;
-import org.nefele.ui.dialog.InfoDialog;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
-import java.util.stream.Stream;
 
 public class Settings extends StackPane implements Initializable, Themeable {
 
     @FXML private ScrollPane scrollPane;
     @FXML private VBox contentPane;
+    @FXML private VBox contentDrivePane;
     @FXML private JFXButton buttonAdvancedSettings;
     @FXML private BorderPane boxAdvancedSettings;
     @FXML private VBox headerAdvancedSettings;
@@ -82,13 +66,15 @@ public class Settings extends StackPane implements Initializable, Themeable {
     @FXML private JFXButton buttonApply;
 
     private final ObservableList<SettingsRecord> records;
-    private final ObservableList<SettingsAdvancedRecord> advancedRecord;
+    private final ObservableList<SettingsDriveRecord> driveRecords;
+    private final ObservableList<SettingsAdvancedRecord> advancedRecords;
 
     
     public Settings() {
 
         this.records = FXCollections.observableArrayList();
-        this.advancedRecord = FXCollections.observableArrayList();
+        this.driveRecords = FXCollections.observableArrayList();
+        this.advancedRecords = FXCollections.observableArrayList();
 
         Resources.getFXML(this, "/fxml/Settings.fxml");
 
@@ -146,6 +132,20 @@ public class Settings extends StackPane implements Initializable, Themeable {
 
                 if(change.wasAdded())
                     change.getAddedSubList().forEach(contentAdvancedSettings.getChildren()::add);
+
+            }
+
+        });
+
+        getDriveRecords().addListener((ListChangeListener<? super SettingsDriveRecord>) change -> {
+
+            while(change.next()) {
+
+                if(change.wasRemoved())
+                    change.getRemoved().forEach(contentDrivePane.getChildren()::remove);
+
+                if(change.wasAdded())
+                    change.getAddedSubList().forEach(contentDrivePane.getChildren()::add);
 
             }
 
@@ -332,6 +332,10 @@ public class Settings extends StackPane implements Initializable, Themeable {
         ));
 
 
+        Drives.getInstance().getDrives().forEach(
+                i -> getDriveRecords().add(new SettingsDriveRecord(i)));
+
+
 
         HashMap<String, Object> cache = Application.getInstance().getConfig().list();
 
@@ -381,7 +385,11 @@ public class Settings extends StackPane implements Initializable, Themeable {
         return records;
     }
 
+    public ObservableList<SettingsDriveRecord> getDriveRecords() {
+        return driveRecords;
+    }
+
     public ObservableList<SettingsAdvancedRecord> getAdvancedRecords() {
-        return advancedRecord;
+        return advancedRecords;
     }
 }

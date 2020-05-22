@@ -24,6 +24,7 @@
 
 .settings-input-pane {
     -fx-max-width: 160px;
+    -fx-border-color: red;
 }
 
 .settings-input-pane > .combo-box .list-cell {

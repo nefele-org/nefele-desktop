@@ -37,8 +37,6 @@ public class MergeNode implements Invalidatable {
     private Instant createdTime;
     private Instant accessedTime;
     private Instant modifiedTime;
-    private boolean trashed;
-    private Instant deletedTime;
     private String parent;
     private boolean dirty;
 
@@ -46,7 +44,7 @@ public class MergeNode implements Invalidatable {
     private final ArrayList<MergeChunk> chunks;
 
 
-    public MergeNode(String name, String mime, long size, Instant createdTime, Instant accessedTime, Instant modifiedTime, boolean trashed, Instant deletedTime, String id, String parent) {
+    public MergeNode(String name, String mime, long size, Instant createdTime, Instant accessedTime, Instant modifiedTime, String id, String parent) {
 
         this.name = name;
         this.mime = mime;
@@ -54,8 +52,6 @@ public class MergeNode implements Invalidatable {
         this.createdTime = createdTime;
         this.accessedTime = accessedTime;
         this.modifiedTime = modifiedTime;
-        this.trashed = trashed;
-        this.deletedTime = deletedTime;
         this.id = id;
         this.parent = parent;
         this.dirty = false;
@@ -110,22 +106,6 @@ public class MergeNode implements Invalidatable {
 
     public void setModifiedTime(Instant modifiedTiem) {
         this.modifiedTime = modifiedTiem;
-    }
-
-    public boolean isTrashed() {
-        return trashed;
-    }
-
-    public void setTrashed(boolean trashed) {
-        this.trashed = trashed;
-    }
-
-    public Instant getDeletedTime() {
-        return deletedTime;
-    }
-
-    public void setDeletedTime(Instant deletedTime) {
-        this.deletedTime = deletedTime;
     }
 
     public String getParent() {
