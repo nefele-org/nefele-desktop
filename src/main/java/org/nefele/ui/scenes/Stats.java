@@ -112,7 +112,12 @@ public class Stats extends StackPane implements Initializable, Themeable {
             while (change.next()) {
 
                 if (change.wasRemoved())
-                    change.getRemoved().forEach(i -> flowPane.getChildren().removeIf(j -> (((StatsDriveInfo) j).getDrive().getId().equals(i.getId()))));
+                    change.getRemoved().forEach(i ->{
+
+                        if()
+                        flowPane.getChildren().removeIf(j -> (((StatsDriveInfo) j).getDrive().getId().equals(i.getId())));
+
+                    });
 
                 if (change.wasAdded())
                     change.getAddedSubList().forEach(i -> flowPane.getChildren().add(new StatsDriveInfo(i)));
