@@ -36,3 +36,8 @@
 .button .glyph-icon {
     -fx-fill: -nefele-theme-primary-text;
 }
+
+.toggle-button {
+    -fx-min-height: 16px;
+    -fx-max-height: 16px;
+}

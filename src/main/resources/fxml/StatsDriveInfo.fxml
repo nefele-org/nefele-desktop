@@ -54,8 +54,12 @@
 
                     <VBox spacing="2">
                         <HBox spacing="5">
+                            <Label userData="STATSDRIVEINFO_CONTENT_3" />
+                            <Label text="" fx:id="labelTotalSpace" />
+                        </HBox>
+                        <HBox spacing="5">
                             <Label userData="STATSDRIVEINFO_CONTENT_1" />
-                            <Label text="" fx:id="labelSpaceAvailable" />
+                            <Label text="" fx:id="labelOccupiedSpace" />
                         </HBox>
                         <HBox spacing="5">
                             <Label userData="STATSDRIVEINFO_CONTENT_2" />

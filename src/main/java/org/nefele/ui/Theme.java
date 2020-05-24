@@ -33,6 +33,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -41,7 +42,7 @@ import static java.util.Objects.requireNonNull;
 
 public class Theme {
 
-    public static final String DEFAULT_THEME = "light";
+    public static final String DEFAULT_THEME = "charcoal-light";
 
     private final HashMap<String, String> map = new HashMap<>();
     private final String styleName;

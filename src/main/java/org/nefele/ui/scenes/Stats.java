@@ -39,6 +39,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import org.nefele.Application;
 import org.nefele.Resources;
+import org.nefele.cloud.Drive;
 import org.nefele.cloud.Drives;
 import org.nefele.core.TransferInfo;
 import org.nefele.fs.MergeFileStore;
@@ -67,11 +68,11 @@ public class Stats extends StackPane implements Initializable, Themeable {
 
     @FXML private Label labelStoragePercentage;
     @FXML private Label labelStorageOccupied;
-    @FXML private Label labelStorageFree;
+    @FXML private Label labelStorageTotal;
     
     @FXML private Label labelTemporaryFilesPercentage;
     @FXML private Label labelTemporaryFilesOccupied;
-    @FXML private Label labelTemporaryFilesFree;
+    @FXML private Label labelTemporaryFilesTotal;
 
     @FXML private Label labelSystemMemoryPercentage;
     @FXML private Label labelSystemMemoryOccupied;
@@ -107,6 +108,18 @@ public class Stats extends StackPane implements Initializable, Themeable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        Drives.getInstance().getDrives().addListener((ListChangeListener<? super Drive>) change -> {
+            while (change.next()) {
+
+                if (change.wasRemoved())
+                    change.getRemoved().forEach(i -> flowPane.getChildren().removeIf(j -> (((StatsDriveInfo) j).getDrive().getId().equals(i.getId()))));
+
+                if (change.wasAdded())
+                    change.getAddedSubList().forEach(i -> flowPane.getChildren().add(new StatsDriveInfo(i)));
+
+            }
+        });
+
         cells.addListener((ListChangeListener<? super StatsDriveInfo>) change -> {
 
             while(change.next()) {
@@ -121,9 +134,8 @@ public class Stats extends StackPane implements Initializable, Themeable {
 
         });
 
-
-        Drives.getInstance().getDrives().forEach(i -> cells.add(new StatsDriveInfo(i)));
-
+        Drives.getInstance().getDrives().forEach(
+                i -> cells.add(new StatsDriveInfo(i)));
 
         buttonSystemMemoryClean.setOnMouseClicked(e -> {
 
@@ -136,7 +148,7 @@ public class Stats extends StackPane implements Initializable, Themeable {
         buttonTemporaryClean.setOnMouseClicked(e -> {
 
             if(Dialogs.showWarningBox("STATS_CARD_PRIMARY_HEADER_2","STATS_CARD_DIALOG_TEMPORARY_CLEAN", BaseDialog.DIALOG_NO, BaseDialog.DIALOG_YES) == BaseDialog.DIALOG_YES)
-                /* TODO... */;
+                ((MergeFileSystem) FileSystems.getFileSystem(URI.create("nefele:///"))).getStorage().cleanCache();
 
         });
 
@@ -179,7 +191,7 @@ public class Stats extends StackPane implements Initializable, Themeable {
                 (int) (spinnerStorage.getProgress() * 100.0), spinnerStorage.progressProperty())
                     .asString("%d %%"));
 
-        labelStorageFree.textProperty().bind(ExtraBindings.createSizeBinding(fileStore::getUsableSpace, ""));
+        labelStorageTotal.textProperty().bind(ExtraBindings.createSizeBinding(fileStore::getTotalSpace, ""));
 
 
     }
@@ -199,7 +211,7 @@ public class Stats extends StackPane implements Initializable, Themeable {
 
 
                 spinnerTemporaryFiles.progressProperty().bind(Bindings.createDoubleBinding(() ->
-                        (double) fileSystem.getStorage().getCurrentSize() / (double) Application.getInstance().getConfig().getLong("app.cache.limit").orElse(1L)
+                        (double) fileSystem.getStorage().getCurrentCacheSize() / (double) Application.getInstance().getConfig().getLong("app.cache.limit").orElse(1L)
                 ));
 
 
@@ -209,11 +221,11 @@ public class Stats extends StackPane implements Initializable, Themeable {
 
 
                 labelTemporaryFilesOccupied.textProperty().bind(ExtraBindings.createSizeBinding(() ->
-                                 fileSystem.getStorage().getCurrentSize(), ""));
+                                 fileSystem.getStorage().getCurrentCacheSize(), ""));
 
 
-                labelTemporaryFilesFree.textProperty().bind(ExtraBindings.createSizeBinding(() ->
-                        Application.getInstance().getConfig().getLong("app.cache.limit").orElse(1L) - fileSystem.getStorage().getCurrentSize(), ""));
+                labelTemporaryFilesTotal.textProperty().bind(ExtraBindings.createSizeBinding(() ->
+                        Application.getInstance().getConfig().getLong("app.cache.limit").orElse(1L), ""));
 
 
 

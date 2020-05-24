@@ -24,15 +24,10 @@
 
 .settings-input-pane {
     -fx-max-width: 160px;
-    -fx-border-color: red;
 }
 
 .settings-input-pane > .combo-box .list-cell {
     -fx-alignment: center-right;
 }
 
-.settings-input-pane > .toggle-button {
-    -fx-min-height: 12px;
-    -fx-max-height: 12px;
-}
 

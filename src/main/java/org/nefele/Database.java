@@ -37,7 +37,7 @@ public class Database {
     public Database() {
 
         CONNECTION_URL = String.format("jdbc:sqlite:%s",
-                Paths.get(System.getProperty("user.home"), ".nefele", "nefele.db"));
+                Application.getInstance().getDataPath().resolve("nefele.db"));
 
     }
 
@@ -132,10 +132,12 @@ public class Database {
                 return update(sql, onPrepare, batch);
 
             else if(e.getErrorCode() == SQLiteErrorCode.SQLITE_CORRUPT.code)
-                Application.panic(Database.class, "Database is gone, rest in peace :( (%s)", e.getMessage(), e.getErrorCode());
+                Application.panic(Database.class, "Database is gone, rest in peace :( [%s(%d)] %s", e.getSQLState(), e.getErrorCode(), e.getMessage());
 
-            else
+            else {
+                Application.log(Database.class, "WARNING! Unhandled exception %s: [%s(%d)] %s", e.getClass().getName(), e.getSQLState(), e.getErrorCode(), e.getMessage());
                 throw e;
+            }
 
         }
 

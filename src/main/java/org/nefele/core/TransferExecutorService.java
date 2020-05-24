@@ -28,6 +28,7 @@ import org.nefele.Application;
 import org.nefele.Service;
 
 import java.util.ArrayDeque;
+import java.util.Objects;
 import java.util.concurrent.*;
 
 public class TransferExecutorService extends ThreadPoolExecutor implements Service {
@@ -63,6 +64,34 @@ public class TransferExecutorService extends ThreadPoolExecutor implements Servi
         return runnableFuture;
     }
 
+    @Override
+    protected void afterExecute(Runnable r, Throwable t) {
+        super.afterExecute(r, t);
+
+
+        if(r instanceof Future<?> && Objects.isNull(t)) {
+
+            Future<?> future = (Future<?>) r;
+
+            if(future.isDone()) {
+                try {
+                    future.get();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                } catch (ExecutionException e) {
+                    t = e.getCause();
+                } catch (CancellationException e) {
+                    t = e;
+                }
+            }
+
+        }
+
+        if(t != null) {
+            Application.log(getClass(), "WARNING! Unhandled exception %s on TransferQueue Thread: %s", t.getClass().getName(), t.getMessage());
+            Application.panic(getClass(), (Exception) t);
+        }
+    }
 
     public void setMaximumThreadActiveCount(int maximumThreadActiveCount) {
         this.maximumThreadActiveCount = maximumThreadActiveCount;
@@ -106,5 +135,6 @@ public class TransferExecutorService extends ThreadPoolExecutor implements Servi
     public void exit(Application app) {
         shutdown();
     }
+
 
 }

@@ -24,5 +24,7 @@
 
 package org.nefele.cloud;
 
-public class DriveFullException extends RuntimeException {
+import java.io.IOException;
+
+public class DriveFullException extends IOException {
 }

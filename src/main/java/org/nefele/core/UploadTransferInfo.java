@@ -78,7 +78,7 @@ public class UploadTransferInfo extends TransferInfo {
             reader.close();
 
 
-        } catch (IOException | DriveFullException | DriveNotFoundException io) {
+        } catch (IOException io) {
 
             setStatus(TRANSFER_STATUS_ERROR);
             Application.log(getClass(), "WARNING! %s when uploading file %s: %s", io.getClass().getName(), localFile.toString(), io.getMessage());
@@ -127,34 +127,21 @@ public class UploadTransferInfo extends TransferInfo {
 
             }
 
-            try {
+            try(InputStream inputStream = getFileSystem().getStorage().read(chunk)) {
 
-                OutputStream outputStream = chunk.getDrive().writeChunk(chunk);
-                InputStream inputStream = getFileSystem().getStorage().read(chunk);
+                chunk.getDrive().writeChunk(chunk, inputStream, new TransferInfoCallback() {
 
+                    @Override
+                    public boolean isCanceled() {
+                        return getStatus() == TRANSFER_STATUS_CANCELED;
+                    }
 
-                while (inputStream.available() > 0) {
+                    @Override
+                    public void updateProgress(int progress) {
+                        Platform.runLater(() -> setProgress(getProgress() + progress));
+                    }
 
-                    if (getStatus() == TRANSFER_STATUS_CANCELED)
-                        break;
-
-
-                    byte[] bytes = new byte[Math.min(UPLOAD_BLOCK_SIZE, inputStream.available())];
-
-                    if (inputStream.read(bytes) > 0)
-                        outputStream.write(bytes);
-
-                    try {
-                        Thread.sleep(10); // FIXME: used only for testing
-                    } catch (InterruptedException ignored) { }
-
-
-                    Platform.runLater(() -> setProgress(getProgress() + bytes.length));
-
-                }
-
-                outputStream.close();
-                inputStream.close();
+                });
 
 
             } catch (IOException e) {
@@ -162,7 +149,7 @@ public class UploadTransferInfo extends TransferInfo {
                 // TODO: handle error
 
 
-                Application.log(getClass(), "WARNING! %s, something wrong, transfer canceled!", e.getClass().getName(), e.getMessage());
+                Application.log(getClass(), "WARNING! %s, something wrong, transfer canceled! %s", e.getClass().getName(), e.getMessage());
 
                 setStatus(TRANSFER_STATUS_ERROR);
                 return getStatus();

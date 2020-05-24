@@ -24,5 +24,7 @@
 
 package org.nefele.cloud;
 
-public class DriveNotEmptyException extends RuntimeException {
+import java.io.IOException;
+
+public class DriveNotEmptyException extends IOException {
 }

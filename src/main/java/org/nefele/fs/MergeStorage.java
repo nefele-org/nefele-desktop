@@ -61,7 +61,7 @@ public class MergeStorage implements Service {
         this.chunks = new HashMap<>();
         this.dustChunks = new ArrayList<>();
         this.dustNodes = new ArrayList<>();
-        this.path = Paths.get(System.getProperty("user.home"), ".nefele", "cache");
+        this.path = Application.getInstance().getDataPath().resolve("cache");
 
         /* FIXME: Service registered too late */
         initialize(null);
@@ -168,7 +168,7 @@ public class MergeStorage implements Service {
 
 
 
-    public MergeChunk alloc(MergeNode node, long offset) {
+    public MergeChunk alloc(MergeNode node, long offset) throws DriveFullException {
 
         try {
 
@@ -184,7 +184,7 @@ public class MergeStorage implements Service {
             chunk.invalidate();
             return chunk;
 
-        } catch (DriveFullException e) {
+        } catch (DriveFullException | DriveNotFoundException e) {
             Application.log(getClass(), "WARNING! alloc() %s: %s", e.getClass().getName(), e.getMessage());
             throw new DriveFullException();
         }
@@ -211,12 +211,30 @@ public class MergeStorage implements Service {
     }
 
 
-    public long getCurrentSize() {
+
+
+    public long getCurrentCacheSize() {
 
         return getChunks().values()
                 .stream()
                 .filter(this::isCached)
                 .count() * MergeChunk.getSize();
+
+    }
+
+    public void cleanCache() {
+
+        Application.log(getClass(), "Cleaning local cache directory");
+
+        try {
+
+            Files.list(path).forEach(p -> {
+                try {
+                    Files.delete(p);
+                } catch (IOException ignored) { }
+            });
+
+        } catch (IOException ignored) { }
 
     }
 
@@ -401,17 +419,7 @@ public class MergeStorage implements Service {
     public void exit(Application app) {
 
         synchronize(app);
-
-
-        try {
-
-            Files.list(path).forEach(p -> {
-                try {
-                    Files.delete(p);
-                } catch (IOException ignored) { }
-            });
-
-        } catch (IOException ignored) { }
+        cleanCache();
 
     }
 

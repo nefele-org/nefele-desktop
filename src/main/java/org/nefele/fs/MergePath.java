@@ -288,6 +288,7 @@ public class MergePath implements Path {
 
         String path = String
                 .join(MergeFileSystem.PATH_SEPARATOR, strings)
+                .replace(FileSystems.getDefault().getSeparator(), MergeFileSystem.PATH_SEPARATOR)
                 .replace("//", MergeFileSystem.PATH_SEPARATOR)
                 .trim();
 

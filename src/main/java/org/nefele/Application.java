@@ -44,6 +44,8 @@ import org.nefele.ui.dialog.Dialogs;
 import org.nefele.ui.scenes.Home;
 import org.nefele.ui.scenes.SplashScreen;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
@@ -68,6 +70,7 @@ public final class Application extends javafx.application.Application implements
     private final ScheduledExecutorService scheduledExecutorService;
     private final Views views;
     private final ObjectProperty<Theme> theme;
+    private final Path dataPath;
 
     private ScheduledFuture<?> serviceWorker = null;
     private Stage primaryStage;
@@ -79,9 +82,10 @@ public final class Application extends javafx.application.Application implements
 
         instance = this;
 
+        dataPath = Paths.get(System.getProperty("user.home"), ".nefele");
         running = new AtomicBoolean(true);
-        services = new ArrayList<>();
 
+        services = new ArrayList<>();
         database = new Database();
         config = new Config(database);
         locale = new Locale();
@@ -181,7 +185,7 @@ public final class Application extends javafx.application.Application implements
                 stage.setMinWidth(600);
                 stage.setMinHeight(400);
                 stage.setWidth(800);
-                stage.setHeight(400);
+                stage.setHeight(480);
 
             });
 
@@ -284,6 +288,10 @@ public final class Application extends javafx.application.Application implements
         return running.get();
     }
 
+    public Path getDataPath() {
+        return dataPath;
+    }
+
     public Views getViews() {
         return views;
     }
@@ -331,6 +339,9 @@ public final class Application extends javafx.application.Application implements
 
     public static void panic(Class<?> className, String message, Object... args) {
 
+        log(className, "PANIC! " + message, args);
+
+
         Application.getInstance().runThread(new Thread(() -> {
 
             try {
@@ -343,16 +354,27 @@ public final class Application extends javafx.application.Application implements
         }, "Put your hands up!"));
 
 
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
 
-        log(className, "PANIC! " + message, args);
+        Platform.runLater(() -> {
 
-        Dialogs.showErrorBox(
-                "DIALOG_PANIC_TITLE",
-                "DIALOG_PANIC_MESSAGE"
-        );
+            Dialogs.showErrorBox(
+                    "DIALOG_PANIC_TITLE",
+                    "DIALOG_PANIC_MESSAGE"
+            );
+
+            countDownLatch.countDown();
+
+        });
+
+
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException ignored) { }
 
 
         System.exit(1);
+
     }
 
     public static void panic(Class<?> className, Exception e) {

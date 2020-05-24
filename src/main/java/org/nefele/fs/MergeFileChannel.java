@@ -144,7 +144,10 @@ public class MergeFileChannel extends FileChannel {
                         .stream()
                         .filter(i -> i.getOffset() == block)
                         .findFirst()
-                        .orElseGet(() -> fileSystem.getStorage().alloc(inode, block));
+                        .orElse(null);
+
+            if(chunk == null)
+                chunk = fileSystem.getStorage().alloc(inode, block);
 
 
             if(inode.getSize() < position + size) {

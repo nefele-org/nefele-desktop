@@ -35,19 +35,18 @@
               <right>
                   <HBox spacing="25">
 
-                      <Pane>
-                        <HBox alignment="BASELINE_CENTER">
+                      <VBox alignment="CENTER">
+                        <HBox>
                               <JFXToggleButton fx:id="toggleDarkMode" size="7.5" text="">
                                   <tooltip>
                                       <Tooltip fx:id="tooltipDarkMode" userData="NEFELEPANE_HINT_DARKMODE"/>
                                   </tooltip>
                               </JFXToggleButton>
-                              <FontAwesomeIconView fx:id="iconDarkMode" glyphName="MOON_ALT" opacity="0.5"
-                                                   size="18.0"/>
+                              <FontAwesomeIconView fx:id="iconDarkMode" glyphName="MOON_ALT" opacity="0.5" size="18.0"/>
                           </HBox>
-                      </Pane>
+                      </VBox>
 
-                      <Pane>
+                      <VBox>
 
                           <HBox>
                               <JFXButton fx:id="controlMinimize" contentDisplay="GRAPHIC_ONLY"
@@ -74,7 +73,7 @@
                           <HBox.margin>
                               <Insets top="10.0"/>
                           </HBox.margin>
-                      </Pane>
+                      </VBox>
 
                       <BorderPane.margin>
                           <Insets right="5.0"/>

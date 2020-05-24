@@ -66,7 +66,7 @@
                                                 <Label text=" " fx:id="labelStorageOccupied" />
                                                 <HBox spacing="3">
                                                     <Label userData="WORD_OF" />
-                                                    <Label text=" " fx:id="labelStorageFree" />
+                                                    <Label text=" " fx:id="labelStorageTotal" />
                                                 </HBox>
                                             </VBox>
                                         </HBox>
@@ -95,7 +95,7 @@
                                             <Label text=" " fx:id="labelTemporaryFilesOccupied" />
                                             <HBox spacing="3">
                                                 <Label userData="WORD_OF" />
-                                                <Label text=" " fx:id="labelTemporaryFilesFree" />
+                                                <Label text=" " fx:id="labelTemporaryFilesTotal" />
                                             </HBox>
                                         </VBox>
                                     </HBox>

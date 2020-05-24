@@ -30,54 +30,50 @@
   ~ THE SOFTWARE.
   -->
 
+<?import com.jfoenix.controls.JFXButton?>
 <?import javafx.geometry.Insets?>
-<?import com.jfoenix.controls.JFXSlider?>
-<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
-<?import com.jfoenix.controls.JFXToggleButton?>
 <fx:root minWidth="-Infinity" maxWidth="Infinity" minHeight="-Infinity" maxHeight="Infinity"
          type="StackPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
-         AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" >
 
-    <HBox>
+    <BorderPane>
 
-            <VBox HBox.hgrow="ALWAYS">
+        <center>
 
-                <HBox spacing="20" alignment="CENTER_LEFT" >
+                <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" vbarPolicy="ALWAYS" prefWidth="200" prefHeight="200">
 
-                    <VBox VBox.vgrow="ALWAYS" >
-                        <StackPane>
-                            <MaterialDesignIconView text=" " glyphName="LAYERS" size="28.0" />
-                        </StackPane>
+                    <VBox spacing="16">
+
+                        <Label userData="DRIVEMANAGER_TITLE" styleClass="text-h1" />
+
+                        <Label userData="DRIVEMANAGER_DESCRIPTION" wrapText="true" />
+
+                        <VBox spacing="2" fx:id="contentPane"/>
+
                     </VBox>
 
-                    <Label fx:id="labelName" styleClass="text-h3" HBox.hgrow="ALWAYS"/>
+                    <padding>
+                        <Insets right="10" left="10" top="10" bottom="10" />
+                    </padding>
+                </ScrollPane>
 
-                </HBox>
+        </center>
 
+        <bottom>
+            <VBox alignment="CENTER_RIGHT">
+
+                <Separator/>
+
+                <VBox alignment="CENTER_RIGHT" >
+                    <JFXButton fx:id="buttonAdd" userData="WORD_ADD"/>
+                </VBox>
+
+                <padding>
+                    <Insets right="10" left="10" top="10" bottom="10" />
+                </padding>
             </VBox>
+        </bottom>
 
-            <VBox>
-
-                <HBox spacing="20" alignment="CENTER_RIGHT">
-
-                    <VBox>
-                        <JFXSlider fx:id="sliderChunks"/>
-                    </VBox>
-
-                    <VBox styleClass="settings-input-pane">
-                        <JFXToggleButton fx:id="toggleState" size="8.0"/>
-                    </VBox>
-
-                    <MaterialDesignIconView fx:id="buttonDelete" glyphName="CLOSE" size="18.0" styleClass="transferviewer-icon-close" />
-
-                </HBox>
-
-            </VBox>
-
-        <padding>
-            <Insets right="20" />
-        </padding>
-
-    </HBox>
+    </BorderPane>
 
 </fx:root>

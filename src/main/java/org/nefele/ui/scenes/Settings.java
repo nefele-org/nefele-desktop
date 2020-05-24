@@ -53,7 +53,6 @@ public class Settings extends StackPane implements Initializable, Themeable {
 
     @FXML private ScrollPane scrollPane;
     @FXML private VBox contentPane;
-    @FXML private VBox contentDrivePane;
     @FXML private JFXButton buttonAdvancedSettings;
     @FXML private BorderPane boxAdvancedSettings;
     @FXML private VBox headerAdvancedSettings;
@@ -66,14 +65,12 @@ public class Settings extends StackPane implements Initializable, Themeable {
     @FXML private JFXButton buttonApply;
 
     private final ObservableList<SettingsRecord> records;
-    private final ObservableList<SettingsDriveRecord> driveRecords;
     private final ObservableList<SettingsAdvancedRecord> advancedRecords;
 
     
     public Settings() {
 
         this.records = FXCollections.observableArrayList();
-        this.driveRecords = FXCollections.observableArrayList();
         this.advancedRecords = FXCollections.observableArrayList();
 
         Resources.getFXML(this, "/fxml/Settings.fxml");
@@ -132,20 +129,6 @@ public class Settings extends StackPane implements Initializable, Themeable {
 
                 if(change.wasAdded())
                     change.getAddedSubList().forEach(contentAdvancedSettings.getChildren()::add);
-
-            }
-
-        });
-
-        getDriveRecords().addListener((ListChangeListener<? super SettingsDriveRecord>) change -> {
-
-            while(change.next()) {
-
-                if(change.wasRemoved())
-                    change.getRemoved().forEach(contentDrivePane.getChildren()::remove);
-
-                if(change.wasAdded())
-                    change.getAddedSubList().forEach(contentDrivePane.getChildren()::add);
 
             }
 
@@ -331,12 +314,6 @@ public class Settings extends StackPane implements Initializable, Themeable {
                 }}
         ));
 
-
-        Drives.getInstance().getDrives().forEach(
-                i -> getDriveRecords().add(new SettingsDriveRecord(i)));
-
-
-
         HashMap<String, Object> cache = Application.getInstance().getConfig().list();
 
         cache.keySet()
@@ -383,10 +360,6 @@ public class Settings extends StackPane implements Initializable, Themeable {
 
     public ObservableList<SettingsRecord> getRecords() {
         return records;
-    }
-
-    public ObservableList<SettingsDriveRecord> getDriveRecords() {
-        return driveRecords;
     }
 
     public ObservableList<SettingsAdvancedRecord> getAdvancedRecords() {

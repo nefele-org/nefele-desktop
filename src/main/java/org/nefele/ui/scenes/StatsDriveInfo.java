@@ -44,9 +44,10 @@ public class StatsDriveInfo extends StackPane implements Initializable, Themeabl
 
     @FXML private JFXSpinner spinner;
     @FXML private Label labelDriveName;
-    @FXML private Label labelSpaceAvailable;
+    @FXML private Label labelOccupiedSpace;
     @FXML private Label labelStatus;
-    
+    @FXML private Label labelTotalSpace;
+
     private final Drive drive;
 
     public StatsDriveInfo(Drive drive) {
@@ -94,8 +95,11 @@ public class StatsDriveInfo extends StackPane implements Initializable, Themeabl
         labelDriveName.textProperty().bind(getDrive().descriptionProperty());
 
 
-        labelSpaceAvailable.textProperty().bind(
-                ExtraBindings.createSizeBinding(() -> (getDrive().getQuota() - getDrive().getChunks()) * MergeChunk.getSize(), "" , getDrive().quotaProperty(), getDrive().chunksProperty()));
+        labelOccupiedSpace.textProperty().bind(
+                ExtraBindings.createSizeBinding(() -> getDrive().getChunks() * MergeChunk.getSize(), "" , getDrive().quotaProperty(), getDrive().chunksProperty()));
+
+        labelTotalSpace.textProperty().bind(
+                ExtraBindings.createSizeBinding(() -> getDrive().getQuota() * MergeChunk.getSize(), "" , getDrive().quotaProperty(), getDrive().chunksProperty()));
 
         spinner.progressProperty().bind(Bindings.createDoubleBinding (
                 () -> (double) getDrive().getChunks() / (double) getDrive().getQuota(), getDrive().chunksProperty(), getDrive().quotaProperty()));

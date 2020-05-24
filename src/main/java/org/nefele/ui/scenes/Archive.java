@@ -27,6 +27,8 @@ package org.nefele.ui.scenes;
 import com.fasterxml.jackson.databind.type.PlaceholderForType;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -39,9 +41,9 @@ import javafx.stage.FileChooser;
 import javafx.util.Pair;
 import org.nefele.Application;
 import org.nefele.Resources;
-import org.nefele.core.Mime;
-import org.nefele.core.Mimes;
-import org.nefele.core.UploadTransferInfo;
+import org.nefele.cloud.DriveNotEmptyException;
+import org.nefele.cloud.Drives;
+import org.nefele.core.*;
 import org.nefele.fs.MergePath;
 import org.nefele.ui.Themeable;
 import org.nefele.ui.controls.FileBrowser;
@@ -67,7 +69,9 @@ public class Archive extends StackPane implements Initializable, Themeable {
     @FXML private JFXTextField textFieldPath;
     @FXML private JFXButton buttonForward;
     @FXML private JFXButton buttonBack;
+    @FXML private JFXButton buttonRefresh;
     @FXML private JFXButton buttonHome;
+    @FXML private JFXButton buttonSync;
     @FXML private JFXButton buttonUpFile;
     @FXML private JFXButton buttonAddFolder;
     @FXML private JFXButton buttonUpFolder;
@@ -91,11 +95,31 @@ public class Archive extends StackPane implements Initializable, Themeable {
             fileBrowser.browseHistory(-1);
         });
 
+        buttonRefresh.setOnMouseClicked(e -> {
+            fileBrowser.update();
+        });
 
         buttonHome.setOnMouseClicked(e -> {
             fileBrowser.setCurrentPath(Path.of(URI.create("nefele:///")));
         });
 
+        buttonSync.setOnMouseClicked(e -> {
+            Platform.runLater(() ->{
+
+                try{
+
+//                    if(Dialogs.showInfoBox("ARCHIVE_DIALOG_REQUEST_SYNC",
+//                            BaseDialog.DIALOG_NO, BaseDialog.DIALOG_YES) == BaseDialog.DIALOG_YES)
+                            /*TODO...*/
+
+                } catch(Exception exception) {
+
+                    Dialogs.showErrorBox("ARCHIVE_ERROR_DIALOG_REQUEST_SYNC");
+
+                }
+
+            });
+        });
 
         buttonUpFile.setOnMouseClicked(e -> {
 
@@ -271,7 +295,38 @@ public class Archive extends StackPane implements Initializable, Themeable {
             private final ArrayList<MenuItem> fileMenuItems = new ArrayList<>() {{
 
                 add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_DOWNLOAD")) {{
-                    setOnAction(Event::consume);
+                    setOnAction(e -> {
+
+                        DirectoryChooser fileChooser = new DirectoryChooser();
+                        File file = fileChooser.showDialog(getScene().getWindow());
+
+                        if(file == null)
+                            Dialogs.showErrorBox("ARCHIVE_DIALOG_FOLDER_NOTSELECTED");
+
+                        else if(!file.isDirectory())
+                            Dialogs.showErrorBox("ARCHIVE_DIALOG_FOLDER_INVALID");
+
+                        else {
+
+                            fileBrowser.getSelectedItems().forEach(i -> {
+
+                                if(i.getMime().equals(Mime.FOLDER))
+                                    return;
+
+
+                                Path cloudPath = MergePath.get("nefele", fileBrowser.getCurrentPath().toString(), i.getText());
+                                Path localPath = Paths.get(file.getAbsolutePath(), cloudPath.getFileName().toString());
+
+                                Application.getInstance().getTransferQueue().enqueue(
+                                        new DownloadTransferInfo((MergePath) cloudPath, localPath.toFile())
+                                );
+
+
+                            });
+
+                        }
+
+                    });
                 }});
 
                 add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_DELETE")) {{

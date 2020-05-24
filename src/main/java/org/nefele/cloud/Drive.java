@@ -25,11 +25,14 @@
 package org.nefele.cloud;
 
 import javafx.beans.property.*;
+import org.nefele.core.TransferInfoCallback;
 import org.nefele.fs.MergeChunk;
 import org.nefele.fs.MergeFileSystem;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 
 public abstract class Drive {
 
@@ -74,8 +77,8 @@ public abstract class Drive {
     }
 
 
-    public abstract OutputStream writeChunk(MergeChunk chunk);
-    public abstract InputStream readChunk(MergeChunk chunk);
+    public abstract void writeChunk(MergeChunk chunk, InputStream inputStream, TransferInfoCallback callback) throws IOException;
+    public abstract ByteBuffer readChunk(MergeChunk chunk, TransferInfoCallback callback) throws IOException;
     public abstract void removeChunk(MergeChunk chunk);
     public abstract long getMaxQuota();
     public abstract Drive initialize();

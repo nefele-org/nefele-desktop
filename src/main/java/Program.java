@@ -55,6 +55,9 @@ public class Program {
             if (Files.notExists(dataPath.resolve(Paths.get("cache"))))
                 Files.createDirectory(dataPath.resolve(Paths.get("cache")));
 
+            if (Files.notExists(dataPath.resolve(Paths.get("drive"))))
+                Files.createDirectory(dataPath.resolve(Paths.get("drive")));
+
             if(Files.notExists(dataPath.resolve(Paths.get("nefele.db"))))
                 Files.write(dataPath.resolve(Paths.get("nefele.db")), Program.class.getResourceAsStream("/setup/nefele.db").readAllBytes());
 

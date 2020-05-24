@@ -29,11 +29,11 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
-
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
+
+
 <fx:root minWidth="-Infinity" maxWidth="Infinity" minHeight="-Infinity" maxHeight="Infinity"
          type="StackPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
          AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -45,24 +45,6 @@
 
             <Label userData="SETTINGS_GENERAL" styleClass="text-h1" />
             <VBox fx:id="contentPane"/>
-
-                <Separator />
-
-
-                <BorderPane>
-                    <center>
-
-                        <VBox spacing="24">
-
-                            <Label userData="SETTINGS_CLOUD" styleClass="text-h1" />
-
-                            <VBox spacing="5" fx:id="contentDrivePane"/>
-
-                        </VBox>
-
-                    </center>
-                </BorderPane>
-
 
                 <Separator />
 

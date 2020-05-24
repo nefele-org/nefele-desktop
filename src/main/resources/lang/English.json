@@ -67,8 +67,9 @@
     "STATS_CARD_TERTIARY_CONTENT_2" : "All folders",
     "STATS_CARD_TERTIARY_CONTENT_3" : "Incoming shares",
     "STATS_CARD_TERTIARY_CONTENT_4" : "Outgoing shares",
-    "STATSDRIVEINFO_CONTENT_1" : "Storage:",
+    "STATSDRIVEINFO_CONTENT_3" : "Storage:",
     "STATSDRIVEINFO_CONTENT_2" : "Status:",
+    "STATSDRIVEINFO_CONTENT_1" : "Occupied:",
     "STATSDRIVEINFO_STATUS_CONNECTED" : "Connected",
     "STATSDRIVEINFO_STATUS_DISCONNECTED" : "Disconnected",
     "STATS_CARD_HINT_MEMORY_CLEAN" : "Free Memory",
@@ -102,5 +103,16 @@
     "STATS_STATUS_DISABLED" : "Disabled by user",
     "TRANSFERVIEWER_TRANSFER_PREPARED" : "Preparing...",
     "ERROR_FILE_UPLOAD" : "An error occurred while uploading the file or folder",
-    "SETTINGS_CLOUD" : "Drive Manage"
+    "ARCHIVE_HINT_REFRESH" : "Refresh",
+    "DRIVEMANAGER_TITLE" : "Drive Manager",
+    "DRIVEMANAGER_DESCRIPTION" : "Add, remove or change your drive settings.",
+    "WORD_ADD" : "Add",
+    "DOCKERBUTTON_HINT_DRIVEMANAGER" : "Drive Manager",
+    "SETTINGSDRIVE_DIALOG_TITLE" : "Confirm delete",
+    "SETTINGSDRIVE_DIALOG_DESCRIPTION" : "Do you really want to delete this Drive? This action could be irreversible",
+    "SETTINGSDRIVE_ERROR_DIALOG_DESCRIPTION" : "This Drive contains data so it cannot be deleted, you can still disable it at any time from the settings",
+    "ARCHIVE_HINT_SYNC" : "Synchronize folder",
+    "ARCHIVE_ERROR_DIALOG_REQUEST_SYNC": "Are you sure you want to sync this folder?",
+    "ARCHIVE_DIALOG_REQUEST_SYNC" : "Something went wrong in synchronization. Please try again later"
+
 }

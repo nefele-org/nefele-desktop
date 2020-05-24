@@ -24,6 +24,8 @@
 
 package org.nefele.cloud;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.nefele.Application;
 import org.nefele.Service;
 import org.sqlite.SQLiteErrorCode;
@@ -46,17 +48,19 @@ public final class Drives implements Service {
 
 
 
-    private final ArrayList<Drive> drives;
+    private final ObservableList<Drive> drives;
+    private final ArrayList<Drive> dustDrives;
 
     private Drives() {
-        drives = new ArrayList<>();
+        drives = FXCollections.observableArrayList();
+        dustDrives = new ArrayList<>();
     }
 
 
 
 
 
-    public Drive fromId(String id) {
+    public Drive fromId(String id) throws DriveNotFoundException {
 
         return getDrives()
                 .stream()
@@ -85,7 +89,7 @@ public final class Drives implements Service {
                     } catch (SQLException e) {
 
                         if(e.getErrorCode() == SQLiteErrorCode.SQLITE_NOTFOUND.code)
-                            throw new DriveNotFoundException(id);
+                            throw new IllegalStateException();
 
                         Application.panic(Drive.class, e);
 
@@ -99,8 +103,12 @@ public final class Drives implements Service {
                             return new OfflineDriveService(id, service.get(), description.get(), quota.get(), blocks.get())
                                     .initialize();
 
+                        case GoogleDriveService.SERVICE_ID:
+                            return new GoogleDriveService(id, service.get(), description.get(), quota.get(), blocks.get())
+                                    .initialize();
+
                         default:
-                            throw new DriveNotFoundException(String.format("Service %s not found", service.get()));
+                            throw new IllegalStateException();
 
                     }
 
@@ -109,12 +117,12 @@ public final class Drives implements Service {
     }
 
 
-    public Drive nextAllocatable() {
+    public Drive nextAllocatable() throws DriveFullException, DriveNotFoundException {
 
         if (getDrives()
                 .stream()
                 .noneMatch(i -> i.getStatus() == Drive.STATUS_READY))
-            throw new DriveNotFoundException("No drive ready or available");
+            throw new DriveNotFoundException("No drive is ready or available");
 
         if(getDrives()
                 .stream()
@@ -130,7 +138,17 @@ public final class Drives implements Service {
 
     }
 
-    public ArrayList<Drive> getDrives() {
+    public void remove(Drive drive) throws DriveNotEmptyException {
+
+        if(drive.getChunks() > 0)
+            throw new DriveNotEmptyException();
+
+        if(drives.remove(drive))
+            dustDrives.add(drive);
+
+    }
+
+    public ObservableList<Drive> getDrives() {
         return drives;
     }
 
@@ -150,7 +168,7 @@ public final class Drives implements Service {
                 getDrives().add(fromId(id));
 
 
-        } catch (SQLException e) {
+        } catch (SQLException | DriveNotFoundException e) {
             Application.panic(Drive.class, e);
         }
 
@@ -176,6 +194,28 @@ public final class Drives implements Service {
                                         s.setString(3, i.getDescription());
                                         s.setLong(4, i.getQuota());
                                         s.setLong(5, i.getChunks());
+                                        s.addBatch();
+
+                                        i.validate();
+
+                                    } catch (SQLException e) {
+                                        Application.panic(getClass(), e);
+                                    }
+
+                                });
+                    }, true
+            );
+
+
+            Application.getInstance().getDatabase().update(
+                    "DELETE FROM drives WHERE id = ?",
+                    s -> {
+                        dustDrives
+                                .forEach(i -> {
+
+                                    try {
+
+                                        s.setString(1, i.getId());
                                         s.addBatch();
 
                                         i.validate();

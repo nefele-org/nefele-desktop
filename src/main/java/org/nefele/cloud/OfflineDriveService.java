@@ -25,16 +25,24 @@
 package org.nefele.cloud;
 
 import org.nefele.Application;
+import org.nefele.core.TransferInfo;
+import org.nefele.core.TransferInfoCallback;
 import org.nefele.fs.MergeChunk;
 import java.io.*;
+import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.concurrent.Callable;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public class OfflineDriveService extends Drive {
 
     public final static String SERVICE_ID = "offline-drive-service";
     public final static String SERVICE_DEFAULT_DESCRIPTION = "Offline Cloud";
+    private final static int UPLOAD_BLOCK_SIZE = 65536;
+    private final static int DOWNLOAD_BLOCK_SIZE = 65536;
 
     private final Path drivePath;
     private final Path servicePath;
@@ -43,36 +51,71 @@ public class OfflineDriveService extends Drive {
     public OfflineDriveService(String id, String service, String description, long quota, long blocks) {
         super(id, service, description, quota, blocks);
 
-        this.servicePath = Paths.get(System.getProperty("user.home"), ".nefele", SERVICE_ID);
-        this.drivePath = Paths.get(System.getProperty("user.home"), ".nefele", SERVICE_ID, id);
+        this.servicePath = Application.getInstance().getDataPath().resolve(Paths.get("drive", SERVICE_ID, id));
+        this.drivePath = Application.getInstance().getDataPath().resolve(Paths.get("drive", SERVICE_ID, id, "storage"));
 
     }
 
     @Override
-    public OutputStream writeChunk(MergeChunk chunk) {
+    public void writeChunk(MergeChunk chunk, InputStream inputStream, TransferInfoCallback callback) throws IOException {
 
-        try {
-            return new FileOutputStream(new File(drivePath.resolve(Paths.get(chunk.getId())).toString()));
-        } catch (FileNotFoundException e) {
-            Application.panic(getClass(), e);
+        FileOutputStream outputStream = new FileOutputStream(new File(drivePath.resolve(Paths.get(chunk.getId())).toString()));
+
+        while(inputStream.available() > 0) {
+
+            if(callback.isCanceled())
+                break;
+
+
+            byte[] bytes = new byte[Math.min(UPLOAD_BLOCK_SIZE, inputStream.available())];
+
+            if(inputStream.read(bytes) > 0)
+                outputStream.write(bytes);
+
+            callback.updateProgress(bytes.length);
+
+
+            try {
+                Thread.sleep(10); // FIXME: used only for testing
+            } catch (InterruptedException ignored) { }
+
         }
 
-        throw new IllegalStateException();
 
     }
 
     @Override
-    public InputStream readChunk(MergeChunk chunk) {
+    public ByteBuffer readChunk(MergeChunk chunk, TransferInfoCallback callback) throws IOException {
 
-        try {
-            return new FileInputStream(new File(drivePath.resolve(Paths.get(chunk.getId())).toString()));
-        } catch (FileNotFoundException e) {
-            Application.panic(getClass(), e);
+        FileInputStream inputStream = new FileInputStream(new File(drivePath.resolve(Paths.get(chunk.getId())).toString()));
+        ByteBuffer byteBuffer = ByteBuffer.allocate(inputStream.available());
+
+        while(inputStream.available() > 0) {
+
+            if(callback.isCanceled())
+                break;
+
+
+            byte[] bytes = new byte[Math.min(DOWNLOAD_BLOCK_SIZE, inputStream.available())];
+
+            if(inputStream.read(bytes) > 0)
+                byteBuffer.put(bytes);
+
+            callback.updateProgress(bytes.length);
+
+
+            try {
+                Thread.sleep(10); // FIXME: used only for testing
+            } catch (InterruptedException ignored) { }
+
         }
 
-        throw new IllegalStateException();
+
+        return byteBuffer.rewind();
 
     }
+
+
 
     @Override
     public void removeChunk(MergeChunk chunk) {
@@ -85,18 +128,20 @@ public class OfflineDriveService extends Drive {
 
     @Override
     public long getMaxQuota() {
-        return 512L;
+        return 2048L;
     }
 
     @Override
     public Drive initialize() {
 
         Application.log(getClass(), "Initializing %s %s", SERVICE_ID, getId());
-
         setStatus(STATUS_CONNECTING);
 
 
         try {
+
+            if(Files.notExists(servicePath.getParent()))
+                Files.createDirectory(servicePath.getParent());
 
             if(Files.notExists(servicePath))
                 Files.createDirectory(servicePath);
