@@ -33,12 +33,12 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class WizardPage extends StackPane implements Initializable, Themeable {
+public abstract class WizardPage extends StackPane implements Initializable, Themeable {
 
-    private final BooleanProperty check;
+    private final BooleanProperty checked;
 
     public WizardPage(){
-        this.check = new SimpleBooleanProperty(false);
+        this.checked = new SimpleBooleanProperty(false);
     }
 
     @Override
@@ -47,24 +47,17 @@ public class WizardPage extends StackPane implements Initializable, Themeable {
     @Override
     public void initializeInterface() { }
 
-    public boolean isCheck() {
-        return check.get();
+    
+    public boolean isChecked() {
+        return checked.get();
     }
 
-    public BooleanProperty checkProperty() {
-        return check;
+    public BooleanProperty checkedProperty() {
+        return checked;
     }
 
-    public void setCheck(boolean check) {
-        this.check.set(check);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        WizardPage that = (WizardPage) o;
-        return Objects.equals(check, that.check);
-    }
+    public void setChecked(boolean check) {
+        this.checked.set(check);
+    }    
 
 }

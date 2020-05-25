@@ -231,7 +231,7 @@ public class NefelePane extends StackPane implements Initializable, Themeable {
         toggleDarkMode.setSelected(Application.getInstance().getTheme().getStyleName().contains("dark"));
         toggleDarkMode.setFocusTraversable(false);
 
-        toggleDarkMode.visibleProperty().bind(showLogoProperty());
+        toggleDarkMode.visibleProperty().bind(showDarkModeProperty());
         iconDarkMode.visibleProperty().bind(showDarkModeProperty());
         awesomeLogo.visibleProperty().bind(showLogoProperty());
         statusBar.visibleProperty().bind(showStatusBarProperty());

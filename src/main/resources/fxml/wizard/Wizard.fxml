@@ -33,9 +33,11 @@
 <?import de.jensd.fx.glyphs.materialicons.MaterialIconView?>
 
 
-<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-         type="NefeleContentPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
-         AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+<?import javafx.geometry.Insets?>
+<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
+<fx:root prefHeight="200.0" prefWidth="200.0" type="NefeleContentPane"
+         xmlns="http://javafx.com/javafx/10.0.2-internal"
+         xmlns:fx="http://javafx.com/fxml/1">
 
     <BorderPane>
 
@@ -55,18 +57,25 @@
                 <VBox alignment="CENTER_RIGHT">
                     <JFXButton contentDisplay="GRAPHIC_ONLY" fx:id="buttonForward" mnemonicParsing="false" text=" " styleClass="filebrowser-header-button">
                         <graphic>
-                            <MaterialIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="ARROW_FORWARD" size="36.0" />
+                            <MaterialDesignIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="FORWARD" size="36.0" />
                         </graphic>
                         <tooltip>
                             <Tooltip userData="ARCHIVE_HINT_FORWARD"/>
                         </tooltip>
                     </JFXButton>
+                    <VBox.margin>
+                        <Insets right="16" top="8"/>
+                    </VBox.margin>
                 </VBox>
+
 
             </VBox>
 
         </bottom>
 
+        <BorderPane.margin>
+            <Insets top="10" bottom="10" right="10" left="10"/>
+        </BorderPane.margin>
     </BorderPane>
 
 </fx:root>

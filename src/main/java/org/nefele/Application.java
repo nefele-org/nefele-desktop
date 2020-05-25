@@ -141,7 +141,7 @@ public final class Application extends javafx.application.Application implements
         stage.setTitle("Nefele");
         stage.initStyle(StageStyle.UNDECORATED);
         stage.centerOnScreen();
-        stage.setAlwaysOnTop(true);
+        stage.setAlwaysOnTop(false);
         stage.show();
 
 

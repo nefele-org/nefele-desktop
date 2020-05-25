@@ -32,20 +32,38 @@
   -->
 
 <?import com.jfoenix.controls.JFXButton?>
-<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-         type="WizardPage" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
+<?import javafx.geometry.Insets?>
+<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
+<fx:root type="WizardPage" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
          AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
     <BorderPane>
 
+        <top>
+
+            <VBox spacing="10">
+
+                <Label userData="WIZARD_FIRST_CLOUD" styleClass="text-h2"/>
+                <Label userData="WIZARD_FIRST_CLOUD_DESCRIPTION"/>
+
+                <padding>
+                    <Insets right="20" left="20" top="10" bottom="10"/>
+                </padding>
+            </VBox>
+
+        </top>
+
         <center>
 
-            <VBox spacing="30">
+            <JFXButton fx:id="buttonAddCloud">
+                <graphic>
+                    <MaterialDesignIconView size="48.0" glyphName="PLUS" />
+                </graphic>
 
-                <Label userData="WIZARD_FIRST_CLOUD" styleClass="h2"/>
-                <JFXButton fx:id="buttonAddCloud" />
-
-            </VBox>
+                <tooltip>
+                    <Tooltip userData="WORD_ADD"/>
+                </tooltip>
+            </JFXButton>
 
         </center>
 

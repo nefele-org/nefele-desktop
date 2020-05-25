@@ -43,8 +43,11 @@ public class WizardPage1 extends WizardPage {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        comboBoxLaunguage.getItems().addAll(Application.getInstance().getLocale().list());
+        comboBoxLaunguage.getItems()
+                .addAll(Application.getInstance().getLocale().list());
+
         comboBoxLaunguage.setValue(Application.getInstance().getLocale().getLanguage());
+
 
         comboBoxLaunguage.valueProperty().addListener((v, o, n) -> {
 
@@ -57,15 +60,15 @@ public class WizardPage1 extends WizardPage {
                 Application.getInstance().getConfig().update();
 
             }, "updateSettings()::app.ui.locale"));
+
         });
 
-        super.setCheck(true);
         Application.getInstance().getViews().add(this);
     }
 
     @Override
     public void initializeInterface() {
-
+        setChecked(true);
     }
 
 }

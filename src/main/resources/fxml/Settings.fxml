@@ -34,8 +34,7 @@
 <?import javafx.scene.image.Image?>
 
 
-<fx:root minWidth="-Infinity" maxWidth="Infinity" minHeight="-Infinity" maxHeight="Infinity"
-         type="StackPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
+<fx:root type="StackPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
          AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
 
@@ -133,7 +132,7 @@
 
                     <VBox alignment="CENTER">
                         <Label text="Copyright © 2020. Nefele-org" styleClass="text-h3" />
-                        <Hyperlink fx:id="hyperLink" text="https://github.com/nefele-org" />
+                        <Hyperlink fx:id="hyperlink" text="https://github.com/nefele-org" />
                     </VBox>
 
                 </VBox>

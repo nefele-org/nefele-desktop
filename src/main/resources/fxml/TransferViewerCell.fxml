@@ -31,7 +31,8 @@
   ~ THE SOFTWARE.
   -->
 
-<fx:root minHeight="80" prefHeight="80" type="StackPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root type="StackPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
+         minHeight="80" prefHeight="80">
 
     <BorderPane>
 

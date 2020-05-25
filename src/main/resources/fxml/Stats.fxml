@@ -34,12 +34,13 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Tooltip?>
 <?import com.jfoenix.controls.JFXButton?>
-<fx:root minWidth="-Infinity" maxWidth="Infinity" minHeight="-Infinity" maxHeight="Infinity"
-         type="StackPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
+
+
+<fx:root type="StackPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
          AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
 
-        <ScrollPane fx:id="scrollPane" fitToWidth="true" fitToHeight="true" prefWidth="200" prefHeight="200" vbarPolicy="ALWAYS">
+    <ScrollPane fx:id="scrollPane" fitToWidth="true" fitToHeight="true" prefWidth="200" prefHeight="200" vbarPolicy="ALWAYS">
         <StackPane>
             <FlowPane fx:id="flowPane">
 
@@ -57,7 +58,7 @@
                                     </Pane>
                                     <Pane styleClass="stats-card-box-content">
                                         <HBox spacing="10">
-                                            <StackPane alignment="CENTER" styleClass="stats-spinner-box">
+                                            <StackPane>
                                                 <JFXSpinner fx:id="spinnerStorage" />
                                                 <MaterialDesignIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="CLOUD" size="28.0"  />
                                             </StackPane>
@@ -79,7 +80,7 @@
                                 </Pane>
                                 <Pane styleClass="stats-card-box-content">
                                     <HBox spacing="10">
-                                        <StackPane alignment="CENTER" styleClass="stats-spinner-box">
+                                        <StackPane>
                                             <JFXSpinner fx:id="spinnerTemporaryFiles"/>
                                             <JFXButton fx:id="buttonTemporaryClean" styleClass="stats-spinner-button">
                                                 <graphic>
@@ -108,7 +109,7 @@
                                 </Pane>
                                 <Pane styleClass="stats-card-box-content">
                                     <HBox spacing="10">
-                                        <StackPane alignment="CENTER" styleClass="stats-spinner-box">
+                                        <StackPane>
                                             <JFXSpinner fx:id="spinnerSystemMemory" />
                                             <JFXButton fx:id="buttonSystemMemoryClean" styleClass="stats-spinner-button">
                                                 <graphic>
@@ -141,7 +142,7 @@
                     <VBox spacing="5">
 
                         <Label userData="STATS_CARD_SECONDARY_TITLE" styleClass="stats-card-title, text-h2" />
-                        <Separator orientation="HORIZONTAL"/>
+                        <Separator />
 
                         <VBox styleClass="stats-card-box, stats-card-box-content" spacing="2">
 
@@ -180,8 +181,8 @@
                     <VBox spacing="5">
 
                                         
-                        <Label userData="STATS_CARD_TERTIARY_TITLE" styleClass="stats-card-title , text-h2" />
-                        <Separator orientation="HORIZONTAL"/>
+                        <Label userData="STATS_CARD_TERTIARY_TITLE" styleClass="text-h2" />
+                        <Separator />
 
                         <VBox styleClass="stats-card-box, stats-card-box-content" spacing="2" >
 

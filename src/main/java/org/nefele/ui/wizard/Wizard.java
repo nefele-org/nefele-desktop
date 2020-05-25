@@ -36,6 +36,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import org.nefele.Application;
 import org.nefele.Resources;
 import org.nefele.ui.Themeable;
@@ -44,7 +45,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class Wizard extends NefeleContentPane implements Initializable, Themeable{
+public class Wizard extends NefeleContentPane implements Initializable, Themeable {
 
     @FXML private AnchorPane wizardViewer;
     @FXML private JFXButton buttonForward;
@@ -81,7 +82,7 @@ public class Wizard extends NefeleContentPane implements Initializable, Themeabl
 
             }
 
-            buttonForward.disableProperty().bind(n.checkProperty().not());
+            buttonForward.disableProperty().bind(n.checkedProperty().not());
             wizardViewer.getChildren().add(n);
 
         });

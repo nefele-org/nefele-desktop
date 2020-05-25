@@ -33,44 +33,43 @@
 <?import com.jfoenix.controls.JFXSpinner?>
 
 <?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
-<fx:root minWidth="-Infinity" maxWidth="Infinity" minHeight="-Infinity" maxHeight="Infinity" styleClass="stats-card"
-         type="StackPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" >
+<fx:root type="StackPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" styleClass="stats-card">
 
-        <VBox spacing="5">
+    <VBox spacing="5">
 
-            <Label text=" " styleClass="stats-card-title, text-h2" fx:id="labelDriveName" />
-            <Separator orientation="HORIZONTAL"/>
+        <Label text=" " styleClass="stats-card-title, text-h2" fx:id="labelDriveName" />
+        <Separator />
 
-            <VBox styleClass="stats-card-box">
+        <VBox styleClass="stats-card-box">
 
-                <HBox styleClass="stats-card-box-content" spacing="5">
+            <HBox styleClass="stats-card-box-content" spacing="5">
 
-                    <StackPane alignment="CENTER" styleClass="stats-spinner-box">
-                        <JFXSpinner fx:id="spinner" />
-                        <MaterialDesignIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="LAYERS" size="28.0"  />
-                    </StackPane>
+                <StackPane>
+                    <JFXSpinner fx:id="spinner" />
+                    <MaterialDesignIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="LAYERS" size="28.0"  />
+                </StackPane>
 
-                    <Separator orientation="VERTICAL"/>
+                <Separator orientation="VERTICAL"/>
 
-                    <VBox spacing="2">
-                        <HBox spacing="5">
-                            <Label userData="STATSDRIVEINFO_CONTENT_3" />
-                            <Label fx:id="labelTotalSpace" />
-                        </HBox>
-                        <HBox spacing="5">
-                            <Label userData="STATSDRIVEINFO_CONTENT_4" />
-                            <Label fx:id="labelTotalQuota" />
-                        </HBox>
-                        <HBox spacing="5">
-                            <Label userData="STATSDRIVEINFO_CONTENT_2" />
-                            <Label fx:id="labelStatus"/>
-                        </HBox>
-                    </VBox>
+                <VBox spacing="2">
+                    <HBox spacing="5">
+                        <Label userData="STATSDRIVEINFO_CONTENT_3" />
+                        <Label fx:id="labelTotalSpace" />
+                    </HBox>
+                    <HBox spacing="5">
+                        <Label userData="STATSDRIVEINFO_CONTENT_4" />
+                        <Label fx:id="labelTotalQuota" />
+                    </HBox>
+                    <HBox spacing="5">
+                        <Label userData="STATSDRIVEINFO_CONTENT_2" />
+                        <Label fx:id="labelStatus"/>
+                    </HBox>
+                </VBox>
 
-                </HBox>
-
-            </VBox>
+            </HBox>
 
         </VBox>
+
+    </VBox>
 
 </fx:root>

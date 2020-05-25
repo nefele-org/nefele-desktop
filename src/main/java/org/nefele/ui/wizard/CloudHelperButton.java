@@ -46,13 +46,13 @@ public class CloudHelperButton extends StackPane implements Initializable, Theme
 
     private final StringProperty name;
     private final StringProperty iconName;
-    private final ObjectProperty<CloudItem> item;
+    private final ObjectProperty<CloudHelperItem> item;
 
     @FXML private MaterialDesignIconView icon;
     @FXML private Label labelName;
     @FXML private Tooltip tooltip;
 
-    public CloudHelperButton(CloudItem item) {
+    public CloudHelperButton(CloudHelperItem item) {
 
         this.name = new SimpleStringProperty(requireNonNull(item.getName()));
         this.iconName = new SimpleStringProperty(requireNonNull(item.getIcon()));
@@ -92,15 +92,15 @@ public class CloudHelperButton extends StackPane implements Initializable, Theme
 
     public void setIconName(String iconName) { this.iconName.set(iconName); }
 
-    public CloudItem getItem() {
+    public CloudHelperItem getItem() {
         return item.get();
     }
 
-    public ObjectProperty<CloudItem> itemProperty() {
+    public ObjectProperty<CloudHelperItem> itemProperty() {
         return item;
     }
 
-    public void setItem(CloudItem item) {
+    public void setItem(CloudHelperItem item) {
         this.item.set(item);
     }
 }

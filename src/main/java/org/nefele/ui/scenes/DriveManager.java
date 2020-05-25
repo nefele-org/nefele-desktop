@@ -110,10 +110,10 @@ public class DriveManager extends StackPane implements Initializable, Themeable 
                 NefelePane nefelePane = new NefelePane(new Wizard());
                 nefelePane.setModal(NefelePane.MODAL_UNDECORATED);
                 nefelePane.setShowDarkMode(false);
-                nefelePane.setShowLogo(false);
+                nefelePane.setShowLogo(true);
                 nefelePane.setShowStatusBar(false);
+                nefelePane.setResizable(false);
                 s.setScene(new Scene(nefelePane));
-                s.setWidth(520);
                 s.show();
 
             });

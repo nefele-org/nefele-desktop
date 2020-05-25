@@ -33,6 +33,7 @@ import org.nefele.ui.Views;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Objects;
 
@@ -60,6 +61,34 @@ public final class Resources {
 
 
         } catch (IOException e) {
+            Application.panic(Views.class, e);
+        }
+
+
+        //Application.log(Resources.class, "Loaded FXML %s", resource);
+        return parent;
+
+    }
+
+
+    public static <T extends Parent & Themeable> T getFXML(T parent, Class<?> controller, String resource) {
+
+        requireNonNull(parent);
+        requireNonNull(controller);
+        requireNonNull(resource);
+
+
+        try {
+
+            FXMLLoader fxmlLoader = new FXMLLoader();
+
+            fxmlLoader.setLocation(getURL(parent, resource));
+            fxmlLoader.setRoot(parent);
+            fxmlLoader.setController(controller.getConstructor().newInstance());
+            fxmlLoader.load();
+
+
+        } catch (IOException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
             Application.panic(Views.class, e);
         }
 

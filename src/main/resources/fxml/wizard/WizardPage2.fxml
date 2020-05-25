@@ -32,29 +32,64 @@
   -->
 
 <?import com.jfoenix.controls.JFXCheckBox?>
-<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
-<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-         type="WizardPage" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+<fx:root type="WizardPage" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
          AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
     <BorderPane>
 
-        <center>
-            <VBox spacing="30">
-                <Pane layoutX="50">
-                    <FontAwesomeIconView glyphName="CLOUD" layoutX="88.0" layoutY="96" selectionFill="#571d1d"
-                                         size="128"
-                                         styleClass="header-awesome-logo-1"/>
-                    <FontAwesomeIconView glyphName="CLOUD" layoutX="102.0" layoutY="96" selectionFill="#f21c1c"
-                                         size="128"
-                                         styleClass="header-awesome-logo-2"/>
-                </Pane>
+        <top>
 
-                <Label userData="WIZARD_WELCOME" styleClass="h2"/> <!-- h2? -->
-                <JFXCheckBox fx:id="checkBoxTerms" userData="WIZARD_TERMS" />
+            <VBox>
+                <Label userData="WIZARD_WELCOME" styleClass="text-h1"/>
+                <padding>
+                    <Insets right="20" left="20" top="10" />
+                </padding>
+            </VBox>
+
+        </top>
+
+        <center>
+
+            <VBox>
+                <ScrollPane fx:id="scrollTerms" hbarPolicy="NEVER" BorderPane.alignment="CENTER_LEFT" prefHeight="100" prefWidth="100" fitToHeight="true" fitToWidth="true">
+                    <BorderPane.margin>
+                        <Insets bottom="10" left="16" right="16"/>
+                    </BorderPane.margin>
+
+                    <Text fx:id="textMessage" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-shape" text=" "/>
+                </ScrollPane>
+
+                <padding>
+                    <Insets right="20" left="20" top="10" />
+                </padding>
             </VBox>
 
         </center>
+
+        <bottom>
+            <VBox>
+
+                <HBox spacing="20" alignment="CENTER">
+                    <Pane fx:id="paneTextTerms">
+                        <Text fx:id="textTerms" userData="WIZARD_TERMS" styleClass="text-shape" />
+                    </Pane>
+
+                    <VBox alignment="CENTER">
+                        <JFXCheckBox fx:id="checkBoxTerms"/>
+                        <padding>
+                            <Insets bottom="30" />
+                        </padding>
+                    </VBox>
+
+                </HBox>
+
+                <padding>
+                    <Insets right="20" left="20" top="20"  />
+                </padding>
+            </VBox>
+        </bottom>
 
     </BorderPane>
 

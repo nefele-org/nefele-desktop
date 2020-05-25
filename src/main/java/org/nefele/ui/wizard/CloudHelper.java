@@ -41,7 +41,7 @@ import java.util.ResourceBundle;
 
 public class CloudHelper extends NefeleContentPane implements Initializable, Themeable {
 
-    private final ObservableList<CloudItem> helperButtons;
+    private final ObservableList<CloudHelperItem> helperButtons;
 
     @FXML private VBox contentPane;
 
@@ -55,7 +55,7 @@ public class CloudHelper extends NefeleContentPane implements Initializable, The
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        helperButtons.addListener((ListChangeListener<CloudItem>) change -> {
+        helperButtons.addListener((ListChangeListener<CloudHelperItem>) change -> {
 
                 while (change.next()) {
 
@@ -91,7 +91,7 @@ public class CloudHelper extends NefeleContentPane implements Initializable, The
 
     }
 
-    public ObservableList<CloudItem> getHelperButtons() {
+    public ObservableList<CloudHelperItem> getHelperButtons() {
         return helperButtons;
     }
 }

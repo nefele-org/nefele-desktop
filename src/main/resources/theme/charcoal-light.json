@@ -15,7 +15,7 @@
 
   "-nefele-theme-primary-hover"       :   "#97BA9F",
   "-nefele-theme-secondary-hover"     :   "#C5A65E",
-  "-nefele-theme-background-hover"    :   "#ACC4C8",
-  "-nefele-theme-surface-hover"       :   "#ACC4C8",
+  "-nefele-theme-background-hover"    :   "#BED6DA",
+  "-nefele-theme-surface-hover"       :   "#C3DADE",
   "-nefele-theme-error-hover"         :   "#8E2818"
 }

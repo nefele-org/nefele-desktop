@@ -113,5 +113,11 @@
     "SETTINGS_DRIVE_ERROR_DIALOG_DESCRIPTION" : "Questo Drive contiene dei dati pertanto non può essere eliminato, potrai comunque disattivarlo in qualsiasi momento dalle impostazioni",
     "ARCHIVE_HINT_SYNC" : "Sincronizza cartella",
     "ARCHIVE_ERROR_DIALOG_REQUEST_SYNC": "Sei sicuro di voler sincronizzare questa cartella?",
-    "ARCHIVE_DIALOG_REQUEST_SYNC" : "Qualcosa è andato storto nella sincronizzazione. Riprova più tardi"
+    "ARCHIVE_DIALOG_REQUEST_SYNC" : "Qualcosa è andato storto nella sincronizzazione. Riprova più tardi",
+    "WIZARD_SELECT_LANGUAGE" : "Seleziona una lingua.",
+    "WIZARD_WELCOME" : "Benvenuto su Nefele",
+    "WIZARD_TERMS" : "Accetto i termini d'uso del servizio e dichiaro di aver letto l'informativa sul trattamento dei miei dati personali.",
+    "WIZARD_FIRST_CLOUD" : "Aggiungi il tuo primo Cloud a Nefele",
+    "WIZARD_FIRST_CLOUD_DESCRIPTION" : "Segui la procedura guidata, per aggiungere il tuo primo spazio di archiviazione.",
+    "CLOUDHELPER_TITLE" : ""
 }

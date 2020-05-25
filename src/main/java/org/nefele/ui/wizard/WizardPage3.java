@@ -25,9 +25,13 @@
 package org.nefele.ui.wizard;
 
 import com.jfoenix.controls.JFXButton;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import org.nefele.Application;
 import org.nefele.Resources;
+import org.nefele.ui.controls.NefelePane;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -42,6 +46,23 @@ public class WizardPage3 extends WizardPage {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        buttonAddCloud.setOnMouseClicked(e ->{
+            Platform.runLater(() -> {
+
+                Stage s = new Stage();
+                NefelePane nefelePane = new NefelePane(new CloudHelper());
+                nefelePane.setModal(NefelePane.MODAL_UNDECORATED);
+                nefelePane.setShowDarkMode(false);
+                nefelePane.setShowLogo(true);
+                nefelePane.setShowStatusBar(false);
+                nefelePane.setResizable(false);
+                s.setScene(new Scene(nefelePane));
+                s.show();
+
+            });
+        });
+
         Application.getInstance().getViews().add(this);
     }
 

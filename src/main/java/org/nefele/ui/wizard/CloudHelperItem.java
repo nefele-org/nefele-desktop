@@ -31,14 +31,14 @@ import javafx.beans.property.StringProperty;
 
 import static java.util.Objects.requireNonNull;
 
-public class CloudItem {
+public class CloudHelperItem {
 
     private final ObjectProperty<Class<?>> reference;
     private final StringProperty name;
     private final StringProperty icon;
     private final StringProperty hint;
 
-    public CloudItem(Class<?> reference , String name, String icon, String hint) {
+    public CloudHelperItem(Class<?> reference , String name, String icon, String hint) {
 
         this.reference = new SimpleObjectProperty<>(requireNonNull(reference));
         this.name = new SimpleStringProperty(requireNonNull(name));

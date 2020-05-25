@@ -24,12 +24,11 @@
 
 .drivemanager-box {
     -fx-background-color: -nefele-theme-surface-hover;
-    -fx-background-insets: 10 10;
+    -fx-background-insets: 5 5;
     -fx-background-radius: 10;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 2, 1, 0, 0);
     -fx-text-fill: -nefele-theme-surface-text;
-    -fx-padding: 20 20 20 20;
-    -fx-pref-width: 420px;
+    -fx-padding: 15 15 15 15;
 }
 
 .drivemanager-icon-close:hover {

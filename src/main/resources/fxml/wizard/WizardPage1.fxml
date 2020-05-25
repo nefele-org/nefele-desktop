@@ -32,8 +32,7 @@
   -->
 
 <?import com.jfoenix.controls.JFXComboBox?>
-<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-         type="WizardPage" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
+<fx:root type="WizardPage" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
          AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
     <BorderPane>
@@ -41,7 +40,7 @@
         <center>
 
             <VBox alignment="CENTER" spacing="15">
-                <Label userData="WIZARD_SELECT_LANGUAGE" styleClass="h2"/>
+                <Label userData="WIZARD_SELECT_LANGUAGE" styleClass="text-h2"/>
                 <JFXComboBox fx:id="comboBoxLaunguage"/>
             </VBox>
 

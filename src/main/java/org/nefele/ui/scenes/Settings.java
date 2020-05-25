@@ -45,6 +45,9 @@ import org.nefele.ui.Themeable;
 import org.nefele.ui.dialog.BaseDialog;
 import org.nefele.ui.dialog.Dialogs;
 
+import java.awt.*;
+import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.ResourceBundle;
@@ -338,6 +341,16 @@ public class Settings extends StackPane implements Initializable, Themeable {
                 Application.getInstance().getConfig().update();
                 Application.getInstance().exit();
 
+            }
+
+        });
+
+        hyperlink.setOnAction(e -> {
+
+            if(Desktop.isDesktopSupported()) {
+                try {
+                    Desktop.getDesktop().browse(URI.create(hyperlink.getText()));
+                } catch (IOException ignored) { }
             }
 
         });

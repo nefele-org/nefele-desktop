@@ -31,7 +31,7 @@
 }
 
 .text-shape {
-    -fx-background-color: transparent;
+    -fx-background: transparent;
     -fx-fill: -nefele-theme-surface-text;
 }
 
@@ -46,14 +46,17 @@
 }
 
 .text-field {
-    -fx-background-color: -nefele-theme-surface;
+    -fx-background-color: -nefele-theme-surface-hover;
     -fx-text-fill: -nefele-theme-surface-text;
     -fx-prompt-text-fill: derive(-nefele-theme-surface-text, 50%);
     -fx-highlight-fill: -nefele-theme-secondary;
     -fx-highlight-fill-text: -nefele-theme-secondary-text;
     -fx-display-caret: true;
     -fx-alignment: center-left;
+    -fx-padding: 8 8;
 }
+
+
 
 
 .text-bold {

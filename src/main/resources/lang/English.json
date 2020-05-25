@@ -114,6 +114,10 @@
     "ARCHIVE_HINT_SYNC" : "Synchronize folder",
     "ARCHIVE_ERROR_DIALOG_REQUEST_SYNC": "Are you sure you want to sync this folder?",
     "ARCHIVE_DIALOG_REQUEST_SYNC" : "Something went wrong in synchronization. Please try again later",
-    "WIZARD_SELECT_LANGUAGE" : "Select a language"
-
+    "WIZARD_SELECT_LANGUAGE" : "Select a language.",
+    "WIZARD_WELCOME" : "Welcome to Nefele",
+    "WIZARD_TERMS" : "I accept the terms of use of the service and I declare that I have read the information on the processing of my personal data.",
+    "WIZARD_FIRST_CLOUD" : "Add your first Cloud to Nefele",
+    "WIZARD_FIRST_CLOUD_DESCRIPTION" : "Follow the wizard to add your first storage space.",
+    "CLOUDHELPER_TITLE" : ""
 }

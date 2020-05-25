@@ -35,7 +35,10 @@ import org.nefele.core.TransferInfoCallback;
 import org.nefele.fs.MergeChunk;
 import org.nefele.ui.dialog.BaseDialog;
 import org.nefele.ui.dialog.Dialogs;
+import org.nefele.ui.dialog.InputDialog;
 import org.nefele.ui.dialog.InputDialogResult;
+import org.nefele.utils.ExtraPlatform;
+
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,7 +48,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Locale;
-
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 
 public class DropboxDriveProvider extends Drive {
@@ -87,10 +91,17 @@ public class DropboxDriveProvider extends Drive {
 
     }
 
+
     @Override
     public long getMaxQuota() {
+
+        if(spaceUsage != null)
+            return (spaceUsage.getAllocation().getIndividualValue().getAllocated() - spaceUsage.getUsed()) / MergeChunk.getSize() - 1;
+
         return 0;
+
     }
+
 
     @Override
     public Drive initialize() {
@@ -101,8 +112,17 @@ public class DropboxDriveProvider extends Drive {
 
         try {
 
-            if(Files.notExists(accessToken)) {
 
+            if(Files.notExists(servicePath.getParent()))
+                Files.createDirectory(servicePath.getParent());
+
+            if(Files.notExists(servicePath))
+                Files.createDirectory(servicePath);
+
+
+
+
+            if(Files.notExists(accessToken)) {
 
 
                 if(!Desktop.isDesktopSupported())
@@ -125,7 +145,7 @@ public class DropboxDriveProvider extends Drive {
                 String URL = webAuth.authorize(request);
                 String accessCode = null;
 
-                InputDialogResult result;
+                AtomicReference<InputDialogResult> result = new AtomicReference<>();
 
                 do {
 
@@ -135,20 +155,22 @@ public class DropboxDriveProvider extends Drive {
                             .browse(URI.create(URL));
 
 
-                    result = Dialogs.showInputBox(
-                            "Inserisci il codice di autorizzazione che hai ricevuto da Dropbox",
-                            BaseDialog.DIALOG_RETRY, BaseDialog.DIALOG_CONTINUE);
+                    ExtraPlatform.runLaterAndWait(() -> {
+                        result.set(Dialogs.showInputBox(
+                                "Inserisci il codice di autorizzazione che hai ricevuto da Dropbox",
+                                InputDialog.DIALOG_RETRY, InputDialog.DIALOG_CONTINUE));
+                    });
 
 
-                } while (result.getButton() == BaseDialog.DIALOG_RETRY);
+                } while (result.get().getButton() == InputDialog.DIALOG_RETRY);
 
 
 
 
-                if (result.getButton() != BaseDialog.DIALOG_CONTINUE)
+                if (result.get().getButton() != InputDialog.DIALOG_CONTINUE)
                     throw new IllegalStateException("Connection attempt with dropbox canceled by user");
 
-                accessCode = result.getText();
+                accessCode = result.get().getText();
 
 
 
@@ -160,6 +182,9 @@ public class DropboxDriveProvider extends Drive {
                 Application.log(getClass(), " - Account ID: %s", authFinish.getAccountId());
                 Application.log(getClass(), " - Access Token: %s", authFinish.getAccessToken());
 
+
+                if(Files.notExists(accessToken))
+                    Files.createFile(accessToken);
 
                 DbxAuthInfo.Writer.writeToFile(
                         new DbxAuthInfo(authFinish.getAccessToken(), appInfo.getHost()), accessToken.toFile());
@@ -176,24 +201,39 @@ public class DropboxDriveProvider extends Drive {
                     .withAutoRetryEnabled()
                     .build();
 
-            DbxClientV2 client = new DbxClientV2(requestConfig, Files.readString(accessToken));
+            DbxClientV2 client = new DbxClientV2(requestConfig, DbxAuthInfo.Reader.readFromFile(accessToken.toFile()).getAccessToken());
 
 
 
             userAccount = client.users().getCurrentAccount();
             spaceUsage = client.users().getSpaceUsage();
 
-            Application.log(getClass(), "Login complete for %s %s");
-            Application.log(getClass(), " - Account: %s <%s>", userAccount.getName(), userAccount.getEmail());
+            Application.log(getClass(), "Login complete for %s %s", SERVICE_ID, getId());
+            Application.log(getClass(), " - Account: %s <%s>", userAccount.getName().getDisplayName(), userAccount.getEmail());
             Application.log(getClass(), " - Space: %d bytes of %d bytes", spaceUsage.getUsed(), spaceUsage.getAllocation().getIndividualValue().getAllocated());
-            Application.log(getClass(), " - Info: %s", userAccount.toStringMultiline());
+
+
+
+            Application.getInstance().runWorker(new Thread(() -> {
+
+                try {
+
+                    if(getStatus() == STATUS_READY)
+                        client.refreshAccessToken();
+
+                } catch (DbxException | RuntimeException e) {
+                    Application.log(getClass(), "WARNING! refreshAccessToken() failed for %s %s: %s", SERVICE_ID, getId(), e.getMessage());
+                }
+
+            }, String.format("Dropbox-#%s::refreshAccessToken()", getId())), 30, 30, TimeUnit.MINUTES);
+
 
 
             setStatus(STATUS_READY);
 
 
 
-        } catch (JsonReader.FileLoadException | UnsupportedOperationException | IllegalStateException | IOException | DbxException e) {
+        } catch (JsonReader.FileLoadException | RuntimeException | IOException | DbxException e) {
 
             Application.log(getClass(), "ERROR! Exception %s for %s %s: %s", e.getClass().getName(), SERVICE_ID, getId(), e.getMessage());
 

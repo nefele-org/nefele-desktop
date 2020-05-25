@@ -65,6 +65,7 @@ public class InputDialog extends Stage {
     public static final int DIALOG_CONTINUE = 5;
     public static final int DIALOG_EXIT = 6;
     public static final int DIALOG_MINIMIZE = 7;
+    public static final int DIALOG_RETRY = 8;
 
 
     class MessagePane extends NefeleContentPane implements Themeable, Initializable {
@@ -132,6 +133,10 @@ public class InputDialog extends Stage {
 
                     case DIALOG_MINIMIZE:
                         button = new JFXButton(Application.getInstance().getLocale().get("DIALOG_MINIMIZE"));
+                        break;
+
+                    case DIALOG_RETRY:
+                        button = new JFXButton(Application.getInstance().getLocale().get("DIALOG_RETRY"));
                         break;
 
                     default:
