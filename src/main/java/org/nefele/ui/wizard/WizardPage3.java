@@ -24,43 +24,5 @@
 
 package org.nefele.ui.wizard;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXCheckBox;
-import com.jfoenix.controls.JFXComboBox;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import org.nefele.Application;
-import org.nefele.Resources;
-import org.nefele.ui.Themeable;
-import org.nefele.ui.controls.NefeleContentPane;
-import java.net.URL;
-import java.util.ResourceBundle;
-
-public class Wizard extends NefeleContentPane implements Initializable, Themeable{
-
-    @FXML private JFXComboBox comboBoxLaunguage;
-    @FXML private JFXCheckBox checkBoxTerms;
-    @FXML private JFXButton buttonAddCloud;
-    @FXML private AnchorPane contentCloudHelper;
-    @FXML private VBox contentDefaultSettings;
-    @FXML private AnchorPane wizardViewer;
-    @FXML private JFXButton buttonForward;
-
-    public Wizard(){
-        Resources.getFXML(this, "/fxml/wizard/Wizard.fxml");
-    }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-
-        Application.getInstance().getViews().add(this);
-    }
-
-    @Override
-    public void initializeInterface() {
-
-    }
+public class WizardPage3 {
 }

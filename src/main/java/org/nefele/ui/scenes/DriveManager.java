@@ -44,6 +44,7 @@ import org.nefele.cloud.Drive;
 import org.nefele.cloud.Drives;
 import org.nefele.ui.Themeable;
 import org.nefele.ui.controls.NefelePane;
+import org.nefele.ui.dialog.BaseDialog;
 import org.nefele.ui.wizard.Wizard;
 
 import java.net.URL;
@@ -105,11 +106,15 @@ public class DriveManager extends StackPane implements Initializable, Themeable 
         buttonAdd.setOnMouseClicked(e ->{
             Platform.runLater(() -> {
 
-                ((Stage)getScene().getWindow()).setScene(new Scene(new NefelePane(new Wizard())));
-                ((Stage)getScene().getWindow()).setMinWidth(600);
-                ((Stage)getScene().getWindow()).setMinHeight(400);
-                getScene().getWindow().setWidth(800);
-                getScene().getWindow().setHeight(480);
+                Stage s = new Stage();
+                NefelePane nefelePane = new NefelePane(new Wizard());
+                nefelePane.setModal(NefelePane.MODAL_UNDECORATED);
+                nefelePane.setShowDarkMode(false);
+                nefelePane.setShowLogo(false);
+                nefelePane.setShowStatusBar(false);
+                s.setScene(new Scene(nefelePane));
+                s.setWidth(520);
+                s.show();
 
             });
         });

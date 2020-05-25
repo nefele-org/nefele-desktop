@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import org.nefele.ui.controls.*?>
 
 <!--
   ~ The MIT License
@@ -29,43 +30,30 @@
   ~ THE SOFTWARE.
   -->
 
-<?import com.jfoenix.controls.JFXButton?>
-<?import de.jensd.fx.glyphs.materialicons.MaterialIconView?>
-
-
+<?import com.jfoenix.controls.JFXCheckBox?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-         type="NefeleContentPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
+         type="StackPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
          AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
     <BorderPane>
 
         <center>
+            <VBox spacing="30">
+                <Pane layoutX="50">
+                    <FontAwesomeIconView glyphName="CLOUD" layoutX="88.0" layoutY="96" selectionFill="#571d1d"
+                                         size="128"
+                                         styleClass="header-awesome-logo-1"/>
+                    <FontAwesomeIconView glyphName="CLOUD" layoutX="102.0" layoutY="96" selectionFill="#f21c1c"
+                                         size="128"
+                                         styleClass="header-awesome-logo-2"/>
+                </Pane>
 
-            <AnchorPane fx:id="wizardViewer"/>
-
-        </center>
-
-
-        <bottom>
-
-            <VBox>
-
-                <Separator/>
-
-                <VBox alignment="CENTER_RIGHT">
-                    <JFXButton contentDisplay="GRAPHIC_ONLY" fx:id="buttonForward" mnemonicParsing="false" text=" " styleClass="filebrowser-header-button">
-                        <graphic>
-                            <MaterialIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="ARROW_FORWARD" size="36.0" />
-                        </graphic>
-                        <tooltip>
-                            <Tooltip userData="ARCHIVE_HINT_FORWARD"/>
-                        </tooltip>
-                    </JFXButton>
-                </VBox>
-
+                <Label userData="WIZARD_WELCOME" styleClass="h2"/> <!-- h2? -->
+                <JFXCheckBox fx:id="checkBoxTerms" userData="WIZARD_TERMS" />
             </VBox>
 
-        </bottom>
+        </center>
 
     </BorderPane>
 

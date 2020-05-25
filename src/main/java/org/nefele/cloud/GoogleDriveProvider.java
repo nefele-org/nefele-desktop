@@ -57,7 +57,7 @@ import java.util.List;
 
 import static java.util.Objects.requireNonNull;
 
-public class GoogleDriveService extends Drive {
+public class GoogleDriveProvider extends Drive {
 
     public final static String SERVICE_ID = "google-drive-service";
     public final static String SERVICE_DEFAULT_DESCRIPTION = "Google Drive";
@@ -76,7 +76,7 @@ public class GoogleDriveService extends Drive {
 
 
 
-    public GoogleDriveService(String id, String service, String description, long quota, long blocks) {
+    public GoogleDriveProvider(String id, String service, String description, long quota, long blocks) {
         super(id, service, description, quota, blocks);
 
         servicePath = Application.getInstance().getDataPath()
@@ -226,11 +226,12 @@ public class GoogleDriveService extends Drive {
             storageQuotaLimit = about.getStorageQuota().getLimit();
             storageQuotaUsed = about.getStorageQuota().getUsage();
 
-            Application.log(getClass(), "Google Drive API [%s]: %s: %s <%s>", getId(), "User", about.getUser().getDisplayName(), about.getUser().getEmailAddress());
-            Application.log(getClass(), "Google Drive API [%s]: %s: %s", getId(), "AppInstalled", about.getAppInstalled());
-            Application.log(getClass(), "Google Drive API [%s]: %s: %d", getId(), "getMaxUploadSize", about.getMaxUploadSize());
-            Application.log(getClass(), "Google Drive API [%s]: %s: %d", getId(), "StorageQuota::Usage", about.getStorageQuota().getUsage());
-            Application.log(getClass(), "Google Drive API [%s]: %s: %d", getId(), "StorageQuota::Limit", about.getStorageQuota().getLimit());
+            Application.log(getClass(), "Login complete for %s %s!", SERVICE_ID, getId());
+            Application.log(getClass(), " - %s: %s <%s>", getId(), "User", about.getUser().getDisplayName(), about.getUser().getEmailAddress());
+            Application.log(getClass(), " - %s: %s", getId(), "AppInstalled", about.getAppInstalled());
+            Application.log(getClass(), " - %s: %d", getId(), "getMaxUploadSize", about.getMaxUploadSize());
+            Application.log(getClass(), " - %s: %d", getId(), "StorageQuota::Usage", about.getStorageQuota().getUsage());
+            Application.log(getClass(), " - %s: %d", getId(), "StorageQuota::Limit", about.getStorageQuota().getLimit());
 
 
 

@@ -37,7 +37,7 @@ import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-public class OfflineDriveService extends Drive {
+public class OfflineDriveProvider extends Drive {
 
     public final static String SERVICE_ID = "offline-drive-service";
     public final static String SERVICE_DEFAULT_DESCRIPTION = "Offline Cloud";
@@ -48,7 +48,7 @@ public class OfflineDriveService extends Drive {
     private final Path servicePath;
 
 
-    public OfflineDriveService(String id, String service, String description, long quota, long blocks) {
+    public OfflineDriveProvider(String id, String service, String description, long quota, long blocks) {
         super(id, service, description, quota, blocks);
 
         this.servicePath = Application.getInstance().getDataPath().resolve(Paths.get("drive", SERVICE_ID, id));
@@ -88,7 +88,7 @@ public class OfflineDriveService extends Drive {
     public ByteBuffer readChunk(MergeChunk chunk, TransferInfoCallback callback) throws IOException {
 
         FileInputStream inputStream = new FileInputStream(new File(drivePath.resolve(Paths.get(chunk.getId())).toString()));
-        ByteBuffer byteBuffer = ByteBuffer.allocate(inputStream.available());
+        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(inputStream.available());
 
         while(inputStream.available() > 0) {
 

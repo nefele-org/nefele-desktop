@@ -99,12 +99,12 @@ public final class Drives implements Service {
 
                     switch (service.get()) {
 
-                        case OfflineDriveService.SERVICE_ID:
-                            return new OfflineDriveService(id, service.get(), description.get(), quota.get(), blocks.get())
+                        case OfflineDriveProvider.SERVICE_ID:
+                            return new OfflineDriveProvider(id, service.get(), description.get(), quota.get(), blocks.get())
                                     .initialize();
 
-                        case GoogleDriveService.SERVICE_ID:
-                            return new GoogleDriveService(id, service.get(), description.get(), quota.get(), blocks.get())
+                        case GoogleDriveProvider.SERVICE_ID:
+                            return new GoogleDriveProvider(id, service.get(), description.get(), quota.get(), blocks.get())
                                     .initialize();
 
                         default:

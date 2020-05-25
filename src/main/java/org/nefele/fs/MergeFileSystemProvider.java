@@ -82,7 +82,6 @@ public class MergeFileSystemProvider extends FileSystemProvider {
             throw new IllegalArgumentException();
 
         return new MergeFileChannel((MergePath) path);
-
     }
 
     @Override

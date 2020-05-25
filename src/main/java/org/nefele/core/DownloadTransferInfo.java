@@ -129,34 +129,37 @@ public class DownloadTransferInfo extends TransferInfo {
         Application.log(getClass(), "Writing DownloadTransferInfo() for %s (size: %d) in %s", getPath().toString(), getSize(), localFile.getAbsolutePath());
 
 
-        for(MergeChunk chunk : getPath().getInode().getData().getChunks()) {
 
-            try {
+        try {
 
-                if (!localFile.exists())
-                    localFile.createNewFile();
+            if (!localFile.exists())
+                localFile.createNewFile();
 
-                RandomAccessFile file = new RandomAccessFile(localFile, "rw");
-                file.seek(chunk.getOffset() * MergeChunk.getSize());
 
-                InputStream chunkStream = getFileSystem().getStorage().read(chunk);
+            OutputStream outputStream = Files.newOutputStream(localFile.toPath());
+            InputStream inputStream = Files.newInputStream(getPath());
 
-                while (chunkStream.available() > 0)
-                    file.write(chunkStream.readNBytes(PREPARE_BLOCK_SIZE));
+            while (inputStream.available() > 0) {
 
-                chunkStream.close();
-                file.close();
+                byte[] bytes = new byte[Math.min(PREPARE_BLOCK_SIZE, inputStream.available())];
 
-            } catch (IOException e) {
-
-                Application.log(getClass(), "WARNING! %s, something wrong, transfer canceled! %s", e.getClass().getName(), e.getMessage());
-
-                setStatus(TRANSFER_STATUS_ERROR);
-                return getStatus();
+                if(inputStream.read(bytes) > 0)
+                    outputStream.write(bytes);
 
             }
 
+            outputStream.close();
+            inputStream.close();
+
+        } catch (IOException e) {
+
+            Application.log(getClass(), "WARNING! %s, something wrong, transfer canceled! %s", e.getClass().getName(), e.getMessage());
+
+            setStatus(TRANSFER_STATUS_ERROR);
+            return getStatus();
+
         }
+
 
 
         setStatus(TRANSFER_STATUS_COMPLETED);

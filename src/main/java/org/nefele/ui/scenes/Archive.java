@@ -521,4 +521,5 @@ public class Archive extends StackPane implements Initializable, Themeable {
     public void initializeInterface() {
         Resources.getCSS(this, "/css/filebrowser-header.css");
     }
+
 }

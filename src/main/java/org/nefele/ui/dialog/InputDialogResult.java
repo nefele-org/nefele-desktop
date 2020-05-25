@@ -22,45 +22,24 @@
  * THE SOFTWARE.
  */
 
-package org.nefele.ui.wizard;
+package org.nefele.ui.dialog;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXCheckBox;
-import com.jfoenix.controls.JFXComboBox;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import org.nefele.Application;
-import org.nefele.Resources;
-import org.nefele.ui.Themeable;
-import org.nefele.ui.controls.NefeleContentPane;
-import java.net.URL;
-import java.util.ResourceBundle;
+public class InputDialogResult {
 
-public class Wizard extends NefeleContentPane implements Initializable, Themeable{
+    private String text;
+    private int button;
 
-    @FXML private JFXComboBox comboBoxLaunguage;
-    @FXML private JFXCheckBox checkBoxTerms;
-    @FXML private JFXButton buttonAddCloud;
-    @FXML private AnchorPane contentCloudHelper;
-    @FXML private VBox contentDefaultSettings;
-    @FXML private AnchorPane wizardViewer;
-    @FXML private JFXButton buttonForward;
-
-    public Wizard(){
-        Resources.getFXML(this, "/fxml/wizard/Wizard.fxml");
+    public InputDialogResult(String text, int button) {
+        this.text = text;
+        this.button = button;
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-
-        Application.getInstance().getViews().add(this);
+    public String getText() {
+        return text;
     }
 
-    @Override
-    public void initializeInterface() {
-
+    public int getButton() {
+        return button;
     }
+
 }

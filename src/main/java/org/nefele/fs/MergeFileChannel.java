@@ -24,7 +24,10 @@
 
 package org.nefele.fs;
 
+import org.nefele.Application;
+
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
@@ -118,15 +121,68 @@ public class MergeFileChannel extends FileChannel {
     }
 
     @Override
-    public int read(ByteBuffer byteBuffer, long l) throws IOException {
-        throw new UnsupportedOperationException();
+    public int read(ByteBuffer byteBuffer, long position) throws IOException {
+
+        final long blocksize = MergeChunk.getSize();
+        final long initpos = position;
+
+        if(blocksize < 8192L)
+            throw new IllegalStateException();
+
+
+        if(initpos > getInode().getSize())
+            return 0;
+
+        if(initpos + byteBuffer.remaining() > getInode().getSize())
+            byteBuffer.limit((int) (getInode().getSize() - initpos));
+
+
+
+        while(byteBuffer.hasRemaining()) {
+
+            long block = position / blocksize;
+            long offset = position % blocksize;
+
+
+            MergeChunk chunk = getInode().getChunks()
+                    .stream()
+                    .filter(i -> i.getOffset() == block)
+                    .findFirst()
+                    .orElse(null);
+
+            if(chunk == null)
+                throw new IOException(String.format("chunk at offset %d not found for inode %s", block, getInode().getId()));
+
+
+            try (InputStream inputStream = getFileSystem().getStorage().read(chunk)) {
+
+                inputStream.skip(offset);
+
+                while(inputStream.available() > 0 && byteBuffer.hasRemaining()) {
+
+                    byte[] bytes = new byte[Math.min(Math.min(65536, inputStream.available()), byteBuffer.remaining())];
+
+                    if(inputStream.read(bytes) > 0)
+                        byteBuffer.put(bytes);
+
+                    position += bytes.length;
+
+                }
+
+            }
+
+        }
+
+
+        return (int) (position - initpos);
+
     }
 
     @Override
     public int write(ByteBuffer byteBuffer, long position) throws IOException {
 
-        long blocksize = MergeChunk.getSize();
-        long initpos = position;
+        final long blocksize = MergeChunk.getSize();
+        final long initpos = position;
 
 
         if(blocksize < 8192L)
@@ -137,29 +193,29 @@ public class MergeFileChannel extends FileChannel {
 
             long block = position / blocksize;
             long offset = position % blocksize;
-            long size = Math.min(byteBuffer.remaining(), blocksize);
+            long size = Math.min(byteBuffer.remaining(), blocksize - offset);
 
 
-            MergeChunk chunk = inode.getChunks()
+            MergeChunk chunk = getInode().getChunks()
                         .stream()
                         .filter(i -> i.getOffset() == block)
                         .findFirst()
                         .orElse(null);
 
             if(chunk == null)
-                chunk = fileSystem.getStorage().alloc(inode, block);
+                chunk = getFileSystem().getStorage().alloc(getInode(), block);
 
 
-            if(inode.getSize() < position + size) {
+            if(getInode().getSize() < position + size) {
 
-                inode.setSize(position + size);
-                inode.setAccessedTime(Instant.now());
-                inode.setModifiedTime(Instant.now());
-                inode.invalidate();
+                getInode().setSize(position + size);
+                getInode().setAccessedTime(Instant.now());
+                getInode().setModifiedTime(Instant.now());
+                getInode().invalidate();
 
             }
 
-            fileSystem.getStorage()
+            getFileSystem().getStorage()
                     .write(chunk, byteBuffer, offset);
 
 
@@ -194,4 +250,11 @@ public class MergeFileChannel extends FileChannel {
 
     }
 
+    protected MergeNode getInode() {
+        return inode;
+    }
+
+    protected MergeFileSystem getFileSystem() {
+        return fileSystem;
+    }
 }

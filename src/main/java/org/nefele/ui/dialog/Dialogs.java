@@ -74,7 +74,7 @@ public final class Dialogs {
                 new WarningDialog(title, message), buttons.length > 0 ? buttons : new int[] { BaseDialog.DIALOG_OK });
     }
 
-    public static Pair<String, Integer> showInputBox(String title, int... buttons) {
+    public static InputDialogResult showInputBox(String title, int... buttons) {
 
         InputDialog inputDialog = new InputDialog(title);
 

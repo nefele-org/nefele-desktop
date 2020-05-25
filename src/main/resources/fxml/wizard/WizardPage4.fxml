@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import org.nefele.ui.controls.*?>
 
 <!--
   ~ The MIT License
@@ -29,43 +30,21 @@
   ~ THE SOFTWARE.
   -->
 
-<?import com.jfoenix.controls.JFXButton?>
-<?import de.jensd.fx.glyphs.materialicons.MaterialIconView?>
-
-
 <fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-         type="NefeleContentPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
+         type="StackPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
          AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
     <BorderPane>
 
         <center>
 
-            <AnchorPane fx:id="wizardViewer"/>
-
-        </center>
-
-
-        <bottom>
-
             <VBox>
-
-                <Separator/>
-
-                <VBox alignment="CENTER_RIGHT">
-                    <JFXButton contentDisplay="GRAPHIC_ONLY" fx:id="buttonForward" mnemonicParsing="false" text=" " styleClass="filebrowser-header-button">
-                        <graphic>
-                            <MaterialIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="ARROW_FORWARD" size="36.0" />
-                        </graphic>
-                        <tooltip>
-                            <Tooltip userData="ARCHIVE_HINT_FORWARD"/>
-                        </tooltip>
-                    </JFXButton>
-                </VBox>
-
+                <VBox fx:id="contentDefaultSettings"/>
+                <Label userData="WIZARD_END_MESSAGE" styleClass="text-h3"/>
+                <Label userData="WIZARD_END_LOADING" styleClass="text-h1"/>
             </VBox>
 
-        </bottom>
+        </center>
 
     </BorderPane>
 

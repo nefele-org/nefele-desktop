@@ -145,11 +145,11 @@ public class InputDialog extends Stage {
 
                 button.setMinWidth(68);
                 button.setMinHeight(25);
-                button.setOnMouseClicked(e -> exitWithDialogResult(new Pair<>(textField.getText(), i)));
+                button.setOnMouseClicked(e -> exitWithDialogResult(new InputDialogResult(textField.getText(), i)));
 
                 textField.setOnKeyPressed(e -> {
                     if(e.getCode() == KeyCode.ENTER )
-                        exitWithDialogResult(new Pair<>(textField.getText(), i));
+                        exitWithDialogResult(new InputDialogResult(textField.getText(), i));
                 });
 
                 buttonHBox.getChildren().add(button);
@@ -158,7 +158,7 @@ public class InputDialog extends Stage {
 
 
             ((NefelePane) getScene().getRoot()).setOnClosing(() -> {
-                exitWithDialogResult(new Pair<>("", DIALOG_CLOSED));
+                exitWithDialogResult(new InputDialogResult("", DIALOG_CLOSED));
                 return true;
             });
 
@@ -171,13 +171,13 @@ public class InputDialog extends Stage {
 
     private final ArrayList<Integer> buttons;
     private Image icon;
-    private Pair<String, Integer> dialogResult;
+    private InputDialogResult dialogResult;
     private String message;
 
 
     protected InputDialog(String title) {
 
-        dialogResult = new Pair<>("", DIALOG_CLOSED);
+        dialogResult = new InputDialogResult("", DIALOG_CLOSED);
         buttons = new ArrayList<>();
         icon = null;
 
@@ -199,13 +199,13 @@ public class InputDialog extends Stage {
         return buttons;
     }
 
-    public Pair<String, Integer> getDialogResult() {
+    public InputDialogResult getDialogResult() {
         return dialogResult;
     }
 
 
 
-    private void exitWithDialogResult(Pair<String, Integer> dialogResult) {
+    private void exitWithDialogResult(InputDialogResult dialogResult) {
         this.dialogResult = dialogResult;
         this.close();
     }
