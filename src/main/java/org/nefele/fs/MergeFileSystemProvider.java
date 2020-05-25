@@ -189,7 +189,7 @@ public class MergeFileSystemProvider extends FileSystemProvider {
 
     @Override
     public void checkAccess(Path path, AccessMode... accessModes) throws IOException {
-        throw new UnsupportedOperationException();
+
     }
 
     @Override

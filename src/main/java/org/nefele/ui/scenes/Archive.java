@@ -51,7 +51,9 @@ import org.nefele.ui.controls.FileBrowserItem;
 import org.nefele.ui.controls.FileBrowserItemFactory;
 import org.nefele.ui.dialog.BaseDialog;
 import org.nefele.ui.dialog.Dialogs;
+import org.nefele.utils.ExtraPlatform;
 
+import java.awt.*;
 import java.io.*;
 import java.net.URI;
 import java.net.URL;
@@ -61,7 +63,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
-
+import java.util.concurrent.Future;
 
 
 public class Archive extends StackPane implements Initializable, Themeable {
@@ -139,12 +141,34 @@ public class Archive extends StackPane implements Initializable, Themeable {
 
                     try {
 
-                        Path path = MergePath.get("nefele", fileBrowser.getCurrentPath().toString(), file.getName());
+                        final Path path = MergePath.get("nefele", fileBrowser.getCurrentPath().toString(), file.getName());
 
-                        Application.getInstance().getTransferQueue().enqueue(
+                        int status = Application.getInstance().getTransferQueue().enqueue(
                                 new UploadTransferInfo((MergePath) path, file)).get();
 
-                    } catch (InterruptedException | ExecutionException | CancellationException ignored) {
+
+                        switch (status) {
+
+                            case TransferInfo.TRANSFER_STATUS_COMPLETED:
+
+                                //Application.getInstance().setStatus(...)
+                                break;
+
+                            case TransferInfo.TRANSFER_STATUS_ERROR:
+                            case TransferInfo.TRANSFER_STATUS_CANCELED:
+
+                                if(Files.exists(path))
+                                    Files.delete(path);
+
+                                break;
+
+                            default:
+                                Application.log(getClass(), "WARNING! Invalid TransferInfo.TRANSFER_STATUS_*: %d", status);
+                                break;
+
+                        }
+
+                    } catch (InterruptedException | ExecutionException | CancellationException | IOException ignored) {
                         // ignored...
                     } finally {
                         Platform.runLater(fileBrowser::update);
@@ -216,16 +240,57 @@ public class Archive extends StackPane implements Initializable, Themeable {
 
                         Files.walk(file.toPath()).forEach(path -> {
 
-                            Path cloudPath = MergePath.get("nefele", fileBrowser.getCurrentPath().toString(), file.toPath().getParent().relativize(path).toString());
+                            final Path cloudPath = MergePath.get("nefele", fileBrowser.getCurrentPath().toString(), file.toPath().getParent().relativize(path).toString());
 
                             try {
 
                                 if (Files.isDirectory(path))
                                     Files.createDirectory(cloudPath);
 
-                                else
-                                    Application.getInstance().getTransferQueue().enqueue(
-                                            new UploadTransferInfo((MergePath) cloudPath, path.toFile()));
+                                else {
+
+                                    ExtraPlatform.runLaterAndWait(() -> {
+
+                                        final Future<Integer> future = Application.getInstance().getTransferQueue().enqueue(
+                                                new UploadTransferInfo((MergePath) cloudPath, path.toFile()));
+
+
+                                        Application.getInstance().runThread(new Thread(() -> {
+
+                                            try {
+
+                                                int status = future.get();
+                                                switch (status) {
+
+                                                    case TransferInfo.TRANSFER_STATUS_COMPLETED:
+
+                                                        //Application.getInstance().setStatus(... // TODO: set Status Bar
+                                                        break;
+
+
+                                                    case TransferInfo.TRANSFER_STATUS_CANCELED:
+                                                    case TransferInfo.TRANSFER_STATUS_ERROR:
+
+                                                        if(Files.exists(cloudPath))
+                                                            Files.delete(cloudPath);
+
+                                                        break;
+
+
+                                                    default:
+                                                        Application.log(getClass(), "WARNING! Invalid TransferInfo.TRANSFER_STATUS_*: %d", status);
+                                                        break;
+
+                                                }
+
+                                            } catch (InterruptedException | ExecutionException | IOException ignored) { }
+
+                                        }, "Future::" + cloudPath.toUri()));
+
+                                    });
+
+
+                                }
 
                             } catch (IOException ignored) { }
 
@@ -308,18 +373,66 @@ public class Archive extends StackPane implements Initializable, Themeable {
 
                         else {
 
+
+                            final int getSelectedItemCount = fileBrowser.getSelectedItems().size();
+
                             fileBrowser.getSelectedItems().forEach(i -> {
 
                                 if(i.getMime().equals(Mime.FOLDER))
                                     return;
 
 
-                                Path cloudPath = MergePath.get("nefele", fileBrowser.getCurrentPath().toString(), i.getText());
-                                Path localPath = Paths.get(file.getAbsolutePath(), cloudPath.getFileName().toString());
+                                final Path cloudPath = MergePath.get("nefele", fileBrowser.getCurrentPath().toString(), i.getText());
+                                final Path localPath = Paths.get(file.getAbsolutePath(), cloudPath.getFileName().toString());
 
-                                Application.getInstance().getTransferQueue().enqueue(
-                                        new DownloadTransferInfo((MergePath) cloudPath, localPath.toFile())
-                                );
+
+                                ExtraPlatform.runLaterAndWait(() -> {
+
+                                    final Future<Integer> future = Application.getInstance().getTransferQueue().enqueue(
+                                            new DownloadTransferInfo((MergePath) cloudPath, localPath.toFile()));
+
+
+                                    Application.getInstance().runThread(new Thread(() -> {
+
+                                        try {
+
+                                            int status = future.get();
+                                            switch (status) {
+
+                                                case TransferInfo.TRANSFER_STATUS_COMPLETED:
+
+                                                    if(getSelectedItemCount == 1) {
+
+                                                        if(Desktop.isDesktopSupported())
+                                                            Desktop.getDesktop().open(localPath.toFile());
+
+                                                    }
+
+                                                    //Application.getInstance().setStatus(... // TODO: set Status Bar
+                                                    break;
+
+
+                                                case TransferInfo.TRANSFER_STATUS_CANCELED:
+                                                case TransferInfo.TRANSFER_STATUS_ERROR:
+
+                                                    if(Files.exists(localPath))
+                                                        Files.delete(localPath);
+
+                                                    break;
+
+
+                                                default:
+                                                    Application.log(getClass(), "WARNING! Invalid TransferInfo.TRANSFER_STATUS_*: %d", status);
+                                                    break;
+
+                                            }
+
+                                        } catch (InterruptedException | ExecutionException | IOException ignored) { }
+
+                                    }, "Future::" + cloudPath.toUri()));
+
+
+                                });
 
 
                             });
