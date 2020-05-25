@@ -79,7 +79,7 @@ public abstract class Drive {
 
     public abstract void writeChunk(MergeChunk chunk, InputStream inputStream, TransferInfoCallback callback) throws IOException;
     public abstract ByteBuffer readChunk(MergeChunk chunk, TransferInfoCallback callback) throws IOException;
-    public abstract void removeChunk(MergeChunk chunk);
+    public abstract void removeChunk(MergeChunk chunk) throws IOException;
     public abstract long getMaxQuota();
     public abstract Drive initialize();
     public abstract Drive exit();

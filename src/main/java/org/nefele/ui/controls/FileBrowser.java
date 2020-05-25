@@ -46,6 +46,7 @@ import org.nefele.core.Mime;
 import org.nefele.fs.MergeFileSystem;
 import org.nefele.fs.MergePath;
 import org.nefele.ui.Themeable;
+import org.nefele.utils.ExtraPlatform;
 
 import java.net.URI;
 import java.net.URL;
@@ -133,7 +134,9 @@ public class FileBrowser extends ScrollPane implements Initializable, Themeable 
                 if(change.wasRemoved()) {
                     executorService.submit(() -> {
                         change.getRemoved().forEach(i -> {
-                            Platform.runLater(() -> cells.removeIf(j -> i.equals(j.getItem())));
+                            ExtraPlatform.runLaterAndWait(() -> {
+                                cells.removeIf(j -> i.equals(j.getItem()));
+                            });
                         });
                     });
                 }
@@ -145,18 +148,9 @@ public class FileBrowser extends ScrollPane implements Initializable, Themeable 
 
                     executorService.submit(() -> {
                         change.getAddedSubList().forEach(i -> {
-
-                            final CountDownLatch countDownLatch = new CountDownLatch(1);
-
-                            Platform.runLater(() -> {
+                            ExtraPlatform.runLaterAndWait(() -> {
                                 cells.add(new FileBrowserCell(i));
-                                countDownLatch.countDown();
                             });
-
-                            try {
-                                countDownLatch.await();
-                            } catch (InterruptedException ignored) { }
-
                         });
 
                     });

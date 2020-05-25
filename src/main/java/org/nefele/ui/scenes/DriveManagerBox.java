@@ -28,6 +28,7 @@ import com.jfoenix.controls.JFXSlider;
 import com.jfoenix.controls.JFXToggleButton;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -76,7 +77,7 @@ public class DriveManagerBox extends StackPane implements Initializable, Themeab
 
         toggleState.selectedProperty().addListener((v, o, n) -> {
 
-            switch(getDrive().getStatus()) {
+            switch (getDrive().getStatus()) {
 
                 case Drive.STATUS_READY:
                 case Drive.STATUS_DISABLED:
@@ -96,18 +97,16 @@ public class DriveManagerBox extends StackPane implements Initializable, Themeab
 
         buttonDelete.setOnMouseClicked(e -> {
 
-            Platform.runLater(() ->{
+            Platform.runLater(() -> {
 
-                try{
+                try {
 
-                    if(Dialogs.showInfoBox("SETTINGSDRIVE_DIALOG_TITLE","SETTINGSDRIVE_DIALOG_DESCRIPTION",
+                    if (Dialogs.showInfoBox("SETTINGS_DRIVE_DIALOG_TITLE", "SETTINGS_DRIVE_DIALOG_DESCRIPTION",
                             BaseDialog.DIALOG_NO, BaseDialog.DIALOG_YES) == BaseDialog.DIALOG_YES)
                         Drives.getInstance().remove(getDrive());
 
-                } catch(DriveNotEmptyException empty) {
-
-                    Dialogs.showErrorBox("SETTINGSDRIVE_ERROR_DIALOG_DESCRIPTION");
-
+                } catch (DriveNotEmptyException empty) {
+                    Dialogs.showErrorBox("SETTINGS_DRIVE_ERROR_DIALOG_DESCRIPTION");
                 }
 
 
@@ -115,13 +114,14 @@ public class DriveManagerBox extends StackPane implements Initializable, Themeab
 
         });
 
-        sliderChunks.setMin(getDrive().getQuota());
+
+        sliderChunks.minProperty().bind(getDrive().chunksProperty());
         sliderChunks.setMax(getDrive().getMaxQuota());
         sliderChunks.setValue(getDrive().getQuota());
 
         sliderChunks.valueChangingProperty().addListener((v, o, n) -> {
 
-            if(!n) {
+            if (!n) {
 
                 getDrive().setQuota(((Double) sliderChunks.getValue()).longValue());
                 getDrive().invalidate();
@@ -129,11 +129,14 @@ public class DriveManagerBox extends StackPane implements Initializable, Themeab
             }
         });
 
-        getDrive().statusProperty().addListener((v, o, n) ->{
 
-            sliderChunks.setDisable(getDrive().getStatus() == Drive.STATUS_READY || getDrive().getStatus() == Drive.STATUS_DISABLED);
-
-        });
+        sliderChunks.disableProperty().bind(
+                Bindings
+                        .when(getDrive().statusProperty().isNotEqualTo(Drive.STATUS_READY)
+                                .and(getDrive().statusProperty().isNotEqualTo(Drive.STATUS_DISABLED)))
+                        .then(true)
+                        .otherwise(false)
+        );
 
         Application.getInstance().getViews().add(this);
     }

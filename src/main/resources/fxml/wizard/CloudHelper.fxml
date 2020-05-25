@@ -5,6 +5,7 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import org.nefele.ui.controls.*?>
 
 <!--
   ~ The MIT License
@@ -30,35 +31,21 @@
   ~ THE SOFTWARE.
   -->
 
-<?import com.jfoenix.controls.JFXButton?>
-<?import javafx.geometry.Insets?>
-<fx:root minWidth="-Infinity" maxWidth="Infinity" minHeight="-Infinity" maxHeight="Infinity"
-         type="StackPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+         type="NefeleContentPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
          AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
-    <VBox>
+    <BorderPane>
 
-        <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" prefWidth="200" prefHeight="200">
-            <VBox spacing="16">
+        <center>
 
-                <Label userData="DRIVEMANAGER_TITLE" styleClass="text-h1" />
-
-                <Label userData="DRIVEMANAGER_DESCRIPTION" wrapText="true" />
-
-                <VBox spacing="5" fx:id="contentPane"/>
-
+            <VBox spacing="20">
+                <Label userData="CLOUDHELPER_TITLE" />
+                <VBox fx:id="contentPane"/>
             </VBox>
-        </ScrollPane>
 
-        <Separator/>
+        </center>
 
-        <VBox alignment="CENTER_LEFT" >
-            <JFXButton fx:id="buttonAdd" userData="WORD_ADD"/>
-        </VBox>
-
-        <padding>
-            <Insets right="10" left="10" top="10" bottom="10" />
-        </padding>
-    </VBox>
+    </BorderPane>
 
 </fx:root>

@@ -31,21 +31,22 @@ import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.googleapis.media.MediaHttpUploader;
+import com.google.api.client.googleapis.media.MediaHttpUploaderProgressListener;
 import com.google.api.client.http.AbstractInputStreamContent;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.drive.DriveScopes;
+import com.google.api.services.drive.model.About;
 import com.google.api.services.drive.model.File;
 import org.nefele.Application;
 import org.nefele.Resources;
 import org.nefele.core.TransferInfoCallback;
 import org.nefele.fs.MergeChunk;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -63,9 +64,13 @@ public class GoogleDriveService extends Drive {
 
     private static final List<String> SCOPES = Collections.singletonList(DriveScopes.DRIVE_APPDATA);
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
+    private static final int DOWNLOAD_BLOCK_SIZE = 65536;
+
 
     private final Path servicePath;
     private com.google.api.services.drive.Drive driveService;
+    private long storageQuotaUsed;
+    private long storageQuotaLimit;
 
 
 
@@ -109,25 +114,84 @@ public class GoogleDriveService extends Drive {
 
         });
 
-        update.getMediaHttpUploader().setProgressListener(media -> callback.updateProgress(media.getChunkSize()));
+        update.getMediaHttpUploader().setChunkSize(MediaHttpUploader.MINIMUM_CHUNK_SIZE);
+        update.getMediaHttpUploader().setDirectUploadEnabled(false);
+
+        update.getMediaHttpUploader().setProgressListener(new MediaHttpUploaderProgressListener() {
+
+            private long currentNumBytesUploaded = 0;
+
+            @Override
+            public void progressChanged(MediaHttpUploader uploader) throws IOException {
+
+                if(callback.isCanceled())
+                    throw new IOException("stopped by user");
+
+
+                final long d = uploader.getNumBytesUploaded();
+                final long n = currentNumBytesUploaded;
+
+                currentNumBytesUploaded = d;
+                callback.updateProgress((int) (d - n));
+
+            }
+        });
+
         update.execute();
 
     }
 
     @Override
     public ByteBuffer readChunk(MergeChunk chunk, TransferInfoCallback callback) throws IOException {
-        return null;
+
+        String id = findChunk(chunk);
+
+        if(id == null)
+            throw new FileNotFoundException(chunk.getId());
+
+
+
+        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream() {
+            @Override
+            public synchronized void write(byte[] b, int off, int len) {
+                super.write(b, off, len);
+                callback.updateProgress(len);
+            }
+        }) {
+
+            driveService.files()
+                    .get(id)
+                    .executeMediaAndDownloadTo(byteArrayOutputStream);
+
+            ByteBuffer byteBuffer = ByteBuffer.wrap(byteArrayOutputStream.toByteArray());
+            return byteBuffer.rewind();
+
+        }
+
     }
 
+
+
     @Override
-    public void removeChunk(MergeChunk chunk) {
+    public void removeChunk(MergeChunk chunk) throws IOException {
+
+        String id = findChunk(chunk);
+
+        if(id == null)
+            throw new FileNotFoundException(chunk.getId());
+
+        else {
+            driveService.files()
+                    .delete(id)
+                    .execute();
+        }
 
     }
 
 
     @Override
     public long getMaxQuota() {
-        return 0;
+        return (storageQuotaLimit - storageQuotaUsed) / MergeChunk.getSize() - 1;
     }
 
     @Override
@@ -151,6 +215,23 @@ public class GoogleDriveService extends Drive {
             driveService = new com.google.api.services.drive.Drive.Builder(httpTransport, JSON_FACTORY, getCredentials(httpTransport))
                     .setApplicationName("Nefele")
                     .build();
+
+
+            About about = driveService.about()
+                    .get()
+                    .setFields("*")
+                    .execute();
+
+
+            storageQuotaLimit = about.getStorageQuota().getLimit();
+            storageQuotaUsed = about.getStorageQuota().getUsage();
+
+            Application.log(getClass(), "Google Drive API [%s]: %s: %s <%s>", getId(), "User", about.getUser().getDisplayName(), about.getUser().getEmailAddress());
+            Application.log(getClass(), "Google Drive API [%s]: %s: %s", getId(), "AppInstalled", about.getAppInstalled());
+            Application.log(getClass(), "Google Drive API [%s]: %s: %d", getId(), "getMaxUploadSize", about.getMaxUploadSize());
+            Application.log(getClass(), "Google Drive API [%s]: %s: %d", getId(), "StorageQuota::Usage", about.getStorageQuota().getUsage());
+            Application.log(getClass(), "Google Drive API [%s]: %s: %d", getId(), "StorageQuota::Limit", about.getStorageQuota().getLimit());
+
 
 
             setStatus(STATUS_READY);
@@ -210,10 +291,11 @@ public class GoogleDriveService extends Drive {
                     .getFiles().get(0)
                     .getId();
 
-        } catch (IOException | IndexOutOfBoundsException e) {
+        } catch (IOException e) {
             Application.log(getClass(), "WARNING! Exception %s in findChunk(): %s", e.getClass().getName(), e.getMessage());
-            return null;
-        }
+        } catch (IndexOutOfBoundsException ignored) { }
+
+        return null;
 
     }
 
@@ -227,7 +309,8 @@ public class GoogleDriveService extends Drive {
                             .setParents(Collections.singletonList("appDataFolder"))
                             .setDescription("Nefele Chunk")
 
-            ).execute().getId();
+            ).execute()
+                    .getId();
 
 
 

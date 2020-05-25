@@ -48,6 +48,7 @@ import org.nefele.ui.Themeable;
 import org.nefele.ui.dialog.BaseDialog;
 import org.nefele.ui.dialog.Dialogs;
 import org.nefele.utils.ExtraBindings;
+import org.nefele.utils.ExtraPlatform;
 
 import java.net.URI;
 import java.net.URL;
@@ -112,12 +113,8 @@ public class Stats extends StackPane implements Initializable, Themeable {
             while (change.next()) {
 
                 if (change.wasRemoved())
-                    change.getRemoved().forEach(i ->{
-
-                        if()
-                        flowPane.getChildren().removeIf(j -> (((StatsDriveInfo) j).getDrive().getId().equals(i.getId())));
-
-                    });
+                    change.getRemoved().forEach(i -> flowPane.getChildren().removeIf(j -> ( j instanceof StatsDriveInfo &&
+                            ((StatsDriveInfo) j).getDrive().getId().equals(i.getId()))));
 
                 if (change.wasAdded())
                     change.getAddedSubList().forEach(i -> flowPane.getChildren().add(new StatsDriveInfo(i)));
@@ -205,7 +202,7 @@ public class Stats extends StackPane implements Initializable, Themeable {
 
         if(isVisible()) {
 
-            Platform.runLater(() -> {
+            ExtraPlatform.runLaterAndWait(() -> {
 
                 updateSystemMemory();
                 updateStorage();

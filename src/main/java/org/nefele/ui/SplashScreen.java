@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package org.nefele.ui.scenes;
+package org.nefele.ui;
 
 import com.jfoenix.controls.JFXSpinner;
 import javafx.fxml.FXML;

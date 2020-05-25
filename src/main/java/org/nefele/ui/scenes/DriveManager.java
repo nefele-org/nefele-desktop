@@ -32,15 +32,19 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import org.nefele.Application;
 import org.nefele.Resources;
 import org.nefele.cloud.Drive;
 import org.nefele.cloud.Drives;
 import org.nefele.ui.Themeable;
+import org.nefele.ui.controls.NefelePane;
+import org.nefele.ui.wizard.Wizard;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -96,6 +100,19 @@ public class DriveManager extends StackPane implements Initializable, Themeable 
 
         Drives.getInstance().getDrives().forEach(
                 i -> getDriveManagerBoxes().add(new DriveManagerBox(i)));
+
+
+        buttonAdd.setOnMouseClicked(e ->{
+            Platform.runLater(() -> {
+
+                ((Stage)getScene().getWindow()).setScene(new Scene(new NefelePane(new Wizard())));
+                ((Stage)getScene().getWindow()).setMinWidth(600);
+                ((Stage)getScene().getWindow()).setMinHeight(400);
+                getScene().getWindow().setWidth(800);
+                getScene().getWindow().setHeight(480);
+
+            });
+        });
 
         Application.getInstance().getViews().add(this);
 

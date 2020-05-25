@@ -116,15 +116,11 @@ public class OfflineDriveService extends Drive {
     }
 
 
-
     @Override
-    public void removeChunk(MergeChunk chunk) {
-
-        try {
-            Files.delete(drivePath.resolve(Paths.get(chunk.getId())));
-        } catch (IOException ignored) { }
-
+    public void removeChunk(MergeChunk chunk) throws IOException {
+        Files.delete(drivePath.resolve(Paths.get(chunk.getId())));
     }
+
 
     @Override
     public long getMaxQuota() {

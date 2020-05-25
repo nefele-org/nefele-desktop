@@ -42,7 +42,8 @@ import org.nefele.ui.Views;
 import org.nefele.ui.controls.NefelePane;
 import org.nefele.ui.dialog.Dialogs;
 import org.nefele.ui.scenes.Home;
-import org.nefele.ui.scenes.SplashScreen;
+import org.nefele.ui.SplashScreen;
+import org.nefele.utils.ExtraPlatform;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -178,7 +179,7 @@ public final class Application extends javafx.application.Application implements
 
 
 
-            Platform.runLater(() -> {
+            ExtraPlatform.runLaterAndWait(() -> {
 
                 stage.setScene(new Scene(new NefelePane(new Home())));
                 stage.setAlwaysOnTop(false);
@@ -354,23 +355,12 @@ public final class Application extends javafx.application.Application implements
         }, "Put your hands up!"));
 
 
-        final CountDownLatch countDownLatch = new CountDownLatch(1);
 
-        Platform.runLater(() -> {
-
+        ExtraPlatform.runLaterAndWait(() -> {
             Dialogs.showErrorBox(
                     "DIALOG_PANIC_TITLE",
-                    "DIALOG_PANIC_MESSAGE"
-            );
-
-            countDownLatch.countDown();
-
+                    "DIALOG_PANIC_MESSAGE");
         });
-
-
-        try {
-            countDownLatch.await();
-        } catch (InterruptedException ignored) { }
 
 
         System.exit(1);

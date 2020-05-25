@@ -49,6 +49,7 @@ import org.nefele.Application;
 import org.nefele.Resources;
 import org.nefele.ui.Themeable;
 import org.nefele.ui.dialog.Dialogs;
+import org.nefele.ui.wizard.CloudHelperButton;
 
 import java.awt.*;
 import java.net.URL;
@@ -109,7 +110,6 @@ public class Docker extends VBox implements Initializable, Themeable {
             }
 
         });
-
 
         selectedButton.addListener((v, o, n) -> {
 

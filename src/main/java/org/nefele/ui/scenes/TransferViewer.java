@@ -48,6 +48,7 @@ import org.nefele.Application;
 import org.nefele.Resources;
 import org.nefele.core.TransferInfo;
 import org.nefele.ui.Themeable;
+import org.nefele.utils.ExtraPlatform;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -76,10 +77,10 @@ public class TransferViewer extends StackPane implements Initializable, Themeabl
                     while (change.next()) {
 
                         if (change.wasRemoved())
-                            Platform.runLater(() -> change.getRemoved().forEach(i -> cellPane.getChildren().removeIf(j -> ((TransferViewerCell) j).getTransferInfo() == i.getKey())));
+                            ExtraPlatform.runLaterAndWait(() -> change.getRemoved().forEach(i -> cellPane.getChildren().removeIf(j -> ((TransferViewerCell) j).getTransferInfo() == i.getKey())));
 
                         if (change.wasAdded())
-                            Platform.runLater(() -> change.getAddedSubList().forEach(i -> cellPane.getChildren().add(new TransferViewerCell(i.getKey()))));
+                            ExtraPlatform.runLaterAndWait(() -> change.getAddedSubList().forEach(i -> cellPane.getChildren().add(new TransferViewerCell(i.getKey()))));
 
                     }
 
