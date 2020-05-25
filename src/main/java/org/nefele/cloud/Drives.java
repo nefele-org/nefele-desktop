@@ -107,6 +107,10 @@ public final class Drives implements Service {
                             return new GoogleDriveProvider(id, service.get(), description.get(), quota.get(), blocks.get())
                                     .initialize();
 
+                        case DropboxDriveProvider.SERVICE_ID:
+                            return new DropboxDriveProvider(id, service.get(), description.get(), quota.get(), blocks.get())
+                                    .initialize();
+
                         default:
                             throw new IllegalStateException();
 

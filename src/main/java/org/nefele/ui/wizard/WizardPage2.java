@@ -24,5 +24,30 @@
 
 package org.nefele.ui.wizard;
 
-public class WizardPage2 {
+import com.jfoenix.controls.JFXCheckBox;
+import javafx.fxml.FXML;
+import org.nefele.Application;
+import org.nefele.Resources;
+
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class WizardPage2 extends WizardPage {
+
+    @FXML private JFXCheckBox checkBoxTerms;
+
+    public WizardPage2() {
+        Resources.getFXML(this, "/fxml/wizard/WizardPage2.fxml");
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        Application.getInstance().getViews().add(this);
+    }
+
+    @Override
+    public void initializeInterface() {
+
+    }
+
 }

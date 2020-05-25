@@ -51,6 +51,7 @@ import org.nefele.ui.controls.FileBrowserItem;
 import org.nefele.ui.controls.FileBrowserItemFactory;
 import org.nefele.ui.dialog.BaseDialog;
 import org.nefele.ui.dialog.Dialogs;
+import org.nefele.ui.dialog.InputDialogResult;
 import org.nefele.utils.ExtraPlatform;
 
 import java.awt.*;
@@ -184,14 +185,14 @@ public class Archive extends StackPane implements Initializable, Themeable {
 
         buttonAddFolder.setOnMouseClicked(e -> {
 
-            Pair<String, Integer> p = Dialogs.showInputBox("INPUTDIALOG_TITLE", BaseDialog.DIALOG_OK);
+            InputDialogResult result = Dialogs.showInputBox("INPUTDIALOG_TITLE", BaseDialog.DIALOG_OK);
 
-            if(p.getValue() == BaseDialog.DIALOG_OK) {
+            if(result.getButton() == BaseDialog.DIALOG_OK) {
 
-                if(p.getKey().trim().isEmpty()) {
+                if(result.getText().trim().isEmpty()) {
                     Dialogs.showErrorBox("ARCHIVE_DIALOG_FOLDER_EMPTY");
 
-                }else if(new File(p.getKey().trim()).isFile()) {
+                }else if(new File(result.getText().trim()).isFile()) {
                     Dialogs.showErrorBox("ARCHIVE_DIALOG_FOLDER_INVALID_NAME");
 
                 } else {
@@ -201,7 +202,7 @@ public class Archive extends StackPane implements Initializable, Themeable {
                         try {
 
                             Files.createDirectory(
-                                    MergePath.get("nefele", fileBrowser.getCurrentPath().toString(), p.getKey()));
+                                    MergePath.get("nefele", fileBrowser.getCurrentPath().toString(), result.getText()));
 
                         } catch (IOException io) {
                             Platform.runLater(() -> Dialogs.showErrorBox("ARCHIVE_DIALOG_FOLDER_CREATE_FAIL"));
@@ -330,6 +331,18 @@ public class Archive extends StackPane implements Initializable, Themeable {
                     );
                 }});
 
+
+                add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_RENAME")) {{
+                    setOnAction(e -> {
+
+
+
+                        fileBrowser.update();
+
+                    });
+                }});
+
+
                 add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_DELETE")) {{
                     setOnAction(e -> {
 
@@ -441,6 +454,18 @@ public class Archive extends StackPane implements Initializable, Themeable {
 
                     });
                 }});
+
+
+                add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_RENAME")) {{
+                    setOnAction(e -> {
+
+
+
+                        fileBrowser.update();
+
+                    });
+                }});
+
 
                 add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_DELETE")) {{
                     setOnAction(e -> {

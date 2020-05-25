@@ -24,5 +24,48 @@
 
 package org.nefele.ui.wizard;
 
-public class WizardPage1 {
+import com.jfoenix.controls.JFXComboBox;
+import javafx.fxml.FXML;
+import org.nefele.Application;
+import org.nefele.Resources;
+
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class WizardPage1 extends WizardPage {
+
+    @FXML private JFXComboBox<String> comboBoxLaunguage;
+
+    public WizardPage1() {
+        Resources.getFXML(this, "/fxml/wizard/WizardPage1.fxml");
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
+        comboBoxLaunguage.getItems().addAll(Application.getInstance().getLocale().list());
+        comboBoxLaunguage.setValue(Application.getInstance().getLocale().getLanguage());
+
+        comboBoxLaunguage.valueProperty().addListener((v, o, n) -> {
+
+            Application.getInstance().getLocale().setLanguage(n);
+            Application.getInstance().getViews().update();
+
+            Application.getInstance().runThread(new Thread(() -> {
+
+                Application.getInstance().getConfig().setString("app.ui.locale", n);
+                Application.getInstance().getConfig().update();
+
+            }, "updateSettings()::app.ui.locale"));
+        });
+
+        super.setCheck(true);
+        Application.getInstance().getViews().add(this);
+    }
+
+    @Override
+    public void initializeInterface() {
+
+    }
+
 }

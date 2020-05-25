@@ -24,5 +24,29 @@
 
 package org.nefele.ui.wizard;
 
-public class WizardPage4 {
+import javafx.fxml.FXML;
+import javafx.scene.layout.VBox;
+import org.nefele.Application;
+import org.nefele.Resources;
+
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class WizardPage4 extends WizardPage {
+
+    @FXML private VBox contentDefaultSettings;
+
+    public WizardPage4() {
+        Resources.getFXML(this, "/fxml/wizard/WizardPage4.fxml");
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        Application.getInstance().getViews().add(this);
+    }
+
+    @Override
+    public void initializeInterface() {
+
+    }
 }

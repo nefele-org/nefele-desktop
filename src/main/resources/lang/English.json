@@ -113,6 +113,7 @@
     "SETTINGS_DRIVE_ERROR_DIALOG_DESCRIPTION" : "This Drive contains data so it cannot be deleted, you can still disable it at any time from the settings",
     "ARCHIVE_HINT_SYNC" : "Synchronize folder",
     "ARCHIVE_ERROR_DIALOG_REQUEST_SYNC": "Are you sure you want to sync this folder?",
-    "ARCHIVE_DIALOG_REQUEST_SYNC" : "Something went wrong in synchronization. Please try again later"
+    "ARCHIVE_DIALOG_REQUEST_SYNC" : "Something went wrong in synchronization. Please try again later",
+    "WIZARD_SELECT_LANGUAGE" : "Select a language"
 
 }

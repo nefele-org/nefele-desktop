@@ -24,5 +24,29 @@
 
 package org.nefele.ui.wizard;
 
-public class WizardPage3 {
+import com.jfoenix.controls.JFXButton;
+import javafx.fxml.FXML;
+import org.nefele.Application;
+import org.nefele.Resources;
+
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class WizardPage3 extends WizardPage {
+
+    @FXML private JFXButton buttonAddCloud;
+
+    public WizardPage3() {
+        Resources.getFXML(this, "/fxml/wizard/WizardPage3.fxml");
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        Application.getInstance().getViews().add(this);
+    }
+
+    @Override
+    public void initializeInterface() {
+
+    }
 }

@@ -97,22 +97,22 @@ public class GoogleDriveProvider extends Drive {
         final com.google.api.services.drive.Drive.Files.Update update = driveService.files()
                 .update(id, null, new AbstractInputStreamContent("") {
 
-            @Override
-            public InputStream getInputStream() throws IOException {
-                return inputStream;
-            }
+                    @Override
+                    public InputStream getInputStream() throws IOException {
+                        return inputStream;
+                    }
 
-            @Override
-            public long getLength() throws IOException {
-                return inputStream.available();
-            }
+                    @Override
+                    public long getLength() throws IOException {
+                        return inputStream.available();
+                    }
 
-            @Override
-            public boolean retrySupported() {
-                return false;
-            }
+                    @Override
+                    public boolean retrySupported() {
+                        return false;
+                    }
 
-        });
+                });
 
         update.getMediaHttpUploader().setChunkSize(MediaHttpUploader.MINIMUM_CHUNK_SIZE);
         update.getMediaHttpUploader().setDirectUploadEnabled(false);
@@ -227,11 +227,11 @@ public class GoogleDriveProvider extends Drive {
             storageQuotaUsed = about.getStorageQuota().getUsage();
 
             Application.log(getClass(), "Login complete for %s %s!", SERVICE_ID, getId());
-            Application.log(getClass(), " - %s: %s <%s>", getId(), "User", about.getUser().getDisplayName(), about.getUser().getEmailAddress());
-            Application.log(getClass(), " - %s: %s", getId(), "AppInstalled", about.getAppInstalled());
-            Application.log(getClass(), " - %s: %d", getId(), "getMaxUploadSize", about.getMaxUploadSize());
-            Application.log(getClass(), " - %s: %d", getId(), "StorageQuota::Usage", about.getStorageQuota().getUsage());
-            Application.log(getClass(), " - %s: %d", getId(), "StorageQuota::Limit", about.getStorageQuota().getLimit());
+            Application.log(getClass(), " - %s: %s <%s>", "User", about.getUser().getDisplayName(), about.getUser().getEmailAddress());
+            Application.log(getClass(), " - %s: %s", "AppInstalled", about.getAppInstalled());
+            Application.log(getClass(), " - %s: %d", "getMaxUploadSize", about.getMaxUploadSize());
+            Application.log(getClass(), " - %s: %d", "StorageQuota::Usage", about.getStorageQuota().getUsage());
+            Application.log(getClass(), " - %s: %d", "StorageQuota::Limit", about.getStorageQuota().getLimit());
 
 
 

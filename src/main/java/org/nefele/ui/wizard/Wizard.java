@@ -25,36 +25,77 @@
 package org.nefele.ui.wizard;
 
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXCheckBox;
-import com.jfoenix.controls.JFXComboBox;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import org.nefele.Application;
 import org.nefele.Resources;
 import org.nefele.ui.Themeable;
 import org.nefele.ui.controls.NefeleContentPane;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class Wizard extends NefeleContentPane implements Initializable, Themeable{
 
-    @FXML private JFXComboBox comboBoxLaunguage;
-    @FXML private JFXCheckBox checkBoxTerms;
-    @FXML private JFXButton buttonAddCloud;
-    @FXML private AnchorPane contentCloudHelper;
-    @FXML private VBox contentDefaultSettings;
     @FXML private AnchorPane wizardViewer;
     @FXML private JFXButton buttonForward;
 
+    private final ArrayList<WizardPage> parents;
+    private final ObjectProperty<WizardPage> currentPage;
+    private int currentIndex;
+
+
     public Wizard(){
+
+        parents = new ArrayList<>();
+        currentPage = new SimpleObjectProperty<>(null);
+        currentIndex = 0;
+
         Resources.getFXML(this, "/fxml/wizard/Wizard.fxml");
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        parents.add(new WizardPage1());
+        parents.add(new WizardPage2());
+        parents.add(new WizardPage3());
+        parents.add(new WizardPage4());
+
+
+        currentPage.addListener((v, o, n) ->{
+
+            if(o != null) {
+
+                buttonForward.disableProperty().unbind();
+                wizardViewer.getChildren().remove(o);
+
+            }
+
+            buttonForward.disableProperty().bind(n.checkProperty().not());
+            wizardViewer.getChildren().add(n);
+
+        });
+
+
+        buttonForward.setOnAction(e -> {
+
+            if(++currentIndex < parents.size())
+                currentPage.setValue(parents.get(currentIndex));
+
+        });
+
+
+        currentPage.setValue(parents.get(currentIndex));
 
         Application.getInstance().getViews().add(this);
     }
@@ -63,4 +104,9 @@ public class Wizard extends NefeleContentPane implements Initializable, Themeabl
     public void initializeInterface() {
 
     }
+
+    public ArrayList<WizardPage> getParents() {
+        return parents;
+    }
+
 }

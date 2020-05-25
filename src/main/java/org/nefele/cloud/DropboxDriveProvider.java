@@ -26,15 +26,16 @@ package org.nefele.cloud;
 
 import com.dropbox.core.*;
 import com.dropbox.core.json.JsonReader;
+import com.dropbox.core.v2.DbxClientV2;
+import com.dropbox.core.v2.users.FullAccount;
+import com.dropbox.core.v2.users.SpaceUsage;
 import org.nefele.Application;
 import org.nefele.Resources;
 import org.nefele.core.TransferInfoCallback;
 import org.nefele.fs.MergeChunk;
 import org.nefele.ui.dialog.BaseDialog;
 import org.nefele.ui.dialog.Dialogs;
-import org.nefele.ui.dialog.InputDialog;
 import org.nefele.ui.dialog.InputDialogResult;
-
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,7 +44,9 @@ import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
+import java.util.Locale;
+
+
 
 public class DropboxDriveProvider extends Drive {
 
@@ -52,6 +55,10 @@ public class DropboxDriveProvider extends Drive {
 
     private final Path servicePath;
     private final Path accessToken;
+
+    private FullAccount userAccount;
+    private SpaceUsage spaceUsage;
+
 
 
     public DropboxDriveProvider(String id, String service, String description, long quota, long blocks) {
@@ -92,9 +99,11 @@ public class DropboxDriveProvider extends Drive {
         setStatus(STATUS_CONNECTING);
 
 
-        if(Files.notExists(accessToken)) {
+        try {
 
-            try {
+            if(Files.notExists(accessToken)) {
+
+
 
                 if(!Desktop.isDesktopSupported())
                     throw new UnsupportedOperationException("Desktop is not supported");
@@ -102,7 +111,7 @@ public class DropboxDriveProvider extends Drive {
 
 
                 DbxAppInfo appInfo = DbxAppInfo.Reader.readFromFile(
-                        Resources.getURL(this, "/services/dropbox/credentials.json").toExternalForm());
+                        Resources.getURL(this, "/services/dropbox/credentials.json").getPath());
 
 
                 DbxRequestConfig requestConfig = new DbxRequestConfig("nefele-desktop");
@@ -156,25 +165,42 @@ public class DropboxDriveProvider extends Drive {
                         new DbxAuthInfo(authFinish.getAccessToken(), appInfo.getHost()), accessToken.toFile());
 
 
-
-            } catch (JsonReader.FileLoadException | UnsupportedOperationException | IllegalStateException | IOException | DbxException e) {
-
-                Application.log(getClass(), "ERROR! Exception %s for %s %s: %s", e.getClass().getName(), SERVICE_ID, getId(), e.getMessage());
-
-                setStatus(STATUS_ERROR);
-                setError(ERROR_LOGIN_FAIL);
-
-                return this;
-
             }
 
 
+
+
+
+            DbxRequestConfig requestConfig = DbxRequestConfig.newBuilder("nefele-desktop")
+                    .withUserLocaleFrom(Locale.ENGLISH)
+                    .withAutoRetryEnabled()
+                    .build();
+
+            DbxClientV2 client = new DbxClientV2(requestConfig, Files.readString(accessToken));
+
+
+
+            userAccount = client.users().getCurrentAccount();
+            spaceUsage = client.users().getSpaceUsage();
+
+            Application.log(getClass(), "Login complete for %s %s");
+            Application.log(getClass(), " - Account: %s <%s>", userAccount.getName(), userAccount.getEmail());
+            Application.log(getClass(), " - Space: %d bytes of %d bytes", spaceUsage.getUsed(), spaceUsage.getAllocation().getIndividualValue().getAllocated());
+            Application.log(getClass(), " - Info: %s", userAccount.toStringMultiline());
+
+
+            setStatus(STATUS_READY);
+
+
+
+        } catch (JsonReader.FileLoadException | UnsupportedOperationException | IllegalStateException | IOException | DbxException e) {
+
+            Application.log(getClass(), "ERROR! Exception %s for %s %s: %s", e.getClass().getName(), SERVICE_ID, getId(), e.getMessage());
+
+            setStatus(STATUS_ERROR);
+            setError(ERROR_LOGIN_FAIL);
+
         }
-
-
-
-
-
 
 
         return this;

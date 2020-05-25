@@ -43,7 +43,7 @@
     -fx-font-smoothing-type: lcd;
     -fx-focus-traversable: false !important;
 
-    -fx-border-color: red;
+    /*-fx-border-color: red;*/
 
 }
 
