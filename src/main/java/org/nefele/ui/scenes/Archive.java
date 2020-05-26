@@ -537,22 +537,27 @@ public class Archive extends StackPane implements Initializable, Themeable {
 
                         fileBrowser.getSelectedItems().forEach(i -> {
 
-                            try {
-                                Files.delete(MergePath.get(
-                                        fileBrowser.getCurrentPath().toUri().getScheme(),
-                                        fileBrowser.getCurrentPath().toString(),
-                                        i.getText()
-                                ));
+                            Application.getInstance().runThread(new Thread(() -> {
 
-                            } catch (DirectoryNotEmptyException io) {
-                                Platform.runLater(() -> Dialogs.showErrorBox("ERROR_DIRECTORY_NOT_EMPTY"));
-                            } catch (IOException io) {
-                                Platform.runLater(() -> Dialogs.showErrorBox("ERROR_FILE_DELETE"));
-                            }
+                                try {
+
+                                    Files.delete(MergePath.get(
+                                            fileBrowser.getCurrentPath().toUri().getScheme(),
+                                            fileBrowser.getCurrentPath().toString(),
+                                            i.getText()
+                                    ));
+
+                                } catch (DirectoryNotEmptyException io) {
+                                    Platform.runLater(() -> Dialogs.showErrorBox("ERROR_DIRECTORY_NOT_EMPTY"));
+                                } catch (IOException io) {
+                                    Platform.runLater(() -> Dialogs.showErrorBox("ERROR_FILE_DELETE"));
+                                } finally {
+                                    Platform.runLater(fileBrowser::update);
+                                }
+
+                            }, "Archive::deleteFile()"));
 
                         });
-
-                        fileBrowser.update();
 
                     });
                 }});

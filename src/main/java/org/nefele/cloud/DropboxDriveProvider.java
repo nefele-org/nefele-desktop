@@ -26,12 +26,15 @@ package org.nefele.cloud;
 
 import com.dropbox.core.*;
 import com.dropbox.core.json.JsonReader;
+import com.dropbox.core.util.IOUtil;
 import com.dropbox.core.v2.DbxClientV2;
+import com.dropbox.core.v2.files.FileMetadata;
+import com.dropbox.core.v2.files.UploadUploader;
 import com.dropbox.core.v2.users.FullAccount;
 import com.dropbox.core.v2.users.SpaceUsage;
 import org.nefele.Application;
 import org.nefele.Resources;
-import org.nefele.core.TransferInfoCallback;
+import org.nefele.core.*;
 import org.nefele.fs.MergeChunk;
 import org.nefele.ui.dialog.Dialogs;
 import org.nefele.ui.dialog.InputDialog;
@@ -39,11 +42,14 @@ import org.nefele.ui.dialog.InputDialogResult;
 import org.nefele.utils.PlatformUtils;
 
 import java.awt.*;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Locale;
@@ -56,9 +62,13 @@ public class DropboxDriveProvider extends Drive {
     public final static String SERVICE_ID = "dropbox-drive-service";
     public final static String SERVICE_DEFAULT_DESCRIPTION = "Dropbox";
 
+    private static final int TRANSFER_BLOCK_SIZE = 65536;
+
+
     private final Path servicePath;
     private final Path accessToken;
 
+    private DbxClientV2 driveService;
     private FullAccount userAccount;
     private SpaceUsage spaceUsage;
 
@@ -76,17 +86,100 @@ public class DropboxDriveProvider extends Drive {
     }
 
     @Override
-    public void writeChunk(MergeChunk chunk, InputStream inputStream, TransferInfoCallback callback) throws IOException {
+    public void writeChunk(MergeChunk chunk, InputStream inputStream, TransferInfoCallback callback) throws TransferInfoException {
+
+        try {
+
+            UploadUploader dbxUploader = driveService.files()
+                    .upload("/" + chunk.getId());
+
+
+            dbxUploader.uploadAndFinish(inputStream, new IOUtil.ProgressListener() {
+
+                private long currentNumBytesWritten = 0;
+
+                @Override
+                public void onProgress(long bytesWritten) {
+
+                    if (callback.isCanceled())
+                        throw new RuntimeException("stopped by user");
+
+
+                    final long n = currentNumBytesWritten;
+                    currentNumBytesWritten = bytesWritten;
+
+                    callback.updateProgress((int) (bytesWritten - n));
+
+                }
+
+            });
+
+
+        } catch (RateLimitException | NetworkIOException e) {
+            throw new TransferInfoTryAgainException("Too many request, waiting a bit and try again...", 500, TimeUnit.MILLISECONDS);
+        } catch (Exception e) {
+            throw new TransferInfoAbortException(e.getMessage());
+        }
 
     }
 
     @Override
-    public ByteBuffer readChunk(MergeChunk chunk, TransferInfoCallback callback) throws IOException {
-        return null;
+    public ByteBuffer readChunk(MergeChunk chunk, TransferInfoCallback callback) throws TransferInfoException {
+
+        try {
+
+            DbxDownloader<FileMetadata> dbxDownloader = driveService.files()
+                    .download("/" + chunk.getId());
+
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(
+                    (int) dbxDownloader.getResult().getSize());
+
+
+            dbxDownloader.download(byteArrayOutputStream, new IOUtil.ProgressListener() {
+
+                private long currentNumBytesWritten = 0;
+
+                @Override
+                public void onProgress(long bytesWritten) {
+
+                    if (callback.isCanceled())
+                        throw new RuntimeException("stopped by user");
+
+
+                    final long n = currentNumBytesWritten;
+                    currentNumBytesWritten = bytesWritten;
+
+                    callback.updateProgress((int) (bytesWritten - n));
+
+                }
+            });
+
+
+            return ByteBuffer.wrap(byteArrayOutputStream.toByteArray());
+
+
+        } catch (RateLimitException | NetworkIOException e) {
+            throw new TransferInfoTryAgainException("Too many request, waiting a bit and try again...", 500, TimeUnit.MILLISECONDS);
+        } catch (Exception e) {
+            throw new TransferInfoAbortException(e.getMessage());
+        }
+
     }
 
     @Override
-    public void removeChunk(MergeChunk chunk) throws IOException {
+    public void removeChunk(MergeChunk chunk) throws TransferInfoException {
+
+        try {
+
+            driveService
+                    .files()
+                    .deleteV2("/" + chunk.getId());
+
+        } catch (RateLimitException | NetworkIOException e) {
+            throw new TransferInfoTryAgainException("Too many request, waiting a bit and try again...", 500, TimeUnit.MILLISECONDS);
+        } catch (Exception e) {
+            throw new TransferInfoAbortException(e.getMessage());
+        }
 
     }
 
@@ -200,12 +293,12 @@ public class DropboxDriveProvider extends Drive {
                     .withAutoRetryEnabled()
                     .build();
 
-            DbxClientV2 client = new DbxClientV2(requestConfig, DbxAuthInfo.Reader.readFromFile(accessToken.toFile()).getAccessToken());
+            driveService = new DbxClientV2(requestConfig, DbxAuthInfo.Reader.readFromFile(accessToken.toFile()).getAccessToken());
 
 
 
-            userAccount = client.users().getCurrentAccount();
-            spaceUsage = client.users().getSpaceUsage();
+            userAccount = driveService.users().getCurrentAccount();
+            spaceUsage = driveService.users().getSpaceUsage();
 
             Application.log(getClass(), "Login complete for %s %s", SERVICE_ID, getId());
             Application.log(getClass(), " - Account: %s <%s>", userAccount.getName().getDisplayName(), userAccount.getEmail());
@@ -218,7 +311,7 @@ public class DropboxDriveProvider extends Drive {
                 try {
 
                     if(getStatus() == STATUS_READY)
-                        client.refreshAccessToken();
+                        driveService.refreshAccessToken();
 
                 } catch (DbxException | RuntimeException e) {
                     Application.log(getClass(), "WARNING! refreshAccessToken() failed for %s %s: %s", SERVICE_ID, getId(), e.getMessage());

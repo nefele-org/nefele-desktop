@@ -43,12 +43,15 @@ import com.google.api.services.drive.model.About;
 import com.google.api.services.drive.model.File;
 import org.nefele.Application;
 import org.nefele.Resources;
+import org.nefele.core.TransferInfoAbortException;
 import org.nefele.core.TransferInfoCallback;
+import org.nefele.core.TransferInfoException;
 import org.nefele.fs.MergeChunk;
 
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
@@ -64,7 +67,6 @@ public class GoogleDriveProvider extends Drive {
 
     private static final List<String> SCOPES = Collections.singletonList(DriveScopes.DRIVE_APPDATA);
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-    private static final int DOWNLOAD_BLOCK_SIZE = 65536;
 
 
     private final Path servicePath;
@@ -85,87 +87,100 @@ public class GoogleDriveProvider extends Drive {
     }
 
     @Override
-    public void writeChunk(MergeChunk chunk, InputStream inputStream, TransferInfoCallback callback) throws IOException {
-
-        String id;
-        if((id = findChunk(chunk)) == null)
-            id = createChunk(chunk);
-
-        requireNonNull(id);
+    public void writeChunk(MergeChunk chunk, InputStream inputStream, TransferInfoCallback callback) throws TransferInfoException {
 
 
-        final com.google.api.services.drive.Drive.Files.Update update = driveService.files()
-                .update(id, null, new AbstractInputStreamContent("") {
+        try {
 
-                    @Override
-                    public InputStream getInputStream() throws IOException {
-                        return inputStream;
-                    }
+            String id;
+            if ((id = findChunk(chunk)) == null)
+                id = createChunk(chunk);
 
-                    @Override
-                    public long getLength() throws IOException {
-                        return inputStream.available();
-                    }
-
-                    @Override
-                    public boolean retrySupported() {
-                        return false;
-                    }
-
-                });
-
-        update.getMediaHttpUploader().setChunkSize(MediaHttpUploader.MINIMUM_CHUNK_SIZE);
-        update.getMediaHttpUploader().setDirectUploadEnabled(false);
-
-        update.getMediaHttpUploader().setProgressListener(new MediaHttpUploaderProgressListener() {
-
-            private long currentNumBytesUploaded = 0;
-
-            @Override
-            public void progressChanged(MediaHttpUploader uploader) throws IOException {
-
-                if(callback.isCanceled())
-                    throw new IOException("stopped by user");
+            requireNonNull(id);
 
 
-                final long d = uploader.getNumBytesUploaded();
-                final long n = currentNumBytesUploaded;
+            final com.google.api.services.drive.Drive.Files.Update update = driveService.files()
+                    .update(id, null, new AbstractInputStreamContent("") {
 
-                currentNumBytesUploaded = d;
-                callback.updateProgress((int) (d - n));
+                        @Override
+                        public InputStream getInputStream() throws IOException {
+                            return inputStream;
+                        }
 
-            }
-        });
+                        @Override
+                        public long getLength() throws IOException {
+                            return inputStream.available();
+                        }
 
-        update.execute();
+                        @Override
+                        public boolean retrySupported() {
+                            return false;
+                        }
+
+                    });
+
+            update.getMediaHttpUploader().setChunkSize(MediaHttpUploader.MINIMUM_CHUNK_SIZE);
+            update.getMediaHttpUploader().setDirectUploadEnabled(false);
+
+            update.getMediaHttpUploader().setProgressListener(new MediaHttpUploaderProgressListener() {
+
+                private long currentNumBytesUploaded = 0;
+
+                @Override
+                public void progressChanged(MediaHttpUploader uploader) throws IOException {
+
+                    if (callback.isCanceled())
+                        throw new IOException("stopped by user");
+
+
+                    final long d = uploader.getNumBytesUploaded();
+                    final long n = currentNumBytesUploaded;
+
+                    currentNumBytesUploaded = d;
+                    callback.updateProgress((int) (d - n));
+
+                }
+            });
+
+            update.execute();
+
+
+        } catch (Exception e) {
+            throw new TransferInfoAbortException(e.getMessage());
+        }
 
     }
 
     @Override
-    public ByteBuffer readChunk(MergeChunk chunk, TransferInfoCallback callback) throws IOException {
+    public ByteBuffer readChunk(MergeChunk chunk, TransferInfoCallback callback) throws TransferInfoException {
 
-        String id = findChunk(chunk);
+        try {
 
-        if(id == null)
-            throw new FileNotFoundException(chunk.getId());
+            String id = findChunk(chunk);
+
+            if (id == null)
+                throw new NoSuchFileException(chunk.getId());
 
 
+            try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream() {
+                @Override
+                public synchronized void write(byte[] b, int off, int len) {
+                    super.write(b, off, len);
+                    callback.updateProgress(len);
+                }
+            }) {
 
-        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream() {
-            @Override
-            public synchronized void write(byte[] b, int off, int len) {
-                super.write(b, off, len);
-                callback.updateProgress(len);
+                driveService.files()
+                        .get(id)
+                        .executeMediaAndDownloadTo(byteArrayOutputStream);
+
+                ByteBuffer byteBuffer = ByteBuffer.wrap(byteArrayOutputStream.toByteArray());
+                return byteBuffer.rewind();
+
             }
-        }) {
 
-            driveService.files()
-                    .get(id)
-                    .executeMediaAndDownloadTo(byteArrayOutputStream);
-
-            ByteBuffer byteBuffer = ByteBuffer.wrap(byteArrayOutputStream.toByteArray());
-            return byteBuffer.rewind();
-
+        } catch (Exception e) {
+            throw new TransferInfoAbortException(e.getMessage());
         }
 
     }
@@ -173,17 +188,23 @@ public class GoogleDriveProvider extends Drive {
 
 
     @Override
-    public void removeChunk(MergeChunk chunk) throws IOException {
+    public void removeChunk(MergeChunk chunk) throws TransferInfoException {
 
-        String id = findChunk(chunk);
+        try {
 
-        if(id == null)
-            throw new FileNotFoundException(chunk.getId());
+            String id = findChunk(chunk);
 
-        else {
-            driveService.files()
-                    .delete(id)
-                    .execute();
+            if (id == null)
+                throw new NoSuchFileException(chunk.getId());
+
+            else {
+                driveService.files()
+                        .delete(id)
+                        .execute();
+            }
+
+        } catch (Exception e) {
+            throw new TransferInfoAbortException(e.getMessage());
         }
 
     }

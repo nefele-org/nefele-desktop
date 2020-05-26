@@ -26,6 +26,7 @@ package org.nefele.cloud;
 
 import javafx.beans.property.*;
 import org.nefele.core.TransferInfoCallback;
+import org.nefele.core.TransferInfoException;
 import org.nefele.fs.MergeChunk;
 import org.nefele.fs.MergeFileSystem;
 
@@ -77,9 +78,9 @@ public abstract class Drive {
     }
 
 
-    public abstract void writeChunk(MergeChunk chunk, InputStream inputStream, TransferInfoCallback callback) throws IOException;
-    public abstract ByteBuffer readChunk(MergeChunk chunk, TransferInfoCallback callback) throws IOException;
-    public abstract void removeChunk(MergeChunk chunk) throws IOException;
+    public abstract void writeChunk(MergeChunk chunk, InputStream inputStream, TransferInfoCallback callback) throws TransferInfoException;
+    public abstract ByteBuffer readChunk(MergeChunk chunk, TransferInfoCallback callback) throws TransferInfoException;
+    public abstract void removeChunk(MergeChunk chunk) throws TransferInfoException;
     public abstract long getMaxQuota();
     public abstract Drive initialize();
     public abstract Drive exit();

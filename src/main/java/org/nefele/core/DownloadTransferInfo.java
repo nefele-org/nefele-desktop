@@ -53,17 +53,12 @@ public class DownloadTransferInfo extends TransferInfo {
     public Integer execute() {
 
         setStatus(TransferInfo.TRANSFER_STATUS_READY);
-        Application.log(getClass(), "Prepare DownloadTransferInfo() for %s (size: %d)", getPath().toString(), getSize());
-
-
-        // TODO ...
-
-
         setStatus(TransferInfo.TRANSFER_STATUS_RUNNING);
+
         Application.log(getClass(), "Started DownloadTransferInfo() for %s (size: %d)", getPath().toString(), getSize());
 
 
-        // TODO: deep copy array
+
         for(MergeChunk chunk : getPath().getInode().getData().getChunks()) {
 
             if (getStatus() == TRANSFER_STATUS_PAUSED) {
@@ -83,35 +78,38 @@ public class DownloadTransferInfo extends TransferInfo {
             if(!getFileSystem().getStorage().isCached(chunk)) {
 
 
+                while(true) {
 
-                try {
+                    try {
 
-                    ByteBuffer byteBuffer = chunk.getDrive().readChunk(chunk, new TransferInfoCallback() {
+                        ByteBuffer byteBuffer = chunk.getDrive().readChunk(chunk, new TransferInfoCallback() {
 
-                        @Override
-                        public boolean isCanceled() {
-                            return getStatus() == TRANSFER_STATUS_CANCELED;
-                        }
+                            @Override
+                            public boolean isCanceled() {
+                                return getStatus() == TRANSFER_STATUS_CANCELED;
+                            }
 
-                        @Override
-                        public void updateProgress(int progress) {
-                            Platform.runLater(() -> setProgress(getProgress() + progress));
-                        }
+                            @Override
+                            public void updateProgress(int progress) {
+                                Platform.runLater(() -> setProgress(getProgress() + progress));
+                            }
 
-                    });
+                        });
 
-                    getFileSystem().getStorage().write(chunk, byteBuffer, 0);
+                        getFileSystem().getStorage().write(chunk, byteBuffer, 0);
+                        break;
 
+                    } catch (TransferInfoTryAgainException e) {
+                        Application.log(getClass(), "WARNING! %s for %s: %s", e.getClass().getName(), chunk.getId(), e.getMessage());
 
-                } catch (IOException e) {
+                    } catch (Exception e) {
 
-                    // TODO: handle error
+                        Application.log(getClass(), "WARNING! %s, something wrong, transfer canceled for %s: %s", e.getClass().getName(), chunk.getId(), e.getMessage());
 
+                        setStatus(TRANSFER_STATUS_ERROR);
+                        return getStatus();
 
-                    Application.log(getClass(), "WARNING! %s, something wrong, transfer canceled!", e.getClass().getName(), e.getMessage());
-
-                    setStatus(TRANSFER_STATUS_ERROR);
-                    return getStatus();
+                    }
 
                 }
 
@@ -151,15 +149,15 @@ public class DownloadTransferInfo extends TransferInfo {
             outputStream.close();
             inputStream.close();
 
-        } catch (IOException e) {
 
-            Application.log(getClass(), "WARNING! %s, something wrong, transfer canceled! %s", e.getClass().getName(), e.getMessage());
+        } catch (Exception e) {
+
+            Application.log(getClass(), "WARNING! %s, something wrong, writing canceled for %s: %s", e.getClass().getName(), localFile.getAbsolutePath(), e.getMessage());
 
             setStatus(TRANSFER_STATUS_ERROR);
             return getStatus();
 
         }
-
 
 
         setStatus(TRANSFER_STATUS_COMPLETED);

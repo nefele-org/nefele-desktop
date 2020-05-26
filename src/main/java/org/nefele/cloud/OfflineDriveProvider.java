@@ -26,7 +26,9 @@ package org.nefele.cloud;
 
 import org.nefele.Application;
 import org.nefele.core.TransferInfo;
+import org.nefele.core.TransferInfoAbortException;
 import org.nefele.core.TransferInfoCallback;
+import org.nefele.core.TransferInfoException;
 import org.nefele.fs.MergeChunk;
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -41,8 +43,6 @@ public class OfflineDriveProvider extends Drive {
 
     public final static String SERVICE_ID = "offline-drive-service";
     public final static String SERVICE_DEFAULT_DESCRIPTION = "Offline Cloud";
-    private final static int UPLOAD_BLOCK_SIZE = 65536;
-    private final static int DOWNLOAD_BLOCK_SIZE = 65536;
 
     private final Path drivePath;
     private final Path servicePath;
@@ -57,68 +57,89 @@ public class OfflineDriveProvider extends Drive {
     }
 
     @Override
-    public void writeChunk(MergeChunk chunk, InputStream inputStream, TransferInfoCallback callback) throws IOException {
+    public void writeChunk(MergeChunk chunk, InputStream inputStream, TransferInfoCallback callback) throws TransferInfoException {
 
-        FileOutputStream outputStream = new FileOutputStream(new File(drivePath.resolve(Paths.get(chunk.getId())).toString()));
+        try (FileOutputStream outputStream = new FileOutputStream(new File(drivePath.resolve(Paths.get(chunk.getId())).toString()))) {
 
-        while(inputStream.available() > 0) {
+            while (inputStream.available() > 0) {
 
-            if(callback.isCanceled())
-                break;
-
-
-            byte[] bytes = new byte[Math.min(UPLOAD_BLOCK_SIZE, inputStream.available())];
-
-            if(inputStream.read(bytes) > 0)
-                outputStream.write(bytes);
-
-            callback.updateProgress(bytes.length);
+                if (callback.isCanceled())
+                    break;
 
 
-            try {
-                Thread.sleep(10); // FIXME: used only for testing
-            } catch (InterruptedException ignored) { }
+                byte[] bytes = new byte[Math.min(65536, inputStream.available())];
 
+                if (inputStream.read(bytes) > 0)
+                    outputStream.write(bytes);
+
+                callback.updateProgress(bytes.length);
+
+
+                try {
+                    Thread.sleep(10); // FIXME: used only for testing
+                } catch (InterruptedException ignored) { }
+
+            }
+
+        } catch (Exception e) {
+            throw new TransferInfoAbortException(e.getMessage());
         }
 
 
     }
 
     @Override
-    public ByteBuffer readChunk(MergeChunk chunk, TransferInfoCallback callback) throws IOException {
+    public ByteBuffer readChunk(MergeChunk chunk, TransferInfoCallback callback) throws TransferInfoException {
 
-        FileInputStream inputStream = new FileInputStream(new File(drivePath.resolve(Paths.get(chunk.getId())).toString()));
-        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(inputStream.available());
-
-        while(inputStream.available() > 0) {
-
-            if(callback.isCanceled())
-                break;
+        try (FileInputStream inputStream = new FileInputStream(new File(drivePath.resolve(Paths.get(chunk.getId())).toString()))) {
 
 
-            byte[] bytes = new byte[Math.min(DOWNLOAD_BLOCK_SIZE, inputStream.available())];
+            ByteBuffer byteBuffer = ByteBuffer
+                    .allocateDirect(inputStream.available());
 
-            if(inputStream.read(bytes) > 0)
-                byteBuffer.put(bytes);
+            while (inputStream.available() > 0) {
 
-            callback.updateProgress(bytes.length);
+                if (callback.isCanceled())
+                    break;
 
 
-            try {
-                Thread.sleep(10); // FIXME: used only for testing
-            } catch (InterruptedException ignored) { }
+                byte[] bytes = new byte[Math.min(65536, inputStream.available())];
 
+                if (inputStream.read(bytes) > 0)
+                    byteBuffer.put(bytes);
+
+                callback.updateProgress(bytes.length);
+
+
+                try {
+                    Thread.sleep(10); // FIXME: used only for testing
+                } catch (InterruptedException ignored) {
+                }
+
+            }
+
+
+            return byteBuffer.rewind();
+
+        } catch (Exception e) {
+            throw new TransferInfoAbortException(e.getMessage());
         }
-
-
-        return byteBuffer.rewind();
 
     }
 
 
     @Override
-    public void removeChunk(MergeChunk chunk) throws IOException {
-        Files.delete(drivePath.resolve(Paths.get(chunk.getId())));
+    public void removeChunk(MergeChunk chunk) throws TransferInfoException {
+
+        try {
+
+            Files.delete(drivePath
+                    .resolve(Paths.get(chunk.getId())));
+
+        } catch (Exception e) {
+            throw new TransferInfoAbortException(e.getMessage());
+        }
+
     }
 
 
@@ -126,6 +147,7 @@ public class OfflineDriveProvider extends Drive {
     public long getMaxQuota() {
         return 2048L;
     }
+
 
     @Override
     public Drive initialize() {

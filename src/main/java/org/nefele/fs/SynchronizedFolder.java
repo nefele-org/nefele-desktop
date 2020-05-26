@@ -54,7 +54,7 @@ public class SynchronizedFolder {
 
 
         if(!Files.exists(path))
-            throw new FileNotFoundException(path.toString());
+            throw new NoSuchFileException(path.toString());
 
         watchService = FileSystems.getDefault().newWatchService();
 

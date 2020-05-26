@@ -78,17 +78,11 @@ public class UploadTransferInfo extends TransferInfo {
             reader.close();
 
 
-        } catch (IOException io) {
+        } catch (Exception e) {
+
+            Application.log(getClass(), "WARNING! %s, something wrong, preparing canceled for %s: %s", e.getClass().getName(), localFile.getAbsolutePath(), e.getMessage());
 
             setStatus(TRANSFER_STATUS_ERROR);
-            Application.log(getClass(), "WARNING! %s when uploading file %s: %s", io.getClass().getName(), localFile.toString(), io.getMessage());
-
-
-            if(io instanceof DriveFullException)
-                Platform.runLater(() -> Dialogs.showErrorBox("DRIVE_FULL_EXCEPTION"));
-            else
-                Platform.runLater(() -> Dialogs.showErrorBox("ERROR_FILE_UPLOAD"));
-
             return getStatus();
 
         }
@@ -100,7 +94,6 @@ public class UploadTransferInfo extends TransferInfo {
 
 
 
-        // TODO: deep copy array
         for (MergeChunk chunk : getPath().getInode().getData().getChunks()) {
 
             if (getStatus() == TRANSFER_STATUS_PAUSED) {
@@ -127,32 +120,38 @@ public class UploadTransferInfo extends TransferInfo {
 
             }
 
-            try(InputStream inputStream = getFileSystem().getStorage().read(chunk)) {
 
-                chunk.getDrive().writeChunk(chunk, inputStream, new TransferInfoCallback() {
+            while(true) {
 
-                    @Override
-                    public boolean isCanceled() {
-                        return getStatus() == TRANSFER_STATUS_CANCELED;
-                    }
+                try(InputStream inputStream = getFileSystem().getStorage().read(chunk)) {
 
-                    @Override
-                    public void updateProgress(int progress) {
-                        Platform.runLater(() -> setProgress(getProgress() + progress));
-                    }
+                    chunk.getDrive().writeChunk(chunk, inputStream, new TransferInfoCallback() {
 
-                });
+                        @Override
+                        public boolean isCanceled() {
+                            return getStatus() == TRANSFER_STATUS_CANCELED;
+                        }
 
+                        @Override
+                        public void updateProgress(int progress) {
+                            Platform.runLater(() -> setProgress(getProgress() + progress));
+                        }
 
-            } catch (IOException e) {
+                    });
 
-                // TODO: handle error
+                    break;
 
+                } catch (TransferInfoTryAgainException e) {
+                    Application.log(getClass(), "WARNING! %s for %s: %s", e.getClass().getName(), chunk.getId(), e.getMessage());
 
-                Application.log(getClass(), "WARNING! %s, something wrong, transfer canceled! %s", e.getClass().getName(), e.getMessage());
+                } catch (Exception e) {
 
-                setStatus(TRANSFER_STATUS_ERROR);
-                return getStatus();
+                    Application.log(getClass(), "WARNING! %s, something wrong, transfer canceled for %s: %s", e.getClass().getName(), chunk.getId(), e.getMessage());
+
+                    setStatus(TRANSFER_STATUS_ERROR);
+                    return getStatus();
+
+                }
 
             }
 
@@ -164,14 +163,13 @@ public class UploadTransferInfo extends TransferInfo {
             if (getStatus() == TRANSFER_STATUS_CANCELED)
                 Files.delete(getPath());  /* FIXME: delete() destroy everything including your machine */
 
-        } catch (IOException e) {
-            Application.log(getClass(), "WARNING! could not delete %s: %s %s", getPath().toString(), e.getClass().getName(), e.getMessage());
+        } catch (Exception e) {
+            Application.log(getClass(), "WARNING! (ignored) could not delete %s: %s %s", getPath().toString(), e.getClass().getName(), e.getMessage());
         }
 
 
         setStatus(TRANSFER_STATUS_COMPLETED);
         return getStatus();
-
 
     }
 

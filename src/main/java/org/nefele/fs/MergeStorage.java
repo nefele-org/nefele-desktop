@@ -30,14 +30,13 @@ import org.nefele.cloud.Drive;
 import org.nefele.cloud.DriveFullException;
 import org.nefele.cloud.DriveNotFoundException;
 import org.nefele.cloud.Drives;
+import org.nefele.core.TransferInfoException;
+import org.nefele.core.TransferInfoTryAgainException;
 
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -133,7 +132,20 @@ public class MergeStorage implements Service {
             chunk.getInode().getChunks().remove(chunk);
             chunk.getInode().invalidate();
 
-            chunk.getDrive().removeChunk(chunk);
+
+            while(true) {
+
+                try {
+
+                    chunk.getDrive().removeChunk(chunk);
+                    break;
+
+                } catch (TransferInfoTryAgainException ignored) {
+                } catch (TransferInfoException e) { break; }
+
+            }
+
+
             chunk.getDrive().setChunks(chunk.getDrive().getChunks() - 1L);
             chunk.getDrive().invalidate();
 
@@ -290,7 +302,7 @@ public class MergeStorage implements Service {
 
 
                             if(inode == null)
-                                throw new FileNotFoundException();
+                                throw new NoSuchFileException(r.getString("inode"));
 
                             MergeChunk chunk = new MergeChunk(
                                     r.getString("id"),
@@ -302,7 +314,7 @@ public class MergeStorage implements Service {
 
                             getChunks().put(chunk.getId(), chunk);
 
-                        } catch (DriveNotFoundException | FileNotFoundException e) {
+                        } catch (DriveNotFoundException | NoSuchFileException e) {
                             Application.log(getClass(), "WARNING! Chunk %s has been orphaned or invalid: %s", r.getString("id"), e.getClass().getName());
                         }
 
