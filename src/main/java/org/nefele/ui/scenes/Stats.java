@@ -109,16 +109,18 @@ public class Stats extends StackPane implements Initializable, Themeable {
     public void initialize(URL location, ResourceBundle resources) {
 
         Drives.getInstance().getDrives().addListener((ListChangeListener<? super Drive>) change -> {
+
             while (change.next()) {
 
                 if (change.wasRemoved())
-                    change.getRemoved().forEach(i -> flowPane.getChildren().removeIf(j -> ( j instanceof StatsDriveInfo &&
-                            ((StatsDriveInfo) j).getDrive().getId().equals(i.getId()))));
+                    change.getRemoved().forEach(i -> flowPane.getChildren().removeIf(j ->
+                            (j instanceof StatsDriveInfo && ((StatsDriveInfo) j).getDrive().getId().equals(i.getId()))));
 
                 if (change.wasAdded())
                     change.getAddedSubList().forEach(i -> flowPane.getChildren().add(new StatsDriveInfo(i)));
 
             }
+
         });
 
         cells.addListener((ListChangeListener<? super StatsDriveInfo>) change -> {

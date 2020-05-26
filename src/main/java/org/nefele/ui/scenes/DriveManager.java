@@ -37,7 +37,9 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.nefele.Application;
 import org.nefele.Resources;
 import org.nefele.cloud.Drive;
@@ -107,13 +109,18 @@ public class DriveManager extends StackPane implements Initializable, Themeable 
             Platform.runLater(() -> {
 
                 Stage s = new Stage();
+
+
                 NefelePane nefelePane = new NefelePane(new Wizard());
                 nefelePane.setModal(NefelePane.MODAL_UNDECORATED);
                 nefelePane.setShowDarkMode(false);
                 nefelePane.setShowLogo(true);
                 nefelePane.setShowStatusBar(false);
                 nefelePane.setResizable(false);
+
                 s.setScene(new Scene(nefelePane));
+                s.initModality(Modality.APPLICATION_MODAL);
+                s.initStyle(StageStyle.UNDECORATED);
                 s.show();
 
             });

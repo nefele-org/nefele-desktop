@@ -25,6 +25,10 @@
 package org.nefele.ui.wizard;
 
 import com.jfoenix.controls.JFXButton;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -37,6 +41,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
 import org.nefele.Application;
 import org.nefele.Resources;
 import org.nefele.ui.Themeable;
@@ -75,15 +80,36 @@ public class Wizard extends NefeleContentPane implements Initializable, Themeabl
 
         currentPage.addListener((v, o, n) ->{
 
+            Timeline timeline = new Timeline();
+
             if(o != null) {
 
                 buttonForward.disableProperty().unbind();
-                wizardViewer.getChildren().remove(o);
+
+
+                timeline.getKeyFrames().add(new KeyFrame(Duration.millis(200),
+                        new KeyValue(o.translateXProperty(), -o.getWidth(), Interpolator.EASE_BOTH)));
+
+                timeline.setOnFinished(e ->
+                        wizardViewer.getChildren().remove(o));
 
             }
 
+
             buttonForward.disableProperty().bind(n.checkedProperty().not());
             wizardViewer.getChildren().add(n);
+
+            n.setManaged(false);
+            n.setTranslateX(getWidth());
+
+            timeline.getKeyFrames().add(new KeyFrame(Duration.millis(200),
+                    new KeyValue(n.translateXProperty(), 0, Interpolator.EASE_BOTH)));
+
+            timeline.getKeyFrames().add(new KeyFrame(Duration.ONE,
+                    new KeyValue(n.managedProperty(), true, Interpolator.EASE_BOTH)));
+
+            timeline.play();
+
 
         });
 

@@ -237,10 +237,13 @@ public class NefelePane extends StackPane implements Initializable, Themeable {
         statusBar.visibleProperty().bind(showStatusBarProperty());
         resizeHandle.visibleProperty().bind(resizableProperty());
 
+
         statusText.textProperty().bind(Application.getInstance().getStatus().textProperty());
         statusIcon.glyphNameProperty().bind(Application.getInstance().getStatus().iconProperty());
 
         contentPaneContainer.getChildren().add(contentPane);
+
+
 
         Application.getInstance().getViews().add(this);
 
@@ -254,6 +257,7 @@ public class NefelePane extends StackPane implements Initializable, Themeable {
         Resources.getCSS(this, "/css/window-header-control-box.css");
         Resources.getCSS(this, "/css/window-pane.css");
         Resources.getCSS(this, "/css/status-bar.css");
+
 
 
         resizeHandle.setOnMouseReleased(e -> {
@@ -299,8 +303,10 @@ public class NefelePane extends StackPane implements Initializable, Themeable {
 
 
 
+
+
         if(!Objects.isNull(getScene().getWindow()))
-            resizeHandle.visibleProperty().bind(Bindings.not(((Stage) getScene().getWindow()).maximizedProperty()));
+            resizeHandle.visibleProperty().bind((((Stage) getScene().getWindow()).maximizedProperty().not().and(resizableProperty())));
 
         resizeHandle.setOnMouseEntered(e -> setCursor(Cursor.SE_RESIZE));
         resizeHandle.setPickOnBounds(true);
@@ -314,7 +320,7 @@ public class NefelePane extends StackPane implements Initializable, Themeable {
         stage.setMaximized(!stage.isMaximized());
 
         // FIXME: test MacOSX
-        if (System.getProperty("os.name").contains("Windows")) {
+        if (System.getProperty("os.name").toLowerCase().contains("windows")) {
             if (stage.isMaximized())
                 stage.setHeight(Screen.getPrimary().getVisualBounds().getHeight());
         }
@@ -370,6 +376,7 @@ public class NefelePane extends StackPane implements Initializable, Themeable {
     public BooleanProperty resizableProperty() {
         return resizable;
     }
+
 
     public void setResizable(boolean resizable) {
         this.resizable.set(resizable);
