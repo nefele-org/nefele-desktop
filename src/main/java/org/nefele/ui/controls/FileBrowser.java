@@ -24,12 +24,10 @@
 
 package org.nefele.ui.controls;
 
-import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableSet;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
@@ -42,18 +40,12 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.shape.Rectangle;
 import org.nefele.Application;
 import org.nefele.Resources;
-import org.nefele.core.Mime;
-import org.nefele.fs.MergeFileSystem;
-import org.nefele.fs.MergePath;
 import org.nefele.ui.Themeable;
-import org.nefele.utils.ExtraPlatform;
+import org.nefele.utils.PlatformUtils;
 
 import java.net.URI;
 import java.net.URL;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
@@ -134,7 +126,7 @@ public class FileBrowser extends ScrollPane implements Initializable, Themeable 
                 if(change.wasRemoved()) {
                     executorService.submit(() -> {
                         change.getRemoved().forEach(i -> {
-                            ExtraPlatform.runLaterAndWait(() -> {
+                            PlatformUtils.runLaterAndWait(() -> {
                                 cells.removeIf(j -> i.equals(j.getItem()));
                             });
                         });
@@ -148,7 +140,7 @@ public class FileBrowser extends ScrollPane implements Initializable, Themeable 
 
                     executorService.submit(() -> {
                         change.getAddedSubList().forEach(i -> {
-                            ExtraPlatform.runLaterAndWait(() -> {
+                            PlatformUtils.runLaterAndWait(() -> {
                                 cells.add(new FileBrowserCell(i));
                             });
                         });

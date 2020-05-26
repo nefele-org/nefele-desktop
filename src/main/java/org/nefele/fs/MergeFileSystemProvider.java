@@ -81,6 +81,10 @@ public class MergeFileSystemProvider extends FileSystemProvider {
         if(!(path instanceof MergePath))
             throw new IllegalArgumentException();
 
+
+        if(Files.notExists(path))
+            ((MergeFileStore) getFileStore(path)).createFile((MergePath) path);
+
         return new MergeFileChannel((MergePath) path);
     }
 
@@ -159,8 +163,20 @@ public class MergeFileSystemProvider extends FileSystemProvider {
     }
 
     @Override
-    public void move(Path path, Path path1, CopyOption... copyOptions) throws IOException {
-        throw new UnsupportedOperationException();
+    public void move(Path oldPath, Path newPath, CopyOption... copyOptions) throws IOException {
+
+        if(!(oldPath instanceof MergePath))
+            throw new IllegalArgumentException();
+
+        if(!(newPath instanceof MergePath))
+            throw new IllegalArgumentException();
+
+        if(!getFileStore(oldPath).equals(getFileStore(newPath)))
+            throw new FileSystemException(oldPath.toString(), newPath.toString(), "Same FileStore required to move()");
+
+
+        ((MergeFileStore) getFileStore(oldPath)).move((MergePath) oldPath, (MergePath) newPath);
+
     }
 
     @Override
@@ -188,6 +204,11 @@ public class MergeFileSystemProvider extends FileSystemProvider {
 
     @Override
     public void checkAccess(Path path, AccessMode... accessModes) throws IOException {
+
+        if(!(path instanceof MergePath))
+            throw new IllegalArgumentException();
+
+        ((MergeFileStore) getFileStore(path)).checkAccess((MergePath) path);
 
     }
 

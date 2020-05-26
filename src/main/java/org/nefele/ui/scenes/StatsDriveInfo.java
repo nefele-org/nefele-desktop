@@ -35,7 +35,7 @@ import org.nefele.Resources;
 import org.nefele.cloud.Drive;
 import org.nefele.fs.MergeChunk;
 import org.nefele.ui.Themeable;
-import org.nefele.utils.ExtraBindings;
+import org.nefele.utils.BindingsUtils;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -96,10 +96,10 @@ public class StatsDriveInfo extends StackPane implements Initializable, Themeabl
 
 
         labelTotalQuota.textProperty().bind(
-                ExtraBindings.createSizeBinding(() -> getDrive().getQuota() * MergeChunk.getSize(), "", getDrive().quotaProperty(), getDrive().chunksProperty()));
+                BindingsUtils.createSizeBinding(() -> getDrive().getQuota() * MergeChunk.getSize(), "", getDrive().quotaProperty(), getDrive().chunksProperty()));
 
         labelTotalSpace.textProperty().bind(
-                ExtraBindings.createSizeBinding(() -> getDrive().getMaxQuota() * MergeChunk.getSize(), ""));
+                BindingsUtils.createSizeBinding(() -> getDrive().getMaxQuota() * MergeChunk.getSize(), ""));
 
         spinner.progressProperty().bind(Bindings.createDoubleBinding (
                 () -> (double) getDrive().getChunks() / (double) getDrive().getQuota(), getDrive().chunksProperty(), getDrive().quotaProperty()));

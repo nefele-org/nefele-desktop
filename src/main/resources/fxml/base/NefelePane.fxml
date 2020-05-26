@@ -39,7 +39,7 @@
                         <HBox>
                               <JFXToggleButton fx:id="toggleDarkMode" size="7.5" text="">
                                   <tooltip>
-                                      <Tooltip fx:id="tooltipDarkMode" userData="NEFELEPANE_HINT_DARKMODE"/>
+                                      <Tooltip fx:id="tooltipDarkMode" userData="NEFELE_PANE_HINT_DARKMODE"/>
                                   </tooltip>
                               </JFXToggleButton>
                               <FontAwesomeIconView fx:id="iconDarkMode" glyphName="MOON_ALT" opacity="0.5" size="18.0"/>

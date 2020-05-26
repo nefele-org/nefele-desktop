@@ -43,7 +43,7 @@ import org.nefele.ui.controls.NefelePane;
 import org.nefele.ui.dialog.Dialogs;
 import org.nefele.ui.scenes.Home;
 import org.nefele.ui.SplashScreen;
-import org.nefele.utils.ExtraPlatform;
+import org.nefele.utils.PlatformUtils;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -179,7 +179,7 @@ public final class Application extends javafx.application.Application implements
 
 
 
-            ExtraPlatform.runLaterAndWait(() -> {
+            PlatformUtils.runLaterAndWait(() -> {
 
                 stage.setScene(new Scene(new NefelePane(new Home())));
                 stage.setAlwaysOnTop(false);
@@ -356,7 +356,7 @@ public final class Application extends javafx.application.Application implements
 
 
 
-        ExtraPlatform.runLaterAndWait(() -> {
+        PlatformUtils.runLaterAndWait(() -> {
             Dialogs.showErrorBox(
                     "DIALOG_PANIC_TITLE",
                     "DIALOG_PANIC_MESSAGE");

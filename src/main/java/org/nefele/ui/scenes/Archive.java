@@ -24,25 +24,17 @@
 
 package org.nefele.ui.scenes;
 
-import com.fasterxml.jackson.databind.type.PlaceholderForType;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
-import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
-import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import javafx.application.Platform;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.StackPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
-import javafx.util.Pair;
 import org.nefele.Application;
 import org.nefele.Resources;
-import org.nefele.cloud.DriveNotEmptyException;
-import org.nefele.cloud.Drives;
 import org.nefele.core.*;
 import org.nefele.fs.MergePath;
 import org.nefele.ui.Themeable;
@@ -51,8 +43,10 @@ import org.nefele.ui.controls.FileBrowserItem;
 import org.nefele.ui.controls.FileBrowserItemFactory;
 import org.nefele.ui.dialog.BaseDialog;
 import org.nefele.ui.dialog.Dialogs;
+import org.nefele.ui.dialog.InputDialog;
 import org.nefele.ui.dialog.InputDialogResult;
-import org.nefele.utils.ExtraPlatform;
+import org.nefele.utils.FilenameUtils;
+import org.nefele.utils.PlatformUtils;
 
 import java.awt.*;
 import java.io.*;
@@ -189,10 +183,12 @@ public class Archive extends StackPane implements Initializable, Themeable {
 
             if(result.getButton() == BaseDialog.DIALOG_OK) {
 
-                if(result.getText().trim().isEmpty()) {
+                final String filename = result.getText().trim();
+
+                if(filename.isBlank()) {
                     Dialogs.showErrorBox("ARCHIVE_DIALOG_FOLDER_EMPTY");
 
-                }else if(new File(result.getText().trim()).isFile()) {
+                } else if(FilenameUtils.isFilenameInvalid(filename)) {
                     Dialogs.showErrorBox("ARCHIVE_DIALOG_FOLDER_INVALID_NAME");
 
                 } else {
@@ -202,7 +198,7 @@ public class Archive extends StackPane implements Initializable, Themeable {
                         try {
 
                             Files.createDirectory(
-                                    MergePath.get("nefele", fileBrowser.getCurrentPath().toString(), result.getText()));
+                                    MergePath.get("nefele", fileBrowser.getCurrentPath().toString(), filename));
 
                         } catch (IOException io) {
                             Platform.runLater(() -> Dialogs.showErrorBox("ARCHIVE_DIALOG_FOLDER_CREATE_FAIL"));
@@ -250,7 +246,7 @@ public class Archive extends StackPane implements Initializable, Themeable {
 
                                 else {
 
-                                    ExtraPlatform.runLaterAndWait(() -> {
+                                    PlatformUtils.runLaterAndWait(() -> {
 
                                         final Future<Integer> future = Application.getInstance().getTransferQueue().enqueue(
                                                 new UploadTransferInfo((MergePath) cloudPath, path.toFile()));
@@ -317,7 +313,6 @@ public class Archive extends StackPane implements Initializable, Themeable {
 
         fileBrowser.setItemFactory(new FileBrowserItemFactory() {
 
-            private final FileSystem fileSystem = FileSystems.getFileSystem(URI.create("nefele:///"));
 
             private final ArrayList<MenuItem> folderMenuItems = new ArrayList<>() {{
 
@@ -335,9 +330,44 @@ public class Archive extends StackPane implements Initializable, Themeable {
                 add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_RENAME")) {{
                     setOnAction(e -> {
 
+                        InputDialogResult result = Dialogs.showInputBox("ARCHIVE_DIALOG_RENAME", fileBrowser.getSelectedItem().getText(),
+                                InputDialog.DIALOG_OK,
+                                InputDialog.DIALOG_ABORT);
 
 
-                        fileBrowser.update();
+                        if(result.getButton() == InputDialog.DIALOG_OK) {
+
+                            final String filename = result.getText().trim();
+
+                            if(filename.isBlank()) {
+                                Dialogs.showErrorBox("ARCHIVE_DIALOG_FOLDER_EMPTY");
+
+                            } else if(FilenameUtils.isFilenameInvalid(filename)) {
+                                Dialogs.showErrorBox("ARCHIVE_DIALOG_FOLDER_INVALID_NAME");
+
+                            } else {
+
+                                Application.getInstance().runThread(new Thread(() -> {
+
+                                    try {
+
+                                        Path oldName = MergePath.get("nefele", fileBrowser.getCurrentPath().toString(), fileBrowser.getSelectedItem().getText());
+                                        Path newName = MergePath.get("nefele", fileBrowser.getCurrentPath().toString(), filename);
+
+                                        Files.move(oldName, newName);
+
+
+                                    } catch (IOException io) {
+                                        Platform.runLater(() -> Dialogs.showErrorBox("ARCHIVE_DIALOG_FOLDER_RENAME_FAIL"));
+                                    } finally {
+                                        Platform.runLater(fileBrowser::update);
+                                    }
+
+                                }, "Archive::renameFolder()"));
+
+                            }
+
+                        }
 
                     });
                 }});
@@ -399,7 +429,7 @@ public class Archive extends StackPane implements Initializable, Themeable {
                                 final Path localPath = Paths.get(file.getAbsolutePath(), cloudPath.getFileName().toString());
 
 
-                                ExtraPlatform.runLaterAndWait(() -> {
+                                PlatformUtils.runLaterAndWait(() -> {
 
                                     final Future<Integer> future = Application.getInstance().getTransferQueue().enqueue(
                                             new DownloadTransferInfo((MergePath) cloudPath, localPath.toFile()));
@@ -459,9 +489,44 @@ public class Archive extends StackPane implements Initializable, Themeable {
                 add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_RENAME")) {{
                     setOnAction(e -> {
 
+                        InputDialogResult result = Dialogs.showInputBox("ARCHIVE_DIALOG_RENAME", fileBrowser.getSelectedItem().getText(),
+                                InputDialog.DIALOG_OK,
+                                InputDialog.DIALOG_ABORT);
 
 
-                        fileBrowser.update();
+                        if(result.getButton() == InputDialog.DIALOG_OK) {
+
+                            final String filename = result.getText().trim();
+
+                            if(filename.isBlank()) {
+                                Dialogs.showErrorBox("ARCHIVE_DIALOG_FILE_EMPTY");
+
+                            } else if(FilenameUtils.isFilenameInvalid(filename)) {
+                                Dialogs.showErrorBox("ARCHIVE_DIALOG_FILE_INVALID_NAME");
+
+                            } else {
+
+                                Application.getInstance().runThread(new Thread(() -> {
+
+                                    try {
+
+                                        Path oldName = MergePath.get("nefele", fileBrowser.getCurrentPath().toString(), fileBrowser.getSelectedItem().getText());
+                                        Path newName = MergePath.get("nefele", fileBrowser.getCurrentPath().toString(), filename);
+
+                                        Files.move(oldName, newName);
+
+
+                                    } catch (IOException io) {
+                                        Platform.runLater(() -> Dialogs.showErrorBox("ARCHIVE_DIALOG_FILE_RENAME_FAIL"));
+                                    } finally {
+                                        Platform.runLater(fileBrowser::update);
+                                    }
+
+                                }, "Archive::renameFile()"));
+
+                            }
+
+                        }
 
                     });
                 }});

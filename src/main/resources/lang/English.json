@@ -1,33 +1,17 @@
 {
-    "CONTEXT_MENU_OPEN" : "Open",
-    "CONTEXT_MENU_DOWNLOAD" : "Download",
-    "CONTEXT_MENU_RENAME" : "Rename",
-    "CONTEXT_MENU_DELETE" : "Delete",
-    "CONTEXT_MENU_RESTORE" : "Restore",
-    "CONTEXT_MENU_TRASH" : "Move to Trash",
+
+    "WORD_OF" : "of",
+    "WORD_FILE" : "file",
+    "WORD_FILES" : "files",
+    "WORD_FOLDER" : "folder",
+    "WORD_FOLDERS" : "folders",
+    "WORD_ADD" : "Add",
+
     "ERROR_DIRECTORY_NOT_EMPTY" : "Selected folder is not empty",
     "ERROR_FILE_DELETE" : "An error occurred while deleting a file or folder",
-    "SETTINGS_GENERAL" : "General",
-    "SETTINGS_LOCALE" : "Language",
-    "SETTINGS_LOCALE_DESCRIPTION" : "Choose your language in which to display Nefele's menus, messages and notifications.",
-    "SETTINGS_THEME" : "Appearance",
-    "SETTINGS_THEME_DESCRIPTION" : "Choose your color.",
-    "SETTINGS_FONT_FAMILY" : "Font family",
-    "SETTINGS_FONT_FAMILY_DESCRIPTION" : "Select your preferred font family.",
-    "SETTINGS_FONT_SIZE" : "Font size",
-    "SETTINGS_FONT_SIZE_DESCRIPTION" : "Select your preferred font size.",
-    "SETTINGS_TRANSFERS" : "Download and Upload",
-    "SETTINGS_TRANSFERS_DESCRIPTION" : "Choose the maximum number of simultaneous downloads and uploads.",
-    "SETTINGS_SHARED" : "Sharing",
-    "SETTINGS_SHARED_DESCRIPTION" : "Choose whether to share and sync your cloud with other offline devices.",
-    "SETTINGS_STARTUP" : "Startup",
-    "SETTINGS_STARTUP_DESCRIPTION" : "Run Nefele on system startup.",
-    "SETTINGS_ADVANCED" : "Advanced",
-    "SETTINGS_SYSTEM_INFO" : "Information",
-    "SETTINGS_ADVANCED_BUTTON_SHOW" : "Show Advanced Settings",
-    "SETTINGS_ADVANCED_BUTTON_HIDE" : "Hide Advanced Settings",
-    "SETTINGS_ADVANCED_BUTTON_APPLY" : "Apply",
-    "SETTINGS_DIALOG_DESCRIPTION" : "Do you really want to apply changes? This action will be irreversible, changes will be applied on the next reboot.",
+    "ERROR_FILE_UPLOAD" : "An error occurred while uploading the file or folder",
+
+
     "DIALOG_CONTINUE" : "Continue",
     "DIALOG_OK" : "Ok",
     "DIALOG_ABORT" : "Cancel",
@@ -35,65 +19,116 @@
     "DIALOG_NO" : "No",
     "DIALOG_EXIT" : "Exit",
     "DIALOG_MINIMIZE" : "Minimize on tray",
+
+
     "DIALOG_TITLE_MESSAGE" : "Message",
     "DIALOG_TITLE_INFO" : "Information",
     "DIALOG_TITLE_WARNING" : "Warning",
     "DIALOG_TITLE_ERROR" : "Error",
     "DIALOG_PANIC_TITLE" : "Fatal error",
     "DIALOG_PANIC_MESSAGE" : "A fatal error has occured, nobody will help you! Please erase your entire hard-drive and throw away your machine!",
-    "DOCKERBUTTON_HINT_ARCHIVE" : "Archive",
-    "DOCKERBUTTON_HINT_TRANSFERVIEWER" : "Transfer Queue",
-    "DOCKERBUTTON_HINT_STATS" : "Stats",
-    "DOCKERBUTTON_HINT_TRASH" : "Trash",
-    "DOCKERBUTTON_HINT_SETTINGS" : "Settings",
-    "DOCKERBUTTON_HINT_EXIT" : "Log Out",
+
+    "INPUTDIALOG_TITLE" : "Enter the name of the folder",
+
+
+    "NEFELE_PANE_HINT_DARKMODE": "Dark Mode",
+
+
+    "CONTEXT_MENU_OPEN" : "Open",
+    "CONTEXT_MENU_DOWNLOAD" : "Download",
+    "CONTEXT_MENU_RENAME" : "Rename",
+    "CONTEXT_MENU_DELETE" : "Delete",
+
+
+    "SETTINGS_GENERAL" : "General",
+
+    "SETTINGS_LOCALE" : "Language",
+    "SETTINGS_LOCALE_DESCRIPTION" : "Choose your language in which to display Nefele's menus, messages and notifications.",
+
+    "SETTINGS_THEME" : "Appearance",
+    "SETTINGS_THEME_DESCRIPTION" : "Choose your color.",
+
+    "SETTINGS_FONT_FAMILY" : "Font family",
+    "SETTINGS_FONT_FAMILY_DESCRIPTION" : "Select your preferred font family.",
+
+    "SETTINGS_FONT_SIZE" : "Font size",
+    "SETTINGS_FONT_SIZE_DESCRIPTION" : "Select your preferred font size.",
+
+    "SETTINGS_TRANSFERS" : "Download and Upload",
+    "SETTINGS_TRANSFERS_DESCRIPTION" : "Choose the maximum number of simultaneous downloads and uploads.",
+
+    "SETTINGS_SHARED" : "Sharing",
+    "SETTINGS_SHARED_DESCRIPTION" : "Choose whether to share and sync your cloud with other offline devices.",
+
+    "SETTINGS_STARTUP" : "Startup",
+    "SETTINGS_STARTUP_DESCRIPTION" : "Run Nefele on system startup.",
+
+    "SETTINGS_ADVANCED" : "Advanced",
+    "SETTINGS_SYSTEM_INFO" : "Information",
+
+    "SETTINGS_ADVANCED_BUTTON_SHOW" : "Show Advanced Settings",
+    "SETTINGS_ADVANCED_BUTTON_HIDE" : "Hide Advanced Settings",
+    "SETTINGS_ADVANCED_BUTTON_APPLY" : "Apply",
+    "SETTINGS_ADVANCED_DIALOG_DESCRIPTION" : "Do you really want to apply changes? This action will be irreversible, changes will be applied on the next reboot.",
+
+
+
+    "DOCKER_BUTTON_HINT_ARCHIVE": "Archive",
+    "DOCKER_BUTTON_HINT_TRANSFERVIEWER": "Transfer Queue",
+    "DOCKER_BUTTON_HINT_STATS": "Stats",
+    "DOCKER_BUTTON_HINT_DRIVEMANAGER" : "Drive Manager",
+    "DOCKER_BUTTON_HINT_SETTINGS": "Settings",
+    "DOCKER_BUTTON_HINT_EXIT": "Log Out",
+
+
     "ARCHIVE_HINT_FORWARD" : "Forward",
     "ARCHIVE_HINT_BACK" : "Back",
     "ARCHIVE_HINT_HOME" : "Home",
     "ARCHIVE_HINT_UPFILE" : "Upload file",
     "ARCHIVE_HINT_ADDFOLDER" : "Create folder",
     "ARCHIVE_HINT_UPFOLDER" : "Upload folder",
-    "TRASH_HINT_EMPTY" : "Empty trash",
-    "NEFELEPANE_HINT_DARKMODE" : "Dark Mode",
-    "STATS_CARD_PRIMARY_TITLE" : "Overall use",
-    "STATS_CARD_PRIMARY_HEADER_1" : "Storage",
-    "STATS_CARD_PRIMARY_HEADER_2" : "Temporary files",
-    "STATS_CARD_PRIMARY_HEADER_3" : "Runtime memory",
-    "STATS_CARD_SECONDARY_TITLE" : "Storage Used",
-    "STATS_CARD_SECONDARY_CONTENT_1" : "Cloud Drive",
-    "STATS_CARD_SECONDARY_CONTENT_2" : "Available",
-    "STATS_CARD_TERTIARY_TITLE" : "Data",
-    "STATS_CARD_TERTIARY_CONTENT_1" : "All files",
-    "STATS_CARD_TERTIARY_CONTENT_2" : "All folders",
-    "STATS_CARD_TERTIARY_CONTENT_3" : "Incoming shares",
-    "STATS_CARD_TERTIARY_CONTENT_4" : "Outgoing shares",
-    "STATSDRIVEINFO_CONTENT_4" : "Limit:",
-    "STATSDRIVEINFO_CONTENT_3" : "Storage:",
-    "STATSDRIVEINFO_CONTENT_2" : "Status:",
-    "STATSDRIVEINFO_STATUS_CONNECTED" : "Connected",
-    "STATSDRIVEINFO_STATUS_DISCONNECTED" : "Disconnected",
-    "STATS_CARD_HINT_MEMORY_CLEAN" : "Free Memory",
-    "STATS_CARD_HINT_TEMPORARY_CLEAN" : "Delete temporary files",
-    "STATS_CARD_DIALOG_TEMPORARY_CLEAN" : "Permanently remove temporary files?",
-    "WORD_TRASH" : "Trash",
-    "WORD_OF" : "of",
-    "WORD_FILE" : "file",
-    "WORD_FILES" : "files",
-    "WORD_FOLDER" : "folder",
-    "WORD_FOLDERS" : "folders",
-    "HOME_DIALOG_DESCRIPTION" : "Are you sure you want to quit from Nefele?",
-    "HOME_DIALOG_TITLE" : "Confirm exit",
-    "SYSTEM_TRAY_ERROR" : "System tray is not supported by the system.",
-    "SYSTEM_TRAY_SHOW" : "Open",
-    "SYSTEM_TRAY_EXIT" : "Exit",
-    "INPUTDIALOG_TITLE" : "Enter the name of the folder",
+    "ARCHIVE_HINT_REFRESH" : "Refresh",
+    "ARCHIVE_HINT_SYNC" : "Share folder",
+
+    "ARCHIVE_ERROR_DIALOG_REQUEST_SYNC":  "Something went wrong in synchronization. Please try again later",
+
     "ARCHIVE_DIALOG_FOLDER_EMPTY" : "Folder name cannot be empty",
     "ARCHIVE_DIALOG_FOLDER_INVALID_NAME" : "The folder name must be valid",
     "ARCHIVE_DIALOG_FILE_NOTSELECTED" : "The file was not selected",
     "ARCHIVE_DIALOG_FILE_INVALID" : "The path must be a file",
     "ARCHIVE_DIALOG_FOLDER_NOTSELECTED" : "The folder has not been selected",
     "ARCHIVE_DIALOG_FOLDER_INVALID" : "The path must be a folder",
-    "TRANSFERVIEWER_TRANSFER_NULL" : "No download or upload in progress now",
+    "ARCHIVE_DIALOG_REQUEST_SYNC" : "Are you sure you want to share this folder?",
+
+
+
+    "STATS_CARD_PRIMARY_TITLE" : "Overall use",
+    "STATS_CARD_PRIMARY_HEADER_1" : "Storage",
+    "STATS_CARD_PRIMARY_HEADER_2" : "Temporary files",
+    "STATS_CARD_PRIMARY_HEADER_3" : "Runtime memory",
+
+    "STATS_CARD_SECONDARY_TITLE" : "Storage Used",
+    "STATS_CARD_SECONDARY_CONTENT_1" : "Cloud Drive",
+    "STATS_CARD_SECONDARY_CONTENT_2" : "Available",
+
+    "STATS_CARD_TERTIARY_TITLE" : "Data",
+    "STATS_CARD_TERTIARY_CONTENT_1" : "All files",
+    "STATS_CARD_TERTIARY_CONTENT_2" : "All folders",
+    "STATS_CARD_TERTIARY_CONTENT_3" : "Incoming shares",
+    "STATS_CARD_TERTIARY_CONTENT_4" : "Outgoing shares",
+
+
+    "STATSDRIVEINFO_CONTENT_4" : "Limit:",
+    "STATSDRIVEINFO_CONTENT_3" : "Storage:",
+    "STATSDRIVEINFO_CONTENT_2" : "Status:",
+
+    "STATSDRIVEINFO_STATUS_CONNECTED" : "Connected",
+    "STATSDRIVEINFO_STATUS_DISCONNECTED" : "Disconnected",
+
+    "STATS_CARD_HINT_MEMORY_CLEAN" : "Free Memory",
+    "STATS_CARD_HINT_TEMPORARY_CLEAN" : "Delete temporary files",
+    "STATS_CARD_DIALOG_TEMPORARY_CLEAN" : "Permanently remove temporary files?",
+
     "STATS_STATUS_UNKNOWN" : "Unknown",
     "STATS_STATUS_CONNECTING" : "Connecting",
     "STATS_STATUS_READY" : "Ready",
@@ -101,23 +136,37 @@
     "STATS_STATUS_DISCONNECTED" : "Disconnected",
     "STATS_STATUS_ERROR" : "Error",
     "STATS_STATUS_DISABLED" : "Disabled by user",
+
+
+    "HOME_DIALOG_DESCRIPTION" : "Are you sure you want to quit from Nefele?",
+    "HOME_DIALOG_TITLE" : "Confirm exit",
+
+
+    "SYSTEM_TRAY_ERROR" : "System tray is not supported by the system.",
+    "SYSTEM_TRAY_SHOW" : "Open",
+    "SYSTEM_TRAY_EXIT" : "Exit",
+
+
+
+    "TRANSFERVIEWER_TRANSFER_NULL" : "No download or upload in progress now",
     "TRANSFERVIEWER_TRANSFER_PREPARED" : "Preparing...",
-    "ERROR_FILE_UPLOAD" : "An error occurred while uploading the file or folder",
-    "ARCHIVE_HINT_REFRESH" : "Refresh",
+
+
     "DRIVEMANAGER_TITLE" : "Drive Manager",
     "DRIVEMANAGER_DESCRIPTION" : "Add, remove or change your drive settings.",
-    "WORD_ADD" : "Add",
-    "DOCKERBUTTON_HINT_DRIVEMANAGER" : "Drive Manager",
+
+
     "SETTINGS_DRIVE_DIALOG_TITLE" : "Confirm delete",
     "SETTINGS_DRIVE_DIALOG_DESCRIPTION" : "Do you really want to delete this Drive? This action could be irreversible",
     "SETTINGS_DRIVE_ERROR_DIALOG_DESCRIPTION" : "This Drive contains data so it cannot be deleted, you can still disable it at any time from the settings",
-    "ARCHIVE_HINT_SYNC" : "Synchronize folder",
-    "ARCHIVE_ERROR_DIALOG_REQUEST_SYNC": "Are you sure you want to sync this folder?",
-    "ARCHIVE_DIALOG_REQUEST_SYNC" : "Something went wrong in synchronization. Please try again later",
+
+
     "WIZARD_SELECT_LANGUAGE" : "Select a language.",
     "WIZARD_WELCOME" : "Welcome to Nefele",
     "WIZARD_TERMS" : "I accept the terms of use of the service and I declare that I have read the information on the processing of my personal data.",
     "WIZARD_FIRST_CLOUD" : "Add your first Cloud to Nefele",
     "WIZARD_FIRST_CLOUD_DESCRIPTION" : "Follow the wizard to add your first storage space.",
+
+
     "CLOUDHELPER_TITLE" : ""
 }

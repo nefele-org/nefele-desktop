@@ -26,7 +26,6 @@ package org.nefele.ui.scenes;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXSpinner;
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -47,8 +46,8 @@ import org.nefele.fs.MergeFileSystem;
 import org.nefele.ui.Themeable;
 import org.nefele.ui.dialog.BaseDialog;
 import org.nefele.ui.dialog.Dialogs;
-import org.nefele.utils.ExtraBindings;
-import org.nefele.utils.ExtraPlatform;
+import org.nefele.utils.BindingsUtils;
+import org.nefele.utils.PlatformUtils;
 
 import java.net.URI;
 import java.net.URL;
@@ -186,14 +185,14 @@ public class Stats extends StackPane implements Initializable, Themeable {
         spinnerStorage.progressProperty().bind(Bindings.createDoubleBinding(() ->
                         (fileStore.getTotalSpace() - fileStore.getUsableSpace()) / (double) fileStore.getTotalSpace()));
 
-        labelStorageOccupied.textProperty().bind(ExtraBindings.createSizeBinding(() ->
+        labelStorageOccupied.textProperty().bind(BindingsUtils.createSizeBinding(() ->
                 (fileStore.getTotalSpace() - fileStore.getUsableSpace()), ""));
 
         labelStoragePercentage.textProperty().bind(Bindings.createIntegerBinding(() ->
                 (int) (spinnerStorage.getProgress() * 100.0), spinnerStorage.progressProperty())
                     .asString("%d %%"));
 
-        labelStorageTotal.textProperty().bind(ExtraBindings.createSizeBinding(fileStore::getTotalSpace, ""));
+        labelStorageTotal.textProperty().bind(BindingsUtils.createSizeBinding(fileStore::getTotalSpace, ""));
 
 
     }
@@ -202,7 +201,7 @@ public class Stats extends StackPane implements Initializable, Themeable {
 
         if(isVisible()) {
 
-            ExtraPlatform.runLaterAndWait(() -> {
+            PlatformUtils.runLaterAndWait(() -> {
 
                 updateSystemMemory();
                 updateStorage();
@@ -222,11 +221,11 @@ public class Stats extends StackPane implements Initializable, Themeable {
                         .asString("%d %%"));
 
 
-                labelTemporaryFilesOccupied.textProperty().bind(ExtraBindings.createSizeBinding(() ->
+                labelTemporaryFilesOccupied.textProperty().bind(BindingsUtils.createSizeBinding(() ->
                                  fileSystem.getStorage().getCurrentCacheSize(), ""));
 
 
-                labelTemporaryFilesTotal.textProperty().bind(ExtraBindings.createSizeBinding(() ->
+                labelTemporaryFilesTotal.textProperty().bind(BindingsUtils.createSizeBinding(() ->
                         Application.getInstance().getConfig().getLong("app.cache.limit").orElse(1L), ""));
 
 
@@ -237,7 +236,7 @@ public class Stats extends StackPane implements Initializable, Themeable {
                         (int) (spinnerStorage.getProgress() * 100.0), spinnerStorage.progressProperty())
                         .asString("%d %%"));
 
-                labelCloudDriveSpace.textProperty().bind(ExtraBindings.createSizeBinding(() ->
+                labelCloudDriveSpace.textProperty().bind(BindingsUtils.createSizeBinding(() ->
                         (fileStore.getTotalSpace() - fileStore.getUsableSpace()), ""));
 
 
@@ -248,7 +247,7 @@ public class Stats extends StackPane implements Initializable, Themeable {
                         (int) (((1.0 - spinnerStorage.getProgress()) * 100.0) + 0.5), spinnerStorage.progressProperty())
                         .asString("%d %%"));
 
-                labelAvailableSpace.textProperty().bind(ExtraBindings.createSizeBinding(fileStore::getUsableSpace, ""));
+                labelAvailableSpace.textProperty().bind(BindingsUtils.createSizeBinding(fileStore::getUsableSpace, ""));
 
 
 
@@ -259,7 +258,7 @@ public class Stats extends StackPane implements Initializable, Themeable {
                                 .count())));
 
 
-                labelAllFilesDim.textProperty().bind(ExtraBindings.createSizeBinding(() ->
+                labelAllFilesDim.textProperty().bind(BindingsUtils.createSizeBinding(() ->
                         Files.walk(fileSystem.getPath(MergeFileSystem.ROOT))
                                 .filter(Files::isRegularFile)
                                 .mapToLong(i -> i.toFile().length())
@@ -275,7 +274,7 @@ public class Stats extends StackPane implements Initializable, Themeable {
                                 .filter(Files::isDirectory)
                                 .count() - 1 )));
 
-                labelAllFoldersDim.textProperty().bind(ExtraBindings.createSizeBinding(() ->
+                labelAllFoldersDim.textProperty().bind(BindingsUtils.createSizeBinding(() ->
                         Files.walk(fileSystem.getPath(MergeFileSystem.ROOT))
                                 .filter(Files::isDirectory)
                                 .mapToLong(i -> i.toFile().length())
@@ -290,7 +289,7 @@ public class Stats extends StackPane implements Initializable, Themeable {
                                 i.getKey().getType() == TransferInfo.TRANSFER_TYPE_UPLOAD)).asString());
 
 
-                labelIncomingSharesDim.textProperty().bind(ExtraBindings.createSizeBinding(() ->
+                labelIncomingSharesDim.textProperty().bind(BindingsUtils.createSizeBinding(() ->
                         Application.getInstance().getTransferQueue().getTransferQueue()
                             .stream()
                             .filter(i -> i.getKey().getType() == TransferInfo.TRANSFER_TYPE_UPLOAD)
@@ -305,7 +304,7 @@ public class Stats extends StackPane implements Initializable, Themeable {
                                 i.getKey().getType() == TransferInfo.TRANSFER_TYPE_DOWNLOAD)).asString());
 
 
-                labelOutgoingSharesDim.textProperty().bind(ExtraBindings.createSizeBinding(() ->
+                labelOutgoingSharesDim.textProperty().bind(BindingsUtils.createSizeBinding(() ->
                         Application.getInstance().getTransferQueue().getTransferQueue()
                             .stream()
                             .filter(i -> i.getKey().getType() == TransferInfo.TRANSFER_TYPE_DOWNLOAD)

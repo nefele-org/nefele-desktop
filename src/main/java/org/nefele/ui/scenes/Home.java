@@ -70,12 +70,12 @@ public class Home extends NefeleContentPane implements Initializable, Themeable 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        dockerPane.getParents().add(new DockerItem(new Archive(), "ARCHIVE", "DOCKERBUTTON_HINT_ARCHIVE"));
-        dockerPane.getParents().add(new DockerItem(new TransferViewer(), "CLOUD_SYNC", "DOCKERBUTTON_HINT_TRANSFERVIEWER"));
-        dockerPane.getParents().add(new DockerItem(new Stats(), "CHART_BAR", "DOCKERBUTTON_HINT_STATS"));
-        dockerPane.getParents().add(new DockerItem(new DriveManager(), "LAYERS", "DOCKERBUTTON_HINT_DRIVEMANAGER"));
-        dockerPane.getParents().add(new DockerItem(new Settings(), "SETTINGS", "DOCKERBUTTON_HINT_SETTINGS"));
-        dockerPane.getParents().add(new DockerItem(new StackPane(), "EXIT_TO_APP", "DOCKERBUTTON_HINT_EXIT"));
+        dockerPane.getParents().add(new DockerItem(new Archive(), "ARCHIVE", "DOCKER_BUTTON_HINT_ARCHIVE"));
+        dockerPane.getParents().add(new DockerItem(new TransferViewer(), "CLOUD_SYNC", "DOCKER_BUTTON_HINT_TRANSFERVIEWER"));
+        dockerPane.getParents().add(new DockerItem(new Stats(), "CHART_BAR", "DOCKER_BUTTON_HINT_STATS"));
+        dockerPane.getParents().add(new DockerItem(new DriveManager(), "LAYERS", "DOCKER_BUTTON_HINT_DRIVEMANAGER"));
+        dockerPane.getParents().add(new DockerItem(new Settings(), "SETTINGS", "DOCKER_BUTTON_HINT_SETTINGS"));
+        dockerPane.getParents().add(new DockerItem(new StackPane(), "EXIT_TO_APP", "DOCKER_BUTTON_HINT_EXIT"));
 
         dockerPane.setContentPane(contentPane);
 

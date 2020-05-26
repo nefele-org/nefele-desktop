@@ -195,8 +195,9 @@ public class MergeStorage implements Service {
     public MergeNode alloc(MergeNode parent, String name, String mime) {
 
         MergeNode node = new MergeNode(
-                name, mime, 0L, Instant.now(), Instant.now(), Instant.now(), generateId(), parent.getId()
+                name, mime, 0L, Instant.now(), Instant.now(), Instant.now(), generateId(), parent.getId(), false
         );
+
 
         node.invalidate();
         getInodes().put(node.getId(), node);
@@ -267,7 +268,8 @@ public class MergeStorage implements Service {
                                 Instant.ofEpochSecond(r.getLong("atime")),
                                 Instant.ofEpochSecond(r.getLong("mtime")),
                                 r.getString("id"),
-                                r.getString("parent")
+                                r.getString("parent"),
+                                true
                         );
 
                         getInodes().put(node.getId(), node);
@@ -333,6 +335,9 @@ public class MergeStorage implements Service {
                         for(MergeNode node : getInodes().values()) {
 
                             if(!node.isDirty())
+                                continue;
+
+                            if(!node.exists())
                                 continue;
 
                             s.setString(1, node.getName());

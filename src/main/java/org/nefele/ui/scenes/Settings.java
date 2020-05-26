@@ -332,7 +332,7 @@ public class Settings extends StackPane implements Initializable, Themeable {
 
         buttonApply.setOnMouseClicked(e ->{
 
-            if(Dialogs.showWarningBox("DIALOG_TITLE_WARNING","SETTINGS_DIALOG_DESCRIPTION",
+            if(Dialogs.showWarningBox("DIALOG_TITLE_WARNING","SETTINGS_ADVANCED_DIALOG_DESCRIPTION",
                     BaseDialog.DIALOG_NO, BaseDialog.DIALOG_YES) == BaseDialog.DIALOG_YES) {
 
                 getAdvancedRecords().forEach(item ->

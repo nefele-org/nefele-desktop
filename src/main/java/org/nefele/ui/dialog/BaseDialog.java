@@ -253,7 +253,8 @@ public class BaseDialog extends Stage {
     @Override
     public void close() {
 
-        Application.getInstance().getViews().remove(getScene().getRoot());
+        Application.getInstance().getViews().remove(
+                getScene().getRoot());
 
         super.close();
     }

@@ -25,7 +25,6 @@
 package org.nefele.ui.scenes;
 
 import com.jfoenix.controls.JFXProgressBar;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import javafx.application.Platform;
@@ -39,7 +38,7 @@ import org.nefele.Application;
 import org.nefele.Resources;
 import org.nefele.core.TransferInfo;
 import org.nefele.ui.Themeable;
-import org.nefele.utils.ExtraBindings;
+import org.nefele.utils.BindingsUtils;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -118,11 +117,11 @@ public class TransferViewerCell extends StackPane implements Initializable, Them
 
         labelFileName.textProperty().bind(getTransferInfo().nameProperty());
 
-        labelSpeed.textProperty().bind(ExtraBindings.createSizeBinding(() ->
+        labelSpeed.textProperty().bind(BindingsUtils.createSizeBinding(() ->
                 (long) getTransferInfo().getSpeed(), "/s", getTransferInfo().speedProperty()));
 
 
-        labelTime.textProperty().bind(ExtraBindings.createTimeBinding(() -> {
+        labelTime.textProperty().bind(BindingsUtils.createTimeBinding(() -> {
 
             if(getTransferInfo().getSpeed() > 0)
                 return (int) ((getTransferInfo().getSize() - getTransferInfo().getProgress()) / (getTransferInfo().getSpeed()) + 1);

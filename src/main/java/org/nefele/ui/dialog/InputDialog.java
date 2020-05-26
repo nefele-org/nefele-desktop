@@ -93,10 +93,12 @@ public class InputDialog extends Stage {
 
         }
 
+
         @Override
         public void initializeInterface() {
 
             textField.requestFocus();
+            textField.setPromptText(prompt);
 
             buttonHBox.getChildren().clear();
 
@@ -152,15 +154,15 @@ public class InputDialog extends Stage {
                 button.setMinHeight(25);
                 button.setOnMouseClicked(e -> exitWithDialogResult(new InputDialogResult(textField.getText(), i)));
 
-                textField.setOnKeyPressed(e -> {
-                    if(e.getCode() == KeyCode.ENTER )
-                        exitWithDialogResult(new InputDialogResult(textField.getText(), i));
-                });
-
                 buttonHBox.getChildren().add(button);
 
             });
 
+
+            textField.setOnKeyPressed(e -> {
+                if(e.getCode() == KeyCode.ENTER )
+                    exitWithDialogResult(new InputDialogResult(textField.getText(), buttons.get(0)));
+            });
 
             ((NefelePane) getScene().getRoot()).setOnClosing(() -> {
                 exitWithDialogResult(new InputDialogResult("", DIALOG_CLOSED));
@@ -175,16 +177,15 @@ public class InputDialog extends Stage {
 
 
     private final ArrayList<Integer> buttons;
-    private Image icon;
     private InputDialogResult dialogResult;
-    private String message;
+    private String prompt;
 
 
-    protected InputDialog(String title) {
+    protected InputDialog(String title, String... prompt) {
 
-        dialogResult = new InputDialogResult("", DIALOG_CLOSED);
-        buttons = new ArrayList<>();
-        icon = null;
+        this.dialogResult = new InputDialogResult("", DIALOG_CLOSED);
+        this.buttons = new ArrayList<>();
+        this.prompt = String.join(", ", prompt);
 
         requireNonNull(title);
 
@@ -220,6 +221,7 @@ public class InputDialog extends Stage {
     public void showAndWait() {
 
         NefelePane nefelePane = new NefelePane(new MessagePane());
+
         nefelePane.setModal(NefelePane.MODAL_DIALOG);
         nefelePane.setShowDarkMode(false);
         nefelePane.setShowLogo(false);
@@ -234,7 +236,8 @@ public class InputDialog extends Stage {
     @Override
     public void close() {
 
-        Application.getInstance().getViews().remove(getScene().getRoot());
+        Application.getInstance().getViews().remove(
+                getScene().getRoot());
 
         super.close();
     }

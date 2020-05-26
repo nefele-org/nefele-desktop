@@ -41,7 +41,7 @@ public class MergeFileTree {
     public MergeFileTree(MergeFileSystem fileSystem) {
 
         this.tree = new Tree<>(
-                new MergeNode(MergeFileSystem.ROOT, "directory", 0, Instant.now(), Instant.now(), Instant.now(), "", "")
+                new MergeNode(MergeFileSystem.ROOT, "directory", 0, Instant.now(), Instant.now(), Instant.now(), "", "", true)
         );
 
         this.fileSystem = fileSystem;

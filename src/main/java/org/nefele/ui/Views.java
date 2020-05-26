@@ -29,7 +29,7 @@ import javafx.scene.Parent;
 import javafx.util.Pair;
 import org.nefele.Application;
 import org.nefele.Resources;
-import org.nefele.utils.ExtraPlatform;
+import org.nefele.utils.PlatformUtils;
 
 import java.util.ArrayList;
 
@@ -49,7 +49,7 @@ public final class Views {
 
     private <T extends Parent> void updateView(T parent, Runnable runnable) {
 
-        ExtraPlatform.runLaterIfNeeded(() -> {
+        PlatformUtils.runLaterIfNeeded(() -> {
 
             parent.setStyle(null);
             parent.setStyle(Application.getInstance().getTheme().getStyle());

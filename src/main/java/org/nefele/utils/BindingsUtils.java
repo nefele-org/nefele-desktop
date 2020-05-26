@@ -29,7 +29,7 @@ import javafx.beans.binding.StringBinding;
 import java.util.concurrent.Callable;
 
 
-public final class ExtraBindings {
+public final class BindingsUtils {
 
     public static <T extends Number> StringBinding createSizeBinding(Callable<T> func, String suffix, Observable... dependencies) {
 

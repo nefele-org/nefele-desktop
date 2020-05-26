@@ -1,99 +1,134 @@
 {
-    "CONTEXT_MENU_OPEN" : "Apri",
-    "CONTEXT_MENU_DOWNLOAD" : "Scarica",
-    "CONTEXT_MENU_RENAME" : "Rinomina",
-    "CONTEXT_MENU_DELETE" : "Elimina",
-    "CONTEXT_MENU_RESTORE" : "Ripristina",
-    "CONTEXT_MENU_TRASH" : "Cestina",
+
+    "WORD_OF" : "di",
+    "WORD_FILE" : "file",
+    "WORD_FILES" : "file",
+    "WORD_FOLDER" : "cartella",
+    "WORD_FOLDERS" : "cartelle",
+    "WORD_ADD" : "Aggiungi",
+
     "ERROR_DIRECTORY_NOT_EMPTY" : "La cartella selezionata non è vuota",
     "ERROR_FILE_DELETE" : "Si è verificato un errore durante l'eliminazione di un file e/o cartella",
-    "SETTINGS_GENERAL" : "Generale",
-    "SETTINGS_LOCALE" : "Lingua",
-    "SETTINGS_LOCALE_DESCRIPTION" : "Scegli la lingua in cui visualizzare menu, messaggi e notifiche di Nefele.",
-    "SETTINGS_THEME" : "Aspetto",
-    "SETTINGS_THEME_DESCRIPTION" : "Scegli il tuo colore.",
-    "SETTINGS_FONT_FAMILY" : "Caratteri",
-    "SETTINGS_FONT_FAMILY_DESCRIPTION" : "Seleziona un carattere tra quelli disponibili",
-    "SETTINGS_FONT_SIZE" : "Dimensione carattere",
-    "SETTINGS_FONT_SIZE_DESCRIPTION" : "Seleziona una dimensione per il carattere",
-    "SETTINGS_TRANSFERS" : "Download e Upload",
-    "SETTINGS_TRANSFERS_DESCRIPTION" : "Scegli il numero massimo di Download e Upload contemporanei",
-    "SETTINGS_SHARED" : "Condivisione",
-    "SETTINGS_SHARED_DESCRIPTION" : "Scegli se condividere e sincronizzare il tuo cloud con altri dispositivi offline.",
-    "SETTINGS_STARTUP" : "Avvio automatico",
-    "SETTINGS_STARTUP_DESCRIPTION" : "Lancia Nefele all'avvio del sistema",
-    "SETTINGS_ADVANCED" : "Avanzate",
-    "SETTINGS_SYSTEM_INFO" : "Informazioni",
-    "SETTINGS_ADVANCED_BUTTON_APPLY" : "Applica",
-    "SETTINGS_ADVANCED_BUTTON_SHOW" : "Mostra Impostazioni Avanzate",
-    "SETTINGS_ADVANCED_BUTTON_HIDE" : "Nascondi Impostazioni Avanzate",
-    "SETTINGS_DIALOG_DESCRIPTION" : "Vuoi veramente applicare le modifiche? Questa azione sarà irreversibile, i cambiamenti verranno applicati al prossimo riavvio.",
+    "ERROR_FILE_UPLOAD" : "Si è verificato un errore durante l'upload del file e/o cartella",
+
+
     "DIALOG_CONTINUE" : "Continua",
     "DIALOG_OK" : "Ok",
     "DIALOG_ABORT" : "Annulla",
     "DIALOG_YES" : "Si",
     "DIALOG_NO" : "No",
     "DIALOG_EXIT" : "Esci",
-    "DIALOG_MINIMIZE" : "Riduci a icona",
+    "DIALOG_MINIMIZE" : "Riduci ad icona",
+
+
     "DIALOG_TITLE_MESSAGE" : "Messaggio",
-    "DIALOG_TITLE_INFO" : "Informazione",
-    "DIALOG_TITLE_WARNING" : "Avviso",
+    "DIALOG_TITLE_INFO" : "Informazioni",
+    "DIALOG_TITLE_WARNING" : "Attenzione",
     "DIALOG_TITLE_ERROR" : "Errore",
     "DIALOG_PANIC_TITLE" : "Errore fatale",
-    "DIALOG_PANIC_MESSAGE" : "La Madonna ha detto!",
-    "DOCKERBUTTON_HINT_ARCHIVE" : "Archivio",
-    "DOCKERBUTTON_HINT_TRANSFERVIEWER" : "Coda dei Trasferimenti",
-    "DOCKERBUTTON_HINT_STATS" : "Statistiche",
-    "DOCKERBUTTON_HINT_TRASH" : "Cestino",
-    "DOCKERBUTTON_HINT_SETTINGS" : "Impostazioni",
-    "DOCKERBUTTON_HINT_EXIT" : "Disconnetti",
+    "DIALOG_PANIC_MESSAGE" : "A fatal error has occured, nobody will help you! Please erase your entire hard-drive and throw away your machine!",
+
+    "INPUTDIALOG_TITLE" : "Inserisci un valore",
+
+
+    "NEFELE_PANE_HINT_DARKMODE": "Modalità scura",
+
+
+    "CONTEXT_MENU_OPEN" : "Apri",
+    "CONTEXT_MENU_DOWNLOAD" : "Scarica",
+    "CONTEXT_MENU_RENAME" : "Rinomina",
+    "CONTEXT_MENU_DELETE" : "Elimina",
+
+
+    "SETTINGS_GENERAL" : "Generale",
+
+    "SETTINGS_LOCALE" : "Lingua",
+    "SETTINGS_LOCALE_DESCRIPTION" : "Scegli la lingua in cui visualizzare menu, messaggi e notifiche di Nefele.",
+
+    "SETTINGS_THEME" : "Aspetto",
+    "SETTINGS_THEME_DESCRIPTION" : "Scegli il tuo colore.",
+
+    "SETTINGS_FONT_FAMILY" : "Caratteri",
+    "SETTINGS_FONT_FAMILY_DESCRIPTION" : "Seleziona un carattere tra quelli disponibili",
+
+    "SETTINGS_FONT_SIZE" : "Dimensione carattere",
+    "SETTINGS_FONT_SIZE_DESCRIPTION" : "Seleziona una dimensione per il carattere",
+
+    "SETTINGS_TRANSFERS" : "Download and Upload",
+    "SETTINGS_TRANSFERS_DESCRIPTION" : "Scegli il numero massimo di Download e Upload contemporanei",
+
+    "SETTINGS_SHARED" : "Condivisione",
+    "SETTINGS_SHARED_DESCRIPTION" : "Scegli se condividere e sincronizzare il tuo cloud con altri dispositivi offline.",
+
+    "SETTINGS_STARTUP" : "Avvio automatico",
+    "SETTINGS_STARTUP_DESCRIPTION" : "Lancia Nefele all'avvio del sistema",
+
+    "SETTINGS_ADVANCED" : "Avanzate",
+    "SETTINGS_SYSTEM_INFO" : "Informazioni",
+
+    "SETTINGS_ADVANCED_BUTTON_SHOW" : "Mostra Impostazioni Avanzate",
+    "SETTINGS_ADVANCED_BUTTON_HIDE" : "Nascondi Impostazioni Avanzate",
+    "SETTINGS_ADVANCED_BUTTON_APPLY" : "Applica",
+    "SETTINGS_ADVANCED_DIALOG_DESCRIPTION" : "Vuoi veramente applicare le modifiche? Questa azione sarà irreversibile, i cambiamenti verranno applicati al prossimo riavvio.",
+
+
+
+    "DOCKER_BUTTON_HINT_ARCHIVE": "Archivio",
+    "DOCKER_BUTTON_HINT_TRANSFERVIEWER": "Coda dei Trasferimenti",
+    "DOCKER_BUTTON_HINT_STATS": "Statistiche",
+    "DOCKER_BUTTON_HINT_DRIVEMANAGER" : "Gestore dei drive",
+    "DOCKER_BUTTON_HINT_SETTINGS": "Impostazioni",
+    "DOCKER_BUTTON_HINT_EXIT": "Disconnetti",
+
+
     "ARCHIVE_HINT_FORWARD" : "Avanti",
     "ARCHIVE_HINT_BACK" : "Indietro",
     "ARCHIVE_HINT_HOME" : "Home",
     "ARCHIVE_HINT_UPFILE" : "Carica un file",
     "ARCHIVE_HINT_ADDFOLDER" : "Crea una cartella",
     "ARCHIVE_HINT_UPFOLDER" : "Carica una cartella",
-    "TRASH_HINT_EMPTY" : "Svuota cestino",
-    "NEFELEPANE_HINT_DARKMODE" : "Modalità Scura",
+    "ARCHIVE_HINT_REFRESH" : "Aggiorna",
+    "ARCHIVE_HINT_SYNC" : "Condividi cartella",
+
+    "ARCHIVE_ERROR_DIALOG_REQUEST_SYNC": "Si è verificato un errore nella condivisione della cartella. Riprova più tardi",
+
+    "ARCHIVE_DIALOG_FOLDER_EMPTY" : "Il nome della cartella non può essere vuoto",
+    "ARCHIVE_DIALOG_FOLDER_INVALID_NAME" : "Il nome della cartella non è valido",
+    "ARCHIVE_DIALOG_FILE_NOTSELECTED" : "Il file non è stato selezionato",
+    "ARCHIVE_DIALOG_FILE_INVALID" : "Il percorso deve essere un file valido",
+    "ARCHIVE_DIALOG_FOLDER_NOTSELECTED" : "La cartella non è stata selezionata",
+    "ARCHIVE_DIALOG_FOLDER_INVALID" : "Il percorso deve essere una cartella valida",
+    "ARCHIVE_DIALOG_REQUEST_SYNC" : "Sei sicuro di voler condividere questa cartella?",
+
+
+
     "STATS_CARD_PRIMARY_TITLE" : "Uso Complessivo",
     "STATS_CARD_PRIMARY_HEADER_1" : "Archiviazione",
     "STATS_CARD_PRIMARY_HEADER_2" : "File Temporanei",
     "STATS_CARD_PRIMARY_HEADER_3" : "Memoria di Runtime",
+
     "STATS_CARD_SECONDARY_TITLE" : "Archiviazione Usata",
     "STATS_CARD_SECONDARY_CONTENT_1" : "Cloud Drive",
     "STATS_CARD_SECONDARY_CONTENT_2" : "Disponibile",
+
     "STATS_CARD_TERTIARY_TITLE" : "Dati",
     "STATS_CARD_TERTIARY_CONTENT_1" : "Tutti i file",
     "STATS_CARD_TERTIARY_CONTENT_2" : "Tutte le cartelle",
     "STATS_CARD_TERTIARY_CONTENT_3" : "Condivisioni in arrivo",
     "STATS_CARD_TERTIARY_CONTENT_4" : "Condivisioni in uscita",
+
+
     "STATSDRIVEINFO_CONTENT_4" : "Limite:",
     "STATSDRIVEINFO_CONTENT_3" : "Archiviazione:",
     "STATSDRIVEINFO_CONTENT_2" : "Stato:",
+
     "STATSDRIVEINFO_STATUS_CONNECTED" : "Connesso",
     "STATSDRIVEINFO_STATUS_DISCONNECTED" : "Disconnesso",
+
     "STATS_CARD_HINT_MEMORY_CLEAN" : "Libera Memoria",
     "STATS_CARD_HINT_TEMPORARY_CLEAN" : "Elimina i File Temporanei",
-    "STATS_CARD_DIALOG_TEMPORARY_CLEAN" : "Rimuovere in modo definitivo i file temporanei",
-    "WORD_TRASH" : "Cestino",
-    "WORD_OF" : "di",
-    "WORD_FILE" : "file",
-    "WORD_FILES" : "files",
-    "WORD_FOLDER" : "cartella",
-    "WORD_FOLDERS" : "cartelle",
-    "HOME_DIALOG_TITLE" : "Conferma uscita",
-    "HOME_DIALOG_DESCRIPTION" : "Sei sicuro di voler uscire da Nefele?",
-    "SYSTEM_TRAY_ERROR" : "L'icona delle notifiche non è supportata dal sistema.",
-    "SYSTEM_TRAY_SHOW" : "Apri",
-    "SYSTEM_TRAY_EXIT" : "Esci",
-    "INPUTDIALOG_TITLE" : "Inserisci il nome della cartella",
-    "ARCHIVE_DIALOG_FOLDER_EMPTY" : "Il nome della cartella non può essere vuoto",
-    "ARCHIVE_DIALOG_FOLDER_INVALID_NAME" : "Il nome della cartella non è valido",
-    "ARCHIVE_DIALOG_FILE_NOTSELECTED" : "Il file non è stato selezionato",
-    "ARCHIVE_DIALOG_FILE_INVALID" : "Il percorso deve essere un file",
-    "ARCHIVE_DIALOG_FOLDER_NOTSELECTED" : "La cartella non è stata selezionata",
-    "ARCHIVE_DIALOG_FOLDER_INVALID" : "Il percorso deve essere una cartella",
-    "TRANSFERVIEWER_TRANSFER_NULL" : "Nessun download e/o upload in corso",
+    "STATS_CARD_DIALOG_TEMPORARY_CLEAN" : "Rimuovere in modo definitivo i file temporanei?",
+
     "STATS_STATUS_UNKNOWN" : "Sconosciuto",
     "STATS_STATUS_CONNECTING" : "Connesso",
     "STATS_STATUS_READY" : "Attivo",
@@ -101,23 +136,38 @@
     "STATS_STATUS_DISCONNECTED" : "Disconnesso",
     "STATS_STATUS_ERROR" : "Errore",
     "STATS_STATUS_DISABLED" : "Disattivato dall'utente",
+
+
+    "HOME_DIALOG_DESCRIPTION" : "Sei sicuro di voler uscire da Nefele?",
+    "HOME_DIALOG_TITLE" : "Conferma uscita",
+
+
+    "SYSTEM_TRAY_ERROR" : "La barra delle notifiche non è supportata dal sistema.",
+    "SYSTEM_TRAY_SHOW" : "Apri",
+    "SYSTEM_TRAY_EXIT" : "Esci",
+
+
+
+    "TRANSFERVIEWER_TRANSFER_NULL" : "Nessun download e/o upload in corso",
     "TRANSFERVIEWER_TRANSFER_PREPARED" : "In preparazione...",
-    "ERROR_FILE_UPLOAD" : "Si è verificato un errore durante l'upload del file e/o cartella",
-    "ARCHIVE_HINT_REFRESH" : "Aggiorna",
+
+
     "DRIVEMANAGER_TITLE" : "Gestore dei Drive",
     "DRIVEMANAGER_DESCRIPTION" : "Aggiungi, rimuovi o modifica le impostazioni dei tuoi drive.",
-    "WORD_ADD" : "Aggiungi",
-    "DOCKERBUTTON_HINT_DRIVEMANAGER" : "Gestore dei Drive",
+
+
     "SETTINGS_DRIVE_DIALOG_TITLE" : "Conferma eliminazione",
     "SETTINGS_DRIVE_DIALOG_DESCRIPTION" : "Vuoi davvero eliminare questo Drive? Questa azione sarà irreversibile",
     "SETTINGS_DRIVE_ERROR_DIALOG_DESCRIPTION" : "Questo Drive contiene dei dati pertanto non può essere eliminato, potrai comunque disattivarlo in qualsiasi momento dalle impostazioni",
-    "ARCHIVE_HINT_SYNC" : "Sincronizza cartella",
-    "ARCHIVE_ERROR_DIALOG_REQUEST_SYNC": "Sei sicuro di voler sincronizzare questa cartella?",
-    "ARCHIVE_DIALOG_REQUEST_SYNC" : "Qualcosa è andato storto nella sincronizzazione. Riprova più tardi",
+
+
     "WIZARD_SELECT_LANGUAGE" : "Seleziona una lingua.",
     "WIZARD_WELCOME" : "Benvenuto su Nefele",
     "WIZARD_TERMS" : "Accetto i termini d'uso del servizio e dichiaro di aver letto l'informativa sul trattamento dei miei dati personali.",
     "WIZARD_FIRST_CLOUD" : "Aggiungi il tuo primo Cloud a Nefele",
     "WIZARD_FIRST_CLOUD_DESCRIPTION" : "Segui la procedura guidata, per aggiungere il tuo primo spazio di archiviazione.",
+
+
     "CLOUDHELPER_TITLE" : ""
+
 }

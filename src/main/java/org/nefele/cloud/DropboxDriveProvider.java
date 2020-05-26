@@ -33,11 +33,10 @@ import org.nefele.Application;
 import org.nefele.Resources;
 import org.nefele.core.TransferInfoCallback;
 import org.nefele.fs.MergeChunk;
-import org.nefele.ui.dialog.BaseDialog;
 import org.nefele.ui.dialog.Dialogs;
 import org.nefele.ui.dialog.InputDialog;
 import org.nefele.ui.dialog.InputDialogResult;
-import org.nefele.utils.ExtraPlatform;
+import org.nefele.utils.PlatformUtils;
 
 import java.awt.*;
 import java.io.IOException;
@@ -155,9 +154,9 @@ public class DropboxDriveProvider extends Drive {
                             .browse(URI.create(URL));
 
 
-                    ExtraPlatform.runLaterAndWait(() -> {
+                    PlatformUtils.runLaterAndWait(() -> {
                         result.set(Dialogs.showInputBox(
-                                "Inserisci il codice di autorizzazione che hai ricevuto da Dropbox",
+                                "Inserisci il codice di autorizzazione che hai ricevuto da Dropbox", // TODO: Fix translation
                                 InputDialog.DIALOG_RETRY, InputDialog.DIALOG_CONTINUE));
                     });
 

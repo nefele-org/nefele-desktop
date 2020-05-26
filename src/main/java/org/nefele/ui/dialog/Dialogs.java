@@ -30,6 +30,7 @@ import javafx.util.Pair;
 import org.nefele.Application;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 public final class Dialogs {
 
@@ -74,9 +75,18 @@ public final class Dialogs {
                 new WarningDialog(title, message), buttons.length > 0 ? buttons : new int[] { BaseDialog.DIALOG_OK });
     }
 
-    public static InputDialogResult showInputBox(String title, int... buttons) {
 
-        InputDialog inputDialog = new InputDialog(title);
+    public static InputDialogResult showInputBox(String title, int... buttons) {
+        return showInputBox(title, new String[0], buttons);
+    }
+
+    public static InputDialogResult showInputBox(String title, String prompt, int... buttons) {
+        return showInputBox(title, new String[] { prompt }, buttons);
+    }
+
+    public static InputDialogResult showInputBox(String title, String[] prompts, int... buttons) {
+
+        InputDialog inputDialog = new InputDialog(title, prompts);
 
         for(int i : buttons)
             inputDialog.getButtons().add(i);

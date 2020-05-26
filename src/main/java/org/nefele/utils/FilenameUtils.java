@@ -24,45 +24,23 @@
 
 package org.nefele.utils;
 
-import javafx.application.Platform;
+import java.io.File;
+import java.io.IOException;
 
-import java.util.concurrent.CountDownLatch;
+public final class FilenameUtils {
 
-public final class ExtraPlatform {
+    public static boolean isFilenameInvalid(String filename) {
 
-    public static void runLaterAndWait(Runnable runnable) {
+        File file = new File(filename);
 
-        if(Platform.isFxApplicationThread())
-            runnable.run();
-
-        else {
-
-            final CountDownLatch countDownLatch = new CountDownLatch(1);
-
-            Platform.runLater(() -> {
-
-                try {
-                    runnable.run();
-                } finally {
-                    countDownLatch.countDown();
-                }
-
-            });
-
-            try {
-                countDownLatch.await();
-            } catch (InterruptedException ignored) { }
-
+        try {
+            file.getCanonicalPath();
+        } catch (IOException ignored) {
+            return true;
         }
 
-    }
-
-    public static void runLaterIfNeeded(Runnable runnable) {
-
-        if(Platform.isFxApplicationThread())
-            runnable.run();
-        else
-            Platform.runLater(runnable);
+        return false;
 
     }
+
 }

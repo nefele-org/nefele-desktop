@@ -28,7 +28,9 @@ import org.nefele.Application;
 import org.nefele.cloud.Drive;
 import org.nefele.cloud.Drives;
 import org.nefele.core.Mime;
+import org.nefele.core.Mimes;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.FileAttribute;
@@ -106,10 +108,32 @@ public class MergeFileStore extends FileStore {
         throw new UnsupportedOperationException();
     }
 
-    public void createDirectory(MergePath path, FileAttribute<?>... fileAttributes) throws IOException {
+
+    public void createFile(MergePath path, FileAttribute<?>... fileAttributes) throws IOException {
+
+        if(path.getInode().getData().exists())
+            throw new FileAlreadyExistsException(path.toString());
+
 
         MergeNode inode = path.getInode().getData();
 
+        inode.create();
+        inode.setMime(Mimes.getInstance().getByExtension(inode.getName()).getType());
+        inode.invalidate();
+
+        Application.log(getClass(), "Created file %s", path.toString());
+
+    }
+
+    public void createDirectory(MergePath path, FileAttribute<?>... fileAttributes) throws IOException {
+
+        if(path.getInode().getData().exists())
+            throw new FileAlreadyExistsException(path.toString());
+
+
+        MergeNode inode = path.getInode().getData();
+
+        inode.create();
         inode.setMime(Mime.FOLDER.getType());
         inode.invalidate();
 
@@ -118,6 +142,9 @@ public class MergeFileStore extends FileStore {
     }
 
     public void delete(MergePath path) throws IOException {
+
+        if(!path.getInode().getData().exists())
+            throw new NoSuchFileException(path.toString());
 
         if(!path.getInode().getChildren().isEmpty())
             throw new DirectoryNotEmptyException(path.toString());
@@ -136,18 +163,34 @@ public class MergeFileStore extends FileStore {
     }
 
 
-    public void moveToTrash(MergePath path) throws IOException {
+    public void move(MergePath oldPath, MergePath newPath) throws IOException {
 
-        if(!path.getInode().getChildren().isEmpty())
-            throw new DirectoryNotEmptyException(path.toString());
+        if(newPath.getInode().getData().exists())
+            throw new FileAlreadyExistsException(newPath.toString());
 
-        if(path.getInode().getParent() == null)
-            throw new IOException("Can not move to trash root directory!");
+        if(newPath.getInode().getParent() == null)
+            throw new FileAlreadyExistsException(newPath.toString());
 
 
-        //path.getInode().getData().setTrashed(true);
-        //path.getInode().getData().invalidate();
+        String newParent = oldPath.getInode().getData().getParent();
+        String newName = newPath.getInode().getData().getName();
 
-        Application.log(getClass(), "Moved to trash %s", path.toString());
+        newPath.getInode().setData(oldPath.getInode().getData());
+        newPath.getInode().getData().setName(newName);
+        newPath.getInode().getData().setParent(newParent);
+        newPath.getInode().getData().invalidate();
+
+        oldPath.getInode().getParent().remove(oldPath.getInode());
+
+
+        Application.log(getClass(), "Moved %s to %s", oldPath.toString(), newPath.toString());
+
+    }
+
+    public void checkAccess(MergePath path) throws NoSuchFileException {
+
+        if(!path.getInode().getData().exists())
+            throw new NoSuchFileException(path.toString());
+
     }
 }
