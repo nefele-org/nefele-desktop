@@ -145,7 +145,7 @@ public class OfflineDriveProvider extends Drive {
 
     @Override
     public long getMaxQuota() {
-        return 2048L;
+        return 8589934592L;
     }
 
 

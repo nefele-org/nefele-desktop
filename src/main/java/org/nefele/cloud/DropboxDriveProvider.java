@@ -45,11 +45,9 @@ import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URI;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Locale;
@@ -188,7 +186,7 @@ public class DropboxDriveProvider extends Drive {
     public long getMaxQuota() {
 
         if(spaceUsage != null)
-            return (spaceUsage.getAllocation().getIndividualValue().getAllocated() - spaceUsage.getUsed()) / MergeChunk.getSize() - 1;
+            return (spaceUsage.getAllocation().getIndividualValue().getAllocated() - spaceUsage.getUsed());
 
         return 0;
 

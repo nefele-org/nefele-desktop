@@ -96,13 +96,13 @@ public class StatsDriveInfo extends StackPane implements Initializable, Themeabl
 
 
         labelTotalQuota.textProperty().bind(
-                BindingsUtils.createSizeBinding(() -> getDrive().getQuota() * MergeChunk.getSize(), "", getDrive().quotaProperty(), getDrive().chunksProperty()));
+                BindingsUtils.createSizeBinding(() -> getDrive().getQuota(), "", getDrive().quotaProperty(), getDrive().chunksProperty()));
 
         labelTotalSpace.textProperty().bind(
-                BindingsUtils.createSizeBinding(() -> getDrive().getMaxQuota() * MergeChunk.getSize(), ""));
+                BindingsUtils.createSizeBinding(() -> getDrive().getMaxQuota(), ""));
 
         spinner.progressProperty().bind(Bindings.createDoubleBinding (
-                () -> (double) getDrive().getChunks() / (double) getDrive().getQuota(), getDrive().chunksProperty(), getDrive().quotaProperty()));
+                () -> (double) getDrive().getUsedSpace() / (double) getDrive().getQuota(), getDrive().chunksProperty(), getDrive().quotaProperty()));
 
     }
 
@@ -116,7 +116,7 @@ public class StatsDriveInfo extends StackPane implements Initializable, Themeabl
 
     public void update() {
 
-        spinner.setProgress((double) getDrive().getChunks() / (double) getDrive().getQuota());
+        spinner.setProgress((double) getDrive().getUsedSpace() / (double) getDrive().getQuota());
 
     }
 

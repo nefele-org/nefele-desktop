@@ -30,12 +30,12 @@ import org.nefele.cloud.Drives;
 import org.nefele.core.Mime;
 import org.nefele.core.Mimes;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.FileAttributeView;
 import java.nio.file.attribute.FileStoreAttributeView;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 
@@ -69,17 +69,21 @@ public class MergeFileStore extends FileStore {
         return Drives.getInstance().getDrives()
                 .stream()
                 .mapToLong(Drive::getQuota)
-                .sum() * MergeChunk.getSize();
+                .sum();
 
     }
 
     @Override
     public long getUsableSpace() throws IOException {
 
-        return getTotalSpace() - Drives.getInstance().getDrives()
+        return getTotalSpace() - fileSystem.getStorage().getInodes()
+                .values()
                 .stream()
-                .mapToLong(Drive::getChunks)
-                .sum() * MergeChunk.getSize();
+                .flatMap(i -> i.getChunks().stream())
+                .collect(Collectors.toList())
+                .stream()
+                .mapToLong(MergeChunk::getSize)
+                .sum();
 
     }
 

@@ -96,7 +96,10 @@ public class DownloadTransferInfo extends TransferInfo {
 
                         });
 
-                        getFileSystem().getStorage().write(chunk, byteBuffer, 0);
+
+                        getFileSystem().getStorage()
+                                .write(chunk, byteBuffer, 0, false);
+
                         break;
 
                     } catch (TransferInfoTryAgainException e) {

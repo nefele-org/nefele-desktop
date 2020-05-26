@@ -34,15 +34,21 @@ public class MergeChunk implements Invalidatable {
     private final long offset;
     private final MergeNode inode;
     private final Drive drive;
+    private final boolean compressed;
+    private final boolean encrypted;
+    private long size;
     private String hash;
     private boolean dirty;
 
-    public MergeChunk(String id, long offset, MergeNode inode, Drive drive, String hash) {
+    public MergeChunk(String id, long offset, MergeNode inode, Drive drive, String hash, long size, boolean compressed, boolean encrypted) {
         this.id = id;
         this.offset = offset;
         this.inode = inode;
         this.drive = drive;
         this.hash = hash;
+        this.compressed = compressed;
+        this.encrypted = encrypted;
+        this.size = size;
         this.dirty = false;
     }
 
@@ -71,7 +77,21 @@ public class MergeChunk implements Invalidatable {
         this.hash = hash;
     }
 
+    public boolean isCompressed() {
+        return compressed;
+    }
 
+    public boolean isEncrypted() {
+        return encrypted;
+    }
+
+    public void setSize(long size) {
+        this.size = size;
+    }
+
+    public long getSize() {
+        return size;
+    }
 
     @Override
     public void invalidate() {
@@ -89,7 +109,7 @@ public class MergeChunk implements Invalidatable {
     }
 
 
-    public static long getSize() {
+    public static long getDefaultSize() {
         return Application.getInstance().getConfig().getLong("core.mfs.blocksize").orElse(65536L);
     }
 

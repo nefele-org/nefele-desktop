@@ -126,4 +126,5 @@ public class Tree<T> {
     public void setParent(Tree<T> parent) {
         this.parent.set(parent);
     }
+
 }

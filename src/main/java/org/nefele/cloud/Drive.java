@@ -27,13 +27,16 @@ package org.nefele.cloud;
 import javafx.beans.property.*;
 import org.nefele.core.TransferInfoCallback;
 import org.nefele.core.TransferInfoException;
-import org.nefele.fs.MergeChunk;
-import org.nefele.fs.MergeFileSystem;
+import org.nefele.fs.*;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
 import java.nio.ByteBuffer;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.util.stream.Collectors;
 
 public abstract class Drive {
 
@@ -127,7 +130,9 @@ public abstract class Drive {
         this.quota.set(quota);
     }
 
-    public long getChunks() { return chunks.get(); }
+    public long getChunks() {
+        return chunks.get();
+    }
 
     public LongProperty chunksProperty() {
         return chunks;
@@ -171,5 +176,26 @@ public abstract class Drive {
 
     public void setDescription(String description) {
         this.description.set(description);
+    }
+
+
+    public long getUsedSpace() {
+
+        /* FIXME: Optimize... */
+
+        MergeStorage storage = ((MergeFileSystem) FileSystems
+                .getFileSystem(URI.create("nefele:///")))
+                .getStorage();
+
+        return storage.getInodes().values()
+                .stream()
+                .filter(MergeNode::exists)
+                .flatMap(i -> i.getChunks().stream())
+                .collect(Collectors.toList())
+                .stream()
+                .filter(i -> i.getDrive().equals(this))
+                .mapToLong(MergeChunk::getSize)
+                .sum();
+
     }
 }

@@ -24,8 +24,6 @@
 
 package org.nefele.fs;
 
-import org.nefele.Application;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -34,7 +32,6 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
-import java.nio.file.Files;
 import java.time.Instant;
 
 public class MergeFileChannel extends FileChannel {
@@ -124,7 +121,7 @@ public class MergeFileChannel extends FileChannel {
     @Override
     public int read(ByteBuffer byteBuffer, long position) throws IOException {
 
-        final long blocksize = MergeChunk.getSize();
+        final long blocksize = MergeChunk.getDefaultSize();
         final long initpos = position;
 
         if(blocksize < 8192L)
@@ -155,7 +152,7 @@ public class MergeFileChannel extends FileChannel {
                 throw new IOException(String.format("chunk at offset %d not found for inode %s", block, getInode().getId()));
 
 
-            try (InputStream inputStream = getFileSystem().getStorage().read(chunk)) {
+            try (InputStream inputStream = getFileSystem().getStorage().read(chunk, false)) {
 
                 inputStream.skip(offset);
 
@@ -182,7 +179,7 @@ public class MergeFileChannel extends FileChannel {
     @Override
     public int write(ByteBuffer byteBuffer, long position) throws IOException {
 
-        final long blocksize = MergeChunk.getSize();
+        final long blocksize = MergeChunk.getDefaultSize();
         final long initpos = position;
 
 
@@ -217,7 +214,7 @@ public class MergeFileChannel extends FileChannel {
             }
 
             getFileSystem().getStorage()
-                    .write(chunk, byteBuffer, offset);
+                    .write(chunk, byteBuffer, offset, true);
 
 
             position += size;

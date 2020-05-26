@@ -212,7 +212,7 @@ public class GoogleDriveProvider extends Drive {
 
     @Override
     public long getMaxQuota() {
-        return (storageQuotaLimit - storageQuotaUsed) / MergeChunk.getSize() - 1;
+        return (storageQuotaLimit - storageQuotaUsed);
     }
 
     @Override

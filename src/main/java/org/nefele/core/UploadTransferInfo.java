@@ -123,7 +123,7 @@ public class UploadTransferInfo extends TransferInfo {
 
             while(true) {
 
-                try(InputStream inputStream = getFileSystem().getStorage().read(chunk)) {
+                try(InputStream inputStream = getFileSystem().getStorage().read(chunk, true)) {
 
                     chunk.getDrive().writeChunk(chunk, inputStream, new TransferInfoCallback() {
 

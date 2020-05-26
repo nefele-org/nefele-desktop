@@ -131,13 +131,13 @@ public final class Drives implements Service {
         if(getDrives()
                 .stream()
                 .filter(i -> i.getStatus() == Drive.STATUS_READY)
-                .mapToLong(i -> i.getQuota() - i.getChunks()).sum() == 0)
+                .mapToLong(i -> i.getQuota() - i.getUsedSpace()).sum() <= 0L)
             throw new DriveFullException();
 
         return getDrives()
                 .stream()
                 .filter(i -> i.getStatus() == Drive.STATUS_READY)
-                .max(Comparator.comparingLong(a -> a.getQuota() - a.getChunks()))
+                .max(Comparator.comparingLong(a -> a.getQuota() - a.getUsedSpace()))
                 .get();
 
     }

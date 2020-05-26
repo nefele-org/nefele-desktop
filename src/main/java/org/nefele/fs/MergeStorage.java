@@ -35,13 +35,14 @@ import org.nefele.core.TransferInfoTryAgainException;
 
 import java.io.*;
 import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
 import java.nio.file.*;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.zip.DeflaterOutputStream;
+import java.util.zip.InflaterInputStream;
 
 ;
 
@@ -51,7 +52,7 @@ public class MergeStorage implements Service {
     private final HashMap<String, MergeChunk> chunks;
     private final ArrayList<MergeChunk> dustChunks;
     private final ArrayList<MergeNode> dustNodes;
-    private final Path path;
+    private final Path cachePath;
 
 
     public MergeStorage() {
@@ -60,7 +61,7 @@ public class MergeStorage implements Service {
         this.chunks = new HashMap<>();
         this.dustChunks = new ArrayList<>();
         this.dustNodes = new ArrayList<>();
-        this.path = Application.getInstance().getDataPath().resolve("cache");
+        this.cachePath = Application.getInstance().getDataPath().resolve("cache");
 
         /* FIXME: Service registered too late */
         initialize(null);
@@ -78,47 +79,83 @@ public class MergeStorage implements Service {
 
 
 
-    public void write(MergeChunk chunk, ByteBuffer byteBuffer, long offset) throws IOException {
+    public void write(MergeChunk chunk, ByteBuffer byteBuffer, long offset, boolean raw) throws IOException {
 
         try {
 
-            FileChannel fileChannel;
+            if(offset != 0L) {
 
-            if(offset == 0L) {
+//                fileChannel = (FileChannel) Files.newByteChannel(cachePath.resolve(Path.of(chunk.getId())),
+//                        StandardOpenOption.WRITE);
 
-                fileChannel = (FileChannel) Files.newByteChannel(path.resolve(Path.of(chunk.getId())),
-                        StandardOpenOption.CREATE,
-                        StandardOpenOption.TRUNCATE_EXISTING,
-                        StandardOpenOption.WRITE);
+                throw new IllegalStateException("deprecated");
 
-            } else {
-
-                fileChannel = (FileChannel) Files.newByteChannel(path.resolve(Path.of(chunk.getId())),
-                        StandardOpenOption.WRITE);
             }
 
-            fileChannel.write(byteBuffer, offset);
-            fileChannel.close();
+            if(chunk.isEncrypted()) {
+                // TODO...
+            }
+
+
+            OutputStream outputStream;
+
+            if(chunk.isCompressed() && raw) {
+                outputStream = new DeflaterOutputStream(Files.newOutputStream(cachePath.resolve(chunk.getId()),
+                        StandardOpenOption.CREATE,
+                        StandardOpenOption.WRITE,
+                        StandardOpenOption.TRUNCATE_EXISTING
+                ));
+
+            } else {
+                outputStream = Files.newOutputStream(cachePath.resolve(chunk.getId()),
+                        StandardOpenOption.CREATE,
+                        StandardOpenOption.WRITE,
+                        StandardOpenOption.TRUNCATE_EXISTING
+                );
+
+            }
+
+
+            while(byteBuffer.hasRemaining()) {
+
+                byte[] bytes = new byte[Math.min(65536, byteBuffer.remaining())];
+
+                byteBuffer.get(bytes);
+                outputStream.write(bytes);
+
+            }
+
+            outputStream.flush();
+            outputStream.close();
 
 
             chunk.setHash(String.format("%d", System.nanoTime()));
+            chunk.setSize(Files.size(cachePath.resolve(chunk.getId())));
             chunk.invalidate();
 
         } catch (IOException e) {
             Application.log(getClass(), "WARNING! write() %s: %s", e.getClass().getName(), e.getMessage());
+            throw e;
         }
 
     }
 
-    public InputStream read(MergeChunk chunk) throws IOException {
+    public InputStream read(MergeChunk chunk, boolean raw) throws IOException {
 
         try {
 
-            return Files.newInputStream(path.resolve(Path.of(chunk.getId())));
+            if(chunk.isEncrypted()) {
+                 // TODO... decrypt()
+            }
+
+            if(chunk.isCompressed() && !raw)
+                return new InflaterInputStream(Files.newInputStream(cachePath.resolve(chunk.getId())));
+
+            return Files.newInputStream(cachePath.resolve(chunk.getId()));
 
         } catch (IOException e) {
             Application.log(getClass(), "WARNING! read() %s: %s", e.getClass().getName(), e.getMessage());
-            throw new IOException(e.getMessage());
+            throw e;
         }
 
     }
@@ -150,7 +187,7 @@ public class MergeStorage implements Service {
             chunk.getDrive().invalidate();
 
             if(isCached(chunk))
-                Files.delete(path.resolve(Path.of(chunk.getId())));
+                Files.delete(cachePath.resolve(Path.of(chunk.getId())));
 
 
         } catch (IOException e) {
@@ -185,7 +222,13 @@ public class MergeStorage implements Service {
         try {
 
             Drive drive = Drives.getInstance().nextAllocatable();
-            MergeChunk chunk = new MergeChunk(generateId(), offset, node, drive, "");
+
+            MergeChunk chunk = new MergeChunk(
+                    generateId(), offset, node, drive, "", 0L,
+                    Application.getInstance().getConfig().getBoolean("core.mfs.compressed").orElse(false),
+                    Application.getInstance().getConfig().getBoolean("core.mfs.encrypted").orElse(false)
+            );
+
 
             getChunks().put(chunk.getId(), chunk);
             node.getChunks().add(chunk);
@@ -220,7 +263,7 @@ public class MergeStorage implements Service {
 
 
     public boolean isCached(MergeChunk chunk) {
-        return Files.exists(path.resolve(Path.of(chunk.getId())));
+        return Files.exists(cachePath.resolve(Path.of(chunk.getId())));
     }
 
 
@@ -231,7 +274,8 @@ public class MergeStorage implements Service {
         return getChunks().values()
                 .stream()
                 .filter(this::isCached)
-                .count() * MergeChunk.getSize();
+                .mapToLong(MergeChunk::getSize)
+                .sum();
 
     }
 
@@ -241,7 +285,7 @@ public class MergeStorage implements Service {
 
         try {
 
-            Files.list(path).forEach(p -> {
+            Files.list(cachePath).forEach(p -> {
                 try {
                     Files.delete(p);
                 } catch (IOException ignored) { }
@@ -257,8 +301,8 @@ public class MergeStorage implements Service {
 
         try {
 
-            if (Files.notExists(path))
-                Files.createDirectory(path);
+            if (Files.notExists(cachePath))
+                Files.createDirectory(cachePath);
 
         } catch (IOException e) {
             Application.panic(getClass(), e);
@@ -304,12 +348,15 @@ public class MergeStorage implements Service {
                             if(inode == null)
                                 throw new NoSuchFileException(r.getString("inode"));
 
-                            MergeChunk chunk = new MergeChunk(
+                            MergeChunk chunk = new MergeChunk (
                                     r.getString("id"),
                                     r.getLong("offset"),
                                     inode,
                                     drive,
-                                    r.getString("hash")
+                                    r.getString("hash"),
+                                    r.getLong("size"),
+                                    r.getInt("compressed") != 0,
+                                    r.getInt("encrypted") != 0
                             );
 
                             getChunks().put(chunk.getId(), chunk);
@@ -371,7 +418,7 @@ public class MergeStorage implements Service {
 
 
             Application.getInstance().getDatabase().update (
-                    "INSERT OR REPLACE INTO chunks (id, offset, inode, drive, hash) values (?, ?, ?, ?, ?)",
+                    "INSERT OR REPLACE INTO chunks (id, offset, inode, drive, hash, size, compressed, encrypted) values (?, ?, ?, ?, ?, ?, ?, ?)",
 
                     s -> {
 
@@ -385,6 +432,9 @@ public class MergeStorage implements Service {
                             s.setString(3, chunk.getInode().getId());
                             s.setString(4, chunk.getDrive().getId());
                             s.setString(5, chunk.getHash());
+                            s.setLong(6, chunk.getSize());
+                            s.setInt(7, chunk.isCompressed() ? 1 : 0);
+                            s.setInt(8, chunk.isEncrypted() ? 1 : 0);
                             s.addBatch();
 
                             chunk.validate();
@@ -439,7 +489,6 @@ public class MergeStorage implements Service {
         cleanCache();
 
     }
-
 
 
     public static String generateId() {
