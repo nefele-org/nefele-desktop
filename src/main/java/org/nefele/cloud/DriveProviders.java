@@ -38,31 +38,31 @@ import java.util.concurrent.atomic.AtomicReference;
 
 
 
-public final class Drives implements Service {
+public final class DriveProviders implements Service {
 
-    private final static Drives instance = new Drives();
+    private final static DriveProviders instance = new DriveProviders();
 
-    public static Drives getInstance() {
+    public static DriveProviders getInstance() {
         return instance;
     }
 
 
 
-    private final ObservableList<Drive> drives;
-    private final ArrayList<Drive> dustDrives;
+    private final ObservableList<DriveProvider> driveProviders;
+    private final ArrayList<DriveProvider> dustDriveProviders;
 
-    private Drives() {
-        drives = FXCollections.observableArrayList();
-        dustDrives = new ArrayList<>();
+    private DriveProviders() {
+        driveProviders = FXCollections.observableArrayList();
+        dustDriveProviders = new ArrayList<>();
     }
 
 
 
 
 
-    public Drive fromId(String id) throws DriveNotFoundException {
+    public DriveProvider fromId(String id) throws DriveNotFoundException {
 
-        return getDrives()
+        return getDriveProviders()
                 .stream()
                 .filter(i -> i.getId().equals(id))
                 .findFirst()
@@ -91,7 +91,7 @@ public final class Drives implements Service {
                         if(e.getErrorCode() == SQLiteErrorCode.SQLITE_NOTFOUND.code)
                             throw new IllegalStateException();
 
-                        Application.panic(Drive.class, e);
+                        Application.panic(DriveProvider.class, e);
 
                     }
 
@@ -121,39 +121,39 @@ public final class Drives implements Service {
     }
 
 
-    public Drive nextAllocatable() throws DriveFullException, DriveNotFoundException {
+    public DriveProvider nextAllocatable() throws DriveFullException, DriveNotFoundException {
 
-        if (getDrives()
+        if (getDriveProviders()
                 .stream()
-                .noneMatch(i -> i.getStatus() == Drive.STATUS_READY))
-            throw new DriveNotFoundException("No drive is ready or available");
+                .noneMatch(i -> i.getStatus() == DriveProvider.STATUS_READY))
+            throw new DriveNotFoundException("No drives are ready or available");
 
-        if(getDrives()
+        if(getDriveProviders()
                 .stream()
-                .filter(i -> i.getStatus() == Drive.STATUS_READY)
+                .filter(i -> i.getStatus() == DriveProvider.STATUS_READY)
                 .mapToLong(i -> i.getQuota() - i.getUsedSpace()).sum() <= 0L)
-            throw new DriveFullException();
+            throw new DriveFullException("Current active drives are full");
 
-        return getDrives()
+        return getDriveProviders()
                 .stream()
-                .filter(i -> i.getStatus() == Drive.STATUS_READY)
+                .filter(i -> i.getStatus() == DriveProvider.STATUS_READY)
                 .max(Comparator.comparingLong(a -> a.getQuota() - a.getUsedSpace()))
                 .get();
 
     }
 
-    public void remove(Drive drive) throws DriveNotEmptyException {
+    public void remove(DriveProvider driveProvider) throws DriveNotEmptyException {
 
-        if(drive.getChunks() > 0)
+        if(driveProvider.getChunks() > 0)
             throw new DriveNotEmptyException();
 
-        if(drives.remove(drive))
-            dustDrives.add(drive);
+        if(driveProviders.remove(driveProvider))
+            dustDriveProviders.add(driveProvider);
 
     }
 
-    public ObservableList<Drive> getDrives() {
-        return drives;
+    public ObservableList<DriveProvider> getDriveProviders() {
+        return driveProviders;
     }
 
 
@@ -169,11 +169,11 @@ public final class Drives implements Service {
                     null, r -> ids.add(r.getString(1)));
 
             for(String id : ids)
-                getDrives().add(fromId(id));
+                getDriveProviders().add(fromId(id));
 
 
         } catch (SQLException | DriveNotFoundException e) {
-            Application.panic(Drive.class, e);
+            Application.panic(DriveProvider.class, e);
         }
 
     }
@@ -186,9 +186,9 @@ public final class Drives implements Service {
             Application.getInstance().getDatabase().update(
                     "INSERT OR REPLACE INTO drives (id, service, description, quota, chunks) VALUES (?, ?, ?, ?, ?)",
                     s -> {
-                        drives
+                        driveProviders
                                 .stream()
-                                .filter(Drive::isDirty)
+                                .filter(DriveProvider::isDirty)
                                 .forEach(i -> {
 
                                     try {
@@ -214,7 +214,7 @@ public final class Drives implements Service {
             Application.getInstance().getDatabase().update(
                     "DELETE FROM drives WHERE id = ?",
                     s -> {
-                        dustDrives
+                        dustDriveProviders
                                 .forEach(i -> {
 
                                     try {

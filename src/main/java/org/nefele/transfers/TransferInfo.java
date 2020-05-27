@@ -22,11 +22,10 @@
  * THE SOFTWARE.
  */
 
-package org.nefele.core;
+package org.nefele.transfers;
 
 import javafx.beans.property.*;
 import org.nefele.fs.MergeFileSystem;
-import org.nefele.fs.MergeNode;
 import org.nefele.fs.MergePath;
 
 import static java.util.Objects.requireNonNull;

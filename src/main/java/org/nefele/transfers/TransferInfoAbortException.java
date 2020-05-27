@@ -22,9 +22,7 @@
  * THE SOFTWARE.
  */
 
-package org.nefele.core;
-
-import java.io.IOException;
+package org.nefele.transfers;
 
 public class TransferInfoAbortException extends TransferInfoException {
 

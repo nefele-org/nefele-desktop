@@ -24,7 +24,7 @@
 
 package org.nefele.fs;
 
-import org.nefele.core.Mime;
+import org.nefele.Mime;
 import org.nefele.utils.Tree;
 
 import java.time.Instant;

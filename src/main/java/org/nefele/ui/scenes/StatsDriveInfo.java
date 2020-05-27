@@ -32,9 +32,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import org.nefele.Application;
 import org.nefele.Resources;
-import org.nefele.cloud.Drive;
-import org.nefele.fs.MergeChunk;
-import org.nefele.ui.Themeable;
+import org.nefele.cloud.DriveProvider;
+import org.nefele.Themeable;
 import org.nefele.utils.BindingsUtils;
 
 import java.net.URL;
@@ -48,11 +47,11 @@ public class StatsDriveInfo extends StackPane implements Initializable, Themeabl
     @FXML private Label labelTotalSpace;
     @FXML private Label labelTotalQuota;
 
-    private final Drive drive;
+    private final DriveProvider driveProvider;
 
-    public StatsDriveInfo(Drive drive) {
+    public StatsDriveInfo(DriveProvider driveProvider) {
         
-        this.drive = drive;
+        this.driveProvider = driveProvider;
 
         Resources.getFXML(this, "/fxml/StatsDriveInfo.fxml");
     }
@@ -62,47 +61,47 @@ public class StatsDriveInfo extends StackPane implements Initializable, Themeabl
 
         labelStatus.textProperty().bind(Bindings.createStringBinding(() -> {
 
-            switch (getDrive().getStatus()) {
+            switch (getDriveProvider().getStatus()) {
 
-                case Drive.STATUS_CONNECTING:
+                case DriveProvider.STATUS_CONNECTING:
                     return (Application.getInstance().getLocale().get("STATS_STATUS_CONNECTING"));
 
-                case Drive.STATUS_READY:
+                case DriveProvider.STATUS_READY:
                     return (Application.getInstance().getLocale().get("STATS_STATUS_READY"));
 
-                case Drive.STATUS_DISCONNECTING:
+                case DriveProvider.STATUS_DISCONNECTING:
                     return (Application.getInstance().getLocale().get("STATS_STATUS_DISCONNECTING"));
 
-                case Drive.STATUS_DISCONNECTED:
+                case DriveProvider.STATUS_DISCONNECTED:
                     return (Application.getInstance().getLocale().get("STATS_STATUS_DISCONNECTED"));
 
-                case Drive.STATUS_ERROR:
+                case DriveProvider.STATUS_ERROR:
                     return (Application.getInstance().getLocale().get("STATS_STATUS_ERROR"));
 
-                case Drive.STATUS_DISABLED:
+                case DriveProvider.STATUS_DISABLED:
                     return (Application.getInstance().getLocale().get("STATS_STATUS_DISABLED"));
 
-                case Drive.STATUS_UNKNOWN:
+                case DriveProvider.STATUS_UNKNOWN:
                 default:
                     return (Application.getInstance().getLocale().get("STATS_STATUS_UNKNOWN"));
 
 
             }
 
-        }, getDrive().statusProperty()));
+        }, getDriveProvider().statusProperty()));
 
 
-        labelDriveName.textProperty().bind(getDrive().descriptionProperty());
+        labelDriveName.textProperty().bind(getDriveProvider().descriptionProperty());
 
 
         labelTotalQuota.textProperty().bind(
-                BindingsUtils.createSizeBinding(() -> getDrive().getQuota(), "", getDrive().quotaProperty(), getDrive().chunksProperty()));
+                BindingsUtils.createSizeBinding(() -> getDriveProvider().getQuota(), "", getDriveProvider().quotaProperty(), getDriveProvider().chunksProperty()));
 
         labelTotalSpace.textProperty().bind(
-                BindingsUtils.createSizeBinding(() -> getDrive().getMaxQuota(), ""));
+                BindingsUtils.createSizeBinding(() -> getDriveProvider().getMaxQuota(), ""));
 
         spinner.progressProperty().bind(Bindings.createDoubleBinding (
-                () -> (double) getDrive().getUsedSpace() / (double) getDrive().getQuota(), getDrive().chunksProperty(), getDrive().quotaProperty()));
+                () -> (double) getDriveProvider().getUsedSpace() / (double) getDriveProvider().getQuota(), getDriveProvider().chunksProperty(), getDriveProvider().quotaProperty()));
 
     }
 
@@ -116,12 +115,12 @@ public class StatsDriveInfo extends StackPane implements Initializable, Themeabl
 
     public void update() {
 
-        spinner.setProgress((double) getDrive().getUsedSpace() / (double) getDrive().getQuota());
+        spinner.setProgress((double) getDriveProvider().getUsedSpace() / (double) getDriveProvider().getQuota());
 
     }
 
-    public Drive getDrive() {
-        return drive;
+    public DriveProvider getDriveProvider() {
+        return driveProvider;
     }
 
 }

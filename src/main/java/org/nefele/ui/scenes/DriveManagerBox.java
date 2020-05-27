@@ -37,10 +37,10 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import org.nefele.Application;
 import org.nefele.Resources;
-import org.nefele.cloud.Drive;
+import org.nefele.cloud.DriveProvider;
 import org.nefele.cloud.DriveNotEmptyException;
-import org.nefele.cloud.Drives;
-import org.nefele.ui.Themeable;
+import org.nefele.cloud.DriveProviders;
+import org.nefele.Themeable;
 import org.nefele.ui.dialog.BaseDialog;
 import org.nefele.ui.dialog.Dialogs;
 
@@ -53,16 +53,16 @@ import static java.util.Objects.requireNonNull;
 
 public class DriveManagerBox extends StackPane implements Initializable, Themeable {
     
-    private final ReadOnlyObjectProperty<Drive> drive;
+    private final ReadOnlyObjectProperty<DriveProvider> drive;
 
     @FXML private Label labelName;
     @FXML private JFXToggleButton toggleState;
     @FXML private MaterialDesignIconView buttonDelete;
     @FXML private JFXSlider sliderChunks;
 
-    public DriveManagerBox(Drive drive) {
+    public DriveManagerBox(DriveProvider driveProvider) {
 
-        this.drive = new SimpleObjectProperty<>(requireNonNull(drive));
+        this.drive = new SimpleObjectProperty<>(requireNonNull(driveProvider));
 
         Resources.getFXML(this, "/fxml/DriveManagerBox.fxml");
     }
@@ -73,16 +73,16 @@ public class DriveManagerBox extends StackPane implements Initializable, Themeab
         labelName.textProperty().bind(getDrive().descriptionProperty());
 
 
-        toggleState.setSelected(getDrive().getStatus() == Drive.STATUS_READY);
+        toggleState.setSelected(getDrive().getStatus() == DriveProvider.STATUS_READY);
 
         toggleState.selectedProperty().addListener((v, o, n) -> {
 
             switch (getDrive().getStatus()) {
 
-                case Drive.STATUS_READY:
-                case Drive.STATUS_DISABLED:
+                case DriveProvider.STATUS_READY:
+                case DriveProvider.STATUS_DISABLED:
 
-                    getDrive().setStatus(n ? Drive.STATUS_READY : Drive.STATUS_DISABLED);
+                    getDrive().setStatus(n ? DriveProvider.STATUS_READY : DriveProvider.STATUS_DISABLED);
                     getDrive().invalidate();
                     break;
 
@@ -103,7 +103,7 @@ public class DriveManagerBox extends StackPane implements Initializable, Themeab
 
                     if (Dialogs.showInfoBox("SETTINGS_DRIVE_DIALOG_TITLE", "SETTINGS_DRIVE_DIALOG_DESCRIPTION",
                             BaseDialog.DIALOG_NO, BaseDialog.DIALOG_YES) == BaseDialog.DIALOG_YES)
-                        Drives.getInstance().remove(getDrive());
+                        DriveProviders.getInstance().remove(getDrive());
 
                 } catch (DriveNotEmptyException empty) {
                     Dialogs.showErrorBox("SETTINGS_DRIVE_ERROR_DIALOG_DESCRIPTION");
@@ -132,8 +132,8 @@ public class DriveManagerBox extends StackPane implements Initializable, Themeab
 
         sliderChunks.disableProperty().bind(
                 Bindings
-                        .when(getDrive().statusProperty().isNotEqualTo(Drive.STATUS_READY)
-                                .and(getDrive().statusProperty().isNotEqualTo(Drive.STATUS_DISABLED)))
+                        .when(getDrive().statusProperty().isNotEqualTo(DriveProvider.STATUS_READY)
+                                .and(getDrive().statusProperty().isNotEqualTo(DriveProvider.STATUS_DISABLED)))
                         .then(true)
                         .otherwise(false)
         );
@@ -146,11 +146,11 @@ public class DriveManagerBox extends StackPane implements Initializable, Themeab
         Resources.getCSS(this, "/css/drivemanager-box.css");
     }
 
-    public Drive getDrive() {
+    public DriveProvider getDrive() {
         return drive.get();
     }
 
-    public ReadOnlyObjectProperty<Drive> driveProperty() {
+    public ReadOnlyObjectProperty<DriveProvider> driveProperty() {
         return drive;
     }
 }

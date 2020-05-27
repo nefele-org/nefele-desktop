@@ -26,26 +26,26 @@ package org.nefele.fs;
 
 import org.nefele.Application;
 import org.nefele.Invalidatable;
-import org.nefele.cloud.Drive;
+import org.nefele.cloud.DriveProvider;
 
 public class MergeChunk implements Invalidatable {
 
     private final String id;
     private final long offset;
     private final MergeNode inode;
-    private final Drive drive;
+    private final DriveProvider driveProvider;
     private final boolean compressed;
     private final boolean encrypted;
     private long size;
-    private String hash;
+    private long revision;
     private boolean dirty;
 
-    public MergeChunk(String id, long offset, MergeNode inode, Drive drive, String hash, long size, boolean compressed, boolean encrypted) {
+    public MergeChunk(String id, long offset, MergeNode inode, DriveProvider driveProvider, long revision, long size, boolean compressed, boolean encrypted) {
         this.id = id;
         this.offset = offset;
         this.inode = inode;
-        this.drive = drive;
-        this.hash = hash;
+        this.driveProvider = driveProvider;
+        this.revision = revision;
         this.compressed = compressed;
         this.encrypted = encrypted;
         this.size = size;
@@ -65,16 +65,16 @@ public class MergeChunk implements Invalidatable {
         return inode;
     }
 
-    public Drive getDrive() {
-        return drive;
+    public DriveProvider getDriveProvider() {
+        return driveProvider;
     }
 
-    public String getHash() {
-        return hash;
+    public long getRevision() {
+        return revision;
     }
 
-    public void setHash(String hash) {
-        this.hash = hash;
+    public void setRevision(long revision) {
+        this.revision = revision;
     }
 
     public boolean isCompressed() {

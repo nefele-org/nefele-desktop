@@ -34,7 +34,7 @@ import com.dropbox.core.v2.users.FullAccount;
 import com.dropbox.core.v2.users.SpaceUsage;
 import org.nefele.Application;
 import org.nefele.Resources;
-import org.nefele.core.*;
+import org.nefele.transfers.*;
 import org.nefele.fs.MergeChunk;
 import org.nefele.ui.dialog.Dialogs;
 import org.nefele.ui.dialog.InputDialog;
@@ -50,12 +50,15 @@ import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Date;
+import java.time.Instant;
+import java.time.temporal.TemporalAccessor;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 
-public class DropboxDriveProvider extends Drive {
+public class DropboxDriveProvider extends DriveProvider {
 
     public final static String SERVICE_ID = "dropbox-drive-service";
     public final static String SERVICE_DEFAULT_DESCRIPTION = "Dropbox";
@@ -89,7 +92,10 @@ public class DropboxDriveProvider extends Drive {
         try {
 
             UploadUploader dbxUploader = driveService.files()
-                    .upload("/" + chunk.getId());
+                    .uploadBuilder("/" + chunk.getId())
+                    .withClientModified(Date.from(
+                            Instant.ofEpochMilli(chunk.getRevision())))
+                    .start();
 
 
             dbxUploader.uploadAndFinish(inputStream, new IOUtil.ProgressListener() {
@@ -183,6 +189,32 @@ public class DropboxDriveProvider extends Drive {
 
 
     @Override
+    public int isChunkUpdated(MergeChunk chunk) throws TransferInfoException {
+
+        try {
+
+            long updatedRev = driveService
+                    .files()
+                    .download("/" + chunk.getId())
+                    .getResult()
+                    .getClientModified()
+                        .toInstant()
+                        .toEpochMilli();
+
+            long currentRev = chunk.getRevision();
+
+
+            return (int) (currentRev - updatedRev);
+
+        } catch (RateLimitException | NetworkIOException e) {
+            throw new TransferInfoTryAgainException("Too many request, waiting a bit and try again...", 500, TimeUnit.MILLISECONDS);
+        } catch (Exception e) {
+            throw new TransferInfoAbortException(e.getMessage());
+        }
+
+    }
+
+    @Override
     public long getMaxQuota() {
 
         if(spaceUsage != null)
@@ -194,7 +226,7 @@ public class DropboxDriveProvider extends Drive {
 
 
     @Override
-    public Drive initialize() {
+    public DriveProvider initialize() {
 
         Application.log(getClass(), "Intializing %s %s", SERVICE_ID, getId());
         setStatus(STATUS_CONNECTING);
@@ -325,7 +357,7 @@ public class DropboxDriveProvider extends Drive {
 
         } catch (JsonReader.FileLoadException | RuntimeException | IOException | DbxException e) {
 
-            Application.log(getClass(), "ERROR! Exception %s for %s %s: %s", e.getClass().getName(), SERVICE_ID, getId(), e.getMessage());
+            Application.log(getClass(), e,"%s %s", SERVICE_ID, getId());
 
             setStatus(STATUS_ERROR);
             setError(ERROR_LOGIN_FAIL);
@@ -337,7 +369,7 @@ public class DropboxDriveProvider extends Drive {
     }
 
     @Override
-    public Drive exit() {
+    public DriveProvider exit() {
         return this;
     }
 

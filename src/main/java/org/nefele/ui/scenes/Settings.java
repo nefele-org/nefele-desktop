@@ -39,9 +39,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import org.nefele.Application;
 import org.nefele.Resources;
-import org.nefele.cloud.Drives;
-import org.nefele.ui.Theme;
-import org.nefele.ui.Themeable;
+import org.nefele.Theme;
+import org.nefele.Themeable;
 import org.nefele.ui.dialog.BaseDialog;
 import org.nefele.ui.dialog.Dialogs;
 
@@ -295,6 +294,49 @@ public class Settings extends StackPane implements Initializable, Themeable {
                 }}
         ));
 
+
+        getRecords().add(new SettingsRecord("core.mfs.compressed", "SETTINGS_COMPRESSED", "SETTINGS_COMPRESSED_DESCRIPTION",
+                new JFXToggleButton() {{
+
+                    this.setSelected(Application.getInstance().getConfig().getBoolean("core.mfs.compressed").orElse(false));
+                    this.setSize(8.0);
+
+
+                    this.selectedProperty().addListener((v, o, n) -> {
+
+                        Application.getInstance().runThread(new Thread(() -> {
+
+                            Application.getInstance().getConfig().setBoolean("core.mfs.compressed", n);
+                            Application.getInstance().getConfig().update();
+
+                        }, "updateSettings()::core.mfs.compressed"));
+
+                    });
+
+                }}
+        ));
+
+
+        getRecords().add(new SettingsRecord("core.mfs.encrypted", "SETTINGS_ENCRYPTED", "SETTINGS_ENCRYPTED_DESCRIPTION",
+                new JFXToggleButton() {{
+
+                    this.setSelected(Application.getInstance().getConfig().getBoolean("core.mfs.encrypted").orElse(false));
+                    this.setSize(8.0);
+
+
+                    this.selectedProperty().addListener((v, o, n) -> {
+
+                        Application.getInstance().runThread(new Thread(() -> {
+
+                            Application.getInstance().getConfig().setBoolean("core.mfs.encrypted", n);
+                            Application.getInstance().getConfig().update();
+
+                        }, "updateSettings()::core.mfs.encrypted"));
+
+                    });
+
+                }}
+        ));
 
 
         getRecords().add(new SettingsRecord("core.transfers.parallel", "SETTINGS_TRANSFERS", "SETTINGS_TRANSFERS_DESCRIPTION",

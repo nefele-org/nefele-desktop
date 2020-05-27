@@ -22,10 +22,9 @@
  * THE SOFTWARE.
  */
 
-package org.nefele.core;
+package org.nefele.transfers;
 
 import javafx.application.Platform;
-import org.mortbay.util.ajax.JSON;
 import org.nefele.Application;
 import org.nefele.fs.MergeChunk;
 import org.nefele.fs.MergePath;
@@ -33,7 +32,6 @@ import org.nefele.fs.MergePath;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
-import java.util.Comparator;
 
 public class DownloadTransferInfo extends TransferInfo {
 
@@ -82,7 +80,7 @@ public class DownloadTransferInfo extends TransferInfo {
 
                     try {
 
-                        ByteBuffer byteBuffer = chunk.getDrive().readChunk(chunk, new TransferInfoCallback() {
+                        ByteBuffer byteBuffer = chunk.getDriveProvider().readChunk(chunk, new TransferInfoCallback() {
 
                             @Override
                             public boolean isCanceled() {
@@ -103,11 +101,11 @@ public class DownloadTransferInfo extends TransferInfo {
                         break;
 
                     } catch (TransferInfoTryAgainException e) {
-                        Application.log(getClass(), "WARNING! %s for %s: %s", e.getClass().getName(), chunk.getId(), e.getMessage());
+                        Application.log(getClass(), e, "%s", chunk.getId());
 
                     } catch (Exception e) {
 
-                        Application.log(getClass(), "WARNING! %s, something wrong, transfer canceled for %s: %s", e.getClass().getName(), chunk.getId(), e.getMessage());
+                        Application.log(getClass(), e, "Something wrong, transfer canceled for %s", chunk.getId());
 
                         setStatus(TRANSFER_STATUS_ERROR);
                         return getStatus();
@@ -155,7 +153,7 @@ public class DownloadTransferInfo extends TransferInfo {
 
         } catch (Exception e) {
 
-            Application.log(getClass(), "WARNING! %s, something wrong, writing canceled for %s: %s", e.getClass().getName(), localFile.getAbsolutePath(), e.getMessage());
+            Application.log(getClass(), e, "Something wrong, writing canceled for %s", localFile.getAbsolutePath());
 
             setStatus(TRANSFER_STATUS_ERROR);
             return getStatus();

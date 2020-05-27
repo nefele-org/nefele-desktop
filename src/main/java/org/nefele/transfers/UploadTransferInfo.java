@@ -22,28 +22,21 @@
  * THE SOFTWARE.
  */
 
-package org.nefele.core;
+package org.nefele.transfers;
 
 import javafx.application.Platform;
 import org.nefele.Application;
-import org.nefele.cloud.DriveFullException;
-import org.nefele.cloud.DriveNotFoundException;
 import org.nefele.fs.MergeChunk;
 import org.nefele.fs.MergePath;
-import org.nefele.ui.dialog.Dialogs;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
-import java.util.concurrent.CancellationException;
 
 
 public class UploadTransferInfo extends TransferInfo {
 
-    private static final int UPLOAD_BLOCK_SIZE = 65536;
-    private static final int PREPARE_BLOCK_SIZE = 4194304;
 
     private final File localFile;
 
@@ -72,7 +65,7 @@ public class UploadTransferInfo extends TransferInfo {
             InputStream reader = Files.newInputStream(localFile.toPath());
 
             while (reader.available() > 0)
-                writer.write(reader.readNBytes(PREPARE_BLOCK_SIZE));
+                writer.write(reader.readNBytes((int) MergeChunk.getDefaultSize()));
 
             writer.close();
             reader.close();
@@ -80,7 +73,7 @@ public class UploadTransferInfo extends TransferInfo {
 
         } catch (Exception e) {
 
-            Application.log(getClass(), "WARNING! %s, something wrong, preparing canceled for %s: %s", e.getClass().getName(), localFile.getAbsolutePath(), e.getMessage());
+            Application.log(getClass(), e, "Something wrong, preparing canceled for %s", localFile.getAbsolutePath());
 
             setStatus(TRANSFER_STATUS_ERROR);
             return getStatus();
@@ -125,7 +118,7 @@ public class UploadTransferInfo extends TransferInfo {
 
                 try(InputStream inputStream = getFileSystem().getStorage().read(chunk, true)) {
 
-                    chunk.getDrive().writeChunk(chunk, inputStream, new TransferInfoCallback() {
+                    chunk.getDriveProvider().writeChunk(chunk, inputStream, new TransferInfoCallback() {
 
                         @Override
                         public boolean isCanceled() {
@@ -146,7 +139,7 @@ public class UploadTransferInfo extends TransferInfo {
 
                 } catch (Exception e) {
 
-                    Application.log(getClass(), "WARNING! %s, something wrong, transfer canceled for %s: %s", e.getClass().getName(), chunk.getId(), e.getMessage());
+                    Application.log(getClass(), e, "Something wrong, transfer canceled for %s", chunk.getId());
 
                     setStatus(TRANSFER_STATUS_ERROR);
                     return getStatus();
@@ -164,7 +157,7 @@ public class UploadTransferInfo extends TransferInfo {
                 Files.delete(getPath());  /* FIXME: delete() destroy everything including your machine */
 
         } catch (Exception e) {
-            Application.log(getClass(), "WARNING! (ignored) could not delete %s: %s %s", getPath().toString(), e.getClass().getName(), e.getMessage());
+            Application.log(getClass(), e, "(ignored) could not delete %s", getPath().toString());
         }
 
 

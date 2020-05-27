@@ -22,10 +22,7 @@
  * THE SOFTWARE.
  */
 
-package org.nefele.core;
-
-import org.nefele.Application;
-import org.nefele.Service;
+package org.nefele;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

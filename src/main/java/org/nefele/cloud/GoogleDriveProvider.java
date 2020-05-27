@@ -43,9 +43,9 @@ import com.google.api.services.drive.model.About;
 import com.google.api.services.drive.model.File;
 import org.nefele.Application;
 import org.nefele.Resources;
-import org.nefele.core.TransferInfoAbortException;
-import org.nefele.core.TransferInfoCallback;
-import org.nefele.core.TransferInfoException;
+import org.nefele.transfers.TransferInfoAbortException;
+import org.nefele.transfers.TransferInfoCallback;
+import org.nefele.transfers.TransferInfoException;
 import org.nefele.fs.MergeChunk;
 
 import java.io.*;
@@ -60,7 +60,7 @@ import java.util.List;
 
 import static java.util.Objects.requireNonNull;
 
-public class GoogleDriveProvider extends Drive {
+public class GoogleDriveProvider extends DriveProvider {
 
     public final static String SERVICE_ID = "google-drive-service";
     public final static String SERVICE_DEFAULT_DESCRIPTION = "Google Drive";
@@ -142,6 +142,7 @@ public class GoogleDriveProvider extends Drive {
                 }
             });
 
+
             update.execute();
 
 
@@ -211,12 +212,44 @@ public class GoogleDriveProvider extends Drive {
 
 
     @Override
+    public int isChunkUpdated(MergeChunk chunk) throws TransferInfoException {
+
+        try {
+
+            String id = findChunk(chunk);
+
+            if (id == null)
+                throw new NoSuchFileException(chunk.getId());
+
+            else {
+
+                long updatedRev = Long.parseUnsignedLong(
+                        driveService.files()
+                            .get(id)
+                            .execute()
+                            .getProperties().get("revision"));
+
+                long currentRev = chunk.getRevision();
+
+
+                return (int) (currentRev - updatedRev);
+
+            }
+
+        } catch (Exception e) {
+            throw new TransferInfoAbortException(e.getMessage());
+        }
+
+    }
+
+    @Override
     public long getMaxQuota() {
         return (storageQuotaLimit - storageQuotaUsed);
     }
 
+
     @Override
-    public Drive initialize() {
+    public DriveProvider initialize() {
 
         Application.log(getClass(), "Intializing %s %s", SERVICE_ID, getId());
         setStatus(STATUS_CONNECTING);
@@ -260,7 +293,7 @@ public class GoogleDriveProvider extends Drive {
 
         } catch (GeneralSecurityException | IOException e) {
 
-            Application.log(getClass(), "Unhandled exception %s for %s %s: %s", e.getClass().getName(), SERVICE_ID, getId(), e.getMessage());
+            Application.log(getClass(), e,"%s %s",  SERVICE_ID, getId());
 
             setStatus(STATUS_ERROR);
             setError(ERROR_UNREACHABLE);
@@ -271,7 +304,7 @@ public class GoogleDriveProvider extends Drive {
     }
 
     @Override
-    public Drive exit() {
+    public DriveProvider exit() {
         return this;
     }
 
@@ -315,14 +348,14 @@ public class GoogleDriveProvider extends Drive {
                     .getId();
 
         } catch (IOException e) {
-            Application.log(getClass(), "WARNING! Exception %s in findChunk(): %s", e.getClass().getName(), e.getMessage());
+            Application.log(getClass(), e,"findChunk()");
         } catch (IndexOutOfBoundsException ignored) { }
 
         return null;
 
     }
 
-    private String createChunk(MergeChunk chunk) throws DriveFullException {
+    private String createChunk(MergeChunk chunk) throws IOException {
 
         try {
 
@@ -331,6 +364,7 @@ public class GoogleDriveProvider extends Drive {
                             .setName(chunk.getId())
                             .setParents(Collections.singletonList("appDataFolder"))
                             .setDescription("Nefele Chunk")
+                            .setProperties(Collections.singletonMap("revision", Long.toUnsignedString(System.nanoTime())))
 
             ).execute()
                     .getId();
@@ -338,8 +372,8 @@ public class GoogleDriveProvider extends Drive {
 
 
         } catch (IOException e) {
-            Application.log(getClass(), "WARNING! IOException %s in createChunk(): %s", e.getClass().getName(), e.getMessage());
-            throw new DriveFullException();
+            Application.log(getClass(), e, "createChunk()");
+            throw e;
         }
 
     }

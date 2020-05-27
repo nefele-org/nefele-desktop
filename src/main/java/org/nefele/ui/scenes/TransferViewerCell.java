@@ -36,8 +36,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import org.nefele.Application;
 import org.nefele.Resources;
-import org.nefele.core.TransferInfo;
-import org.nefele.ui.Themeable;
+import org.nefele.transfers.TransferInfo;
+import org.nefele.Themeable;
 import org.nefele.utils.BindingsUtils;
 
 import java.net.URL;

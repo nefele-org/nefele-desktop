@@ -24,12 +24,9 @@
 
 package org.nefele;
 
-import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.text.Font;
-import org.nefele.ui.Themeable;
-import org.nefele.ui.Views;
 
 import java.io.IOException;
 import java.io.InputStream;

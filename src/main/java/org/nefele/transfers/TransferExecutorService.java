@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package org.nefele.core;
+package org.nefele.transfers;
 
 import org.nefele.Application;
 import org.nefele.Service;
@@ -88,8 +88,7 @@ public class TransferExecutorService extends ThreadPoolExecutor implements Servi
         }
 
         if(t != null) {
-            Application.log(getClass(), "WARNING! Unhandled exception %s on TransferQueue Thread: %s", t.getClass().getName(), t.getMessage());
-            Application.panic(getClass(), (Exception) t);
+            Application.log(getClass(), (Exception) t, "TransferExecutorService::afterExecute()");
         }
     }
 

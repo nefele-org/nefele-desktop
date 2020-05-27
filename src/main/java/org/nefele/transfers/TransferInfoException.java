@@ -22,11 +22,16 @@
  * THE SOFTWARE.
  */
 
-package org.nefele.core;
+package org.nefele.transfers;
 
-public interface TransferInfoCallback {
+public class TransferInfoException extends Exception {
 
-    boolean isCanceled();
-    void updateProgress(int progress);
+    public TransferInfoException() {
+
+    }
+
+    public TransferInfoException(String message) {
+        super(message);
+    }
 
 }

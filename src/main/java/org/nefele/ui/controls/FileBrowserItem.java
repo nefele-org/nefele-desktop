@@ -5,7 +5,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.MenuItem;
-import org.nefele.core.Mime;
+import org.nefele.Mime;
 
 import java.util.ArrayList;
 import java.util.List;

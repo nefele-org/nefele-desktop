@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package org.nefele.core;
+package org.nefele.transfers;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;

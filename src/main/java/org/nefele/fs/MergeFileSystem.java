@@ -24,6 +24,7 @@
 
 package org.nefele.fs;
 
+import javafx.application.Platform;
 import org.nefele.Application;
 
 import java.io.IOException;
@@ -105,7 +106,7 @@ public class MergeFileSystem extends FileSystem {
     public Path getPath(String s, String... strings) {
 
         if(!s.startsWith(MergeFileSystem.PATH_SEPARATOR))
-            throw new IllegalArgumentException("Path must be absolute!");
+            throw new IllegalArgumentException("Path must be absolute! " + s);
 
         return new MergePath(this, fileTree.resolve(s.split(MergeFileSystem.PATH_SEPARATOR)), s, s);
 
@@ -148,5 +149,18 @@ public class MergeFileSystem extends FileSystem {
 
     public MergeStorage getStorage() {
         return storage;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MergeFileSystem that = (MergeFileSystem) o;
+        return provider.getScheme().equals(that.provider.getScheme());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(provider.getScheme());
     }
 }

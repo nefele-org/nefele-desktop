@@ -25,10 +25,10 @@
 package org.nefele.fs;
 
 import org.nefele.Application;
-import org.nefele.cloud.Drive;
-import org.nefele.cloud.Drives;
-import org.nefele.core.Mime;
-import org.nefele.core.Mimes;
+import org.nefele.cloud.DriveProvider;
+import org.nefele.cloud.DriveProviders;
+import org.nefele.Mime;
+import org.nefele.Mimes;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -66,9 +66,9 @@ public class MergeFileStore extends FileStore {
     @Override
     public long getTotalSpace() throws IOException {
 
-        return Drives.getInstance().getDrives()
+        return DriveProviders.getInstance().getDriveProviders()
                 .stream()
-                .mapToLong(Drive::getQuota)
+                .mapToLong(DriveProvider::getQuota)
                 .sum();
 
     }

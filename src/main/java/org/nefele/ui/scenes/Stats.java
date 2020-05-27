@@ -38,12 +38,12 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import org.nefele.Application;
 import org.nefele.Resources;
-import org.nefele.cloud.Drive;
-import org.nefele.cloud.Drives;
-import org.nefele.core.TransferInfo;
+import org.nefele.cloud.DriveProvider;
+import org.nefele.cloud.DriveProviders;
+import org.nefele.transfers.TransferInfo;
 import org.nefele.fs.MergeFileStore;
 import org.nefele.fs.MergeFileSystem;
-import org.nefele.ui.Themeable;
+import org.nefele.Themeable;
 import org.nefele.ui.dialog.BaseDialog;
 import org.nefele.ui.dialog.Dialogs;
 import org.nefele.utils.BindingsUtils;
@@ -108,13 +108,13 @@ public class Stats extends StackPane implements Initializable, Themeable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        Drives.getInstance().getDrives().addListener((ListChangeListener<? super Drive>) change -> {
+        DriveProviders.getInstance().getDriveProviders().addListener((ListChangeListener<? super DriveProvider>) change -> {
 
             while (change.next()) {
 
                 if (change.wasRemoved())
                     change.getRemoved().forEach(i -> flowPane.getChildren().removeIf(j ->
-                            (j instanceof StatsDriveInfo && ((StatsDriveInfo) j).getDrive().getId().equals(i.getId()))));
+                            (j instanceof StatsDriveInfo && ((StatsDriveInfo) j).getDriveProvider().getId().equals(i.getId()))));
 
                 if (change.wasAdded())
                     change.getAddedSubList().forEach(i -> flowPane.getChildren().add(new StatsDriveInfo(i)));
@@ -137,7 +137,7 @@ public class Stats extends StackPane implements Initializable, Themeable {
 
         });
 
-        Drives.getInstance().getDrives().forEach(
+        DriveProviders.getInstance().getDriveProviders().forEach(
                 i -> cells.add(new StatsDriveInfo(i)));
 
         buttonSystemMemoryClean.setOnMouseClicked(e -> {

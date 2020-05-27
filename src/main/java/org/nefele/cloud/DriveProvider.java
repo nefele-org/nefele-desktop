@@ -25,20 +25,17 @@
 package org.nefele.cloud;
 
 import javafx.beans.property.*;
-import org.nefele.core.TransferInfoCallback;
-import org.nefele.core.TransferInfoException;
+import org.nefele.transfers.TransferInfoCallback;
+import org.nefele.transfers.TransferInfoException;
 import org.nefele.fs.*;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URI;
 import java.nio.ByteBuffer;
-import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.util.stream.Collectors;
 
-public abstract class Drive {
+public abstract class DriveProvider {
 
     public static final int STATUS_UNKNOWN = 0;
     public static final int STATUS_CONNECTING = 1;
@@ -66,7 +63,7 @@ public abstract class Drive {
     private boolean dirty;
 
 
-    public Drive(String id, String service, String description, long quota, long blocks) {
+    public DriveProvider(String id, String service, String description, long quota, long blocks) {
 
         this.id = new SimpleStringProperty(id);
         this.service = new SimpleStringProperty(service);
@@ -84,9 +81,10 @@ public abstract class Drive {
     public abstract void writeChunk(MergeChunk chunk, InputStream inputStream, TransferInfoCallback callback) throws TransferInfoException;
     public abstract ByteBuffer readChunk(MergeChunk chunk, TransferInfoCallback callback) throws TransferInfoException;
     public abstract void removeChunk(MergeChunk chunk) throws TransferInfoException;
+    public abstract int isChunkUpdated(MergeChunk chunk) throws TransferInfoException;
     public abstract long getMaxQuota();
-    public abstract Drive initialize();
-    public abstract Drive exit();
+    public abstract DriveProvider initialize();
+    public abstract DriveProvider exit();
 
 
 
@@ -193,7 +191,7 @@ public abstract class Drive {
                 .flatMap(i -> i.getChunks().stream())
                 .collect(Collectors.toList())
                 .stream()
-                .filter(i -> i.getDrive().equals(this))
+                .filter(i -> i.getDriveProvider().equals(this))
                 .mapToLong(MergeChunk::getSize)
                 .sum();
 

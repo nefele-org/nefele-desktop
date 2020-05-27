@@ -26,7 +26,6 @@ package org.nefele.ui.scenes;
 
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
-import javafx.beans.InvalidationListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -34,7 +33,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -42,11 +40,10 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.nefele.Application;
 import org.nefele.Resources;
-import org.nefele.cloud.Drive;
-import org.nefele.cloud.Drives;
-import org.nefele.ui.Themeable;
+import org.nefele.cloud.DriveProvider;
+import org.nefele.cloud.DriveProviders;
+import org.nefele.Themeable;
 import org.nefele.ui.controls.NefelePane;
-import org.nefele.ui.dialog.BaseDialog;
 import org.nefele.ui.wizard.Wizard;
 
 import java.net.URL;
@@ -71,7 +68,7 @@ public class DriveManager extends StackPane implements Initializable, Themeable 
     public void initialize(URL location, ResourceBundle resources) {
 
 
-        Drives.getInstance().getDrives().addListener((ListChangeListener<? super Drive>) change -> {
+        DriveProviders.getInstance().getDriveProviders().addListener((ListChangeListener<? super DriveProvider>) change -> {
 
             while (change.next()) {
 
@@ -101,7 +98,7 @@ public class DriveManager extends StackPane implements Initializable, Themeable 
         });
 
 
-        Drives.getInstance().getDrives().forEach(
+        DriveProviders.getInstance().getDriveProviders().forEach(
                 i -> getDriveManagerBoxes().add(new DriveManagerBox(i)));
 
 

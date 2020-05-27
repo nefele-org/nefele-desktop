@@ -24,8 +24,6 @@
 
 package org.nefele.ui.controls;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXNodesList;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -37,21 +35,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Popup;
 import javafx.util.Duration;
 import org.nefele.Application;
 import org.nefele.Resources;
-import org.nefele.ui.Themeable;
-import org.nefele.ui.dialog.Dialogs;
-import org.nefele.ui.wizard.CloudHelperButton;
+import org.nefele.Themeable;
 
-import java.awt.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 

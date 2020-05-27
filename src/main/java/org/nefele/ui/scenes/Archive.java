@@ -34,10 +34,14 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import org.nefele.Application;
+import org.nefele.Mime;
+import org.nefele.Mimes;
 import org.nefele.Resources;
-import org.nefele.core.*;
+import org.nefele.cloud.SharedFolder;
+import org.nefele.cloud.SharedFolders;
+import org.nefele.transfers.*;
 import org.nefele.fs.MergePath;
-import org.nefele.ui.Themeable;
+import org.nefele.Themeable;
 import org.nefele.ui.controls.FileBrowser;
 import org.nefele.ui.controls.FileBrowserItem;
 import org.nefele.ui.controls.FileBrowserItemFactory;
@@ -54,11 +58,14 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.file.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public class Archive extends StackPane implements Initializable, Themeable {
@@ -136,7 +143,7 @@ public class Archive extends StackPane implements Initializable, Themeable {
 
                     try {
 
-                        final Path path = MergePath.get("nefele", fileBrowser.getCurrentPath().toString(), file.getName());
+                        final Path path = MergePath.get(fileBrowser.getCurrentPath().toString(), file.getName());
 
                         int status = Application.getInstance().getTransferQueue().enqueue(
                                 new UploadTransferInfo((MergePath) path, file)).get();
@@ -198,7 +205,7 @@ public class Archive extends StackPane implements Initializable, Themeable {
                         try {
 
                             Files.createDirectory(
-                                    MergePath.get("nefele", fileBrowser.getCurrentPath().toString(), filename));
+                                    MergePath.get(fileBrowser.getCurrentPath().toString(), filename));
 
                         } catch (IOException io) {
                             Platform.runLater(() -> Dialogs.showErrorBox("ARCHIVE_DIALOG_FOLDER_CREATE_FAIL"));
@@ -237,7 +244,7 @@ public class Archive extends StackPane implements Initializable, Themeable {
 
                         Files.walk(file.toPath()).forEach(path -> {
 
-                            final Path cloudPath = MergePath.get("nefele", fileBrowser.getCurrentPath().toString(), file.toPath().getParent().relativize(path).toString());
+                            final Path cloudPath = MergePath.get(fileBrowser.getCurrentPath().toString(), file.toPath().getParent().relativize(path).toString());
 
                             try {
 
@@ -314,73 +321,121 @@ public class Archive extends StackPane implements Initializable, Themeable {
         fileBrowser.setItemFactory(new FileBrowserItemFactory() {
 
 
-            private final ArrayList<MenuItem> folderMenuItems = new ArrayList<>() {{
+            private final MenuItem folderShareMenuItem = new MenuItem("") {{
+                setOnAction(e -> {
 
-                add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_OPEN")) {{
-                    setOnAction(e ->
+                    MergePath path = (MergePath) MergePath.get(
+                            fileBrowser.getCurrentPath().toString(),
+                            fileBrowser.getSelectedItem().getText());
+
+
+                    DirectoryChooser fileChooser = new DirectoryChooser();
+                    File file = fileChooser.showDialog(getScene().getWindow());
+
+                    if(file == null)
+                        Dialogs.showErrorBox("ARCHIVE_DIALOG_FOLDER_NOTSELECTED");
+
+                    else if(!file.isDirectory())
+                        Dialogs.showErrorBox("ARCHIVE_DIALOG_FOLDER_INVALID");
+
+                    else {
+
+                        SharedFolders.getInstance()
+                                .getSharedFolders().add(new SharedFolder(file.toPath(), path));
+
+                        fileBrowser.update();
+
+                        Application.log(Archive.this.getClass(), "Added new SharedFolder %s:%s", file.getAbsolutePath(), path);
+
+                    }
+
+                });
+            }};
+
+            private final MenuItem folderUnshareMenuItem = new MenuItem("") {{
+                setOnAction(e -> {
+
+                    MergePath path = (MergePath) MergePath.get(
+                            fileBrowser.getCurrentPath().toString(),
+                            fileBrowser.getSelectedItem().getText());
+
+                    SharedFolders.getInstance()
+                            .getSharedFolders().removeIf(i -> i.getCloudPath().equals(path));
+
+                    fileBrowser.update();
+
+                    Application.log(Archive.this.getClass(), "Removed SharedFolder %s", path);
+
+                });
+            }};
+
+
+            private final MenuItem folderOpenMenuItem = new MenuItem("") {{
+                setOnAction(e ->
                         fileBrowser.browse(MergePath.get(
-                                fileBrowser.getCurrentPath().toUri().getScheme(),
                                 fileBrowser.getCurrentPath().toString(),
                                 fileBrowser.getSelectedItem().getText()
                         ))
-                    );
-                }});
+                );
+            }};
 
 
-                add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_RENAME")) {{
-                    setOnAction(e -> {
+            private final MenuItem renameMenuItem = new MenuItem("") {{
+                setOnAction(e -> {
 
-                        InputDialogResult result = Dialogs.showInputBox("ARCHIVE_DIALOG_RENAME", fileBrowser.getSelectedItem().getText(),
-                                InputDialog.DIALOG_OK,
-                                InputDialog.DIALOG_ABORT);
-
-
-                        if(result.getButton() == InputDialog.DIALOG_OK) {
-
-                            final String filename = result.getText().trim();
-
-                            if(filename.isBlank()) {
-                                Dialogs.showErrorBox("ARCHIVE_DIALOG_FOLDER_EMPTY");
-
-                            } else if(FilenameUtils.isFilenameInvalid(filename)) {
-                                Dialogs.showErrorBox("ARCHIVE_DIALOG_FOLDER_INVALID_NAME");
-
-                            } else {
-
-                                Application.getInstance().runThread(new Thread(() -> {
-
-                                    try {
-
-                                        Path oldName = MergePath.get("nefele", fileBrowser.getCurrentPath().toString(), fileBrowser.getSelectedItem().getText());
-                                        Path newName = MergePath.get("nefele", fileBrowser.getCurrentPath().toString(), filename);
-
-                                        Files.move(oldName, newName);
+                    InputDialogResult result = Dialogs.showInputBox("ARCHIVE_DIALOG_RENAME", fileBrowser.getSelectedItem().getText(),
+                            InputDialog.DIALOG_OK,
+                            InputDialog.DIALOG_ABORT);
 
 
-                                    } catch (IOException io) {
-                                        Platform.runLater(() -> Dialogs.showErrorBox("ARCHIVE_DIALOG_FOLDER_RENAME_FAIL"));
-                                    } finally {
-                                        Platform.runLater(fileBrowser::update);
-                                    }
+                    if(result.getButton() == InputDialog.DIALOG_OK) {
 
-                                }, "Archive::renameFolder()"));
+                        final String filename = result.getText().trim();
 
-                            }
+                        if(filename.isBlank()) {
+                            Dialogs.showErrorBox("ARCHIVE_DIALOG_RENAME_EMPTY");
+
+                        } else if(FilenameUtils.isFilenameInvalid(filename)) {
+                            Dialogs.showErrorBox("ARCHIVE_DIALOG_RENAME_INVALID_NAME");
+
+                        } else {
+
+                            Application.getInstance().runThread(new Thread(() -> {
+
+                                try {
+
+                                    Path oldName = MergePath.get(fileBrowser.getCurrentPath().toString(), fileBrowser.getSelectedItem().getText());
+                                    Path newName = MergePath.get(fileBrowser.getCurrentPath().toString(), filename);
+
+                                    Files.move(oldName, newName);
+
+
+                                } catch (IOException io) {
+                                    Platform.runLater(() -> Dialogs.showErrorBox("ARCHIVE_DIALOG_RENAME_FAIL"));
+                                } finally {
+                                    Platform.runLater(fileBrowser::update);
+                                }
+
+                            }, "Archive::rename()"));
 
                         }
 
-                    });
-                }});
+                    }
+
+                });
+            }};
 
 
-                add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_DELETE")) {{
-                    setOnAction(e -> {
+            private final MenuItem deleteMenuItem = new MenuItem("") {{
+                setOnAction(e -> {
 
-                        fileBrowser.getSelectedItems().forEach(i -> {
+                    fileBrowser.getSelectedItems().forEach(i -> {
+
+                        Application.getInstance().runThread(new Thread(() -> {
 
                             try {
+
                                 Files.delete(MergePath.get(
-                                        fileBrowser.getCurrentPath().toUri().getScheme(),
                                         fileBrowser.getCurrentPath().toString(),
                                         i.getText()
                                 ));
@@ -389,179 +444,115 @@ public class Archive extends StackPane implements Initializable, Themeable {
                                 Platform.runLater(() -> Dialogs.showErrorBox("ERROR_DIRECTORY_NOT_EMPTY"));
                             } catch (IOException io) {
                                 Platform.runLater(() -> Dialogs.showErrorBox("ERROR_FILE_DELETE"));
+                            } finally {
+                                Platform.runLater(fileBrowser::update);
                             }
 
-                        });
-
-                        fileBrowser.update();
+                        }, "Archive::delete()"));
 
                     });
-                }});
 
+                });
             }};
 
-            private final ArrayList<MenuItem> fileMenuItems = new ArrayList<>() {{
 
-                add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_DOWNLOAD")) {{
-                    setOnAction(e -> {
+            private final MenuItem fileDownloadMenuItem = new MenuItem("") {{
+                setOnAction(e -> {
 
-                        DirectoryChooser fileChooser = new DirectoryChooser();
-                        File file = fileChooser.showDialog(getScene().getWindow());
+                    DirectoryChooser fileChooser = new DirectoryChooser();
+                    File file = fileChooser.showDialog(getScene().getWindow());
 
-                        if(file == null)
-                            Dialogs.showErrorBox("ARCHIVE_DIALOG_FOLDER_NOTSELECTED");
+                    if(file == null)
+                        Dialogs.showErrorBox("ARCHIVE_DIALOG_FOLDER_NOTSELECTED");
 
-                        else if(!file.isDirectory())
-                            Dialogs.showErrorBox("ARCHIVE_DIALOG_FOLDER_INVALID");
+                    else if(!file.isDirectory())
+                        Dialogs.showErrorBox("ARCHIVE_DIALOG_FOLDER_INVALID");
 
-                        else {
-
-
-                            final int getSelectedItemCount = fileBrowser.getSelectedItems().size();
-
-                            fileBrowser.getSelectedItems().forEach(i -> {
-
-                                if(i.getMime().equals(Mime.FOLDER))
-                                    return;
+                    else {
 
 
-                                final Path cloudPath = MergePath.get("nefele", fileBrowser.getCurrentPath().toString(), i.getText());
-                                final Path localPath = Paths.get(file.getAbsolutePath(), cloudPath.getFileName().toString());
+                        final int getSelectedItemCount = fileBrowser.getSelectedItems().size();
+
+                        fileBrowser.getSelectedItems().forEach(i -> {
+
+                            if(i.getMime().equals(Mime.FOLDER))
+                                return;
 
 
-                                PlatformUtils.runLaterAndWait(() -> {
-
-                                    final Future<Integer> future = Application.getInstance().getTransferQueue().enqueue(
-                                            new DownloadTransferInfo((MergePath) cloudPath, localPath.toFile()));
+                            final Path cloudPath = MergePath.get(fileBrowser.getCurrentPath().toString(), i.getText());
+                            final Path localPath = Paths.get(file.getAbsolutePath(), cloudPath.getFileName().toString());
 
 
-                                    Application.getInstance().runThread(new Thread(() -> {
+                            PlatformUtils.runLaterAndWait(() -> {
 
-                                        try {
+                                final Future<Integer> future = Application.getInstance().getTransferQueue().enqueue(
+                                        new DownloadTransferInfo((MergePath) cloudPath, localPath.toFile()));
 
-                                            int status = future.get();
-                                            switch (status) {
-
-                                                case TransferInfo.TRANSFER_STATUS_COMPLETED:
-
-                                                    if(getSelectedItemCount == 1) {
-
-                                                        if(Desktop.isDesktopSupported())
-                                                            Desktop.getDesktop().open(localPath.toFile());
-
-                                                    }
-
-                                                    //Application.getInstance().setStatus(... // TODO: set Status Bar
-                                                    break;
-
-
-                                                case TransferInfo.TRANSFER_STATUS_CANCELED:
-                                                case TransferInfo.TRANSFER_STATUS_ERROR:
-
-                                                    if(Files.exists(localPath))
-                                                        Files.delete(localPath);
-
-                                                    break;
-
-
-                                                default:
-                                                    Application.log(getClass(), "WARNING! Invalid TransferInfo.TRANSFER_STATUS_*: %d", status);
-                                                    break;
-
-                                            }
-
-                                        } catch (InterruptedException | ExecutionException | IOException ignored) { }
-
-                                    }, "Future::" + cloudPath.toUri()));
-
-
-                                });
-
-
-                            });
-
-                        }
-
-                    });
-                }});
-
-
-                add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_RENAME")) {{
-                    setOnAction(e -> {
-
-                        InputDialogResult result = Dialogs.showInputBox("ARCHIVE_DIALOG_RENAME", fileBrowser.getSelectedItem().getText(),
-                                InputDialog.DIALOG_OK,
-                                InputDialog.DIALOG_ABORT);
-
-
-                        if(result.getButton() == InputDialog.DIALOG_OK) {
-
-                            final String filename = result.getText().trim();
-
-                            if(filename.isBlank()) {
-                                Dialogs.showErrorBox("ARCHIVE_DIALOG_FILE_EMPTY");
-
-                            } else if(FilenameUtils.isFilenameInvalid(filename)) {
-                                Dialogs.showErrorBox("ARCHIVE_DIALOG_FILE_INVALID_NAME");
-
-                            } else {
 
                                 Application.getInstance().runThread(new Thread(() -> {
 
                                     try {
 
-                                        Path oldName = MergePath.get("nefele", fileBrowser.getCurrentPath().toString(), fileBrowser.getSelectedItem().getText());
-                                        Path newName = MergePath.get("nefele", fileBrowser.getCurrentPath().toString(), filename);
+                                        int status = future.get();
+                                        switch (status) {
 
-                                        Files.move(oldName, newName);
+                                            case TransferInfo.TRANSFER_STATUS_COMPLETED:
 
+                                                if(getSelectedItemCount == 1) {
 
-                                    } catch (IOException io) {
-                                        Platform.runLater(() -> Dialogs.showErrorBox("ARCHIVE_DIALOG_FILE_RENAME_FAIL"));
-                                    } finally {
-                                        Platform.runLater(fileBrowser::update);
-                                    }
+                                                    if(Desktop.isDesktopSupported())
+                                                        Desktop.getDesktop().open(localPath.toFile());
 
-                                }, "Archive::renameFile()"));
+                                                }
 
-                            }
-
-                        }
-
-                    });
-                }});
+                                                //Application.getInstance().setStatus(... // TODO: set Status Bar
+                                                break;
 
 
-                add(new MenuItem(Application.getInstance().getLocale().get("CONTEXT_MENU_DELETE")) {{
-                    setOnAction(e -> {
+                                            case TransferInfo.TRANSFER_STATUS_CANCELED:
+                                            case TransferInfo.TRANSFER_STATUS_ERROR:
 
-                        fileBrowser.getSelectedItems().forEach(i -> {
+                                                if(Files.exists(localPath))
+                                                    Files.delete(localPath);
 
-                            Application.getInstance().runThread(new Thread(() -> {
+                                                break;
 
-                                try {
 
-                                    Files.delete(MergePath.get(
-                                            fileBrowser.getCurrentPath().toUri().getScheme(),
-                                            fileBrowser.getCurrentPath().toString(),
-                                            i.getText()
-                                    ));
+                                            default:
+                                                Application.log(getClass(), "WARNING! Invalid TransferInfo.TRANSFER_STATUS_*: %d", status);
+                                                break;
 
-                                } catch (DirectoryNotEmptyException io) {
-                                    Platform.runLater(() -> Dialogs.showErrorBox("ERROR_DIRECTORY_NOT_EMPTY"));
-                                } catch (IOException io) {
-                                    Platform.runLater(() -> Dialogs.showErrorBox("ERROR_FILE_DELETE"));
-                                } finally {
-                                    Platform.runLater(fileBrowser::update);
-                                }
+                                        }
 
-                            }, "Archive::deleteFile()"));
+                                    } catch (InterruptedException | ExecutionException | IOException ignored) { }
+
+                                }, "Future::" + cloudPath.toUri()));
+
+
+                            });
+
 
                         });
 
-                    });
-                }});
+                    }
 
+                });
+            }};
+
+
+
+
+            private final List<MenuItem> folderMenuItems = new ArrayList<>() {{
+                add(folderOpenMenuItem);
+                add(renameMenuItem);
+                add(deleteMenuItem);
+            }};
+
+
+            private final List<MenuItem> fileMenuItems = new ArrayList<>() {{
+                add(fileDownloadMenuItem);
+                add(renameMenuItem);
+                add(deleteMenuItem);
             }};
 
 
@@ -571,6 +562,13 @@ public class Archive extends StackPane implements Initializable, Themeable {
 
                 final ArrayList<FileBrowserItem> items = new ArrayList<>();
 
+                folderOpenMenuItem.setText(Application.getInstance().getLocale().get("CONTEXT_MENU_OPEN"));
+                folderShareMenuItem.setText(Application.getInstance().getLocale().get("CONTEXT_MENU_SHARE"));
+                folderUnshareMenuItem.setText(Application.getInstance().getLocale().get("CONTEXT_MENU_UNSHARE"));
+                fileDownloadMenuItem.setText(Application.getInstance().getLocale().get("CONTEXT_MENU_DOWNLOAD"));
+                renameMenuItem.setText(Application.getInstance().getLocale().get("CONTEXT_MENU_RENAME"));
+                deleteMenuItem.setText(Application.getInstance().getLocale().get("CONTEXT_MENU_DELETE"));
+
 
                 try {
 
@@ -578,7 +576,16 @@ public class Archive extends StackPane implements Initializable, Themeable {
                     Files.list(path)
                             .filter(Files::isDirectory).forEach(i ->
                                 items.add(new FileBrowserItem(Mime.FOLDER, i.getFileName().toString()) {{
-                                    setMenuItems(folderMenuItems);
+
+                                    if(!SharedFolders.getInstance().isShared((MergePath) i))
+                                        setMenuItems(Stream
+                                                .concat(folderMenuItems.stream(), Stream.of(folderShareMenuItem))
+                                                .collect(Collectors.toList()));
+                                    else
+                                        setMenuItems(Stream
+                                                .concat(folderMenuItems.stream(), Stream.of(folderUnshareMenuItem))
+                                                .collect(Collectors.toList()));
+
                                 }})
                     );
 
@@ -615,6 +622,8 @@ public class Archive extends StackPane implements Initializable, Themeable {
     @Override
     public void initializeInterface() {
         Resources.getCSS(this, "/css/filebrowser-header.css");
+
+        fileBrowser.update();
     }
 
 }

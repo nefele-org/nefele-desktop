@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package org.nefele.ui;
+package org.nefele;
 
 public interface Themeable {
     void initializeInterface();

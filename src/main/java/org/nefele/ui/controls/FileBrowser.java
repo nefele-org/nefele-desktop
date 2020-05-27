@@ -40,7 +40,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.shape.Rectangle;
 import org.nefele.Application;
 import org.nefele.Resources;
-import org.nefele.ui.Themeable;
+import org.nefele.Themeable;
 import org.nefele.utils.PlatformUtils;
 
 import java.net.URI;
@@ -263,7 +263,17 @@ public class FileBrowser extends ScrollPane implements Initializable, Themeable 
     }
 
     public void update() {
+
+        contextMenu.hide();
+        selectedCells.clear();
+
+        if(selectionRectangle != null)
+            selectionPane.getChildren().remove(selectionRectangle);
+
+        selectionRectangle = null;
+
         setItems(requireNonNull(getItemFactory().call(currentPath.get())));
+
     }
 
 

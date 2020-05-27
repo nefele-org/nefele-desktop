@@ -22,41 +22,28 @@
  * THE SOFTWARE.
  */
 
-package org.nefele.ui.wizard;
+package org.nefele.transfers;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.fxml.Initializable;
-import javafx.scene.layout.StackPane;
-import org.nefele.Themeable;
-import java.net.URL;
-import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 
-public abstract class WizardPage extends StackPane implements Initializable, Themeable {
+public class TransferInfoTryAgainException extends TransferInfoException {
 
-    private final BooleanProperty checked;
+    public TransferInfoTryAgainException() {
 
-    public WizardPage(){
-        this.checked = new SimpleBooleanProperty(false);
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) { }
-
-    @Override
-    public void initializeInterface() { }
-
-    
-    public boolean isChecked() {
-        return checked.get();
+    public TransferInfoTryAgainException(String message) {
+        super(message);
     }
 
-    public BooleanProperty checkedProperty() {
-        return checked;
-    }
+    public TransferInfoTryAgainException(String message, int timeToWait, TimeUnit timeUnit) {
 
-    public void setChecked(boolean check) {
-        this.checked.set(check);
-    }    
+        super(message);
+
+        try {
+            Thread.sleep(timeUnit.toMillis(timeToWait));
+        } catch (InterruptedException ignored) { }
+
+    }
 
 }

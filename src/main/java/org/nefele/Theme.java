@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package org.nefele.ui;
+package org.nefele;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.scene.paint.Color;

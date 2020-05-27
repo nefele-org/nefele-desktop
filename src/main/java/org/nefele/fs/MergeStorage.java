@@ -26,12 +26,12 @@ package org.nefele.fs;
 
 import org.nefele.Application;
 import org.nefele.Service;
-import org.nefele.cloud.Drive;
+import org.nefele.cloud.DriveProvider;
 import org.nefele.cloud.DriveFullException;
 import org.nefele.cloud.DriveNotFoundException;
-import org.nefele.cloud.Drives;
-import org.nefele.core.TransferInfoException;
-import org.nefele.core.TransferInfoTryAgainException;
+import org.nefele.cloud.DriveProviders;
+import org.nefele.transfers.TransferInfoException;
+import org.nefele.transfers.TransferInfoTryAgainException;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -129,12 +129,12 @@ public class MergeStorage implements Service {
             outputStream.close();
 
 
-            chunk.setHash(String.format("%d", System.nanoTime()));
+            chunk.setRevision(Instant.now().toEpochMilli());
             chunk.setSize(Files.size(cachePath.resolve(chunk.getId())));
             chunk.invalidate();
 
         } catch (IOException e) {
-            Application.log(getClass(), "WARNING! write() %s: %s", e.getClass().getName(), e.getMessage());
+            Application.log(getClass(), e,"write()");
             throw e;
         }
 
@@ -154,7 +154,7 @@ public class MergeStorage implements Service {
             return Files.newInputStream(cachePath.resolve(chunk.getId()));
 
         } catch (IOException e) {
-            Application.log(getClass(), "WARNING! read() %s: %s", e.getClass().getName(), e.getMessage());
+            Application.log(getClass(), e, "read()");
             throw e;
         }
 
@@ -174,7 +174,7 @@ public class MergeStorage implements Service {
 
                 try {
 
-                    chunk.getDrive().removeChunk(chunk);
+                    chunk.getDriveProvider().removeChunk(chunk);
                     break;
 
                 } catch (TransferInfoTryAgainException ignored) {
@@ -183,15 +183,15 @@ public class MergeStorage implements Service {
             }
 
 
-            chunk.getDrive().setChunks(chunk.getDrive().getChunks() - 1L);
-            chunk.getDrive().invalidate();
+            chunk.getDriveProvider().setChunks(chunk.getDriveProvider().getChunks() - 1L);
+            chunk.getDriveProvider().invalidate();
 
             if(isCached(chunk))
                 Files.delete(cachePath.resolve(Path.of(chunk.getId())));
 
 
         } catch (IOException e) {
-            Application.log(getClass(), "WARNING! free() %s: %s", e.getClass().getName(), e.getMessage());
+            Application.log(getClass(), e, "free()");
         } finally {
             dustChunks.add(chunk);
         }
@@ -217,14 +217,14 @@ public class MergeStorage implements Service {
 
 
 
-    public MergeChunk alloc(MergeNode node, long offset) throws DriveFullException {
+    public MergeChunk alloc(MergeNode node, long offset) throws IOException {
 
         try {
 
-            Drive drive = Drives.getInstance().nextAllocatable();
+            DriveProvider driveProvider = DriveProviders.getInstance().nextAllocatable();
 
             MergeChunk chunk = new MergeChunk(
-                    generateId(), offset, node, drive, "", 0L,
+                    generateId(), offset, node, driveProvider, 0L, 0L,
                     Application.getInstance().getConfig().getBoolean("core.mfs.compressed").orElse(false),
                     Application.getInstance().getConfig().getBoolean("core.mfs.encrypted").orElse(false)
             );
@@ -233,15 +233,15 @@ public class MergeStorage implements Service {
             getChunks().put(chunk.getId(), chunk);
             node.getChunks().add(chunk);
 
-            drive.setChunks(drive.getChunks() + 1L);
-            drive.invalidate();
+            driveProvider.setChunks(driveProvider.getChunks() + 1L);
+            driveProvider.invalidate();
 
             chunk.invalidate();
             return chunk;
 
         } catch (DriveFullException | DriveNotFoundException e) {
-            Application.log(getClass(), "WARNING! alloc() %s: %s", e.getClass().getName(), e.getMessage());
-            throw new DriveFullException();
+            Application.log(getClass(), e, "alloc()");
+            throw e;
         }
 
     }
@@ -341,7 +341,7 @@ public class MergeStorage implements Service {
 
                         try {
 
-                            Drive drive = Drives.getInstance().fromId(r.getString("drive"));
+                            DriveProvider driveProvider = DriveProviders.getInstance().fromId(r.getString("drive"));
                             MergeNode inode = getInodes().get(r.getString("inode"));
 
 
@@ -352,8 +352,8 @@ public class MergeStorage implements Service {
                                     r.getString("id"),
                                     r.getLong("offset"),
                                     inode,
-                                    drive,
-                                    r.getString("hash"),
+                                    driveProvider,
+                                    r.getLong("revision"),
                                     r.getLong("size"),
                                     r.getInt("compressed") != 0,
                                     r.getInt("encrypted") != 0
@@ -418,7 +418,7 @@ public class MergeStorage implements Service {
 
 
             Application.getInstance().getDatabase().update (
-                    "INSERT OR REPLACE INTO chunks (id, offset, inode, drive, hash, size, compressed, encrypted) values (?, ?, ?, ?, ?, ?, ?, ?)",
+                    "INSERT OR REPLACE INTO chunks (id, offset, inode, drive, revision, size, compressed, encrypted) values (?, ?, ?, ?, ?, ?, ?, ?)",
 
                     s -> {
 
@@ -430,8 +430,8 @@ public class MergeStorage implements Service {
                             s.setString(1, chunk.getId());
                             s.setLong(2, chunk.getOffset());
                             s.setString(3, chunk.getInode().getId());
-                            s.setString(4, chunk.getDrive().getId());
-                            s.setString(5, chunk.getHash());
+                            s.setString(4, chunk.getDriveProvider().getId());
+                            s.setLong(5, chunk.getRevision());
                             s.setLong(6, chunk.getSize());
                             s.setInt(7, chunk.isCompressed() ? 1 : 0);
                             s.setInt(8, chunk.isEncrypted() ? 1 : 0);

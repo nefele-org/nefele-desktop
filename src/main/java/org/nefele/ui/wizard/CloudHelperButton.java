@@ -36,7 +36,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.StackPane;
 import org.nefele.Application;
 import org.nefele.Resources;
-import org.nefele.ui.Themeable;
+import org.nefele.Themeable;
 import java.net.URL;
 import java.util.ResourceBundle;
 

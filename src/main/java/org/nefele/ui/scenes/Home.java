@@ -24,7 +24,6 @@
 
 package org.nefele.ui.scenes;
 
-import com.jfoenix.controls.JFXNodesList;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -33,26 +32,19 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.nefele.Application;
 import org.nefele.Resources;
-import org.nefele.ui.Themeable;
+import org.nefele.Themeable;
 import org.nefele.ui.controls.Docker;
 import org.nefele.ui.controls.DockerItem;
 import org.nefele.ui.controls.NefeleContentPane;
 import org.nefele.ui.controls.NefelePane;
 import org.nefele.ui.dialog.BaseDialog;
 import org.nefele.ui.dialog.Dialogs;
-import org.nefele.ui.dialog.InfoDialog;
 
 import javax.imageio.ImageIO;
-import javax.swing.text.html.ImageView;
 import java.awt.*;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URL;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ResourceBundle;
-import java.util.concurrent.TimeUnit;
 
 import static java.util.Objects.requireNonNull;
 

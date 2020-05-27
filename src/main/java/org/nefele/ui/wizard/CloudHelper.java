@@ -33,7 +33,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.layout.VBox;
 import org.nefele.Application;
 import org.nefele.Resources;
-import org.nefele.ui.Themeable;
+import org.nefele.Themeable;
 import org.nefele.ui.controls.NefeleContentPane;
 
 import java.net.URL;

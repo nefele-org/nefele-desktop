@@ -25,7 +25,6 @@
 package org.nefele.ui.dialog;
 
 import com.jfoenix.controls.JFXButton;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
@@ -40,12 +39,10 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.nefele.Application;
 import org.nefele.Resources;
-import org.nefele.ui.Themeable;
+import org.nefele.Themeable;
 import org.nefele.ui.controls.NefeleContentPane;
 import org.nefele.ui.controls.NefelePane;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;

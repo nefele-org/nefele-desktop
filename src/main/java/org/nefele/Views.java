@@ -22,13 +22,14 @@
  * THE SOFTWARE.
  */
 
-package org.nefele.ui;
+package org.nefele;
 
 import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.util.Pair;
 import org.nefele.Application;
 import org.nefele.Resources;
+import org.nefele.Themeable;
 import org.nefele.utils.PlatformUtils;
 
 import java.util.ArrayList;

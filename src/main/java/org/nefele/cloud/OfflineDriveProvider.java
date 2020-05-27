@@ -25,21 +25,17 @@
 package org.nefele.cloud;
 
 import org.nefele.Application;
-import org.nefele.core.TransferInfo;
-import org.nefele.core.TransferInfoAbortException;
-import org.nefele.core.TransferInfoCallback;
-import org.nefele.core.TransferInfoException;
+import org.nefele.transfers.TransferInfoAbortException;
+import org.nefele.transfers.TransferInfoCallback;
+import org.nefele.transfers.TransferInfoException;
 import org.nefele.fs.MergeChunk;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.concurrent.Callable;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
 
-public class OfflineDriveProvider extends Drive {
+public class OfflineDriveProvider extends DriveProvider {
 
     public final static String SERVICE_ID = "offline-drive-service";
     public final static String SERVICE_DEFAULT_DESCRIPTION = "Offline Cloud";
@@ -59,7 +55,7 @@ public class OfflineDriveProvider extends Drive {
     @Override
     public void writeChunk(MergeChunk chunk, InputStream inputStream, TransferInfoCallback callback) throws TransferInfoException {
 
-        try (FileOutputStream outputStream = new FileOutputStream(new File(drivePath.resolve(Paths.get(chunk.getId())).toString()))) {
+        try (OutputStream outputStream = Files.newOutputStream(drivePath.resolve(chunk.getId()))) {
 
             while (inputStream.available() > 0) {
 
@@ -80,6 +76,9 @@ public class OfflineDriveProvider extends Drive {
                 } catch (InterruptedException ignored) { }
 
             }
+
+
+            Files.writeString(drivePath.resolve(chunk.getId() + ".rev"), Long.toUnsignedString(chunk.getRevision()));
 
         } catch (Exception e) {
             throw new TransferInfoAbortException(e.getMessage());
@@ -144,13 +143,29 @@ public class OfflineDriveProvider extends Drive {
 
 
     @Override
+    public int isChunkUpdated(MergeChunk chunk) throws TransferInfoException {
+
+        try {
+
+            long currentRev = chunk.getRevision();
+            long updatedRev = Long.parseUnsignedLong(Files.readString(drivePath.resolve(chunk.getId() + ".rev")));
+
+            return (int) (currentRev - updatedRev);
+
+        } catch (Exception e) {
+            throw new TransferInfoAbortException(e.getMessage());
+        }
+
+    }
+
+    @Override
     public long getMaxQuota() {
         return 8589934592L;
     }
 
 
     @Override
-    public Drive initialize() {
+    public DriveProvider initialize() {
 
         Application.log(getClass(), "Initializing %s %s", SERVICE_ID, getId());
         setStatus(STATUS_CONNECTING);
@@ -185,7 +200,7 @@ public class OfflineDriveProvider extends Drive {
     }
 
     @Override
-    public Drive exit() {
+    public DriveProvider exit() {
         return this;
     }
 

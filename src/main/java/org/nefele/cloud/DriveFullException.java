@@ -27,4 +27,7 @@ package org.nefele.cloud;
 import java.io.IOException;
 
 public class DriveFullException extends IOException {
+    public DriveFullException(String message) {
+        super(message);
+    }
 }

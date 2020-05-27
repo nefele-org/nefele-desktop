@@ -219,8 +219,26 @@ public class MergePath implements Path {
     }
 
     @Override
+    public Path resolve(String other) {
+        return get(absolutePath, other);
+    }
+
+    @Override
     public Path relativize(Path path) {
-        throw new UnsupportedOperationException();
+
+        if(!(path instanceof MergePath))
+            throw new IllegalArgumentException();
+
+
+        MergePath mergePath = (MergePath) path;
+
+        String relativePath = mergePath.absolutePath
+                .replaceFirst(absolutePath, "")
+                .replaceFirst("^.", "");
+
+
+        return new MergePath(fileSystem, mergePath.getInode(), mergePath.absolutePath, relativePath);
+
     }
 
     @Override
@@ -280,11 +298,11 @@ public class MergePath implements Path {
         if (o == null || getClass() != o.getClass()) return false;
         MergePath paths = (MergePath) o;
         return getFileSystem().equals(paths.getFileSystem()) &&
-                path.equals(paths.path);
+                absolutePath.equals(paths.absolutePath);
     }
 
 
-    public static Path get(String scheme, String... strings) {
+    public static Path get(String... strings) {
 
         String path = String
                 .join(MergeFileSystem.PATH_SEPARATOR, strings)
@@ -293,7 +311,7 @@ public class MergePath implements Path {
                 .trim();
 
         try {
-            return Path.of(new URI(scheme, "", path, null));
+            return Path.of(new URI("nefele", "", path, null));
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException();
         }

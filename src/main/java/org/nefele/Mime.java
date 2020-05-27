@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package org.nefele.core;
+package org.nefele;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;

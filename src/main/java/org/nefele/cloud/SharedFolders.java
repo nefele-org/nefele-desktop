@@ -22,29 +22,59 @@
  * THE SOFTWARE.
  */
 
-package org.nefele.core;
+package org.nefele.cloud;
 
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
+import org.nefele.Application;
+import org.nefele.Service;
+import org.nefele.fs.MergePath;
 
-public class TransferInfoTryAgainException extends TransferInfoException {
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashSet;
 
-    public TransferInfoTryAgainException() {
+public final class SharedFolders implements Service {
+
+    private final static SharedFolders instance = new SharedFolders();
+
+    public static SharedFolders getInstance() {
+        return instance;
+    }
+
+
+
+    private final HashSet<SharedFolder> sharedFolders;
+
+    public SharedFolders() {
+        sharedFolders = new HashSet<>();
+    }
+
+    @Override
+    public void initialize(Application app) {
 
     }
 
-    public TransferInfoTryAgainException(String message) {
-        super(message);
-    }
-
-    public TransferInfoTryAgainException(String message, int timeToWait, TimeUnit timeUnit) {
-
-        super(message);
-
-        try {
-            Thread.sleep(timeUnit.toMillis(timeToWait));
-        } catch (InterruptedException ignored) { }
+    @Override
+    public void synchronize(Application app) {
 
     }
 
+    @Override
+    public void exit(Application app) {
+
+    }
+
+
+    public HashSet<SharedFolder> getSharedFolders() {
+        return sharedFolders;
+    }
+
+    public boolean isShared(MergePath path) {
+
+
+        return getSharedFolders()
+                .stream()
+                .peek(i -> Application.log(getClass(), "SHARED FOLDER: %s == %s: %s", i.getCloudPath(), path, i.getCloudPath().equals(path)))
+                .anyMatch(i -> i.getCloudPath().equals(path));
+
+    }
 }

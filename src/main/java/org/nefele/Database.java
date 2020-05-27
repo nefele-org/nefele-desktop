@@ -135,7 +135,7 @@ public class Database {
                 Application.panic(Database.class, "Database is gone, rest in peace :( [%s(%d)] %s", e.getSQLState(), e.getErrorCode(), e.getMessage());
 
             else {
-                Application.log(Database.class, "WARNING! Unhandled exception %s: [%s(%d)] %s", e.getClass().getName(), e.getSQLState(), e.getErrorCode(), e.getMessage());
+                Application.log(Database.class, e, "[%s(%d)]", e.getSQLState(), e.getErrorCode());
                 throw e;
             }
 

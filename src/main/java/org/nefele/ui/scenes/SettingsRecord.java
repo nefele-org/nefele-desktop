@@ -24,29 +24,15 @@
 
 package org.nefele.ui.scenes;
 
-import com.jfoenix.controls.JFXCheckBox;
-import com.jfoenix.controls.JFXComboBox;
-import javafx.beans.binding.Binding;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import org.nefele.Application;
 import org.nefele.Resources;
-import org.nefele.core.TransferInfo;
-import org.nefele.core.TransferQueue;
-import org.nefele.ui.Theme;
-import org.nefele.ui.Themeable;
+import org.nefele.Themeable;
 
 import java.net.URL;
 import java.util.ResourceBundle;

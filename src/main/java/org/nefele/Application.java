@@ -33,12 +33,10 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
-import org.nefele.cloud.Drives;
-import org.nefele.core.Mimes;
-import org.nefele.core.Status;
-import org.nefele.core.TransferQueue;
-import org.nefele.ui.Theme;
-import org.nefele.ui.Views;
+import org.nefele.cloud.DriveProviders;
+import org.nefele.cloud.SharedFolder;
+import org.nefele.cloud.SharedFolders;
+import org.nefele.transfers.TransferQueue;
 import org.nefele.ui.controls.NefelePane;
 import org.nefele.ui.dialog.Dialogs;
 import org.nefele.ui.scenes.Home;
@@ -124,8 +122,9 @@ public final class Application extends javafx.application.Application implements
 
 
         addService(getLocale());
-        addService(Drives.getInstance());
+        addService(DriveProviders.getInstance());
         addService(Mimes.getInstance());
+        addService(SharedFolders.getInstance());
 
 
 
@@ -172,9 +171,15 @@ public final class Application extends javafx.application.Application implements
 
 
             serviceWorker = runWorker(new Thread(() -> {
-                services.forEach(i -> {
-                    i.synchronize(Application.this);
-                });
+                synchronized (services) {
+                    services.forEach(i -> {
+                        try {
+                            i.synchronize(Application.this);
+                        } catch (Exception e) {
+                            Application.log(getClass(), e, i.getClass().getName());
+                        }
+                    });
+                }
             }, "Service::synchronize()"), 10, 10, TimeUnit.SECONDS);
 
 
@@ -280,8 +285,13 @@ public final class Application extends javafx.application.Application implements
     }
 
     public <T extends Service> void addService(T e) {
+
         Application.log(getClass(), "Added service %s", e.getClass().getName());
-        services.add(e);
+
+        synchronized (services) {
+            services.add(e);
+        }
+
     }
 
 
@@ -369,20 +379,32 @@ public final class Application extends javafx.application.Application implements
 
     public static void panic(Class<?> className, Exception e) {
 
+        Application.log(className, e);
+        Application.panic(className, "Aborting...");
+
+    }
+
+
+    public static void log(Class<?> className, Exception e, String message, Object...args) {
+
         StringBuilder ss = new StringBuilder().append (
-                        String.format("Exception in thread \"%s\" %s: %s\n",
-                                Thread.currentThread().getName(),
-                                e.getClass().getName(),
-                                e.getMessage())
-                    );
+                String.format("!!! Exception in thread \"%s\" %s: %s: %s\n",
+                        Thread.currentThread().getName(),
+                        e.getClass().getName(),
+                        String.format(message, args),
+                        e.getMessage())
+        );
 
 
         for (StackTraceElement i : e.getStackTrace())
             ss.append(String.format("   at %s/%s.%s(%s:%d)\n", i.getModuleName(), i.getClassName(), i.getMethodName(), i.getFileName(), i.getLineNumber()));
 
+        Application.log(className, ss.toString());
 
-        Application.panic(className, ss.toString());
+    }
 
+    public static void log(Class<?> className, Exception e) {
+        Application.log(className, e, "");
     }
 
     public static void log(Class<?> className, String message, Object... args) {
