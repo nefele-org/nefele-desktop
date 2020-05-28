@@ -140,7 +140,7 @@ public class DownloadTransferInfo extends TransferInfo {
 
             while (inputStream.available() > 0) {
 
-                byte[] bytes = new byte[Math.min(PREPARE_BLOCK_SIZE, inputStream.available())];
+                var bytes = new byte[Math.min(PREPARE_BLOCK_SIZE, inputStream.available())];
 
                 if(inputStream.read(bytes) > 0)
                     outputStream.write(bytes);

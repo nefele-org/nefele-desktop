@@ -28,6 +28,11 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXToggleButton;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -41,6 +46,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.nefele.Application;
 import org.nefele.Resources;
 import org.nefele.Theme;
@@ -67,6 +73,7 @@ public class NefelePane extends StackPane implements Initializable, Themeable {
     private final BooleanProperty showLogo;
     private final BooleanProperty showStatusBar;
     private final BooleanProperty resizable;
+    private final BooleanProperty draggable;
     private final ObjectProperty<NefelePaneClosingOperation> onClosing;
 
     @FXML private JFXToggleButton toggleDarkMode;
@@ -103,6 +110,7 @@ public class NefelePane extends StackPane implements Initializable, Themeable {
         this.showLogo = new SimpleBooleanProperty(true);
         this.showStatusBar = new SimpleBooleanProperty(true);
         this.resizable = new SimpleBooleanProperty(true);
+        this.draggable = new SimpleBooleanProperty(true);
         this.onClosing = new SimpleObjectProperty<>(null);
 
         Resources.getFXML(this, "/fxml/base/NefelePane.fxml");
@@ -152,6 +160,9 @@ public class NefelePane extends StackPane implements Initializable, Themeable {
 
         headerPane.setOnMousePressed(e -> {
 
+            if(!isDraggable())
+                return;
+
             mouseDragX = e.getX();
             mouseDragY = e.getY();
             mouseDragging = true;
@@ -161,13 +172,16 @@ public class NefelePane extends StackPane implements Initializable, Themeable {
 
         headerPane.setOnMouseClicked(e -> {
 
-            if(e.getClickCount() > 1)
+            if(e.getClickCount() > 1 && isResizable())
                 toggleMaximize();
 
         });
 
 
         headerPane.setOnMouseDragged(e -> {
+
+            if(!isDraggable())
+                return;
 
             Stage stage = (Stage) getScene().getWindow();
 
@@ -179,6 +193,9 @@ public class NefelePane extends StackPane implements Initializable, Themeable {
 
 
         headerPane.setOnMouseReleased(e -> {
+
+            if(!isDraggable())
+                return;
 
             mouseDragX = 0;
             mouseDragY = 0;
@@ -234,6 +251,7 @@ public class NefelePane extends StackPane implements Initializable, Themeable {
         awesomeLogo.visibleProperty().bind(showLogoProperty());
         statusBar.visibleProperty().bind(showStatusBarProperty());
         resizeHandle.visibleProperty().bind(resizableProperty());
+
 
 
         statusText.textProperty().bind(Application.getInstance().getStatus().textProperty());
@@ -309,6 +327,7 @@ public class NefelePane extends StackPane implements Initializable, Themeable {
         resizeHandle.setOnMouseEntered(e -> setCursor(Cursor.SE_RESIZE));
         resizeHandle.setPickOnBounds(true);
 
+
     }
 
 
@@ -322,6 +341,8 @@ public class NefelePane extends StackPane implements Initializable, Themeable {
             if (stage.isMaximized())
                 stage.setHeight(Screen.getPrimary().getVisualBounds().getHeight());
         }
+
+        setDraggable(!stage.isMaximized());
 
     }
 
@@ -380,6 +401,18 @@ public class NefelePane extends StackPane implements Initializable, Themeable {
         this.resizable.set(resizable);
     }
 
+    public boolean isDraggable() {
+        return draggable.get();
+    }
+
+    public BooleanProperty draggableProperty() {
+        return draggable;
+    }
+
+    public void setDraggable(boolean draggable) {
+        this.draggable.set(draggable);
+    }
+
     public boolean isShowStatusBar() {
         return showStatusBar.get();
     }
@@ -413,4 +446,5 @@ public class NefelePane extends StackPane implements Initializable, Themeable {
             getScene().getWindow().hide();
 
     }
+
 }

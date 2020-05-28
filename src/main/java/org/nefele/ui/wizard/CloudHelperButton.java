@@ -24,11 +24,9 @@
 
 package org.nefele.ui.wizard;
 
+import com.jfoenix.controls.JFXButton;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -37,28 +35,42 @@ import javafx.scene.layout.StackPane;
 import org.nefele.Application;
 import org.nefele.Resources;
 import org.nefele.Themeable;
+import org.nefele.cloud.DriveNotFoundException;
+import org.nefele.cloud.DriveProvider;
+import org.nefele.cloud.DriveProviders;
+import org.nefele.ui.dialog.BaseDialog;
+import org.nefele.ui.dialog.Dialogs;
+import org.nefele.ui.dialog.InputDialogResult;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 
 import static java.util.Objects.requireNonNull;
 
-public class CloudHelperButton extends StackPane implements Initializable, Themeable {
+public class CloudHelperButton extends JFXButton implements Initializable, Themeable {
 
     private final StringProperty name;
     private final StringProperty iconName;
+    private final StringProperty service;
+    private final BooleanProperty access;
+
+    private final ObjectProperty<DriveProvider> drive;
     private final ObjectProperty<CloudHelperItem> item;
 
     @FXML private MaterialDesignIconView icon;
-    @FXML private Label labelName;
     @FXML private Tooltip tooltip;
+    @FXML private Label labelName;
 
     public CloudHelperButton(CloudHelperItem item) {
 
+        this.service = new SimpleStringProperty(requireNonNull(item.getService()));
         this.name = new SimpleStringProperty(requireNonNull(item.getName()));
         this.iconName = new SimpleStringProperty(requireNonNull(item.getIcon()));
+        this.access = new SimpleBooleanProperty(item.isAccess());
         this.item = new SimpleObjectProperty<>(requireNonNull(item));
+        this.drive = new SimpleObjectProperty<>();
 
-        Resources.getFXML(this, "/fxml/CloudHelperButton.fxml");
+        Resources.getFXML(this, "/fxml/wizard/CloudHelperButton.fxml");
 
     }
 
@@ -68,8 +80,40 @@ public class CloudHelperButton extends StackPane implements Initializable, Theme
         labelName.textProperty().bind(getItem().nameProperty());
         icon.glyphNameProperty().bind(getItem().iconProperty());
 
-        this.setOnMouseClicked(e ->{
-            /* TODO... */
+        this.setOnMouseClicked(e -> {
+
+            try {
+
+                DriveProvider driveProvider = DriveProviders.getInstance().add(getService());
+
+                while(driveProvider.getStatus() != DriveProvider.STATUS_READY) {
+
+                    if(Dialogs.showErrorBox(
+                            "DIALOG_TITLE_ERROR",
+                            "CLOUDHELPER_DIALOG_ERROR_LOGIN" ,
+                            BaseDialog.DIALOG_RETRY, BaseDialog.DIALOG_ABORT) == BaseDialog.DIALOG_RETRY)
+                        driveProvider.initialize();
+
+                    else
+                        return;
+
+                }
+
+
+                if(driveProvider.getStatus() == DriveProvider.STATUS_READY){
+
+                    setDrive(driveProvider);
+                    access.setValue(true);
+
+                }
+
+
+            } catch (DriveNotFoundException driveNotFoundException) {
+
+                Application.panic(getClass(), "Drive not found is impossible!!");
+
+            }
+
         });
 
         Application.getInstance().getViews().add(this);
@@ -77,7 +121,8 @@ public class CloudHelperButton extends StackPane implements Initializable, Theme
 
     @Override
     public void initializeInterface() {
-
+        Resources.getCSS(this, "/css/cloud-helper-text.css");
+        tooltip.setUserData(getItem().getHint());
     }
 
     public String getName() { return name.get(); }
@@ -92,15 +137,29 @@ public class CloudHelperButton extends StackPane implements Initializable, Theme
 
     public void setIconName(String iconName) { this.iconName.set(iconName); }
 
-    public CloudHelperItem getItem() {
-        return item.get();
+    public CloudHelperItem getItem() { return item.get(); }
+
+    public ObjectProperty<CloudHelperItem> itemProperty() { return item; }
+
+    public void setItem(CloudHelperItem item) { this.item.set(item); }
+
+    public String getService() { return service.get(); }
+
+    public StringProperty serviceProperty() { return service; }
+
+    public boolean isAccess() { return access.get(); }
+
+    public BooleanProperty accessProperty() { return access; }
+
+    public DriveProvider getDrive() {
+        return drive.get();
     }
 
-    public ObjectProperty<CloudHelperItem> itemProperty() {
-        return item;
+    public ObjectProperty<DriveProvider> driveProperty() {
+        return drive;
     }
 
-    public void setItem(CloudHelperItem item) {
-        this.item.set(item);
+    public void setDrive(DriveProvider drive) {
+        this.drive.set(drive);
     }
 }

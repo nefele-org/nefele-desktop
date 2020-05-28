@@ -24,25 +24,14 @@
 
 package org.nefele.utils;
 
-import java.io.File;
-import java.io.IOException;
+import java.util.UUID;
 
-public final class FilenameUtils {
+public final class IdUtils {
 
-    private FilenameUtils() { }
+    private IdUtils() { }
 
-    public static boolean isFilenameInvalid(String filename) {
-
-        File file = new File(filename);
-
-        try {
-            file.getCanonicalPath();
-        } catch (IOException ignored) {
-            return true;
-        }
-
-        return false;
-
+    public static String generateId() {
+        return UUID.randomUUID().toString();
     }
 
 }

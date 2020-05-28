@@ -198,17 +198,24 @@ public class Locale implements Service {
     }
 
     @Override
-    public void initialize(Application app) {
-        app.getLocale().setLanguage(app.getConfig().getString("app.ui.locale").orElse(Locale.DEFAULT_LOCALE));
+    public void initialize() {
+
+        Application.getInstance()
+                .getLocale()
+                .setLanguage(Application.getInstance()
+                        .getConfig()
+                        .getString("app.ui.locale")
+                            .orElse(Locale.DEFAULT_LOCALE));
+
     }
 
     @Override
-    public void synchronize(Application app) {
+    public void synchronize() {
 
     }
 
     @Override
-    public void exit(Application app) {
+    public void exit() {
 
     }
 

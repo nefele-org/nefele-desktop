@@ -95,7 +95,7 @@ public class MergeFileSystemProvider extends FileSystemProvider {
             throw new IllegalArgumentException();
 
 
-        final Tree<MergeNode> inode = ((MergePath) path).getInode();
+        final var inode = ((MergePath) path).getInode();
 
         if(inode == null)
             return null;

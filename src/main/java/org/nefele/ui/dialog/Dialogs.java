@@ -40,7 +40,7 @@ public final class Dialogs {
             throw new IllegalStateException("Wrong thread for MessageBox!");
 
 
-        for(int i : buttons)
+        for(var i : buttons)
             baseDialog.getButtons().add(i);
 
         baseDialog.showAndWait();
@@ -88,7 +88,7 @@ public final class Dialogs {
 
         InputDialog inputDialog = new InputDialog(title, prompts);
 
-        for(int i : buttons)
+        for(var i : buttons)
             inputDialog.getButtons().add(i);
 
         inputDialog.showAndWait();

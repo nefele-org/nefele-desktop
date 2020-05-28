@@ -283,7 +283,7 @@ public class FileBrowser extends ScrollPane implements Initializable, Themeable 
         lastMousePressed = Instant.now();
 
 
-        AtomicBoolean found = new AtomicBoolean(false);
+        var found = new AtomicBoolean(false);
 
         cells.forEach(i -> {
 

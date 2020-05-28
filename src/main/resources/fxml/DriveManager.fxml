@@ -32,6 +32,7 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import javafx.geometry.Insets?>
+<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
 <fx:root type="StackPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
          AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" >
 
@@ -64,7 +65,16 @@
                 <Separator/>
 
                 <HBox alignment="CENTER_RIGHT">
-                    <JFXButton fx:id="buttonAdd" userData="WORD_ADD"/>
+                    <JFXButton fx:id="buttonAdd" styleClass="docker-button" alignment="CENTER" contentDisplay="CENTER" prefHeight="64.0"
+                               prefWidth="64.0">
+                        <graphic>
+                            <MaterialDesignIconView size="28.0" glyphName="PLUS"/>
+                        </graphic>
+
+                        <tooltip>
+                            <Tooltip userData="WORD_ADD"/>
+                        </tooltip>
+                    </JFXButton>
                     <padding>
                         <Insets right="16" top="8" />
                     </padding>

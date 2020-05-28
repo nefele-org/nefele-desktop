@@ -30,7 +30,6 @@
   -->
 
 <?import com.jfoenix.controls.JFXButton?>
-<?import de.jensd.fx.glyphs.materialicons.MaterialIconView?>
 
 
 <?import javafx.geometry.Insets?>

@@ -29,12 +29,14 @@ import org.nefele.cloud.DriveProvider;
 import org.nefele.cloud.DriveProviders;
 import org.nefele.Mime;
 import org.nefele.Mimes;
+import org.nefele.utils.Tree;
 
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.FileAttributeView;
 import java.nio.file.attribute.FileStoreAttributeView;
+import java.util.Iterator;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
@@ -125,6 +127,9 @@ public class MergeFileStore extends FileStore {
         inode.setMime(Mimes.getInstance().getByExtension(inode.getName()).getType());
         inode.invalidate();
 
+
+        fileSystem.throwWatchEvent(StandardWatchEventKinds.ENTRY_CREATE, path);
+
         Application.log(getClass(), "Created file %s", path.toString());
 
     }
@@ -141,26 +146,40 @@ public class MergeFileStore extends FileStore {
         inode.setMime(Mime.FOLDER.getType());
         inode.invalidate();
 
+
+        fileSystem.throwWatchEvent(StandardWatchEventKinds.ENTRY_CREATE, path);
+
         Application.log(getClass(), "Created directory %s", path.toString());
 
     }
 
     public void delete(MergePath path) throws IOException {
 
-        if(!path.getInode().getData().exists())
-            throw new NoSuchFileException(path.toString());
-
-        if(!path.getInode().getChildren().isEmpty())
-            throw new DirectoryNotEmptyException(path.toString());
-
         if(path.getInode().getParent() == null)
             throw new IOException("Can not delete root directory!");
+
+//        if(path.getInode().getChildren().stream().anyMatch(i -> i.getData().exists()))
+//            throw new DirectoryNotEmptyException(path.toString());
+
+
+        while (!path.getInode().getChildren().isEmpty())
+            delete((MergePath) path.resolve(
+                    path.getInode()
+                        .getChildren()
+                        .get(0)
+                        .getData()
+                        .getName()
+            ));
+
 
 
         fileSystem.getStorage()
                 .free(path.getInode().getData());
 
         path.getInode().getParent().remove(path.getInode());
+
+
+        fileSystem.throwWatchEvent(StandardWatchEventKinds.ENTRY_DELETE, path);
 
         Application.log(getClass(), "Deleted %s", path.toString());
 
@@ -186,6 +205,9 @@ public class MergeFileStore extends FileStore {
 
         oldPath.getInode().getParent().remove(oldPath.getInode());
 
+
+        fileSystem.throwWatchEvent(StandardWatchEventKinds.ENTRY_DELETE, oldPath);
+        fileSystem.throwWatchEvent(StandardWatchEventKinds.ENTRY_CREATE, newPath);
 
         Application.log(getClass(), "Moved %s to %s", oldPath.toString(), newPath.toString());
 

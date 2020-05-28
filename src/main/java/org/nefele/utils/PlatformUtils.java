@@ -30,6 +30,9 @@ import java.util.concurrent.CountDownLatch;
 
 public final class PlatformUtils {
 
+    private PlatformUtils() { }
+
+
     public static void runLaterAndWait(Runnable runnable) {
 
         if(Platform.isFxApplicationThread())

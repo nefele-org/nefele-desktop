@@ -115,15 +115,15 @@ public class DriveManagerBox extends StackPane implements Initializable, Themeab
         });
 
 
-        sliderChunks.minProperty().bind(getDrive().chunksProperty());
-        sliderChunks.setMax(getDrive().getMaxQuota());
-        sliderChunks.setValue(getDrive().getQuota());
+        sliderChunks.minProperty().bind(getDrive().chunksProperty().divide(1024 * 1024));
+        sliderChunks.setMax(getDrive().getMaxQuota() / 1024.0 / 1024.0);
+        sliderChunks.setValue(getDrive().getQuota() / 1024.0 / 1024.0);
 
         sliderChunks.valueChangingProperty().addListener((v, o, n) -> {
 
             if (!n) {
 
-                getDrive().setQuota(((Double) sliderChunks.getValue()).longValue());
+                getDrive().setQuota(((Double) sliderChunks.getValue()).longValue() * 1024 * 1024);
                 getDrive().invalidate();
 
             }

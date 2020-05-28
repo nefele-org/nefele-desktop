@@ -26,8 +26,8 @@ package org.nefele;
 
 public interface Service {
 
-    void initialize(Application app);
-    void synchronize(Application app);
-    void exit(Application app);
+    void initialize();
+    void synchronize();
+    void exit();
 
 }

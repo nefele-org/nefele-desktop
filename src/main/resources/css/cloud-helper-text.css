@@ -22,12 +22,8 @@
  * THE SOFTWARE.
  */
 
-.cloud-helper-card {
-    -fx-background-color: -nefele-theme-surface-hover;
-    -fx-background-insets: 10 10;
-    -fx-background-radius: 10;
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 2, 1, 0, 0);
-    -fx-text-fill: -nefele-theme-surface-text;
-    -fx-padding: 10 10 10 10;
-    -fx-pref-width: 420px;
+.cloud-helper-text {
+    -fx-background-color: transparent;
+    -fx-text-fill: -nefele-theme-primary-text;
+    -fx-font-size: 1.25em;
 }

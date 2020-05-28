@@ -26,6 +26,7 @@ package org.nefele.ui.wizard;
 
 import com.jfoenix.controls.JFXComboBox;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import org.nefele.Application;
 import org.nefele.Resources;
 
@@ -36,7 +37,10 @@ public class WizardPage1 extends WizardPage {
 
     @FXML private JFXComboBox<String> comboBoxLaunguage;
 
-    public WizardPage1() {
+    public WizardPage1(Parent wizardRoot) {
+
+        super(wizardRoot);
+
         Resources.getFXML(this, "/fxml/wizard/WizardPage1.fxml");
     }
 

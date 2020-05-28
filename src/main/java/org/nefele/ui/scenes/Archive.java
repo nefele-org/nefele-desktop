@@ -39,6 +39,7 @@ import org.nefele.Mimes;
 import org.nefele.Resources;
 import org.nefele.cloud.SharedFolder;
 import org.nefele.cloud.SharedFolders;
+import org.nefele.fs.MergeNode;
 import org.nefele.transfers.*;
 import org.nefele.fs.MergePath;
 import org.nefele.Themeable;
@@ -127,8 +128,8 @@ public class Archive extends StackPane implements Initializable, Themeable {
 
         buttonUpFile.setOnMouseClicked(e -> {
 
-            FileChooser fileChooser = new FileChooser();
-            File file = fileChooser.showOpenDialog(getScene().getWindow());
+            var fileChooser = new FileChooser();
+            var file = fileChooser.showOpenDialog(getScene().getWindow());
 
 
             if(file == null)
@@ -145,7 +146,7 @@ public class Archive extends StackPane implements Initializable, Themeable {
 
                         final Path path = MergePath.get(fileBrowser.getCurrentPath().toString(), file.getName());
 
-                        int status = Application.getInstance().getTransferQueue().enqueue(
+                        var status = Application.getInstance().getTransferQueue().enqueue(
                                 new UploadTransferInfo((MergePath) path, file)).get();
 
 
@@ -226,8 +227,8 @@ public class Archive extends StackPane implements Initializable, Themeable {
 
         buttonUpFolder.setOnMouseClicked(e -> {
 
-            DirectoryChooser fileChooser = new DirectoryChooser();
-            File file = fileChooser.showDialog(getScene().getWindow());
+            var fileChooser = new DirectoryChooser();
+            var file = fileChooser.showDialog(getScene().getWindow());
 
 
             if(file == null)
@@ -263,7 +264,8 @@ public class Archive extends StackPane implements Initializable, Themeable {
 
                                             try {
 
-                                                int status = future.get();
+                                                var status = future.get();
+
                                                 switch (status) {
 
                                                     case TransferInfo.TRANSFER_STATUS_COMPLETED:
@@ -329,8 +331,8 @@ public class Archive extends StackPane implements Initializable, Themeable {
                             fileBrowser.getSelectedItem().getText());
 
 
-                    DirectoryChooser fileChooser = new DirectoryChooser();
-                    File file = fileChooser.showDialog(getScene().getWindow());
+                    var fileChooser = new DirectoryChooser();
+                    var file = fileChooser.showDialog(getScene().getWindow());
 
                     if(file == null)
                         Dialogs.showErrorBox("ARCHIVE_DIALOG_FOLDER_NOTSELECTED");
@@ -341,7 +343,7 @@ public class Archive extends StackPane implements Initializable, Themeable {
                     else {
 
                         SharedFolders.getInstance()
-                                .getSharedFolders().add(new SharedFolder(file.toPath(), path));
+                                .addSharedFolderService(new SharedFolder(file.toPath(), path));
 
                         fileBrowser.update();
 
@@ -360,7 +362,7 @@ public class Archive extends StackPane implements Initializable, Themeable {
                             fileBrowser.getSelectedItem().getText());
 
                     SharedFolders.getInstance()
-                            .getSharedFolders().removeIf(i -> i.getCloudPath().equals(path));
+                            .removeSharedFolderServiceByPath(path);
 
                     fileBrowser.update();
 
@@ -435,10 +437,16 @@ public class Archive extends StackPane implements Initializable, Themeable {
 
                             try {
 
-                                Files.delete(MergePath.get(
+                                Path path = MergePath.get(
                                         fileBrowser.getCurrentPath().toString(),
                                         i.getText()
-                                ));
+                                );
+
+                                if(Files.isDirectory(path))
+                                    if(Files.list(path).count() > 0)
+                                        throw new DirectoryNotEmptyException(path.toString());
+
+                                Files.delete(path);
 
                             } catch (DirectoryNotEmptyException io) {
                                 Platform.runLater(() -> Dialogs.showErrorBox("ERROR_DIRECTORY_NOT_EMPTY"));
@@ -459,8 +467,8 @@ public class Archive extends StackPane implements Initializable, Themeable {
             private final MenuItem fileDownloadMenuItem = new MenuItem("") {{
                 setOnAction(e -> {
 
-                    DirectoryChooser fileChooser = new DirectoryChooser();
-                    File file = fileChooser.showDialog(getScene().getWindow());
+                    var fileChooser = new DirectoryChooser();
+                    var file = fileChooser.showDialog(getScene().getWindow());
 
                     if(file == null)
                         Dialogs.showErrorBox("ARCHIVE_DIALOG_FOLDER_NOTSELECTED");
@@ -485,7 +493,7 @@ public class Archive extends StackPane implements Initializable, Themeable {
 
                             PlatformUtils.runLaterAndWait(() -> {
 
-                                final Future<Integer> future = Application.getInstance().getTransferQueue().enqueue(
+                                final var future = Application.getInstance().getTransferQueue().enqueue(
                                         new DownloadTransferInfo((MergePath) cloudPath, localPath.toFile()));
 
 
@@ -493,7 +501,8 @@ public class Archive extends StackPane implements Initializable, Themeable {
 
                                     try {
 
-                                        int status = future.get();
+                                        var status = future.get();
+
                                         switch (status) {
 
                                             case TransferInfo.TRANSFER_STATUS_COMPLETED:
@@ -574,6 +583,7 @@ public class Archive extends StackPane implements Initializable, Themeable {
 
 
                     Files.list(path)
+                            .filter(Files::exists)
                             .filter(Files::isDirectory).forEach(i ->
                                 items.add(new FileBrowserItem(Mime.FOLDER, i.getFileName().toString()) {{
 
@@ -590,6 +600,7 @@ public class Archive extends StackPane implements Initializable, Themeable {
                     );
 
                     Files.list(path)
+                            .filter(Files::exists)
                             .filter(p -> !Files.isDirectory(p)).forEach(i -> {
 
                                 String filename = i.getFileName().toString();

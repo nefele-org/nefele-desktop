@@ -24,6 +24,7 @@
 
 package org.nefele.cloud;
 
+import com.sun.nio.file.ExtendedWatchEventModifier;
 import org.nefele.Application;
 import org.nefele.Service;
 import org.nefele.fs.MergeFileSystem;
@@ -33,36 +34,117 @@ import org.nefele.transfers.TransferInfo;
 import org.nefele.transfers.UploadTransferInfo;
 
 import java.io.File;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.IOException;
+import java.net.URI;
+import java.nio.file.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.concurrent.Future;
 import java.util.function.Predicate;
 
+
+
 public final class SharedFolder implements Service {
+
+    private final static int HOST_LOCAL = 0;
+    private final static int HOST_CLOUD = 1;
+
+
+    class SharedEntry {
+
+        private final int host;
+        private final Path source;
+        private final Path target;
+
+        public SharedEntry(int host, Path source) {
+
+            this.host = host;
+            this.source = source;
+
+            if(host == HOST_LOCAL)
+                target = getLocalPath().resolve(getCloudPath().relativize(source).toString());
+            else
+                target = getCloudPath().resolve(getLocalPath().relativize(source).toString());
+
+        }
+
+        public int getHost() {
+            return host;
+        }
+
+        public Path getSource() {
+            return source;
+        }
+
+        public Path getTarget() {
+            return target;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            SharedEntry that = (SharedEntry) o;
+            return getHost() == that.getHost() &&
+                    getSource().equals(that.getSource());
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(getHost(), getSource());
+        }
+
+        @Override
+        public String toString() {
+            return String.format("<%s:%s>", source, target);
+        }
+    };
+
+
+
 
     private final Path localPath;
     private final MergePath cloudPath;
-    private final ArrayList<String> uploadQueue;
-    private final ArrayList<String> downloadQueue;
+    private final HashSet<SharedEntry> createQueue;
+    private final HashSet<SharedEntry> deleteQueue;
+    private final HashSet<SharedEntry> updateQueue;
+
+    private final HashSet<WatchKey> watchKeys;
+    private final WatchService localWatchService;
+    private final WatchService cloudWatchService;
+
+
 
     public SharedFolder(Path localPath, MergePath cloudPath) {
 
         this.localPath = localPath;
         this.cloudPath = cloudPath;
 
-        this.uploadQueue = new ArrayList<>();
-        this.downloadQueue = new ArrayList<>();
+        this.createQueue = new HashSet<>();
+        this.deleteQueue = new HashSet<>();
+        this.updateQueue = new HashSet<>();
 
-        initialize(null);
+        this.watchKeys = new HashSet<>();
+
+
+        try {
+
+            this.localWatchService = FileSystems.getDefault().newWatchService();
+            this.cloudWatchService = FileSystems.getFileSystem(URI.create("nefele:///")).newWatchService();
+
+        } catch (IOException e) {
+            Application.panic(getClass(), e);
+            throw new IllegalStateException();
+        }
+
+        initialize();
+
     }
 
 
     @Override
-    public void initialize(Application app) {
+    public void initialize() {
 
         try {
 
@@ -86,94 +168,172 @@ public final class SharedFolder implements Service {
                     .map(name -> name.replace(File.pathSeparator, MergeFileSystem.PATH_SEPARATOR))
                     .filter(Predicate.not(cloudFiles::contains))
                     .map(name -> name.replace(MergeFileSystem.PATH_SEPARATOR, File.pathSeparator))
-                    .forEach(uploadQueue::add);
+                    .forEach(i -> createQueue.add(new SharedEntry(HOST_CLOUD, localPath.resolve(i))));
 
             cloudFiles
                     .stream()
                     .map(name -> name.replace(MergeFileSystem.PATH_SEPARATOR, File.pathSeparator))
                     .filter(Predicate.not(localFiles::contains))
                     .map(name -> name.replace(File.pathSeparator, MergeFileSystem.PATH_SEPARATOR))
-                    .forEach(downloadQueue::add);
+                    .forEach(i -> createQueue.add(new SharedEntry(HOST_LOCAL, cloudPath.resolve(i))));
 
 
-            Application.getInstance().addService(this);
+
+            try {
+
+                final WatchEvent.Kind<?>[] standardWatchEventsKind = new WatchEvent.Kind[] {
+                        StandardWatchEventKinds.ENTRY_CREATE,
+                        StandardWatchEventKinds.ENTRY_DELETE,
+                        StandardWatchEventKinds.ENTRY_MODIFY,
+                };
+
+                watchKeys.add(localPath.register(localWatchService,
+                        standardWatchEventsKind,
+                        ExtendedWatchEventModifier.FILE_TREE
+                ));
+
+                watchKeys.add(cloudPath.register(cloudWatchService,
+                        standardWatchEventsKind,
+                        ExtendedWatchEventModifier.FILE_TREE
+                ));
+
+
+            } catch (IOException e) {
+                Application.log(getClass(), e, "watchKeys.add()");
+            }
+
+
+            Application.getInstance().runThread(new Thread(() -> watchServiceWorker(localWatchService), "SharedFolder::watchService::" + localPath));
+            Application.getInstance().runThread(new Thread(() -> watchServiceWorker(cloudWatchService), "SharedFolder::watchService::" + cloudPath));
+
 
         } catch (Exception e) {
-            e.printStackTrace();
-            Application.log(getClass(), e,"SharedFolder %s::%s", localPath, cloudPath);
+            Application.log(getClass(), e,"SharedFolder %s", this);
         }
 
     }
 
     @Override @SuppressWarnings("unchecked")
-    public void synchronize(Application app) {
+    public void synchronize() {
+
+        final var currentCreateQueue = (HashSet<SharedEntry>) createQueue.clone();
+        final var currentDeleteQueue = (HashSet<SharedEntry>) deleteQueue.clone();
+        final var currentUpdateQueue = (HashSet<SharedEntry>) updateQueue.clone();
+
+        synchronized(createQueue) { createQueue.clear(); }
+        synchronized(deleteQueue) { deleteQueue.clear(); }
+        synchronized(updateQueue) { updateQueue.clear(); }
 
 
-        final ArrayList<String> currentUploadQueue = ((ArrayList<String>) uploadQueue.clone());
-        final ArrayList<String> currentDownloadQueue = ((ArrayList<String>) downloadQueue.clone());
+        currentCreateQueue
+                .forEach(q -> {
 
-        uploadQueue.clear();
-        downloadQueue.clear();
+                    if(currentDeleteQueue.stream().anyMatch(i -> i.getSource().equals(q.getSource())))
+                        return;
+
+
+                    try {
+
+                        if(Files.notExists(q.getTarget())) {
+
+                            if (Files.isDirectory(q.getSource()))
+                                Files.createDirectory(q.getTarget());
+                            else
+                                currentUpdateQueue.add(q);
+
+                        }
+
+
+                    } catch (Exception e) {
+                        Application.log(getClass(), e, "SharedFolder::createQueue::%s", q);
+                        createQueue.add(q);
+                    }
+
+                });
 
 
 
-        currentUploadQueue.stream()
-                .distinct()
+        currentUpdateQueue
                 .forEach(q -> {
 
                     try {
 
-                        if(Files.isDirectory(localPath.resolve(q)))
-                            Files.createDirectory(cloudPath.resolve(q));
+                        if (currentDeleteQueue.stream().anyMatch(i -> i.getSource().equals(q.getSource())))
+                            return;
+
+                        if (Files.isDirectory(q.getSource()))
+                            return;
 
 
-                        else {
-
-                            if (Files.exists(cloudPath.resolve(q)))
-                                Files.delete(cloudPath.resolve(q));
-
-                            final Future<Integer> future = Application.getInstance().getTransferQueue().enqueue(
-                                    new UploadTransferInfo((MergePath) cloudPath.resolve(q), localPath.resolve(q).toFile()));
+                        if(Files.exists(q.getTarget()))
+                            Files.delete(q.getTarget()); /* FIXME: Dangerous */
 
 
-                            Application.getInstance().runThread(new Thread(() -> {
 
-                                try {
+                        final Future<Integer> future;
 
-                                    int status = future.get();
-
-                                    switch (status) {
-
-                                        case TransferInfo.TRANSFER_STATUS_COMPLETED:
-                                            break;
-
-                                        case TransferInfo.TRANSFER_STATUS_ERROR:
-                                        case TransferInfo.TRANSFER_STATUS_CANCELED:
-
-                                            if (Files.exists(cloudPath.resolve(q)))
-                                                Files.delete(cloudPath.resolve(q));
-
-                                            uploadQueue.add(q);
-                                            break;
-
-                                        default:
-                                            Application.log(getClass(), "WARNING! Invalid TransferInfo.TRANSFER_STATUS_*: %d", status);
-                                            break;
-
-                                    }
+                        if (q.getHost() == HOST_CLOUD)
+                            future = Application.getInstance().getTransferQueue().enqueue(
+                                        new UploadTransferInfo((MergePath) q.getTarget(), q.getSource().toFile()));
+                        else
+                            future = Application.getInstance().getTransferQueue().enqueue(
+                                        new DownloadTransferInfo((MergePath) q.getSource(), q.getTarget().toFile()));
 
 
-                                } catch (Exception e) {
-                                    Application.log(getClass(), e,"SharedFolder::UploadQueueFuture::%s", q);
+                        Application.getInstance().runThread(new Thread(() -> {
+
+                            try {
+
+                                var status = future.get();
+
+                                switch (status) {
+
+                                    case TransferInfo.TRANSFER_STATUS_COMPLETED:
+                                        break;
+
+                                    case TransferInfo.TRANSFER_STATUS_ERROR:
+                                    case TransferInfo.TRANSFER_STATUS_CANCELED:
+
+                                        if (Files.exists(q.getTarget()))
+                                            Files.delete(q.getTarget());
+
+                                        updateQueue.add(q);
+                                        break;
+
+                                    default:
+                                        Application.log(getClass(), "WARNING! Invalid TransferInfo.TRANSFER_STATUS_*: %d", status);
+                                        break;
+
                                 }
 
 
-                            }, "SharedFolder::UploadQueue::" + q));
+                            } catch (Exception e) {
+                                Application.log(getClass(), e, "SharedFolder::updateQueueFuture::%s", q);
+                            }
 
-                        }
+
+                        }, "SharedFolder::TransferQueue::" + q));
+
 
                     } catch (Exception e) {
-                        Application.log(getClass(), e,"SharedFolder::UploadQueue::%s", q);
+                        Application.log(getClass(), e, "SharedFolder::updateQueue::%s", q);
+                        updateQueue.add(q);
+                    }
+
+                });
+
+
+        currentDeleteQueue
+                .forEach(q -> {
+
+                    try {
+
+                        if(Files.exists(q.getTarget()))
+                            Files.delete(q.getTarget());
+
+                    } catch (Exception e) {
+                        Application.log(getClass(), e, "SharedFolder::deleteQueue::%s", q);
+                        deleteQueue.add(q);
                     }
 
                 });
@@ -181,82 +341,117 @@ public final class SharedFolder implements Service {
 
 
 
-        currentDownloadQueue.stream()
-                .distinct()
-                .forEach(q -> {
+    }
 
 
-                    try {
 
-                        if(Files.isDirectory(cloudPath.resolve(q)))
-                            Files.createDirectory(localPath.resolve(q));
+    public void watchServiceWorker(WatchService watchService) {
 
+        do {
 
-                        else {
-
-                            if (Files.exists(localPath.resolve(q)))
-                                Files.delete(localPath.resolve(q));
+            try {
 
 
-                            final Future<Integer> future = Application.getInstance().getTransferQueue().enqueue(
-                                    new DownloadTransferInfo((MergePath) cloudPath.resolve(q), localPath.resolve(q).toFile()));
-
-                            Application.getInstance().runThread(new Thread(() -> {
-
-                                try {
-
-                                    int status = future.get();
-
-                                    switch (status) {
-
-                                        case TransferInfo.TRANSFER_STATUS_COMPLETED:
-                                            break;
-
-                                        case TransferInfo.TRANSFER_STATUS_ERROR:
-                                        case TransferInfo.TRANSFER_STATUS_CANCELED:
-
-                                            if (Files.exists(localPath.resolve(q)))
-                                                Files.delete(localPath.resolve(q));
-
-                                            downloadQueue.add(q);
-                                            break;
-
-                                        default:
-                                            Application.log(getClass(), "WARNING! Invalid TransferInfo.TRANSFER_STATUS_*: %d", status);
-                                            break;
-
-                                    }
+                WatchKey watchKey = watchService.take();
 
 
-                                } catch (Exception e) {
-                                    Application.log(getClass(), e, "SharedFolder::DownloadQueueFuture::%s", q);
+                if(!watchKey.isValid())
+                    continue;
+
+
+                if (watchKeys.contains(watchKey)) {
+
+                    watchKey.pollEvents().forEach(e -> {
+
+                        try {
+
+                            Application.log(getClass(), "Received WatchKey %s in %s %s", e.kind(), e.context(), this);
+
+
+                            Path source = ((Path) watchKey.watchable()).resolve(e.context().toString());
+
+                            Path relativeSource;
+
+                            if(source instanceof MergePath)
+                                relativeSource = cloudPath.relativize(source);
+                            else
+                                relativeSource = localPath.relativize(source);
+
+
+
+                            if (e.kind().equals(StandardWatchEventKinds.ENTRY_CREATE)) {
+
+                                Application.log(getClass(), "Created entry %s in %s", relativeSource, this);
+
+
+                                synchronized (createQueue) {
+
+                                    if(source instanceof MergePath)
+                                        createQueue.add(new SharedEntry(HOST_LOCAL, source));
+                                    else
+                                        createQueue.add(new SharedEntry(HOST_CLOUD, source));
+
                                 }
 
 
-                            }, "SharedFolder::DownloadQueue::" + q));
+                            } else if (e.kind().equals(StandardWatchEventKinds.ENTRY_DELETE)) {
+
+                                Application.log(getClass(), "Deleted entry %s in %s", relativeSource, this);
+
+                                synchronized (deleteQueue) {
+
+                                    if(source instanceof MergePath)
+                                        deleteQueue.add(new SharedEntry(HOST_LOCAL, source));
+                                    else
+                                        deleteQueue.add(new SharedEntry(HOST_CLOUD, source));
+
+                                }
 
 
+                            } else if (e.kind().equals(StandardWatchEventKinds.ENTRY_MODIFY)) {
+
+                                Application.log(getClass(), "Updated entry %s in %s", relativeSource, this);
+
+                            }
+
+
+                        } catch (Exception eV) {
+                            Application.log(getClass(), eV, "watchKey.pollEvents() of SharedFolder %s", this);
                         }
 
-                    } catch (Exception e) {
-                        Application.log(getClass(), e, "SharedFolder::DownloadQueue::" + q);
-                    }
+                    });
 
-                });
+                }
 
+
+                watchKey.reset();
+
+            } catch (InterruptedException | ClosedWatchServiceException ignored) {
+                break;
+            }
+
+        } while (Application.getInstance().isRunning());
 
     }
 
 
 
     @Override
-    public void exit(Application app) {
+    public void exit() {
 
-        if(uploadQueue.size() + downloadQueue.size() > 0)
-            Application.log(getClass(), "WARNING! Ignoring %d uploads and %d downloads from %s:%s", uploadQueue.size(), downloadQueue.size(), localPath, cloudPath);
+        if(createQueue.size() + deleteQueue.size() + updateQueue.size() > 0)
+            Application.log(getClass(), "WARNING! Ignoring %d create(), %d delete(), %d update() from %s", createQueue.size(), deleteQueue.size(), updateQueue.size(), this);
 
-        uploadQueue.clear();
-        downloadQueue.clear();
+        try {
+            cloudWatchService.close();
+            localWatchService.close();
+        } catch (IOException ignored) { }
+
+        watchKeys.clear();
+
+        createQueue.clear();
+        deleteQueue.clear();
+        updateQueue.clear();
 
     }
 
@@ -281,5 +476,10 @@ public final class SharedFolder implements Service {
     @Override
     public int hashCode() {
         return Objects.hash(getLocalPath(), getCloudPath());
+    }
+
+    @Override
+    public String toString() {
+        return String.format("<%s::%s>", cloudPath, localPath);
     }
 }

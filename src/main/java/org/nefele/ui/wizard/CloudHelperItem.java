@@ -24,26 +24,26 @@
 
 package org.nefele.ui.wizard;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
+import javafx.scene.Node;
 
 import static java.util.Objects.requireNonNull;
 
 public class CloudHelperItem {
 
-    private final ObjectProperty<Class<?>> reference;
+    private final StringProperty service;
     private final StringProperty name;
     private final StringProperty icon;
     private final StringProperty hint;
+    private final BooleanProperty access;
 
-    public CloudHelperItem(Class<?> reference , String name, String icon, String hint) {
+    public CloudHelperItem(String service, String name, String icon, String hint) {
 
-        this.reference = new SimpleObjectProperty<>(requireNonNull(reference));
+        this.service = new SimpleStringProperty(requireNonNull(service));
         this.name = new SimpleStringProperty(requireNonNull(name));
         this.icon = new SimpleStringProperty(requireNonNull(icon));
         this.hint = new SimpleStringProperty(requireNonNull(hint));
+        this.access = new SimpleBooleanProperty(false);
 
     }
 
@@ -83,9 +83,19 @@ public class CloudHelperItem {
         this.hint.set(hint);
     }
 
-    public Class<?> getReference() { return reference.get(); }
+    public String getService() {
+        return service.get();
+    }
 
-    public ObjectProperty<Class<?>> referenceProperty() { return reference; }
+    public StringProperty serviceProperty() {
+        return service;
+    }
 
-    public void setReference(Class<?> reference) { this.reference.set(reference); }
+    public boolean isAccess() { return access.get(); }
+
+    public void setAccess(boolean access) { this.access.set(access); }
+
+    public BooleanProperty accessProperty() { return access; }
+
+    public void setService(String service) { this.service.set(service); }
 }

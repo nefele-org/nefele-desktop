@@ -42,10 +42,10 @@ public final class Views {
 
     private final ArrayList<Pair<Parent, Runnable>> registeredViews;
 
-
     public Views() {
         registeredViews = new ArrayList<>();
     }
+
 
 
     private <T extends Parent> void updateView(T parent, Runnable runnable) {

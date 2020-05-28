@@ -118,7 +118,7 @@ public class TransferExecutorService extends ThreadPoolExecutor implements Servi
     }
 
     @Override
-    public void initialize(Application app) {
+    public void initialize() {
 
         Application.getInstance().runWorker(new Thread(
                 this::updatePool, "TransferExecutorService::updatePool()"), 0, 250, TimeUnit.MILLISECONDS);
@@ -126,12 +126,12 @@ public class TransferExecutorService extends ThreadPoolExecutor implements Servi
     }
 
     @Override
-    public void synchronize(Application app) {
+    public void synchronize() {
         updatePool();
     }
 
     @Override
-    public void exit(Application app) {
+    public void exit() {
         shutdown();
     }
 

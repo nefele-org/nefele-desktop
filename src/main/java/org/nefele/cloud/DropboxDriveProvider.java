@@ -279,7 +279,7 @@ public class DropboxDriveProvider extends DriveProvider {
 
                     PlatformUtils.runLaterAndWait(() -> {
                         result.set(Dialogs.showInputBox(
-                                "Inserisci il codice di autorizzazione che hai ricevuto da Dropbox", // TODO: Fix translation
+                                "DROPBOX_PROVIDER_ADVISE",
                                 InputDialog.DIALOG_RETRY, InputDialog.DIALOG_CONTINUE));
                     });
 
@@ -290,7 +290,7 @@ public class DropboxDriveProvider extends DriveProvider {
 
 
                 if (result.get().getButton() != InputDialog.DIALOG_CONTINUE)
-                    throw new IllegalStateException("Connection attempt with dropbox canceled by user");
+                    throw new IllegalStateException("Connection attempted with dropbox canceled by user");
 
                 accessCode = result.get().getText();
 

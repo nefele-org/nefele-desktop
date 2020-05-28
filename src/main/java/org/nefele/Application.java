@@ -43,6 +43,7 @@ import org.nefele.ui.scenes.Home;
 import org.nefele.ui.SplashScreen;
 import org.nefele.utils.PlatformUtils;
 
+import javax.swing.text.View;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Instant;
@@ -165,7 +166,7 @@ public final class Application extends javafx.application.Application implements
                 getStatus().setLoadingProgress(cur / max);
 
                 Application.log(getClass(), "Loading %s", i.getClass().getName());
-                i.initialize(this);
+                i.initialize();
 
             }
 
@@ -174,7 +175,7 @@ public final class Application extends javafx.application.Application implements
                 synchronized (services) {
                     services.forEach(i -> {
                         try {
-                            i.synchronize(Application.this);
+                            i.synchronize();
                         } catch (Exception e) {
                             Application.log(getClass(), e, i.getClass().getName());
                         }
@@ -217,7 +218,7 @@ public final class Application extends javafx.application.Application implements
 
             for (Service i : services) {
                 Application.log(getClass(), "Unloading %s", i.getClass().getName());
-                i.exit(this);
+                i.exit();
             }
 
             running.set(false);

@@ -43,10 +43,12 @@ public final class Mimes implements Service {
         mimes = new ArrayList<>();
     }
 
+
+
+
     public ArrayList<Mime> getMimes() {
         return mimes;
     }
-
 
     public Mime getByExtension(String filename) {
 
@@ -79,7 +81,7 @@ public final class Mimes implements Service {
 
 
     @Override
-    public void initialize(Application app) {
+    public void initialize() {
 
         try {
 
@@ -109,12 +111,12 @@ public final class Mimes implements Service {
     }
 
     @Override
-    public void synchronize(Application app) {
+    public void synchronize() {
 
     }
 
     @Override
-    public void exit(Application app) {
+    public void exit() {
 
     }
 

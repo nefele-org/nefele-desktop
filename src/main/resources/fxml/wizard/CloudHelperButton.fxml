@@ -28,26 +28,31 @@
   -->
 
 <?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
-<fx:root type="StackPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" styleClass="cloud-helper-card"
-         AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+<?import com.jfoenix.controls.JFXButton?>
 
-    <VBox>
-        <HBox spacing="15" alignment="CENTER">
+<fx:root type="JFXButton" alignment="CENTER" contentDisplay="CENTER" prefHeight="48.0"
+         prefWidth="192.0" text=" " xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" >
+    <graphic>
 
-            <VBox HBox.hgrow="ALWAYS" alignment="CENTER">
-                <MaterialDesignIconView fx:id="icon"/>
-            </VBox>
+        <BorderPane prefWidth="160.0">
 
-            <VBox>
-                <Label fx:id="labelName" styleClass="text-h2">
-                    <tooltip>
-                        <Tooltip fx:id="tooltip"/>
-                    </tooltip>
-                </Label>
-            </VBox>
+            <left>
+                <VBox alignment="CENTER" HBox.hgrow="ALWAYS">
+                    <MaterialDesignIconView fx:id="icon" size="28.0"/>
+                </VBox>
+            </left>
 
-        </HBox>
+            <center>
+                <VBox alignment="CENTER">
+                    <Label fx:id="labelName" styleClass="text-h3"/>
+                </VBox>
+            </center>
 
-    </VBox>
+        </BorderPane>
 
+    </graphic>
+
+    <tooltip>
+        <Tooltip fx:id="tooltip"/>
+    </tooltip>
 </fx:root>

@@ -22,27 +22,35 @@
  * THE SOFTWARE.
  */
 
-package org.nefele.utils;
+package org.nefele.fs;
 
-import java.io.File;
-import java.io.IOException;
+import java.nio.file.WatchEvent;
 
-public final class FilenameUtils {
+public class MergeWatchEvent<T> implements WatchEvent<T> {
 
-    private FilenameUtils() { }
+    private final Kind<T> kind;
+    private final int count;
+    private final T context;
 
-    public static boolean isFilenameInvalid(String filename) {
+    public MergeWatchEvent(Kind<T> kind, int count, T context) {
+        this.kind = kind;
+        this.count = count;
+        this.context = context;
+    }
 
-        File file = new File(filename);
+    @Override
+    public Kind<T> kind() {
+        return kind;
+    }
 
-        try {
-            file.getCanonicalPath();
-        } catch (IOException ignored) {
-            return true;
-        }
+    @Override
+    public int count() {
+        return count;
+    }
 
-        return false;
-
+    @Override
+    public T context() {
+        return context;
     }
 
 }

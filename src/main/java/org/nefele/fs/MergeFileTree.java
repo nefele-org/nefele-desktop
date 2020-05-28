@@ -72,9 +72,9 @@ public class MergeFileTree {
 
 
 
-    public Tree<MergeNode> resolve(String[] paths) {
+    public Tree<MergeNode> resolve(String[] paths) throws MergeFileSystemException {
 
-        Tree<MergeNode> tree = getTree();
+        var tree = getTree();
 
         for(int i = 0; i < paths.length; i++) {
 
@@ -83,14 +83,14 @@ public class MergeFileTree {
             if(path.isEmpty())
                 continue;
 
-            Tree<MergeNode> child = requireNonNull(tree).findIf (
+            var child = requireNonNull(tree).findIf (
                     j -> j.getData().getName().equals(path)
             );
 
             if(child == null) {
 
                 if(i != paths.length - 1)
-                    throw new IllegalStateException();
+                    throw new MergeFileSystemException("Bad path: " + String.join(MergeFileSystem.PATH_SEPARATOR, paths));
 
                 child = new Tree<>(tree, fileSystem.getStorage().alloc(tree.getData(), path, Mime.UNKNOWN.getType()));
 

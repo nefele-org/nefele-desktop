@@ -44,7 +44,7 @@
             <VBox>
                 <Label userData="WIZARD_WELCOME" styleClass="text-h1"/>
                 <padding>
-                    <Insets right="20" left="20" top="10" />
+                    <Insets right="20" left="20" top="10" bottom="20"/>
                 </padding>
             </VBox>
 
@@ -53,7 +53,7 @@
         <center>
 
             <VBox>
-                <ScrollPane fx:id="scrollTerms" hbarPolicy="NEVER" BorderPane.alignment="CENTER_LEFT" prefHeight="100" prefWidth="100" fitToHeight="true" fitToWidth="true">
+                <ScrollPane fx:id="scrollTerms" hbarPolicy="NEVER" BorderPane.alignment="CENTER_LEFT" prefHeight="160" prefWidth="160" fitToHeight="true" fitToWidth="true">
                     <BorderPane.margin>
                         <Insets bottom="10" left="16" right="16"/>
                     </BorderPane.margin>

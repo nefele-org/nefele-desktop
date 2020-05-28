@@ -24,9 +24,9 @@
 
 package org.nefele.ui.wizard;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.*;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.layout.StackPane;
 import org.nefele.Themeable;
 import java.net.URL;
@@ -35,16 +35,26 @@ import java.util.ResourceBundle;
 public abstract class WizardPage extends StackPane implements Initializable, Themeable {
 
     private final BooleanProperty checked;
+    private final ReadOnlyObjectProperty<Parent> wizardRoot;
 
-    public WizardPage(){
+    public WizardPage() {
+        throw new IllegalStateException();
+    }
+
+    public WizardPage(Parent wizardRoot) {
         this.checked = new SimpleBooleanProperty(false);
+        this.wizardRoot = new SimpleObjectProperty<>(wizardRoot);
     }
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) { }
+    public void initialize(URL location, ResourceBundle resources) {
+
+    }
 
     @Override
-    public void initializeInterface() { }
+    public void initializeInterface() {
+
+    }
 
     
     public boolean isChecked() {
@@ -57,6 +67,14 @@ public abstract class WizardPage extends StackPane implements Initializable, The
 
     public void setChecked(boolean check) {
         this.checked.set(check);
-    }    
+    }
+
+    public Parent getWizardRoot() {
+        return wizardRoot.get();
+    }
+
+    public ReadOnlyObjectProperty<Parent> wizardRootProperty() {
+        return wizardRoot;
+    }
 
 }

@@ -47,8 +47,11 @@ public class OfflineDriveProvider extends DriveProvider {
     public OfflineDriveProvider(String id, String service, String description, long quota, long blocks) {
         super(id, service, description, quota, blocks);
 
-        this.servicePath = Application.getInstance().getDataPath().resolve(Paths.get("drive", SERVICE_ID, id));
-        this.drivePath = Application.getInstance().getDataPath().resolve(Paths.get("drive", SERVICE_ID, id, "storage"));
+        this.servicePath = Application.getInstance()
+                .getDataPath().resolve(Paths.get("drive", SERVICE_ID, id));
+
+        this.drivePath = Application.getInstance()
+                .getDataPath().resolve(Paths.get("drive", SERVICE_ID, id, "storage"));
 
     }
 
@@ -63,7 +66,7 @@ public class OfflineDriveProvider extends DriveProvider {
                     break;
 
 
-                byte[] bytes = new byte[Math.min(65536, inputStream.available())];
+                var bytes = new byte[Math.min(65536, inputStream.available())];
 
                 if (inputStream.read(bytes) > 0)
                     outputStream.write(bytes);
@@ -102,7 +105,7 @@ public class OfflineDriveProvider extends DriveProvider {
                     break;
 
 
-                byte[] bytes = new byte[Math.min(65536, inputStream.available())];
+                var bytes = new byte[Math.min(65536, inputStream.available())];
 
                 if (inputStream.read(bytes) > 0)
                     byteBuffer.put(bytes);

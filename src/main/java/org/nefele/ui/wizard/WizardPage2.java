@@ -27,6 +27,7 @@ package org.nefele.ui.wizard;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
@@ -45,7 +46,10 @@ public class WizardPage2 extends WizardPage {
     @FXML private Pane paneTextTerms;
     @FXML private Text textMessage;
 
-    public WizardPage2() {
+    public WizardPage2(Parent wizardRoot) {
+
+        super(wizardRoot);
+
         Resources.getFXML(this, "/fxml/wizard/WizardPage2.fxml");
     }
 

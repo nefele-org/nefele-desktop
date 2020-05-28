@@ -28,11 +28,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.nefele.Application;
 import org.nefele.Service;
+import org.nefele.utils.IdUtils;
 import org.sqlite.SQLiteErrorCode;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -45,6 +48,7 @@ public final class DriveProviders implements Service {
     public static DriveProviders getInstance() {
         return instance;
     }
+
 
 
 
@@ -97,28 +101,79 @@ public final class DriveProviders implements Service {
 
 
 
-                    switch (service.get()) {
+                    try {
 
-                        case OfflineDriveProvider.SERVICE_ID:
-                            return new OfflineDriveProvider(id, service.get(), description.get(), quota.get(), blocks.get())
-                                    .initialize();
+                        return add(id, service.get(), description.get(), quota.get(), blocks.get());
 
-                        case GoogleDriveProvider.SERVICE_ID:
-                            return new GoogleDriveProvider(id, service.get(), description.get(), quota.get(), blocks.get())
-                                    .initialize();
-
-                        case DropboxDriveProvider.SERVICE_ID:
-                            return new DropboxDriveProvider(id, service.get(), description.get(), quota.get(), blocks.get())
-                                    .initialize();
-
-                        default:
-                            throw new IllegalStateException();
-
+                    } catch (DriveNotFoundException e) {
+                        Application.panic(DriveProvider.class, e);
                     }
+
+
+                    throw new IllegalStateException();
 
                 });
 
     }
+
+
+    public DriveProvider add(String id, String service, String description, long quota, long blocks) throws DriveNotFoundException {
+
+        DriveProvider provider;
+
+        switch (service) {
+
+            case OfflineDriveProvider.SERVICE_ID:
+                provider = new OfflineDriveProvider(id, service, description, quota, blocks)
+                        .initialize();
+                break;
+
+            case GoogleDriveProvider.SERVICE_ID:
+                provider = new GoogleDriveProvider(id, service, description, quota, blocks)
+                        .initialize();
+                break;
+
+            case DropboxDriveProvider.SERVICE_ID:
+                provider = new DropboxDriveProvider(id, service, description, quota, blocks)
+                        .initialize();
+                break;
+
+            default:
+                throw new DriveNotFoundException(service);
+
+        }
+
+        getDriveProviders()
+                .add(provider);
+
+        provider.invalidate();
+        return provider;
+
+    }
+
+
+    public DriveProvider add(String service) throws DriveNotFoundException {
+
+        String id = IdUtils.generateId();
+
+        switch (service) {
+
+            case OfflineDriveProvider.SERVICE_ID:
+                return add(id, service, OfflineDriveProvider.SERVICE_DEFAULT_DESCRIPTION, 0, 0);
+
+            case GoogleDriveProvider.SERVICE_ID:
+                return add(id, service, GoogleDriveProvider.SERVICE_DEFAULT_DESCRIPTION, 0, 0);
+
+            case DropboxDriveProvider.SERVICE_ID:
+                return add(id, service, DropboxDriveProvider.SERVICE_DEFAULT_DESCRIPTION, 0, 0);
+
+            default:
+                throw new DriveNotFoundException(service);
+
+        }
+
+    }
+
 
 
     public DriveProvider nextAllocatable() throws DriveFullException, DriveNotFoundException {
@@ -158,18 +213,18 @@ public final class DriveProviders implements Service {
 
 
     @Override
-    public void initialize(Application app) {
+    public void initialize() {
 
         try {
 
             final ArrayList<String> ids = new ArrayList<>();
 
-            app.getDatabase().fetch(
+            Application.getInstance().getDatabase().fetch(
                     "SELECT id FROM drives",
                     null, r -> ids.add(r.getString(1)));
 
             for(String id : ids)
-                getDriveProviders().add(fromId(id));
+                fromId(id);
 
 
         } catch (SQLException | DriveNotFoundException e) {
@@ -179,7 +234,7 @@ public final class DriveProviders implements Service {
     }
 
     @Override
-    public void synchronize(Application app) {
+    public void synchronize() {
 
         try {
 
@@ -240,8 +295,9 @@ public final class DriveProviders implements Service {
     }
 
     @Override
-    public void exit(Application app) {
-        synchronize(app);
+    public void exit() {
+        synchronize();
     }
+
 
 }

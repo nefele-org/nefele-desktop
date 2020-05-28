@@ -152,7 +152,7 @@ public class Config implements Service {
 
 
     @Override
-    public void initialize(Application app) {
+    public void initialize() {
 
         try {
 
@@ -170,13 +170,13 @@ public class Config implements Service {
     }
 
     @Override
-    public void synchronize(Application app) {
+    public void synchronize() {
         update();
     }
 
     @Override
-    public void exit(Application app) {
-        synchronize(app);
+    public void exit() {
+        synchronize();
     }
 
 }

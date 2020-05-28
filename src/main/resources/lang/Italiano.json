@@ -26,6 +26,7 @@
     "DIALOG_TITLE_WARNING" : "Attenzione",
     "DIALOG_TITLE_ERROR" : "Errore",
     "DIALOG_PANIC_TITLE" : "Errore fatale",
+    "DIALOG_RETRY" : "Riprova",
     "DIALOG_PANIC_MESSAGE" : "A fatal error has occured, nobody will help you! Please erase your entire hard-drive and throw away your machine!",
 
     "INPUTDIALOG_TITLE" : "Inserisci un valore",
@@ -175,7 +176,18 @@
     "WIZARD_FIRST_CLOUD" : "Aggiungi il tuo primo Cloud a Nefele",
     "WIZARD_FIRST_CLOUD_DESCRIPTION" : "Segui la procedura guidata, per aggiungere il tuo primo spazio di archiviazione.",
 
+    "DRIVE_GOOGLE_DRIVE_HINT": "Google Drive",
+    "DRIVE_DROPBOX_HINT": "Dropbox Drive",
+    "DRIVE_OFFLINE_HINT": "Offline Drive",
 
-    "CLOUDHELPER_TITLE" : ""
+    "CLOUDHELPER_TITLE" : "Seleziona un Drive Service da inserire su Nefele",
+    "CLOUDHELPER_DIALOG_ERROR_LOGIN" : "Si è verificato un errore durante l'inizializzazione del drive",
+    "CLOUDHELPER_FORM_NAME" : "Inserisci un Alias per il tuo Cloud Service",
+    "CLOUDHELPER_FORM_QUOTA" : "Scegli quanto spazio vuoi dedicare a Nefele",
+    "CLOUDHELPER_FORM_DIALOG" : "Vuoi veramente procedere? L'Alias assegnato non sarà modificabile",
+    "CLOUDHELPER_FORM_DIALOG_EMPTY_NAME" : "L'alias non può essere una stringa vuota",
+    "CLOUDHELPER_FORM_TITLE" : "Impostazioni Cloud Service",
+    "WIZARD_END_MESSAGE" : "Abbiamo quasi finito..",
 
+    "DROPBOX_PROVIDER_ADVISE" : "Inserisci il codice di autorizzazione che hai ricevuto da Dropbox"
 }

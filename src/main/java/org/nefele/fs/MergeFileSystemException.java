@@ -22,27 +22,18 @@
  * THE SOFTWARE.
  */
 
-package org.nefele.utils;
+package org.nefele.fs;
 
-import java.io.File;
-import java.io.IOException;
+import java.nio.file.FileSystemException;
 
-public final class FilenameUtils {
+public class MergeFileSystemException extends FileSystemException {
 
-    private FilenameUtils() { }
+    public MergeFileSystemException(String file) {
+        super(file);
+    }
 
-    public static boolean isFilenameInvalid(String filename) {
-
-        File file = new File(filename);
-
-        try {
-            file.getCanonicalPath();
-        } catch (IOException ignored) {
-            return true;
-        }
-
-        return false;
-
+    public MergeFileSystemException(String file, String other, String reason) {
+        super(file, other, reason);
     }
 
 }

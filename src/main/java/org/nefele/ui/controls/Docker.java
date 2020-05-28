@@ -150,7 +150,7 @@ public class Docker extends VBox implements Initializable, Themeable {
 
     @Override
     public void initializeInterface() {
-        Resources.getCSS(this, "css/docker-button.css");
+        Resources.getCSS(this, "/css/docker-button.css");
     }
 
 

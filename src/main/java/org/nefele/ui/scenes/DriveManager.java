@@ -33,6 +33,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -113,13 +114,17 @@ public class DriveManager extends StackPane implements Initializable, Themeable 
                 nefelePane.setShowDarkMode(false);
                 nefelePane.setShowLogo(true);
                 nefelePane.setShowStatusBar(false);
-                nefelePane.setResizable(false);
 
+                s.setHeight(420);
+                s.setWidth(580);
                 s.setScene(new Scene(nefelePane));
+                s.setTitle("Nefele Wizard");
+                s.getIcons().add(new Image(Resources.getURL(this, "/images/trayicon.png").toExternalForm()));
                 s.initModality(Modality.APPLICATION_MODAL);
                 s.initStyle(StageStyle.UNDECORATED);
                 s.show();
 
+                nefelePane.setResizable(false);
             });
         });
 
@@ -128,7 +133,9 @@ public class DriveManager extends StackPane implements Initializable, Themeable 
     }
 
     @Override
-    public void initializeInterface() { }
+    public void initializeInterface() {
+        Resources.getCSS(this, "/css/docker-button.css");
+    }
 
     public ObservableList<DriveManagerBox> getDriveManagerBoxes() {
         return driveManagerBoxes;

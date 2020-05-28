@@ -158,7 +158,7 @@ public class MergeFileChannel extends FileChannel {
 
                 while(inputStream.available() > 0 && byteBuffer.hasRemaining()) {
 
-                    byte[] bytes = new byte[Math.min(Math.min(65536, inputStream.available()), byteBuffer.remaining())];
+                    var bytes = new byte[Math.min(Math.min(65536, inputStream.available()), byteBuffer.remaining())];
 
                     if(inputStream.read(bytes) > 0)
                         byteBuffer.put(bytes);

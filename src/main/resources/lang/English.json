@@ -18,6 +18,7 @@
     "DIALOG_YES" : "Yes",
     "DIALOG_NO" : "No",
     "DIALOG_EXIT" : "Exit",
+    "DIALOG_RETRY" : "Retry",
     "DIALOG_MINIMIZE" : "Minimize on tray",
 
 
@@ -175,5 +176,18 @@
     "WIZARD_FIRST_CLOUD_DESCRIPTION" : "Follow the wizard to add your first storage space.",
 
 
-    "CLOUDHELPER_TITLE" : ""
+    "DRIVE_GOOGLE_DRIVE_HINT": "Google Drive",
+    "DRIVE_DROPBOX_HINT": "Dropbox Drive",
+    "DRIVE_OFFLINE_HINT": "Offline Drive",
+
+    "CLOUDHELPER_TITLE" : "Select a Drive Service to insert on Nefele",
+    "CLOUDHELPER_DIALOG_ERROR_LOGIN" : "An error occurred while initializing the driver",
+    "CLOUDHELPER_FORM_NAME" : "Enter an Alias for your Cloud Service",
+    "CLOUDHELPER_FORM_QUOTA" : "Choose how much space you want to dedicate to Nefele",
+    "CLOUDHELPER_FORM_DIALOG" : "Do you really want to proceed? The assigned alias will not be editable",
+    "CLOUDHELPER_FORM_DIALOG_EMPTY_NAME" : "The alias cannot be an empty string",
+    "CLOUDHELPER_FORM_TITLE" : "Cloud Service settings",
+    "WIZARD_END_MESSAGE" : "We're almost done..",
+
+    "DROPBOX_PROVIDER_ADVISE" : "Enter the authorization code you received from Dropbox"
 }

@@ -24,17 +24,21 @@
 
 package org.nefele.fs;
 
+import org.nefele.Application;
 import org.nefele.utils.Tree;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Modifier;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributeView;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
+import java.util.Collections;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 
@@ -56,7 +60,7 @@ public class MergePath implements Path {
         this.fileSystem = fileSystem;
         this.path = path;
         this.absolutePath = absolutePath;
-        this.inode = inode;
+        this.inode = requireNonNull(inode);
 
 
         this.attributeView = new BasicFileAttributeView() {
@@ -122,19 +126,20 @@ public class MergePath implements Path {
             @Override
             public void setTimes(FileTime mtime, FileTime atime, FileTime ctime) throws IOException {
 
-                if(mtime != null)
+                if (mtime != null)
                     inode.setModifiedTime(mtime.toInstant());
 
-                if(atime != null)
+                if (atime != null)
                     inode.setAccessedTime(atime.toInstant());
 
-                if(ctime != null)
+                if (ctime != null)
                     inode.setCreatedTime(ctime.toInstant());
 
                 inode.invalidate();
 
             }
         };
+
 
     }
 
@@ -155,12 +160,32 @@ public class MergePath implements Path {
 
     @Override
     public Path getFileName() {
-         return new MergePath(fileSystem, inode, absolutePath, inode.getData().getName());
+
+        if(inode == null)
+            throw new UnsupportedOperationException();
+
+        return new MergePath(fileSystem, inode, absolutePath, inode.getData().getName());
+
     }
 
     @Override
     public Path getParent() {
-        throw new UnsupportedOperationException();
+
+        if(inode == null)
+            throw new UnsupportedOperationException();
+
+        if(inode.getParent() == null)
+            return getRoot();
+        
+        
+
+        var index = absolutePath.lastIndexOf(inode.getData().getName());
+
+        if(index == 1)      // Parent is root?
+            return getRoot();
+        else
+            return new MergePath(fileSystem, inode.getParent(), absolutePath.substring(0, index - 1), absolutePath.substring(0, index - 1));
+
     }
 
     @Override
@@ -215,7 +240,7 @@ public class MergePath implements Path {
 
     @Override
     public Path resolve(Path path) {
-        throw new UnsupportedOperationException();
+        return get(absolutePath, path.toString());
     }
 
     @Override
@@ -269,7 +294,13 @@ public class MergePath implements Path {
 
     @Override
     public WatchKey register(WatchService watchService, WatchEvent.Kind<?>[] kinds, WatchEvent.Modifier... modifiers) throws IOException {
-        throw new UnsupportedOperationException();
+
+        if(watchService instanceof MergeWatchService)
+            return new MergeWatchKey((MergeWatchService) watchService, this);
+
+
+        throw new IllegalArgumentException("watchService must be a instance of MergeWatchService!");
+
     }
 
     @Override
@@ -317,5 +348,7 @@ public class MergePath implements Path {
         }
 
     }
+
+
 
 }

@@ -30,6 +30,8 @@ import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class MergeNode implements Invalidatable {
 
@@ -44,7 +46,7 @@ public class MergeNode implements Invalidatable {
     private boolean exists;
 
     private final String id;
-    private final ArrayList<MergeChunk> chunks;
+    private final List<MergeChunk> chunks;
 
 
     public MergeNode(String name, String mime, long size, Instant createdTime, Instant accessedTime, Instant modifiedTime, String id, String parent, boolean exists) {
@@ -60,7 +62,7 @@ public class MergeNode implements Invalidatable {
         this.dirty = false;
         this.exists = exists;
 
-        this.chunks = new ArrayList<>();
+        this.chunks = new CopyOnWriteArrayList<>();
 
     }
 
@@ -124,7 +126,7 @@ public class MergeNode implements Invalidatable {
         return id;
     }
 
-    public ArrayList<MergeChunk> getChunks() {
+    public List<MergeChunk> getChunks() {
         return chunks;
     }
 

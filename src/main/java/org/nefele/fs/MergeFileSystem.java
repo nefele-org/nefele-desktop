@@ -47,6 +47,7 @@ public class MergeFileSystem extends FileSystem {
     private final MergeFileStore fileStore;
     private final MergeFileTree fileTree;
     private final MergeStorage storage;
+    private final List<MergeWatchService> watchServices;
 
 
     public MergeFileSystem(FileSystemProvider provider) {
@@ -55,6 +56,7 @@ public class MergeFileSystem extends FileSystem {
         this.storage = new MergeStorage();
         this.fileStore = new MergeFileStore(this);
         this.fileTree = new MergeFileTree(this);
+        this.watchServices = new ArrayList<>();
 
         Application.getInstance().addService(storage);
 
@@ -108,7 +110,12 @@ public class MergeFileSystem extends FileSystem {
         if(!s.startsWith(MergeFileSystem.PATH_SEPARATOR))
             throw new IllegalArgumentException("Path must be absolute! " + s);
 
-        return new MergePath(this, fileTree.resolve(s.split(MergeFileSystem.PATH_SEPARATOR)), s, s);
+
+        try {
+            return new MergePath(this, fileTree.resolve(s.split(MergeFileSystem.PATH_SEPARATOR)), s, s);
+        } catch (FileSystemException e) {
+            throw new IllegalArgumentException(e.getMessage());
+        }
 
     }
 
@@ -122,7 +129,7 @@ public class MergeFileSystem extends FileSystem {
             throw new UnsupportedOperationException();
 
 
-        Pattern pattern = Pattern.compile(s.substring(s.indexOf(":") + 1));
+        final var pattern = Pattern.compile(s.substring(s.indexOf(":") + 1));
 
         return path ->
                 pattern.matcher(path.toString()).matches();
@@ -136,7 +143,9 @@ public class MergeFileSystem extends FileSystem {
 
     @Override
     public WatchService newWatchService() throws IOException {
-        throw new UnsupportedOperationException();
+        var watchService = new MergeWatchService(this);
+        watchServices.add(watchService);
+        return watchService;
     }
 
     public MergeFileStore getFileStore() {
@@ -149,6 +158,33 @@ public class MergeFileSystem extends FileSystem {
 
     public MergeStorage getStorage() {
         return storage;
+    }
+
+    public List<MergeWatchService> getWatchServices() {
+        return watchServices;
+    }
+
+
+    public synchronized void throwWatchEvent(WatchEvent.Kind<Path> watchEvent, MergePath path) {
+
+
+        watchServices.forEach(i -> {
+            i.getWatchKeys().forEach(j -> {
+
+                final var absSource = path.toAbsolutePath().toString();
+                final var absParent = ((Path) j.watchable()).toAbsolutePath().toString();
+
+                if(absSource.startsWith(absParent)) {
+
+                    Application.log(getClass(), "throw new WatchEvent %s in %s", watchEvent, path);
+
+                    j.getWatchEvents().add(new MergeWatchEvent<>(watchEvent, 1, ((Path) j.watchable()).relativize(path)));
+
+                }
+
+            });
+        });
+
     }
 
     @Override

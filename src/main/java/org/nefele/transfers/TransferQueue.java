@@ -115,7 +115,7 @@ public class TransferQueue implements Service {
 
 
     @Override
-    public void initialize(Application app) {
+    public void initialize() {
 
         int parallelMax = Application.getInstance().getConfig()
                 .getInteger("core.transfers.parallel")
@@ -133,12 +133,12 @@ public class TransferQueue implements Service {
     }
 
     @Override
-    public void synchronize(Application app) {
+    public void synchronize() {
 
     }
 
     @Override
-    public void exit(Application app) {
+    public void exit() {
 
     }
 

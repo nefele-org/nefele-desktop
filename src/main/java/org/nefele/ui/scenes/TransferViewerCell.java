@@ -62,7 +62,7 @@ public class TransferViewerCell extends StackPane implements Initializable, Them
 
         this.transferInfo = new SimpleObjectProperty<>(transferInfo);
 
-        Resources.getFXML(this, "fxml/TransferViewerCell.fxml");
+        Resources.getFXML(this, "/fxml/TransferViewerCell.fxml");
     }
 
 

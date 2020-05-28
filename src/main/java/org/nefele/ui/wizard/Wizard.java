@@ -65,10 +65,10 @@ public class Wizard extends NefeleContentPane implements Initializable, Themeabl
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        parents.add(new WizardPage1());
-        parents.add(new WizardPage2());
-        parents.add(new WizardPage3());
-        parents.add(new WizardPage4());
+        parents.add(new WizardPage1(this));
+        parents.add(new WizardPage2(this));
+        parents.add(new WizardPage3(this));
+        parents.add(new WizardPage4(this));
 
 
         currentPage.addListener((v, o, n) ->{
@@ -111,6 +111,11 @@ public class Wizard extends NefeleContentPane implements Initializable, Themeabl
 
             if(++currentIndex < parents.size())
                 currentPage.setValue(parents.get(currentIndex));
+            else {
+
+                /* TODO... */
+                getScene().getWindow().hide();
+            }
 
         });
 
@@ -129,4 +134,7 @@ public class Wizard extends NefeleContentPane implements Initializable, Themeabl
         return parents;
     }
 
+    public JFXButton getButtonForward() {
+        return buttonForward;
+    }
 }

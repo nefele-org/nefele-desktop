@@ -24,13 +24,11 @@
 
 package org.nefele.cloud;
 
-import org.nefele.Application;
 import org.nefele.Service;
 import org.nefele.fs.MergePath;
 
-import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.HashSet;
+
 
 public final class SharedFolders implements Service {
 
@@ -44,37 +42,60 @@ public final class SharedFolders implements Service {
 
     private final HashSet<SharedFolder> sharedFolders;
 
-    public SharedFolders() {
+    private SharedFolders() {
         sharedFolders = new HashSet<>();
     }
 
     @Override
-    public void initialize(Application app) {
+    public void initialize() {
 
     }
 
     @Override
-    public void synchronize(Application app) {
+    public void synchronize() {
+
+        synchronized (sharedFolders) {
+            sharedFolders.forEach(SharedFolder::synchronize);
+        }
 
     }
 
     @Override
-    public void exit(Application app) {
-
+    public void exit() {
+        synchronized (sharedFolders) {
+            sharedFolders.forEach(SharedFolder::exit);
+        }
     }
 
 
-    public HashSet<SharedFolder> getSharedFolders() {
-        return sharedFolders;
+
+
+    public <T extends SharedFolder & Service> void addSharedFolderService(T service) {
+        synchronized (sharedFolders) {
+            sharedFolders.add(service);
+        }
     }
+
+    public <T extends SharedFolder & Service> void removeSharedFolderServiceByPath(MergePath path) {
+        synchronized(sharedFolders) {
+            sharedFolders.stream()
+                    .filter(i -> i.getCloudPath().equals(path))
+                    .peek(SharedFolder::exit)
+                    .findFirst()
+                    .ifPresent(sharedFolders::remove);
+
+        }
+    }
+
 
     public boolean isShared(MergePath path) {
 
-
-        return getSharedFolders()
-                .stream()
-                .peek(i -> Application.log(getClass(), "SHARED FOLDER: %s == %s: %s", i.getCloudPath(), path, i.getCloudPath().equals(path)))
-                .anyMatch(i -> i.getCloudPath().equals(path));
+        synchronized (sharedFolders) {
+            return sharedFolders
+                    .stream()
+                    .anyMatch(i -> i.getCloudPath().equals(path));
+        }
 
     }
+
 }

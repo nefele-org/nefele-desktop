@@ -157,7 +157,7 @@ public class GoogleDriveProvider extends DriveProvider {
 
         try {
 
-            String id = findChunk(chunk);
+            final var id = findChunk(chunk);
 
             if (id == null)
                 throw new NoSuchFileException(chunk.getId());
@@ -193,7 +193,7 @@ public class GoogleDriveProvider extends DriveProvider {
 
         try {
 
-            String id = findChunk(chunk);
+            final var id = findChunk(chunk);
 
             if (id == null)
                 throw new NoSuchFileException(chunk.getId());
@@ -216,7 +216,7 @@ public class GoogleDriveProvider extends DriveProvider {
 
         try {
 
-            String id = findChunk(chunk);
+            final var id = findChunk(chunk);
 
             if (id == null)
                 throw new NoSuchFileException(chunk.getId());

@@ -32,6 +32,7 @@ import org.nefele.cloud.DriveNotFoundException;
 import org.nefele.cloud.DriveProviders;
 import org.nefele.transfers.TransferInfoException;
 import org.nefele.transfers.TransferInfoTryAgainException;
+import org.nefele.utils.IdUtils;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -64,7 +65,7 @@ public class MergeStorage implements Service {
         this.cachePath = Application.getInstance().getDataPath().resolve("cache");
 
         /* FIXME: Service registered too late */
-        initialize(null);
+        initialize();
 
     }
 
@@ -118,7 +119,7 @@ public class MergeStorage implements Service {
 
             while(byteBuffer.hasRemaining()) {
 
-                byte[] bytes = new byte[Math.min(65536, byteBuffer.remaining())];
+                var bytes = new byte[Math.min(65536, byteBuffer.remaining())];
 
                 byteBuffer.get(bytes);
                 outputStream.write(bytes);
@@ -224,7 +225,7 @@ public class MergeStorage implements Service {
             DriveProvider driveProvider = DriveProviders.getInstance().nextAllocatable();
 
             MergeChunk chunk = new MergeChunk(
-                    generateId(), offset, node, driveProvider, 0L, 0L,
+                    IdUtils.generateId(), offset, node, driveProvider, 0L, 0L,
                     Application.getInstance().getConfig().getBoolean("core.mfs.compressed").orElse(false),
                     Application.getInstance().getConfig().getBoolean("core.mfs.encrypted").orElse(false)
             );
@@ -250,7 +251,7 @@ public class MergeStorage implements Service {
     public MergeNode alloc(MergeNode parent, String name, String mime) {
 
         MergeNode node = new MergeNode(
-                name, mime, 0L, Instant.now(), Instant.now(), Instant.now(), generateId(), parent.getId(), false
+                name, mime, 0L, Instant.now(), Instant.now(), Instant.now(), IdUtils.generateId(), parent.getId(), false
         );
 
 
@@ -297,7 +298,7 @@ public class MergeStorage implements Service {
 
 
     @Override
-    public void initialize(Application app) {
+    public void initialize() {
 
         try {
 
@@ -381,7 +382,7 @@ public class MergeStorage implements Service {
     }
 
     @Override
-    public void synchronize(Application app) {
+    public void synchronize() {
 
 
         try {
@@ -391,7 +392,7 @@ public class MergeStorage implements Service {
 
                     s -> {
 
-                        for(MergeNode node : getInodes().values()) {
+                        for(var node : getInodes().values()) {
 
                             if(!node.isDirty())
                                 continue;
@@ -422,7 +423,7 @@ public class MergeStorage implements Service {
 
                     s -> {
 
-                        for(MergeChunk chunk : getChunks().values()) {
+                        for(var chunk : getChunks().values()) {
 
                             if(!chunk.isDirty())
                                 continue;
@@ -450,7 +451,7 @@ public class MergeStorage implements Service {
 
                     s -> {
 
-                        for(MergeNode node : dustNodes) {
+                        for(var node : dustNodes) {
 
                             s.setString(1, node.getId());
                             s.addBatch();
@@ -466,7 +467,7 @@ public class MergeStorage implements Service {
 
                     s -> {
 
-                        for(MergeChunk chunk : dustChunks) {
+                        for(var chunk : dustChunks) {
 
                             s.setString(1, chunk.getId());
                             s.addBatch();
@@ -483,16 +484,11 @@ public class MergeStorage implements Service {
     }
 
     @Override
-    public void exit(Application app) {
+    public void exit() {
 
-        synchronize(app);
+        synchronize();
         cleanCache();
 
-    }
-
-
-    public static String generateId() {
-        return UUID.randomUUID().toString();
     }
 
 }
