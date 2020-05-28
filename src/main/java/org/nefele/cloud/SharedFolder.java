@@ -42,7 +42,7 @@ import java.util.Objects;
 import java.util.concurrent.Future;
 import java.util.function.Predicate;
 
-public final class SharedFoldera {
+public final class SharedFolder implements Service {
 
     private final Path localPath;
     private final MergePath cloudPath;
