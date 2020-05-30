@@ -588,6 +588,7 @@ public class Archive extends StackPane implements Initializable, Themeable {
                                         setMenuItems(Stream
                                                 .concat(folderMenuItems.stream(), Stream.of(folderShareMenuItem))
                                                 .collect(Collectors.toList()));
+
                                     else
                                         setMenuItems(Stream
                                                 .concat(folderMenuItems.stream(), Stream.of(folderUnshareMenuItem))

@@ -1,9 +1,6 @@
 package org.nefele.ui.controls;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.scene.control.MenuItem;
 import org.nefele.Mime;
 
@@ -24,6 +21,13 @@ public class FileBrowserItem {
         this.text = new SimpleStringProperty(requireNonNull(text));
         this.menuItems = new ArrayList<>();
     }
+
+    public FileBrowserItem(Mime mime, String text, boolean shared) {
+        this.mime = new SimpleObjectProperty<>(requireNonNull(mime));
+        this.text = new SimpleStringProperty(requireNonNull(text));
+        this.menuItems = new ArrayList<>();
+    }
+
 
 
     public String getText() {
