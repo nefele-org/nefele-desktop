@@ -25,8 +25,6 @@
 package org.nefele.cloud;
 
 import javafx.beans.property.*;
-import org.nefele.transfers.TransferInfoCallback;
-import org.nefele.transfers.TransferInfoException;
 import org.nefele.fs.*;
 
 import java.io.InputStream;
@@ -185,9 +183,8 @@ public abstract class DriveProvider {
                 .getFileSystem(URI.create("nefele:///")))
                 .getStorage();
 
-        return storage.getInodes().values()
+        return storage.getInodes()
                 .stream()
-                .filter(MergeNode::exists)
                 .flatMap(i -> i.getChunks().stream())
                 .collect(Collectors.toList())
                 .stream()

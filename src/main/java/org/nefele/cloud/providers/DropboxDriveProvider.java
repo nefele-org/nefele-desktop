@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package org.nefele.cloud;
+package org.nefele.cloud.providers;
 
 import com.dropbox.core.*;
 import com.dropbox.core.json.JsonReader;
@@ -34,7 +34,7 @@ import com.dropbox.core.v2.users.FullAccount;
 import com.dropbox.core.v2.users.SpaceUsage;
 import org.nefele.Application;
 import org.nefele.Resources;
-import org.nefele.transfers.*;
+import org.nefele.cloud.*;
 import org.nefele.fs.MergeChunk;
 import org.nefele.ui.dialog.Dialogs;
 import org.nefele.ui.dialog.InputDialog;
@@ -52,7 +52,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Date;
 import java.time.Instant;
-import java.time.temporal.TemporalAccessor;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -105,7 +104,7 @@ public class DropboxDriveProvider extends DriveProvider {
                 @Override
                 public void onProgress(long bytesWritten) {
 
-                    if (callback.isCanceled())
+                    if (callback.isCancelled())
                         throw new RuntimeException("stopped by user");
 
 
@@ -146,7 +145,7 @@ public class DropboxDriveProvider extends DriveProvider {
                 @Override
                 public void onProgress(long bytesWritten) {
 
-                    if (callback.isCanceled())
+                    if (callback.isCancelled())
                         throw new RuntimeException("stopped by user");
 
 

@@ -27,7 +27,7 @@ package org.nefele;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public final class Mimes implements Service {
+public final class Mimes implements ApplicationService {
 
     private final static Mimes instance = new Mimes();
 
@@ -111,12 +111,12 @@ public final class Mimes implements Service {
     }
 
     @Override
-    public void synchronize() {
+    public void update(ApplicationTask currentTask) {
 
     }
 
     @Override
-    public void exit() {
+    public void close() {
 
     }
 

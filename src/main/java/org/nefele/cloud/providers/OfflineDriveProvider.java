@@ -22,12 +22,13 @@
  * THE SOFTWARE.
  */
 
-package org.nefele.cloud;
+package org.nefele.cloud.providers;
 
 import org.nefele.Application;
-import org.nefele.transfers.TransferInfoAbortException;
-import org.nefele.transfers.TransferInfoCallback;
-import org.nefele.transfers.TransferInfoException;
+import org.nefele.cloud.DriveProvider;
+import org.nefele.cloud.TransferInfoAbortException;
+import org.nefele.cloud.TransferInfoCallback;
+import org.nefele.cloud.TransferInfoException;
 import org.nefele.fs.MergeChunk;
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -62,7 +63,7 @@ public class OfflineDriveProvider extends DriveProvider {
 
             while (inputStream.available() > 0) {
 
-                if (callback.isCanceled())
+                if (callback.isCancelled())
                     break;
 
 
@@ -101,7 +102,7 @@ public class OfflineDriveProvider extends DriveProvider {
 
             while (inputStream.available() > 0) {
 
-                if (callback.isCanceled())
+                if (callback.isCancelled())
                     break;
 
 

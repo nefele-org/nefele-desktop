@@ -40,7 +40,7 @@ import org.nefele.Application;
 import org.nefele.Resources;
 import org.nefele.cloud.DriveProvider;
 import org.nefele.cloud.DriveProviders;
-import org.nefele.transfers.TransferInfo;
+import org.nefele.cloud.TransferInfo;
 import org.nefele.fs.MergeFileStore;
 import org.nefele.fs.MergeFileSystem;
 import org.nefele.Themeable;

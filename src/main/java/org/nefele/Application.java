@@ -27,23 +27,25 @@ package org.nefele;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.concurrent.ScheduledService;
+import javafx.concurrent.Task;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
+import org.nefele.cloud.DriveProvider;
 import org.nefele.cloud.DriveProviders;
-import org.nefele.cloud.SharedFolder;
 import org.nefele.cloud.SharedFolders;
-import org.nefele.transfers.TransferQueue;
+import org.nefele.cloud.TransferQueue;
 import org.nefele.ui.controls.NefelePane;
 import org.nefele.ui.dialog.Dialogs;
 import org.nefele.ui.scenes.Home;
 import org.nefele.ui.SplashScreen;
 import org.nefele.utils.PlatformUtils;
 
-import javax.swing.text.View;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Instant;
@@ -65,14 +67,13 @@ public final class Application extends javafx.application.Application implements
     private final Status status;
     private final AtomicBoolean running;
     private final TransferQueue transferQueue;
-    private final ArrayList<Service> services;
+    private final ApplicationServiceManager serviceManager;
     private final ExecutorService executorService;
     private final ScheduledExecutorService scheduledExecutorService;
     private final Views views;
     private final ObjectProperty<Theme> theme;
     private final Path dataPath;
 
-    private ScheduledFuture<?> serviceWorker = null;
     private Stage primaryStage;
 
 
@@ -85,7 +86,7 @@ public final class Application extends javafx.application.Application implements
         dataPath = Paths.get(System.getProperty("user.home"), ".nefele");
         running = new AtomicBoolean(true);
 
-        services = new ArrayList<>();
+        serviceManager = new ApplicationServiceManager();
         database = new Database();
         config = new Config(database);
         locale = new Locale();
@@ -112,6 +113,7 @@ public final class Application extends javafx.application.Application implements
         Application.log(Application.class, "JavaFX: %s", System.getProperty("javafx.runtime.version"));
         Application.log(Application.class, "System: %s", System.getProperty("os.name"));
 
+
         Application.log(Application.class, "Heap: %d/%d MB",
                 Runtime.getRuntime().totalMemory() / 1024 / 1024, Runtime.getRuntime().maxMemory() / 1024 / 1024);
 
@@ -122,10 +124,21 @@ public final class Application extends javafx.application.Application implements
         Resources.getFont(this, "/font/segoeuii.ttf");
 
 
-        addService(getLocale());
-        addService(DriveProviders.getInstance());
-        addService(Mimes.getInstance());
-        addService(SharedFolders.getInstance());
+
+        getServiceManager().register(getConfig(), "Config",
+                true, 30, 30, TimeUnit.SECONDS);
+
+        getServiceManager().register(getLocale(), "Locale",
+                true, 30, 30, TimeUnit.SECONDS);
+
+        getServiceManager().register(Mimes.getInstance(), "Mimes",
+                true, 365, 365, TimeUnit.DAYS);
+
+        getServiceManager().register(DriveProviders.getInstance(), "DriveProviders",
+                true, 10, 10, TimeUnit.SECONDS);
+
+        getServiceManager().register(SharedFolders.getInstance(), "SharedFolders",
+                true, 3, 3, TimeUnit.SECONDS);
 
 
 
@@ -157,31 +170,9 @@ public final class Application extends javafx.application.Application implements
 
             Application.log(getClass(), "Initialize services");
 
-            double max = services.size();
-            double cur = 0.0;
+            serviceManager
+                    .boot(status::setLoadingProgress);
 
-            for(Service i : services) {
-
-                cur += 1.0;
-                getStatus().setLoadingProgress(cur / max);
-
-                Application.log(getClass(), "Loading %s", i.getClass().getName());
-                i.initialize();
-
-            }
-
-
-            serviceWorker = runWorker(new Thread(() -> {
-                synchronized (services) {
-                    services.forEach(i -> {
-                        try {
-                            i.synchronize();
-                        } catch (Exception e) {
-                            Application.log(getClass(), e, i.getClass().getName());
-                        }
-                    });
-                }
-            }, "Service::synchronize()"), 10, 10, TimeUnit.SECONDS);
 
 
 
@@ -211,17 +202,11 @@ public final class Application extends javafx.application.Application implements
         new Thread(() -> {
 
             Application.log(Application.class, "Preparing to exit in a friendly way...");
-
-            if (serviceWorker != null)
-                serviceWorker.cancel(true);
-
-
-            for (Service i : services) {
-                Application.log(getClass(), "Unloading %s", i.getClass().getName());
-                i.exit();
-            }
-
             running.set(false);
+
+
+            PlatformUtils
+                    .runLaterAndWait(serviceManager::shutdown);
 
 
             try {
@@ -285,16 +270,11 @@ public final class Application extends javafx.application.Application implements
 
     }
 
-    public <T extends Service> void addService(T e) {
 
-        Application.log(getClass(), "Added service %s", e.getClass().getName());
 
-        synchronized (services) {
-            services.add(e);
-        }
-
+    public ApplicationServiceManager getServiceManager() {
+        return serviceManager;
     }
-
 
     public boolean isRunning() {
         return running.get();

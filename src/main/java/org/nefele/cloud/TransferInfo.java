@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package org.nefele.transfers;
+package org.nefele.cloud;
 
 import javafx.beans.property.*;
 import org.nefele.fs.MergeFileSystem;
@@ -66,7 +66,7 @@ public abstract class TransferInfo {
 
 
         this.name = new SimpleStringProperty(path.getFileName().toString());
-        this.size =  new SimpleLongProperty(path.getInode().getData().getSize());
+        this.size =  new SimpleLongProperty(path.getInode().getSize());
         this.type = new SimpleIntegerProperty(type);
         this.progress = new SimpleLongProperty(0L);
         this.status = new SimpleIntegerProperty(TRANSFER_STATUS_READY);

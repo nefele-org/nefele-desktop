@@ -25,11 +25,9 @@
 package org.nefele.fs;
 
 import org.nefele.Application;
-import org.nefele.utils.Tree;
 
 import java.io.IOException;
 import java.net.URI;
-import java.nio.channels.FileChannel;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributeView;
@@ -38,7 +36,6 @@ import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.FileAttributeView;
 import java.nio.file.spi.FileSystemProvider;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 
 
 public class MergeFileSystemProvider extends FileSystemProvider {
@@ -82,10 +79,18 @@ public class MergeFileSystemProvider extends FileSystemProvider {
             throw new IllegalArgumentException();
 
 
+        if(set.contains(StandardOpenOption.CREATE_NEW) && Files.exists(path))
+            throw new FileAlreadyExistsException(path.toString());
+
+        if(Files.notExists(path) && !(set.contains(StandardOpenOption.CREATE) || set.contains(StandardOpenOption.CREATE_NEW)))
+            throw new NoSuchFileException(path.toString());
+
+
         if(Files.notExists(path))
             ((MergeFileStore) getFileStore(path)).createFile((MergePath) path);
 
         return new MergeFileChannel((MergePath) path);
+
     }
 
     @Override
@@ -112,15 +117,21 @@ public class MergeFileSystemProvider extends FileSystemProvider {
 
                     @Override
                     public boolean hasNext() {
-                        return (index < inode.getChildren().size());
+                        return (index < fileSystem.getFileTree().listChildren(inode).size());
                     }
 
                     @Override
                     public Path next() {
 
-                        Tree<MergeNode> entry = inode.getChildren().get(index++);
+                        MergeNode entry = (MergeNode) fileSystem.getFileTree().listChildren(inode)
+                                .toArray()[index++];
 
-                        return new MergePath(fileSystem, entry, fileSystem.getFileTree().toAbsolutePath(entry), entry.getData().getName());
+                        try {
+                            return new MergePath(fileSystem, entry, fileSystem.getFileTree().toAbsolutePath(entry), entry.getName());
+                        } catch (FileSystemException e) {
+                            Application.log(getClass(), e, "newDirectoryStream::iterator.next()");
+                            return null;
+                        }
 
                     }
 

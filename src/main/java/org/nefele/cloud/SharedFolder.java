@@ -26,12 +26,10 @@ package org.nefele.cloud;
 
 import com.sun.nio.file.ExtendedWatchEventModifier;
 import org.nefele.Application;
-import org.nefele.Service;
+import org.nefele.ApplicationService;
+import org.nefele.ApplicationTask;
 import org.nefele.fs.MergeFileSystem;
 import org.nefele.fs.MergePath;
-import org.nefele.transfers.DownloadTransferInfo;
-import org.nefele.transfers.TransferInfo;
-import org.nefele.transfers.UploadTransferInfo;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,7 +43,7 @@ import java.util.function.Predicate;
 
 
 
-public final class SharedFolder implements Service {
+public final class SharedFolder implements ApplicationService {
 
     private final static int HOST_LOCAL = 0;
     private final static int HOST_CLOUD = 1;
@@ -99,9 +97,7 @@ public final class SharedFolder implements Service {
         public String toString() {
             return String.format("<%s:%s>", source, target);
         }
-    };
-
-
+    }
 
 
     private final Path localPath;
@@ -109,6 +105,7 @@ public final class SharedFolder implements Service {
     private final HashSet<SharedEntry> createQueue;
     private final HashSet<SharedEntry> deleteQueue;
     private final HashSet<SharedEntry> updateQueue;
+    private final HashSet<Path> ignoreQueue;
 
     private final HashSet<WatchKey> watchKeys;
     private final WatchService localWatchService;
@@ -124,6 +121,7 @@ public final class SharedFolder implements Service {
         this.createQueue = new HashSet<>();
         this.deleteQueue = new HashSet<>();
         this.updateQueue = new HashSet<>();
+        this.ignoreQueue = new HashSet<>();
 
         this.watchKeys = new HashSet<>();
 
@@ -189,7 +187,7 @@ public final class SharedFolder implements Service {
 
                 watchKeys.add(localPath.register(localWatchService,
                         standardWatchEventsKind,
-                        ExtendedWatchEventModifier.FILE_TREE
+                        ExtendedWatchEventModifier.FILE_TREE // FIXME: REMOVE FILE TREE
                 ));
 
                 watchKeys.add(cloudPath.register(cloudWatchService,
@@ -214,7 +212,7 @@ public final class SharedFolder implements Service {
     }
 
     @Override @SuppressWarnings("unchecked")
-    public void synchronize() {
+    public void update(ApplicationTask currentTask) {
 
         final var currentCreateQueue = (HashSet<SharedEntry>) createQueue.clone();
         final var currentDeleteQueue = (HashSet<SharedEntry>) deleteQueue.clone();
@@ -231,6 +229,8 @@ public final class SharedFolder implements Service {
                     if(currentDeleteQueue.stream().anyMatch(i -> i.getSource().equals(q.getSource())))
                         return;
 
+
+                    ignoreQueue.add(q.getTarget());
 
                     try {
 
@@ -249,6 +249,8 @@ public final class SharedFolder implements Service {
                         createQueue.add(q);
                     }
 
+                    ignoreQueue.remove(q.getTarget());
+
                 });
 
 
@@ -263,6 +265,9 @@ public final class SharedFolder implements Service {
 
                         if (Files.isDirectory(q.getSource()))
                             return;
+
+
+                        ignoreQueue.add(q.getTarget());
 
 
                         if(Files.exists(q.getTarget()))
@@ -312,6 +317,8 @@ public final class SharedFolder implements Service {
                             }
 
 
+                            ignoreQueue.remove(q.getTarget());
+
                         }, "SharedFolder::TransferQueue::" + q));
 
 
@@ -326,6 +333,8 @@ public final class SharedFolder implements Service {
         currentDeleteQueue
                 .forEach(q -> {
 
+                    ignoreQueue.add(q.getTarget());
+
                     try {
 
                         if(Files.exists(q.getTarget()))
@@ -335,6 +344,8 @@ public final class SharedFolder implements Service {
                         Application.log(getClass(), e, "SharedFolder::deleteQueue::%s", q);
                         deleteQueue.add(q);
                     }
+
+                    ignoreQueue.remove(q.getTarget());
 
                 });
 
@@ -365,10 +376,15 @@ public final class SharedFolder implements Service {
 
                         try {
 
-                            Application.log(getClass(), "Received WatchKey %s in %s %s", e.kind(), e.context(), this);
+                            Application.log(getClass(), "Received WatchKey %s in %s %s from %s", e.kind(), e.context(), this, watchService);
 
 
                             Path source = ((Path) watchKey.watchable()).resolve(e.context().toString());
+
+                            if(ignoreQueue.contains(source))
+                                return;
+
+
 
                             Path relativeSource;
 
@@ -412,6 +428,11 @@ public final class SharedFolder implements Service {
 
                                 Application.log(getClass(), "Updated entry %s in %s", relativeSource, this);
 
+                                if(source instanceof MergePath)
+                                    updateQueue.add(new SharedEntry(HOST_LOCAL, source));
+                                else
+                                    updateQueue.add(new SharedEntry(HOST_CLOUD, source));
+
                             }
 
 
@@ -437,7 +458,7 @@ public final class SharedFolder implements Service {
 
 
     @Override
-    public void exit() {
+    public void close() {
 
         if(createQueue.size() + deleteQueue.size() + updateQueue.size() > 0)
             Application.log(getClass(), "WARNING! Ignoring %d create(), %d delete(), %d update() from %s", createQueue.size(), deleteQueue.size(), updateQueue.size(), this);

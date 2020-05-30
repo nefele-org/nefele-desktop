@@ -31,6 +31,7 @@ import java.nio.file.FileAlreadyExistsException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class MergeNode implements Invalidatable {
@@ -43,13 +44,12 @@ public class MergeNode implements Invalidatable {
     private Instant modifiedTime;
     private String parent;
     private boolean dirty;
-    private boolean exists;
 
     private final String id;
     private final List<MergeChunk> chunks;
 
 
-    public MergeNode(String name, String mime, long size, Instant createdTime, Instant accessedTime, Instant modifiedTime, String id, String parent, boolean exists) {
+    public MergeNode(String name, String mime, long size, Instant createdTime, Instant accessedTime, Instant modifiedTime, String id, String parent) {
 
         this.name = name;
         this.mime = mime;
@@ -60,7 +60,6 @@ public class MergeNode implements Invalidatable {
         this.id = id;
         this.parent = parent;
         this.dirty = false;
-        this.exists = exists;
 
         this.chunks = new CopyOnWriteArrayList<>();
 
@@ -131,20 +130,6 @@ public class MergeNode implements Invalidatable {
     }
 
 
-    public boolean exists() {
-        return exists;
-    }
-
-    public void create() throws IOException {
-
-        if(exists)
-            throw new FileAlreadyExistsException(getName());
-
-        exists = true;
-        invalidate();
-
-    }
-
     @Override
     public void invalidate() {
         dirty = true;
@@ -158,6 +143,21 @@ public class MergeNode implements Invalidatable {
     @Override
     public boolean isDirty() {
         return dirty;
+    }
+
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MergeNode mergeNode = (MergeNode) o;
+        return getId().equals(mergeNode.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 
 }

@@ -29,14 +29,12 @@ import org.nefele.cloud.DriveProvider;
 import org.nefele.cloud.DriveProviders;
 import org.nefele.Mime;
 import org.nefele.Mimes;
-import org.nefele.utils.Tree;
 
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.FileAttributeView;
 import java.nio.file.attribute.FileStoreAttributeView;
-import java.util.Iterator;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
@@ -79,7 +77,6 @@ public class MergeFileStore extends FileStore {
     public long getUsableSpace() throws IOException {
 
         return getTotalSpace() - fileSystem.getStorage().getInodes()
-                .values()
                 .stream()
                 .flatMap(i -> i.getChunks().stream())
                 .collect(Collectors.toList())
@@ -117,18 +114,18 @@ public class MergeFileStore extends FileStore {
 
     public void createFile(MergePath path, FileAttribute<?>... fileAttributes) throws IOException {
 
-        if(path.getInode().getData().exists())
-            throw new FileAlreadyExistsException(path.toString());
 
+        MergeNode inode = path.getInode();
 
-        MergeNode inode = path.getInode().getData();
-
-        inode.create();
         inode.setMime(Mimes.getInstance().getByExtension(inode.getName()).getType());
         inode.invalidate();
 
 
-        fileSystem.throwWatchEvent(StandardWatchEventKinds.ENTRY_CREATE, path);
+        fileSystem.getStorage()
+                .create(inode);
+
+        fileSystem.getWatchService()
+                .post(StandardWatchEventKinds.ENTRY_CREATE, path);
 
         Application.log(getClass(), "Created file %s", path.toString());
 
@@ -136,18 +133,19 @@ public class MergeFileStore extends FileStore {
 
     public void createDirectory(MergePath path, FileAttribute<?>... fileAttributes) throws IOException {
 
-        if(path.getInode().getData().exists())
-            throw new FileAlreadyExistsException(path.toString());
 
 
-        MergeNode inode = path.getInode().getData();
+        MergeNode inode = path.getInode();
 
-        inode.create();
         inode.setMime(Mime.FOLDER.getType());
         inode.invalidate();
 
 
-        fileSystem.throwWatchEvent(StandardWatchEventKinds.ENTRY_CREATE, path);
+        fileSystem.getStorage().getInodes()
+                .add(inode);
+
+        fileSystem.getWatchService()
+                .post(StandardWatchEventKinds.ENTRY_CREATE, path);
 
         Application.log(getClass(), "Created directory %s", path.toString());
 
@@ -155,31 +153,16 @@ public class MergeFileStore extends FileStore {
 
     public void delete(MergePath path) throws IOException {
 
-        if(path.getInode().getParent() == null)
-            throw new IOException("Can not delete root directory!");
-
-//        if(path.getInode().getChildren().stream().anyMatch(i -> i.getData().exists()))
-//            throw new DirectoryNotEmptyException(path.toString());
-
-
-        while (!path.getInode().getChildren().isEmpty())
-            delete((MergePath) path.resolve(
-                    path.getInode()
-                        .getChildren()
-                        .get(0)
-                        .getData()
-                        .getName()
-            ));
-
+        for(MergeNode child : fileSystem.getFileTree().listChildren(path.getInode()))
+            delete((MergePath) path.resolve(child.getName()));
 
 
         fileSystem.getStorage()
-                .free(path.getInode().getData());
+                .free(path.getInode());
 
-        path.getInode().getParent().remove(path.getInode());
+        fileSystem.getWatchService()
+                .post(StandardWatchEventKinds.ENTRY_DELETE, path);
 
-
-        fileSystem.throwWatchEvent(StandardWatchEventKinds.ENTRY_DELETE, path);
 
         Application.log(getClass(), "Deleted %s", path.toString());
 
@@ -188,26 +171,28 @@ public class MergeFileStore extends FileStore {
 
     public void move(MergePath oldPath, MergePath newPath) throws IOException {
 
-        if(newPath.getInode().getData().exists())
-            throw new FileAlreadyExistsException(newPath.toString());
-
-        if(newPath.getInode().getParent() == null)
+        if(Files.exists(newPath))
             throw new FileAlreadyExistsException(newPath.toString());
 
 
-        String newParent = oldPath.getInode().getData().getParent();
-        String newName = newPath.getInode().getData().getName();
-
-        newPath.getInode().setData(oldPath.getInode().getData());
-        newPath.getInode().getData().setName(newName);
-        newPath.getInode().getData().setParent(newParent);
-        newPath.getInode().getData().invalidate();
-
-        oldPath.getInode().getParent().remove(oldPath.getInode());
+        String newParent = oldPath.getInode().getParent();
+        String newName = newPath.getInode().getName();
 
 
-        fileSystem.throwWatchEvent(StandardWatchEventKinds.ENTRY_DELETE, oldPath);
-        fileSystem.throwWatchEvent(StandardWatchEventKinds.ENTRY_CREATE, newPath);
+        newPath.getInode().setName(newName);
+        newPath.getInode().setParent(newParent);
+        newPath.getInode().invalidate();
+
+
+        fileSystem.getStorage().getInodes()
+                .remove(oldPath.getInode());
+
+        fileSystem.getStorage().getInodes()
+                .add(newPath.getInode());
+
+
+        fileSystem.getWatchService().post(StandardWatchEventKinds.ENTRY_DELETE, oldPath);
+        fileSystem.getWatchService().post(StandardWatchEventKinds.ENTRY_CREATE, newPath);
 
         Application.log(getClass(), "Moved %s to %s", oldPath.toString(), newPath.toString());
 
@@ -215,7 +200,7 @@ public class MergeFileStore extends FileStore {
 
     public void checkAccess(MergePath path) throws NoSuchFileException {
 
-        if(!path.getInode().getData().exists())
+        if(!fileSystem.getStorage().getInodes().contains(path.getInode()))
             throw new NoSuchFileException(path.toString());
 
     }

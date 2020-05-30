@@ -25,7 +25,6 @@
 package org.nefele.ui.wizard;
 
 import com.jfoenix.controls.JFXButton;
-import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -37,6 +36,9 @@ import javafx.stage.StageStyle;
 import org.nefele.Application;
 import org.nefele.Resources;
 import org.nefele.cloud.*;
+import org.nefele.cloud.providers.DropboxDriveProvider;
+import org.nefele.cloud.providers.GoogleDriveProvider;
+import org.nefele.cloud.providers.OfflineDriveProvider;
 import org.nefele.ui.controls.NefelePane;
 
 import java.net.URL;

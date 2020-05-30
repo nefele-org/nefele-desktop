@@ -24,13 +24,14 @@
 
 package org.nefele.cloud;
 
-import org.nefele.Service;
+import org.nefele.ApplicationService;
+import org.nefele.ApplicationTask;
 import org.nefele.fs.MergePath;
 
 import java.util.HashSet;
 
 
-public final class SharedFolders implements Service {
+public final class SharedFolders implements ApplicationService {
 
     private final static SharedFolders instance = new SharedFolders();
 
@@ -52,35 +53,35 @@ public final class SharedFolders implements Service {
     }
 
     @Override
-    public void synchronize() {
+    public void update(ApplicationTask currentTask) {
 
         synchronized (sharedFolders) {
-            sharedFolders.forEach(SharedFolder::synchronize);
+            sharedFolders.forEach(i -> i.update(currentTask));
         }
 
     }
 
     @Override
-    public void exit() {
+    public void close() {
         synchronized (sharedFolders) {
-            sharedFolders.forEach(SharedFolder::exit);
+            sharedFolders.forEach(SharedFolder::close);
         }
     }
 
 
 
 
-    public <T extends SharedFolder & Service> void addSharedFolderService(T service) {
+    public <T extends SharedFolder & ApplicationService> void addSharedFolderService(T service) {
         synchronized (sharedFolders) {
             sharedFolders.add(service);
         }
     }
 
-    public <T extends SharedFolder & Service> void removeSharedFolderServiceByPath(MergePath path) {
+    public <T extends SharedFolder & ApplicationService> void removeSharedFolderServiceByPath(MergePath path) {
         synchronized(sharedFolders) {
             sharedFolders.stream()
                     .filter(i -> i.getCloudPath().equals(path))
-                    .peek(SharedFolder::exit)
+                    .peek(SharedFolder::close)
                     .findFirst()
                     .ifPresent(sharedFolders::remove);
 

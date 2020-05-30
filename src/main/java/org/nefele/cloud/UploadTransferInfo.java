@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package org.nefele.transfers;
+package org.nefele.cloud;
 
 import javafx.application.Platform;
 import org.nefele.Application;
@@ -87,7 +87,7 @@ public class UploadTransferInfo extends TransferInfo {
 
 
 
-        for (MergeChunk chunk : getPath().getInode().getData().getChunks()) {
+        for (MergeChunk chunk : getPath().getInode().getChunks()) {
 
             if (getStatus() == TRANSFER_STATUS_PAUSED) {
 
@@ -121,7 +121,7 @@ public class UploadTransferInfo extends TransferInfo {
                     chunk.getDriveProvider().writeChunk(chunk, inputStream, new TransferInfoCallback() {
 
                         @Override
-                        public boolean isCanceled() {
+                        public boolean isCancelled() {
                             return getStatus() == TRANSFER_STATUS_CANCELED;
                         }
 
@@ -160,6 +160,9 @@ public class UploadTransferInfo extends TransferInfo {
             Application.log(getClass(), e, "(ignored) could not delete %s", getPath().toString());
         }
 
+
+
+        Application.log(getClass(), "Completed UploadTransferInfo() for %s (size: %d)", getPath().toString(), getSize());
 
         setStatus(TRANSFER_STATUS_COMPLETED);
         return getStatus();

@@ -114,6 +114,7 @@ public class FileBrowser extends ScrollPane implements Initializable, Themeable 
             if(o != null)
                 historyBack.push(o.toUri());
 
+
             setItems(requireNonNull(itemFactory).call(n));
 
         });
@@ -226,8 +227,18 @@ public class FileBrowser extends ScrollPane implements Initializable, Themeable 
     }
 
     public void setItems(List<FileBrowserItem> items) {
+
+        contextMenu.hide();
+        selectedCells.clear();
+
+        if(selectionRectangle != null)
+            selectionPane.getChildren().remove(selectionRectangle);
+
+        selectionRectangle = null;
+
         this.items.clear();
         this.items.addAll(items);
+
     }
 
     public FileBrowserItemFactory getItemFactory() {
@@ -263,17 +274,7 @@ public class FileBrowser extends ScrollPane implements Initializable, Themeable 
     }
 
     public void update() {
-
-        contextMenu.hide();
-        selectedCells.clear();
-
-        if(selectionRectangle != null)
-            selectionPane.getChildren().remove(selectionRectangle);
-
-        selectionRectangle = null;
-
-        setItems(requireNonNull(getItemFactory().call(currentPath.get())));
-
+        setItems(requireNonNull(getItemFactory().call(getCurrentPath())));
     }
 
 

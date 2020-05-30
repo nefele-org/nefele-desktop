@@ -41,7 +41,7 @@ import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;
 
-public class Locale implements Service {
+public class Locale implements ApplicationService {
 
 
     public static final String DEFAULT_LOCALE = "English";
@@ -210,12 +210,12 @@ public class Locale implements Service {
     }
 
     @Override
-    public void synchronize() {
+    public void update(ApplicationTask currentTask) {
 
     }
 
     @Override
-    public void exit() {
+    public void close() {
 
     }
 

@@ -22,16 +22,17 @@
  * THE SOFTWARE.
  */
 
-package org.nefele.transfers;
+package org.nefele.cloud;
 
 import org.nefele.Application;
-import org.nefele.Service;
+import org.nefele.ApplicationService;
+import org.nefele.ApplicationTask;
 
 import java.util.ArrayDeque;
 import java.util.Objects;
 import java.util.concurrent.*;
 
-public class TransferExecutorService extends ThreadPoolExecutor implements Service {
+public class TransferExecutorService extends ThreadPoolExecutor implements ApplicationService {
 
 
     private int maximumThreadActiveCount = 4;
@@ -41,9 +42,6 @@ public class TransferExecutorService extends ThreadPoolExecutor implements Servi
 
     public TransferExecutorService(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue) {
         super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
-
-        Application.getInstance().addService(this);
-
     }
 
 
@@ -126,12 +124,12 @@ public class TransferExecutorService extends ThreadPoolExecutor implements Servi
     }
 
     @Override
-    public void synchronize() {
+    public void update(ApplicationTask currentTask) {
         updatePool();
     }
 
     @Override
-    public void exit() {
+    public void close() {
         shutdown();
     }
 

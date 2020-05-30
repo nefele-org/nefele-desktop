@@ -22,16 +22,45 @@
  * THE SOFTWARE.
  */
 
-package org.nefele.transfers;
+package org.nefele;
 
-public class TransferInfoAbortException extends TransferInfoException {
 
-    public TransferInfoAbortException() {
+import javafx.concurrent.Task;
 
+public abstract class ApplicationTask extends Task<Void> {
+
+    public void updateProgress(long max, long current) {
+        super.updateProgress(max, current);
     }
 
-    public TransferInfoAbortException(String message) {
-        super(message);
+    public void updateProgress(double max, double current) {
+        super.updateProgress(max, current);
     }
+
+    public void updateMessage(String message) {
+        super.updateMessage(message);
+    }
+
+    public void updateTitle(String title) {
+        super.updateTitle(title);
+    }
+
+    public void updateValue(Void value) {
+        super.updateValue(value);
+    }
+
+    public void set(Void aVoid) {
+        super.set(aVoid);
+    }
+
+    public void setException(Throwable t) {
+        super.setException(t);
+    }
+
+    public boolean runAndReset() {
+        return super.runAndReset();
+    }
+
+    protected abstract Void call() throws Exception;
 
 }

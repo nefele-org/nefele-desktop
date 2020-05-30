@@ -28,6 +28,8 @@ import org.nefele.Application;
 import org.nefele.Invalidatable;
 import org.nefele.cloud.DriveProvider;
 
+import java.util.Objects;
+
 public class MergeChunk implements Invalidatable {
 
     private final String id;
@@ -106,6 +108,19 @@ public class MergeChunk implements Invalidatable {
     @Override
     public boolean isDirty() {
         return dirty;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MergeChunk chunk = (MergeChunk) o;
+        return getId().equals(chunk.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 
 

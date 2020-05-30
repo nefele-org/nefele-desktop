@@ -61,7 +61,7 @@ public class WizardPage1 extends WizardPage {
             Application.getInstance().runThread(new Thread(() -> {
 
                 Application.getInstance().getConfig().setString("app.ui.locale", n);
-                Application.getInstance().getConfig().update();
+                Application.getInstance().getConfig().update(null);
 
             }, "updateSettings()::app.ui.locale"));
 

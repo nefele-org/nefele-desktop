@@ -26,22 +26,26 @@ package org.nefele.cloud;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import org.nefele.Application;
-import org.nefele.Service;
+import org.nefele.ApplicationFuture;
+import org.nefele.ApplicationService;
+import org.nefele.ApplicationTask;
+import org.nefele.cloud.providers.DropboxDriveProvider;
+import org.nefele.cloud.providers.GoogleDriveProvider;
+import org.nefele.cloud.providers.OfflineDriveProvider;
 import org.nefele.utils.IdUtils;
 import org.sqlite.SQLiteErrorCode;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
 
 
-public final class DriveProviders implements Service {
+public final class DriveProviders implements ApplicationService {
 
     private final static DriveProviders instance = new DriveProviders();
 
@@ -234,7 +238,7 @@ public final class DriveProviders implements Service {
     }
 
     @Override
-    public void synchronize() {
+    public void update(ApplicationTask currentTask) {
 
         try {
 
@@ -295,8 +299,8 @@ public final class DriveProviders implements Service {
     }
 
     @Override
-    public void exit() {
-        synchronize();
+    public void close() {
+        update(null);
     }
 
 

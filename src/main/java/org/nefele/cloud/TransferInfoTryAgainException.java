@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package org.nefele.transfers;
+package org.nefele.cloud;
 
 import java.util.concurrent.TimeUnit;
 

@@ -25,56 +25,59 @@
 package org.nefele.fs;
 
 import org.nefele.Application;
-import org.nefele.Service;
-import org.nefele.cloud.DriveProvider;
+import org.nefele.ApplicationService;
+import org.nefele.ApplicationTask;
 import org.nefele.cloud.DriveFullException;
 import org.nefele.cloud.DriveNotFoundException;
+import org.nefele.cloud.DriveProvider;
 import org.nefele.cloud.DriveProviders;
-import org.nefele.transfers.TransferInfoException;
-import org.nefele.transfers.TransferInfoTryAgainException;
+import org.nefele.cloud.TransferInfoException;
+import org.nefele.cloud.TransferInfoTryAgainException;
 import org.nefele.utils.IdUtils;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.UUID;
+import java.util.HashSet;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
 
-;
+public class MergeStorage implements ApplicationService {
 
-public class MergeStorage implements Service {
-
-    private final HashMap<String, MergeNode> inodes;
-    private final HashMap<String, MergeChunk> chunks;
-    private final ArrayList<MergeChunk> dustChunks;
-    private final ArrayList<MergeNode> dustNodes;
+    private final MergeFileSystem fileSystem;
+    private final HashSet<MergeNode> inodes;
+    private final HashSet<MergeChunk> chunks;
+    private final HashSet<MergeChunk> dustChunks;
+    private final HashSet<MergeNode> dustNodes;
     private final Path cachePath;
 
 
-    public MergeStorage() {
+    public MergeStorage(MergeFileSystem fileSystem) {
 
-        this.inodes = new HashMap<>();
-        this.chunks = new HashMap<>();
-        this.dustChunks = new ArrayList<>();
-        this.dustNodes = new ArrayList<>();
+        this.fileSystem = fileSystem;
+        this.inodes = new HashSet<>();
+        this.chunks = new HashSet<>();
+        this.dustChunks = new HashSet<>();
+        this.dustNodes = new HashSet<>();
         this.cachePath = Application.getInstance().getDataPath().resolve("cache");
-
-        /* FIXME: Service registered too late */
-        initialize();
 
     }
 
 
-    public HashMap<String, MergeNode> getInodes() {
+    public HashSet<MergeNode> getInodes() {
         return inodes;
     }
 
-    public HashMap<String, MergeChunk> getChunks() {
+    public HashSet<MergeChunk> getChunks() {
         return chunks;
     }
 
@@ -165,7 +168,7 @@ public class MergeStorage implements Service {
 
         try {
 
-            getChunks().remove(chunk.getId());
+            getChunks().remove(chunk);
 
             chunk.getInode().getChunks().remove(chunk);
             chunk.getInode().invalidate();
@@ -203,7 +206,7 @@ public class MergeStorage implements Service {
 
         try {
 
-            getInodes().remove(node.getId());
+            getInodes().remove(node);
 
             while (!node.getChunks().isEmpty())
                 free(node.getChunks().get(0));
@@ -215,6 +218,10 @@ public class MergeStorage implements Service {
 
     }
 
+
+    public void create(MergeNode node) {
+        getInodes().add(node);
+    }
 
 
 
@@ -231,7 +238,7 @@ public class MergeStorage implements Service {
             );
 
 
-            getChunks().put(chunk.getId(), chunk);
+            getChunks().add(chunk);
             node.getChunks().add(chunk);
 
             driveProvider.setChunks(driveProvider.getChunks() + 1L);
@@ -248,20 +255,6 @@ public class MergeStorage implements Service {
     }
 
 
-    public MergeNode alloc(MergeNode parent, String name, String mime) {
-
-        MergeNode node = new MergeNode(
-                name, mime, 0L, Instant.now(), Instant.now(), Instant.now(), IdUtils.generateId(), parent.getId(), false
-        );
-
-
-        node.invalidate();
-        getInodes().put(node.getId(), node);
-
-        return node;
-
-    }
-
 
     public boolean isCached(MergeChunk chunk) {
         return Files.exists(cachePath.resolve(Path.of(chunk.getId())));
@@ -272,7 +265,7 @@ public class MergeStorage implements Service {
 
     public long getCurrentCacheSize() {
 
-        return getChunks().values()
+        return getChunks()
                 .stream()
                 .filter(this::isCached)
                 .mapToLong(MergeChunk::getSize)
@@ -325,11 +318,11 @@ public class MergeStorage implements Service {
                                 Instant.ofEpochSecond(r.getLong("atime")),
                                 Instant.ofEpochSecond(r.getLong("mtime")),
                                 r.getString("id"),
-                                r.getString("parent"),
-                                true
+                                r.getString("parent")
                         );
 
-                        getInodes().put(node.getId(), node);
+
+                        getInodes().add(node);
 
                     }
             );
@@ -342,12 +335,21 @@ public class MergeStorage implements Service {
 
                         try {
 
-                            DriveProvider driveProvider = DriveProviders.getInstance().fromId(r.getString("drive"));
-                            MergeNode inode = getInodes().get(r.getString("inode"));
 
+                            DriveProvider driveProvider = DriveProviders.getInstance().fromId(r.getString("drive"));
+
+
+                            final var inodeId = r.getString("inode");
+
+                            MergeNode inode = getInodes()
+                                    .stream()
+                                    .filter(i -> i.getId().equals(inodeId))
+                                    .findFirst()
+                                    .orElse(null);
 
                             if(inode == null)
-                                throw new NoSuchFileException(r.getString("inode"));
+                                throw new NoSuchFileException(inodeId);
+
 
                             MergeChunk chunk = new MergeChunk (
                                     r.getString("id"),
@@ -360,7 +362,7 @@ public class MergeStorage implements Service {
                                     r.getInt("encrypted") != 0
                             );
 
-                            getChunks().put(chunk.getId(), chunk);
+                            getChunks().add(chunk);
 
                         } catch (DriveNotFoundException | NoSuchFileException e) {
                             Application.log(getClass(), "WARNING! Chunk %s has been orphaned or invalid: %s", r.getString("id"), e.getClass().getName());
@@ -375,14 +377,14 @@ public class MergeStorage implements Service {
 
 
 
-        getChunks().values().forEach(i ->
+        getChunks().forEach(i ->
             i.getInode().getChunks().add(i));
 
 
     }
 
     @Override
-    public void synchronize() {
+    public void update(ApplicationTask currentTask) {
 
 
         try {
@@ -392,12 +394,9 @@ public class MergeStorage implements Service {
 
                     s -> {
 
-                        for(var node : getInodes().values()) {
+                        for(var node : getInodes()) {
 
                             if(!node.isDirty())
-                                continue;
-
-                            if(!node.exists())
                                 continue;
 
                             s.setString(1, node.getName());
@@ -423,7 +422,7 @@ public class MergeStorage implements Service {
 
                     s -> {
 
-                        for(var chunk : getChunks().values()) {
+                        for(var chunk : getChunks()) {
 
                             if(!chunk.isDirty())
                                 continue;
@@ -484,9 +483,9 @@ public class MergeStorage implements Service {
     }
 
     @Override
-    public void exit() {
+    public void close() {
 
-        synchronize();
+        update(null);
         cleanCache();
 
     }

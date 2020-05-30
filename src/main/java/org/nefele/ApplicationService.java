@@ -22,16 +22,12 @@
  * THE SOFTWARE.
  */
 
-package org.nefele.transfers;
+package org.nefele;
 
-public class TransferInfoException extends Exception {
+import javafx.concurrent.Task;
 
-    public TransferInfoException() {
-
-    }
-
-    public TransferInfoException(String message) {
-        super(message);
-    }
-
+public interface ApplicationService extends AutoCloseable {
+    void initialize();
+    void update(ApplicationTask currentTask);
+    void close();
 }

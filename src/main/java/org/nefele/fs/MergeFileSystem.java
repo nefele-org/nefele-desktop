@@ -32,6 +32,7 @@ import java.nio.file.*;
 import java.nio.file.attribute.UserPrincipalLookupService;
 import java.nio.file.spi.FileSystemProvider;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import static java.util.Objects.requireNonNull;
@@ -47,18 +48,21 @@ public class MergeFileSystem extends FileSystem {
     private final MergeFileStore fileStore;
     private final MergeFileTree fileTree;
     private final MergeStorage storage;
-    private final List<MergeWatchService> watchServices;
+    private final MergeWatchService watchService;
 
 
     public MergeFileSystem(FileSystemProvider provider) {
 
         this.provider = provider;
-        this.storage = new MergeStorage();
+        this.storage = new MergeStorage(this);
+
+        Application.getInstance().getServiceManager()
+                .register(storage, "Storage", true, 5, 5, TimeUnit.SECONDS);
+
+
         this.fileStore = new MergeFileStore(this);
         this.fileTree = new MergeFileTree(this);
-        this.watchServices = new ArrayList<>();
-
-        Application.getInstance().addService(storage);
+        this.watchService = new MergeWatchService();
 
     }
 
@@ -143,9 +147,7 @@ public class MergeFileSystem extends FileSystem {
 
     @Override
     public WatchService newWatchService() throws IOException {
-        var watchService = new MergeWatchService(this);
-        watchServices.add(watchService);
-        return watchService;
+        return getWatchService();
     }
 
     public MergeFileStore getFileStore() {
@@ -160,32 +162,10 @@ public class MergeFileSystem extends FileSystem {
         return storage;
     }
 
-    public List<MergeWatchService> getWatchServices() {
-        return watchServices;
+    public MergeWatchService getWatchService() {
+        return watchService;
     }
 
-
-    public synchronized void throwWatchEvent(WatchEvent.Kind<Path> watchEvent, MergePath path) {
-
-
-        watchServices.forEach(i -> {
-            i.getWatchKeys().forEach(j -> {
-
-                final var absSource = path.toAbsolutePath().toString();
-                final var absParent = ((Path) j.watchable()).toAbsolutePath().toString();
-
-                if(absSource.startsWith(absParent)) {
-
-                    Application.log(getClass(), "throw new WatchEvent %s in %s", watchEvent, path);
-
-                    j.getWatchEvents().add(new MergeWatchEvent<>(watchEvent, 1, ((Path) j.watchable()).relativize(path)));
-
-                }
-
-            });
-        });
-
-    }
 
     @Override
     public boolean equals(Object o) {

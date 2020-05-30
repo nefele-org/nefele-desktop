@@ -38,7 +38,7 @@ public class MergeFile extends File {
 
     @Override
     public long length() {
-        return path.getInode().getData().getSize();
+        return path.getInode().getSize();
     }
 
 }

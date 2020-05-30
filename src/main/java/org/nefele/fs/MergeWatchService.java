@@ -24,89 +24,87 @@
 
 package org.nefele.fs;
 
+import org.nefele.Application;
+
 import java.io.IOException;
-import java.nio.file.ClosedWatchServiceException;
-import java.nio.file.WatchKey;
-import java.nio.file.WatchService;
+import java.nio.file.*;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
+import java.util.HashSet;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MergeWatchService implements WatchService {
 
-    private final MergeFileSystem fileSystem;
-    private final ArrayList<MergeWatchKey> watchKeys;
-    private boolean closed;
+    private final BlockingQueue<WatchKey> watchKeys;
+    private final HashSet<MergeWatchKey> registeredWatchKeys;
 
-
-    public MergeWatchService(MergeFileSystem fileSystem) {
-        this.fileSystem = fileSystem;
-        this.watchKeys = new ArrayList<>();
-        this.closed = false;
+    public MergeWatchService() {
+        this.watchKeys = new LinkedBlockingQueue<>();
+        this.registeredWatchKeys = new HashSet<>();
     }
+
+
 
     @Override
     public void close() throws IOException {
-
-        watchKeys.forEach(MergeWatchKey::invalidate);
         watchKeys.clear();
-
-        closed = true;
-
     }
 
     @Override
     public WatchKey poll() {
-
-        if(isClosed())
-            throw new ClosedWatchServiceException();
-
-
-        return watchKeys.stream()
-                .filter(i -> !i.getWatchEvents().isEmpty())
-                .findFirst()
-                .orElse(null);
-
+        return watchKeys.poll();
     }
 
     @Override
     public WatchKey poll(long l, TimeUnit timeUnit) throws InterruptedException {
-
-        if(isClosed())
-            throw new ClosedWatchServiceException();
-
-        throw new UnsupportedOperationException();
-
+        return watchKeys.poll(l, timeUnit);
     }
 
     @Override
     public WatchKey take() throws InterruptedException {
-
-        if(isClosed())
-            throw new ClosedWatchServiceException();
-
-
-        /* FIXME: Can be better than this... */
-
-        WatchKey key;
-        while((key = poll()) == null)
-            Thread.yield();
-
-        return key;
-
+        return watchKeys.take();
     }
 
 
 
-    public MergeFileSystem getFileSystem() {
-        return fileSystem;
+    public WatchKey register(Watchable watchable, Iterable<? extends WatchEvent.Kind<?>> eventKinds) throws ClosedWatchServiceException {
+
+        if(!(watchable instanceof MergePath))
+            throw new IllegalArgumentException("watchable must be a MergePath!");
+
+
+        final var watchKey = new MergeWatchKey(this, (MergePath) watchable, eventKinds);
+        registeredWatchKeys.add(watchKey);
+
+        return watchKey;
+
     }
 
-    public ArrayList<MergeWatchKey> getWatchKeys() {
-        return watchKeys;
+
+    public void post(WatchEvent.Kind<Path> eventKind, Path context) {
+
+        registeredWatchKeys.forEach(watchKey -> {
+
+            if(!watchKey.subscribesTo(eventKind))
+                return;
+
+            if(!((Path) watchKey.watchable()).startsWith(context))
+                return;
+
+
+            watchKey.post(new MergeWatchEvent<>(eventKind, 1, ((Path) watchKey.watchable()).relativize(context)));
+
+        });
+
     }
 
-    public boolean isClosed() {
-        return closed;
+    public void enqueue(WatchKey watchKey) {
+        watchKeys.offer(watchKey);
     }
+
+
+
+
+
 
 }

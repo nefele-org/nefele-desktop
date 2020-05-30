@@ -28,11 +28,6 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXToggleButton;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -46,7 +41,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import org.nefele.Application;
 import org.nefele.Resources;
 import org.nefele.Theme;
@@ -133,7 +127,7 @@ public class NefelePane extends StackPane implements Initializable, Themeable {
 
             Application.getInstance().runThread(new Thread(() -> {
                 Application.getInstance().getConfig().set("app.ui.theme", Application.getInstance().getTheme().getStyleName());
-                Application.getInstance().getConfig().update();
+                Application.getInstance().getConfig().update(null);
             }, "toggleDarkMode()::app.ui.theme"));
 
             Application.getInstance().getViews().update();

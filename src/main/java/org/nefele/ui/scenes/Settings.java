@@ -152,7 +152,7 @@ public class Settings extends StackPane implements Initializable, Themeable {
                         Application.getInstance().runThread(new Thread(() -> {
                     
                             Application.getInstance().getConfig().setString("app.ui.locale", n);
-                            Application.getInstance().getConfig().update();
+                            Application.getInstance().getConfig().update(null);
 
                         }, "updateSettings()::app.ui.locale"));
                         
@@ -179,7 +179,7 @@ public class Settings extends StackPane implements Initializable, Themeable {
                             Application.getInstance().runThread(new Thread(() -> {
 
                                 Application.getInstance().getConfig().setString("app.ui.theme", n);
-                                Application.getInstance().getConfig().update();
+                                Application.getInstance().getConfig().update(null);
 
                             }, "updateSettings()::app.ui.theme"));
 
@@ -216,7 +216,7 @@ public class Settings extends StackPane implements Initializable, Themeable {
                         Application.getInstance().runThread(new Thread(() -> {
 
                             Application.getInstance().getConfig().setString("app.ui.font-family", n);
-                            Application.getInstance().getConfig().update();
+                            Application.getInstance().getConfig().update(null);
 
                         }, "updateSettings()::app.ui.font-family"));
 
@@ -240,7 +240,7 @@ public class Settings extends StackPane implements Initializable, Themeable {
                             Application.getInstance().runThread(new Thread(() -> {
 
                                 Application.getInstance().getConfig().setInteger("app.ui.font-size", ((Double) getValue()).intValue());
-                                Application.getInstance().getConfig().update();
+                                Application.getInstance().getConfig().update(null);
 
                             }, "updateSettings()::app.ui.font-size"));
 
@@ -263,7 +263,7 @@ public class Settings extends StackPane implements Initializable, Themeable {
                         Application.getInstance().runThread(new Thread(() -> {
 
                             Application.getInstance().getConfig().setBoolean("app.ui.startup", n);
-                            Application.getInstance().getConfig().update();
+                            Application.getInstance().getConfig().update(null);
 
                         }, "updateSettings()::app.ui.startup"));
 
@@ -285,7 +285,7 @@ public class Settings extends StackPane implements Initializable, Themeable {
                         Application.getInstance().runThread(new Thread(() -> {
 
                             Application.getInstance().getConfig().setBoolean("core.mfs.shared", n);
-                            Application.getInstance().getConfig().update();
+                            Application.getInstance().getConfig().update(null);
 
                         }, "updateSettings()::core.mfs.shared"));
 
@@ -307,7 +307,7 @@ public class Settings extends StackPane implements Initializable, Themeable {
                         Application.getInstance().runThread(new Thread(() -> {
 
                             Application.getInstance().getConfig().setBoolean("core.mfs.compressed", n);
-                            Application.getInstance().getConfig().update();
+                            Application.getInstance().getConfig().update(null);
 
                         }, "updateSettings()::core.mfs.compressed"));
 
@@ -329,7 +329,7 @@ public class Settings extends StackPane implements Initializable, Themeable {
                         Application.getInstance().runThread(new Thread(() -> {
 
                             Application.getInstance().getConfig().setBoolean("core.mfs.encrypted", n);
-                            Application.getInstance().getConfig().update();
+                            Application.getInstance().getConfig().update(null);
 
                         }, "updateSettings()::core.mfs.encrypted"));
 
@@ -349,7 +349,7 @@ public class Settings extends StackPane implements Initializable, Themeable {
                             Application.getInstance().runThread(new Thread(() -> {
 
                                 Application.getInstance().getConfig().setInteger("core.transfers.parallel", ((Double) getValue()).intValue());
-                                Application.getInstance().getConfig().update();
+                                Application.getInstance().getConfig().update(null);
 
                             }, "updateSettings()::core.transfers.parallel"));
 
@@ -380,7 +380,7 @@ public class Settings extends StackPane implements Initializable, Themeable {
                 getAdvancedRecords().forEach(item ->
                     Application.getInstance().getConfig().set(item.getName(), item.getTextFieldValue().getText()));
 
-                Application.getInstance().getConfig().update();
+                Application.getInstance().getConfig().update(null);
                 Application.getInstance().exit();
 
             }

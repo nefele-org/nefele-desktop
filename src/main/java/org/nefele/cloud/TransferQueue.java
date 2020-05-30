@@ -22,18 +22,20 @@
  * THE SOFTWARE.
  */
 
-package org.nefele.transfers;
+package org.nefele.cloud;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.util.Pair;
 import org.nefele.Application;
-import org.nefele.Service;
+import org.nefele.ApplicationService;
+import org.nefele.ApplicationTask;
 
+import java.nio.file.Files;
 import java.util.concurrent.*;
 
-public class TransferQueue implements Service {
+public class TransferQueue implements ApplicationService {
 
     public final static int TRANSFER_QUEUE_INTERVAL = 1000;
 
@@ -44,9 +46,13 @@ public class TransferQueue implements Service {
     public TransferQueue() {
 
         this.transferQueue = FXCollections.observableArrayList();
-        this.executorService = new TransferExecutorService(0, 2147483647, 365L, TimeUnit.DAYS, new SynchronousQueue<Runnable>());
+        this.executorService = new TransferExecutorService(0, 2147483647, 365L, TimeUnit.DAYS, new SynchronousQueue<>());
 
-        Application.getInstance().addService(this);
+        Application.getInstance().getServiceManager()
+                .register(this, "TransferQueue", true, TRANSFER_QUEUE_INTERVAL, TRANSFER_QUEUE_INTERVAL, TimeUnit.MILLISECONDS);
+
+        Application.getInstance().getServiceManager()
+                .register(executorService, "TransferExecutorQueue", true, 500, 500, TimeUnit.MILLISECONDS);
 
     }
 
@@ -65,44 +71,7 @@ public class TransferQueue implements Service {
     }
 
 
-    private void updateTransferQueue() {
 
-        synchronized (transferQueue) {
-
-            for (Pair<TransferInfo, Future<Integer>> i : transferQueue) {
-
-                switch (i.getKey().getStatus()) {
-
-                    case TransferInfo.TRANSFER_STATUS_COMPLETED:
-                    //case TransferInfo.TRANSFER_STATUS_CANCELED:
-                    //case TransferInfo.TRANSFER_STATUS_ERROR:
-
-                        if (!i.getValue().isCancelled() || !i.getValue().isDone())
-                            i.getValue().cancel(true);
-
-                        break;
-
-                    case TransferInfo.TRANSFER_STATUS_READY:
-                    case TransferInfo.TRANSFER_STATUS_RUNNING:
-                    case TransferInfo.TRANSFER_STATUS_RESUME:
-                    case TransferInfo.TRANSFER_STATUS_PAUSED:
-                        break;
-
-
-                }
-
-                Platform.runLater(() -> i.getKey().updateSpeed());
-
-            }
-
-
-            Platform.runLater(() ->
-                transferQueue.removeIf((j) -> j.getValue().isDone())
-            );
-
-        }
-
-    }
 
     public int getCurrentTransfers() {
         return executorService.getCurrentThreadActiveCount();
@@ -126,19 +95,50 @@ public class TransferQueue implements Service {
 
         this.executorService.setMaximumThreadActiveCount(parallelMax);
 
+    }
 
-        Application.getInstance().runWorker(new Thread(
-                this::updateTransferQueue, "TransferQueue::updateQueue()"), 0, TRANSFER_QUEUE_INTERVAL, TimeUnit.MILLISECONDS);
+    @Override
+    public void update(ApplicationTask currentTask) {
+
+        synchronized (transferQueue) {
+
+            for (Pair<TransferInfo, Future<Integer>> i : transferQueue) {
+
+                switch (i.getKey().getStatus()) {
+
+                    case TransferInfo.TRANSFER_STATUS_COMPLETED:
+                        //case TransferInfo.TRANSFER_STATUS_CANCELED:
+                        //case TransferInfo.TRANSFER_STATUS_ERROR:
+
+                        if (!i.getValue().isCancelled() || !i.getValue().isDone())
+                            i.getValue().cancel(true);
+
+                        break;
+
+                    case TransferInfo.TRANSFER_STATUS_READY:
+                    case TransferInfo.TRANSFER_STATUS_RUNNING:
+                    case TransferInfo.TRANSFER_STATUS_RESUME:
+                    case TransferInfo.TRANSFER_STATUS_PAUSED:
+                        break;
+
+
+                }
+
+                Platform.runLater(() -> i.getKey().updateSpeed());
+
+            }
+
+
+            Platform.runLater(() ->
+                    transferQueue.removeIf((j) -> j.getValue().isDone())
+            );
+
+        }
 
     }
 
     @Override
-    public void synchronize() {
-
-    }
-
-    @Override
-    public void exit() {
+    public void close() {
 
     }
 

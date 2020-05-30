@@ -81,7 +81,7 @@ public class WizardPage4 extends WizardPage {
                         Application.getInstance().runThread(new Thread(() -> {
 
                             Application.getInstance().getConfig().setBoolean("app.ui.startup", n);
-                            Application.getInstance().getConfig().update();
+                            Application.getInstance().getConfig().update(null);
 
                         }, "updateSettings()::app.ui.startup"));
 
@@ -103,7 +103,7 @@ public class WizardPage4 extends WizardPage {
                         Application.getInstance().runThread(new Thread(() -> {
 
                             Application.getInstance().getConfig().setBoolean("core.mfs.compressed", n);
-                            Application.getInstance().getConfig().update();
+                            Application.getInstance().getConfig().update(null);
 
                         }, "updateSettings()::core.mfs.compressed"));
 
@@ -125,7 +125,7 @@ public class WizardPage4 extends WizardPage {
                         Application.getInstance().runThread(new Thread(() -> {
 
                             Application.getInstance().getConfig().setBoolean("core.mfs.encrypted", n);
-                            Application.getInstance().getConfig().update();
+                            Application.getInstance().getConfig().update(null);
 
                         }, "updateSettings()::core.mfs.encrypted"));
 

@@ -47,7 +47,7 @@ public class MergeFileChannel extends FileChannel {
             throw new IllegalArgumentException();
 
         this.path = path;
-        this.inode = path.getInode().getData();
+        this.inode = path.getInode();
         this.fileSystem = (MergeFileSystem) path.getFileSystem();
         this.position = 0;
 
@@ -121,6 +121,10 @@ public class MergeFileChannel extends FileChannel {
     @Override
     public int read(ByteBuffer byteBuffer, long position) throws IOException {
 
+        if(!byteBuffer.hasRemaining())
+            return 0;
+
+
         final long blocksize = MergeChunk.getDefaultSize();
         final long initpos = position;
 
@@ -178,6 +182,10 @@ public class MergeFileChannel extends FileChannel {
 
     @Override
     public int write(ByteBuffer byteBuffer, long position) throws IOException {
+
+        if(!byteBuffer.hasRemaining())
+            return 0;
+
 
         final long blocksize = MergeChunk.getDefaultSize();
         final long initpos = position;

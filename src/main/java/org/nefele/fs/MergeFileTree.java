@@ -24,96 +24,117 @@
 
 package org.nefele.fs;
 
+import com.google.common.collect.ImmutableSet;
+import org.nefele.Application;
 import org.nefele.Mime;
-import org.nefele.utils.Tree;
+import org.nefele.Mimes;
+import org.nefele.utils.IdUtils;
 
+import java.nio.file.NoSuchFileException;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 
 public class MergeFileTree {
 
-    private final Tree<MergeNode> tree;
     private final MergeFileSystem fileSystem;
+    private final MergeNode rootNode;
 
     public MergeFileTree(MergeFileSystem fileSystem) {
-
-        this.tree = new Tree<>(
-                new MergeNode(MergeFileSystem.ROOT, "directory", 0, Instant.now(), Instant.now(), Instant.now(), "", "", true)
-        );
-
         this.fileSystem = fileSystem;
-
-        fetchNode(tree.getData().getId(), tree);
+        this.rootNode = new MergeNode(MergeFileSystem.ROOT, "directory", 0, Instant.now(), Instant.now(), Instant.now(), "", "");
     }
 
 
-    private void fetchNode(String parent, Tree<MergeNode> inodeTree) {
+    public MergeNode resolve(String[] paths) throws MergeFileSystemException {
 
-        fileSystem.getStorage().getInodes()
-                .values()
-                .stream()
-                .filter(i -> i.getParent().equals(parent))
-                .forEach(inodeTree::add);
+        MergeNode walker = rootNode;
+        String parent = "";
+        int index = 0;
 
-        inodeTree.getChildren()
-                .stream()
-                .filter(i -> i.getData().getMime().equals("directory"))
-                .forEach(i -> fetchNode(i.getData().getId(), i));
+        for(var path : paths) {
 
-    }
-
-
-    public Tree<MergeNode> getTree() {
-        return tree;
-    }
-
-
-
-    public Tree<MergeNode> resolve(String[] paths) throws MergeFileSystemException {
-
-        var tree = getTree();
-
-        for(int i = 0; i < paths.length; i++) {
-
-            final String path = paths[i];
+            index++;
 
             if(path.isEmpty())
                 continue;
 
-            var child = requireNonNull(tree).findIf (
-                    j -> j.getData().getName().equals(path)
-            );
 
-            if(child == null) {
+            final var currentParent = parent;
 
-                if(i != paths.length - 1)
-                    throw new MergeFileSystemException("Bad path: " + String.join(MergeFileSystem.PATH_SEPARATOR, paths));
+            walker = fileSystem.getStorage().getInodes()
+                    .stream()
+                    .filter(i -> i.getName().equals(path) && i.getParent().equals(currentParent))
+                    .findFirst()
+                    .orElse(null);
 
-                child = new Tree<>(tree, fileSystem.getStorage().alloc(tree.getData(), path, Mime.UNKNOWN.getType()));
+
+            if(walker == null) {
+
+                if(index == paths.length)
+                    walker = new MergeNode(path, Mime.UNKNOWN.getType(), 0, Instant.now(), Instant.now(), Instant.now(), IdUtils.generateId(), currentParent);
+                else
+                    throw new MergeFileSystemException("resolve failed: " + String.join(MergeFileSystem.PATH_SEPARATOR, paths));
 
             }
 
-            tree = child;
+            parent = walker.getId();
 
         }
 
 
-        return requireNonNull(tree);
+        return requireNonNull(walker, "BUG! Walker cannot be null, impossible!");
 
     }
 
-    public String toAbsolutePath(Tree<MergeNode> entry) {
+    public MergeNode resolve(String id) throws MergeFileSystemException {
 
-        final ArrayList<String> names = new ArrayList<>();
+        if(id.isEmpty())
+            return null;
 
-        for(; entry != tree; entry = entry.getParent())
-            names.add(entry.getData().getName());
+        var result = fileSystem.getStorage().getInodes()
+                .stream()
+                .filter(i -> i.getId().equals(id))
+                .findFirst()
+                .orElse(null);
 
-        Collections.reverse(names);
+        if(result == null)
+            throw new MergeFileSystemException("resolve failed: " + id);
 
-        return MergeFileSystem.PATH_SEPARATOR + String.join(MergeFileSystem.PATH_SEPARATOR, names);
+        return result;
+
+    }
+
+    public String toAbsolutePath(MergeNode entry) throws MergeFileSystemException {
+
+        var paths = new ArrayList<String>() {{
+            add(entry.getName());
+        }};
+
+        for(var parent = resolve(entry.getParent());
+                parent != null;
+                parent = resolve(parent.getParent())) {
+
+            paths.add(parent.getName());
+        }
+
+        Collections.reverse(paths);
+
+        return MergeFileSystem.ROOT + String.join(MergeFileSystem.PATH_SEPARATOR, paths);
+
+    }
+
+    public Set<MergeNode> listChildren(MergeNode inode) {
+
+        return fileSystem.getStorage().getInodes()
+                .stream()
+                .filter(i -> i.getParent().equals(inode.getId()))
+                .collect(Collectors.toUnmodifiableSet());
+
     }
 }

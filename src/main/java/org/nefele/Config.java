@@ -24,6 +24,7 @@
 
 package org.nefele;
 
+import javafx.concurrent.Task;
 import org.sqlite.SQLiteErrorCode;
 
 import java.sql.SQLException;
@@ -31,7 +32,7 @@ import java.util.HashMap;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class Config implements Service {
+public class Config implements ApplicationService {
 
     private final Database database;
     private final HashMap<String, Object> cache;
@@ -41,8 +42,6 @@ public class Config implements Service {
 
         this.database = database;
         this.cache = new HashMap<>();
-
-        Application.getInstance().addService(this);
 
     }
 
@@ -91,32 +90,6 @@ public class Config implements Service {
     public HashMap<String, Object> list() {
         return cache;
     }
-
-
-    public synchronized void update() {
-
-        try {
-
-            for (String key : cache.keySet()) {
-
-                if (get(key).isPresent()) {
-                    database.update("UPDATE config SET value = ? WHERE name = ?",
-                            s -> {
-                                s.setString(1, (String) get(key).get());
-                                s.setString(2, key);
-                            }, false
-                    );
-                }
-
-            }
-
-
-        } catch (SQLException e) {
-            Application.log(e.getClass(), e.getLocalizedMessage());
-        }
-
-    }
-
 
     public Optional<String> getString(String name) {
         return get(name).map(Object::toString);
@@ -169,14 +142,35 @@ public class Config implements Service {
 
     }
 
-    @Override
-    public void synchronize() {
-        update();
+
+    public synchronized void update(ApplicationTask task) {
+
+        try {
+
+            for (String key : cache.keySet()) {
+
+                if (get(key).isPresent()) {
+                    database.update("UPDATE config SET value = ? WHERE name = ?",
+                            s -> {
+                                s.setString(1, (String) get(key).get());
+                                s.setString(2, key);
+                            }, false
+                    );
+                }
+
+            }
+
+
+        } catch (SQLException e) {
+            Application.log(e.getClass(), e.getLocalizedMessage());
+        }
+
     }
 
+
     @Override
-    public void exit() {
-        synchronize();
+    public void close() {
+        update(null);
     }
 
 }
