@@ -26,10 +26,7 @@ package org.nefele.fs;
 
 import org.nefele.Invalidatable;
 
-import java.io.IOException;
-import java.nio.file.FileAlreadyExistsException;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;

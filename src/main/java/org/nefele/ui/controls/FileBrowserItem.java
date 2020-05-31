@@ -1,6 +1,9 @@
 package org.nefele.ui.controls;
 
-import javafx.beans.property.*;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.scene.control.MenuItem;
 import org.nefele.Mime;
 

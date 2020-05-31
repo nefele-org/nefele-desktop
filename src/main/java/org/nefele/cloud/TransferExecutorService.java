@@ -36,8 +36,8 @@ public class TransferExecutorService extends ThreadPoolExecutor implements Appli
 
 
     private int maximumThreadActiveCount = 4;
-    private ArrayDeque<RunnableFuture<?>> pendingTask = new ArrayDeque<>();
-    private ArrayDeque<RunnableFuture<?>> runningTask = new ArrayDeque<>();
+    private final ArrayDeque<RunnableFuture<?>> pendingTask = new ArrayDeque<>();
+    private final ArrayDeque<RunnableFuture<?>> runningTask = new ArrayDeque<>();
 
 
     public TransferExecutorService(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue) {

@@ -36,8 +36,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import org.nefele.Application;
 import org.nefele.Resources;
-import org.nefele.cloud.TransferInfo;
 import org.nefele.Themeable;
+import org.nefele.cloud.TransferInfo;
 import org.nefele.utils.BindingsUtils;
 
 import java.net.URL;
@@ -69,35 +69,34 @@ public class TransferViewerCell extends StackPane implements Initializable, Them
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        buttonClose.setOnMouseClicked( e -> {
-            getTransferInfo().setStatus(TransferInfo.TRANSFER_STATUS_CANCELED);
-        });
+        buttonClose.setOnMouseClicked(e ->
+            getTransferInfo().setStatus(TransferInfo.TRANSFER_STATUS_CANCELED));
 
 
-        buttonPauseResume.setOnMouseClicked( e -> {
+        buttonPauseResume.setOnMouseClicked(e ->
 
             getTransferInfo().setStatus (
                     getTransferInfo().getStatus() == TransferInfo.TRANSFER_STATUS_RUNNING
                         ? TransferInfo.TRANSFER_STATUS_PAUSED
                         : TransferInfo.TRANSFER_STATUS_RESUME
-            );
+            )
 
-        });
-
-
+        );
 
 
-        getTransferInfo().statusProperty().addListener((v, o, n) -> {
+
+
+        getTransferInfo().statusProperty().addListener((v, o, n) ->
 
             buttonPauseResume.setGlyphName (
                    n.intValue() == TransferInfo.TRANSFER_STATUS_RUNNING
                             ? "PAUSE"
                             : "PLAY"
-            );
+            )
 
-        });
+        );
 
-        getTransferInfo().progressProperty().addListener((v, o, n) -> {
+        getTransferInfo().progressProperty().addListener((v, o, n) ->
 
             Platform.runLater(() -> {
 
@@ -111,9 +110,10 @@ public class TransferViewerCell extends StackPane implements Initializable, Them
                                             : "UPLOAD"
                 );
 
-            });
+            })
 
-        });
+        );
+
 
         labelFileName.textProperty().bind(getTransferInfo().nameProperty());
 

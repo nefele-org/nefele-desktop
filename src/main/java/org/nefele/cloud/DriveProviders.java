@@ -26,9 +26,7 @@ package org.nefele.cloud;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import org.nefele.Application;
-import org.nefele.ApplicationFuture;
 import org.nefele.ApplicationService;
 import org.nefele.ApplicationTask;
 import org.nefele.cloud.providers.DropboxDriveProvider;
@@ -244,7 +242,7 @@ public final class DriveProviders implements ApplicationService {
 
             Application.getInstance().getDatabase().update(
                     "INSERT OR REPLACE INTO drives (id, service, description, quota, chunks) VALUES (?, ?, ?, ?, ?)",
-                    s -> {
+                    s ->
                         driveProviders
                                 .stream()
                                 .filter(DriveProvider::isDirty)
@@ -265,14 +263,14 @@ public final class DriveProviders implements ApplicationService {
                                         Application.panic(getClass(), e);
                                     }
 
-                                });
-                    }, true
+                                })
+                    , true
             );
 
 
             Application.getInstance().getDatabase().update(
                     "DELETE FROM drives WHERE id = ?",
-                    s -> {
+                    s ->
                         dustDriveProviders
                                 .forEach(i -> {
 
@@ -287,8 +285,8 @@ public final class DriveProviders implements ApplicationService {
                                         Application.panic(getClass(), e);
                                     }
 
-                                });
-                    }, true
+                                })
+                    , true
             );
 
         } catch (SQLException e) {

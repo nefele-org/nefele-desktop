@@ -35,7 +35,9 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.FileAttributeView;
 import java.nio.file.spi.FileSystemProvider;
-import java.util.*;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 
 public class MergeFileSystemProvider extends FileSystemProvider {
@@ -106,12 +108,12 @@ public class MergeFileSystemProvider extends FileSystemProvider {
             return null;
 
 
-        return new DirectoryStream<Path>() {
+        return new DirectoryStream<>() {
 
             @Override
             public Iterator<Path> iterator() {
 
-                return new Iterator<Path>() {
+                return new Iterator<>() {
 
                     private int index = 0;
 

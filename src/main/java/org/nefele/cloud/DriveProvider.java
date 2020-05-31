@@ -25,7 +25,9 @@
 package org.nefele.cloud;
 
 import javafx.beans.property.*;
-import org.nefele.fs.*;
+import org.nefele.fs.MergeChunk;
+import org.nefele.fs.MergeFileSystem;
+import org.nefele.fs.MergeStorage;
 
 import java.io.InputStream;
 import java.net.URI;

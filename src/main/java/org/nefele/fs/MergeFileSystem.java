@@ -24,18 +24,17 @@
 
 package org.nefele.fs;
 
-import javafx.application.Platform;
 import org.nefele.Application;
 
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.UserPrincipalLookupService;
 import java.nio.file.spi.FileSystemProvider;
-import java.util.*;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
-
-import static java.util.Objects.requireNonNull;
 
 
 public class MergeFileSystem extends FileSystem {
@@ -54,7 +53,7 @@ public class MergeFileSystem extends FileSystem {
     public MergeFileSystem(FileSystemProvider provider) {
 
         this.provider = provider;
-        this.storage = new MergeStorage(this);
+        this.storage = new MergeStorage();
 
         Application.getInstance().getServiceManager()
                 .register(storage, "Storage", true, 5, 5, TimeUnit.SECONDS);

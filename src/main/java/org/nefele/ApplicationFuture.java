@@ -24,7 +24,6 @@
 
 package org.nefele;
 
-import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 

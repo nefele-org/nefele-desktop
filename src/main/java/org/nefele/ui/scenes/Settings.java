@@ -24,7 +24,10 @@
 
 package org.nefele.ui.scenes;
 
-import com.jfoenix.controls.*;
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXSlider;
+import com.jfoenix.controls.JFXToggleButton;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -258,16 +261,16 @@ public class Settings extends StackPane implements Initializable, Themeable {
                     this.setSize(8.0);
 
 
-                    this.selectedProperty().addListener((v, o, n) -> {
+                    this.selectedProperty().addListener((v, o, n) ->
 
                         Application.getInstance().runThread(new Thread(() -> {
 
                             Application.getInstance().getConfig().setBoolean("app.ui.startup", n);
                             Application.getInstance().getConfig().update(null);
 
-                        }, "updateSettings()::app.ui.startup"));
+                        }, "updateSettings()::app.ui.startup"))
 
-                    });
+                    );
 
                 }}
         ));
@@ -280,16 +283,16 @@ public class Settings extends StackPane implements Initializable, Themeable {
                     this.setSize(8.0);
 
 
-                    this.selectedProperty().addListener((v, o, n) -> {
+                    this.selectedProperty().addListener((v, o, n) ->
 
                         Application.getInstance().runThread(new Thread(() -> {
 
                             Application.getInstance().getConfig().setBoolean("core.mfs.shared", n);
                             Application.getInstance().getConfig().update(null);
 
-                        }, "updateSettings()::core.mfs.shared"));
+                        }, "updateSettings()::core.mfs.shared"))
 
-                    });
+                    );
 
                 }}
         ));
@@ -302,16 +305,16 @@ public class Settings extends StackPane implements Initializable, Themeable {
                     this.setSize(8.0);
 
 
-                    this.selectedProperty().addListener((v, o, n) -> {
+                    this.selectedProperty().addListener((v, o, n) ->
 
                         Application.getInstance().runThread(new Thread(() -> {
 
                             Application.getInstance().getConfig().setBoolean("core.mfs.compression.enable", n);
                             Application.getInstance().getConfig().update(null);
 
-                        }, "updateSettings()::core.mfs.compression.enable"));
+                        }, "updateSettings()::core.mfs.compression.enable"))
 
-                    });
+                    );
 
                 }}
         ));
@@ -324,16 +327,16 @@ public class Settings extends StackPane implements Initializable, Themeable {
                     this.setSize(8.0);
 
 
-                    this.selectedProperty().addListener((v, o, n) -> {
+                    this.selectedProperty().addListener((v, o, n) ->
 
                         Application.getInstance().runThread(new Thread(() -> {
 
                             Application.getInstance().getConfig().setBoolean("core.mfs.encryption.enable", n);
                             Application.getInstance().getConfig().update(null);
 
-                        }, "updateSettings()::core.mfs.encryption.enable"));
+                        }, "updateSettings()::core.mfs.encryption.enable"))
 
-                    });
+                    );
 
                 }}
         ));

@@ -49,7 +49,6 @@ public class MergePath implements Path {
     private final MergeNode inode;
     private final BasicFileAttributeView attributeView;
 
-    private MergeWatchKey watchKey = null;
 
 
     public MergePath(MergeFileSystem fileSystem, MergeNode inode, String absolutePath, String path) {
@@ -299,8 +298,7 @@ public class MergePath implements Path {
     public WatchKey register(WatchService watchService, WatchEvent.Kind<?>[] kinds, WatchEvent.Modifier... modifiers) throws IOException {
 
         if(watchService instanceof MergeWatchService)
-            return (watchKey = (MergeWatchKey)
-                    ((MergeWatchService) watchService).register(this, Arrays.asList(kinds)));
+            return ((MergeWatchService) watchService).register(this, Arrays.asList(kinds));
 
         throw new IllegalArgumentException("watchService must be a instance of MergeWatchService!");
 

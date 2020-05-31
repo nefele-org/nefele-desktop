@@ -24,7 +24,6 @@
 
 package org.nefele;
 
-import javafx.concurrent.Task;
 import org.sqlite.SQLiteErrorCode;
 
 import java.sql.SQLException;
@@ -131,9 +130,9 @@ public class Config implements ApplicationService {
 
             database.fetch("SELECT name, value FROM config",
                     null,
-                    r -> {
-                        cache.put(r.getString(1), r.getObject(2));
-                    }
+                    r ->
+                        cache.put(r.getString(1), r.getObject(2))
+
             );
 
         } catch (SQLException e) {

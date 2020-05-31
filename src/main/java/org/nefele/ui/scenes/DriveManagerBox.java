@@ -37,10 +37,10 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import org.nefele.Application;
 import org.nefele.Resources;
-import org.nefele.cloud.DriveProvider;
-import org.nefele.cloud.DriveNotEmptyException;
-import org.nefele.cloud.DriveProviders;
 import org.nefele.Themeable;
+import org.nefele.cloud.DriveNotEmptyException;
+import org.nefele.cloud.DriveProvider;
+import org.nefele.cloud.DriveProviders;
 import org.nefele.ui.dialog.BaseDialog;
 import org.nefele.ui.dialog.Dialogs;
 
@@ -95,7 +95,7 @@ public class DriveManagerBox extends StackPane implements Initializable, Themeab
         });
 
 
-        buttonDelete.setOnMouseClicked(e -> {
+        buttonDelete.setOnMouseClicked(e ->
 
             Platform.runLater(() -> {
 
@@ -110,9 +110,9 @@ public class DriveManagerBox extends StackPane implements Initializable, Themeab
                 }
 
 
-            });
+            })
 
-        });
+        );
 
 
         sliderChunks.minProperty().bind(getDrive().chunksProperty().divide(1024 * 1024));
@@ -127,6 +127,7 @@ public class DriveManagerBox extends StackPane implements Initializable, Themeab
                 getDrive().invalidate();
 
             }
+
         });
 
 

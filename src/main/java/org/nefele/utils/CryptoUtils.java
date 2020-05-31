@@ -28,7 +28,6 @@ import org.nefele.Application;
 
 import javax.crypto.*;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -143,7 +142,7 @@ public final class CryptoUtils {
             cipher.init(Cipher.DECRYPT_MODE, secretKey);
 
 
-            ByteArrayInputStream stream = null;
+            ByteArrayInputStream stream;
 
             try(var cipherInputStream = new CipherInputStream(inputStream, cipher)) {
                 stream = new ByteArrayInputStream(cipherInputStream.readAllBytes());

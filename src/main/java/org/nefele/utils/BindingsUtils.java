@@ -25,8 +25,8 @@
 package org.nefele.utils;
 
 import javafx.beans.Observable;
-import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
+
 import java.util.concurrent.Callable;
 
 

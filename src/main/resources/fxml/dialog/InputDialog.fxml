@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-<?import org.nefele.ui.controls.*?>
-
 <!--
   ~ The MIT License
   ~
@@ -32,6 +25,11 @@
   -->
 
 <?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import org.nefele.ui.controls.NefeleContentPane?>
 <fx:root prefHeight="170.0" prefWidth="300.0" type="NefeleContentPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
     <BorderPane>
         <top>

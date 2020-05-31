@@ -38,12 +38,12 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import org.nefele.Application;
 import org.nefele.Resources;
+import org.nefele.Themeable;
 import org.nefele.cloud.DriveProvider;
 import org.nefele.cloud.DriveProviders;
 import org.nefele.cloud.TransferInfo;
 import org.nefele.fs.MergeFileStore;
 import org.nefele.fs.MergeFileSystem;
-import org.nefele.Themeable;
 import org.nefele.ui.dialog.BaseDialog;
 import org.nefele.ui.dialog.Dialogs;
 import org.nefele.utils.BindingsUtils;
@@ -51,7 +51,10 @@ import org.nefele.utils.PlatformUtils;
 
 import java.net.URI;
 import java.net.URL;
-import java.nio.file.*;
+import java.nio.file.FileStore;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 

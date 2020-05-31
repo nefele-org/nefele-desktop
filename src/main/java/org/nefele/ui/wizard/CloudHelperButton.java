@@ -31,7 +31,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
-import javafx.scene.layout.StackPane;
 import org.nefele.Application;
 import org.nefele.Resources;
 import org.nefele.Themeable;
@@ -40,7 +39,6 @@ import org.nefele.cloud.DriveProvider;
 import org.nefele.cloud.DriveProviders;
 import org.nefele.ui.dialog.BaseDialog;
 import org.nefele.ui.dialog.Dialogs;
-import org.nefele.ui.dialog.InputDialogResult;
 
 import java.net.URL;
 import java.util.ResourceBundle;

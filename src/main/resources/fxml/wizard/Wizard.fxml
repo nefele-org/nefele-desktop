@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import org.nefele.ui.controls.*?>
-
 <!--
   ~ The MIT License
   ~
@@ -29,11 +25,14 @@
   ~ THE SOFTWARE.
   -->
 
+
 <?import com.jfoenix.controls.JFXButton?>
-
-
-<?import javafx.geometry.Insets?>
 <?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.*?>
+<?import org.nefele.ui.controls.NefeleContentPane?>
 <fx:root prefHeight="200.0" prefWidth="200.0" type="NefeleContentPane"
          xmlns="http://javafx.com/javafx/10.0.2-internal"
          xmlns:fx="http://javafx.com/fxml/1">

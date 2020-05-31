@@ -25,5 +25,5 @@
 package org.nefele;
 
 public interface Themeable {
-    void initializeInterface();
+    default void initializeInterface() { }
 }

@@ -26,8 +26,8 @@ package org.nefele.ui.dialog;
 
 public class InputDialogResult {
 
-    private String text;
-    private int button;
+    private final String text;
+    private final int button;
 
     public InputDialogResult(String text, int button) {
         this.text = text;

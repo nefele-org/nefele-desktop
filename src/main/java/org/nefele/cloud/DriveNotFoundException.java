@@ -25,7 +25,6 @@
 package org.nefele.cloud;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 public class DriveNotFoundException extends IOException {
     public DriveNotFoundException(String reason) {

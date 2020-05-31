@@ -24,8 +24,10 @@
 
 package org.nefele.ui.wizard;
 
-import javafx.beans.property.*;
-import javafx.scene.Node;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 import static java.util.Objects.requireNonNull;
 

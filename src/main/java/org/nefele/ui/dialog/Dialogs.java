@@ -24,13 +24,8 @@
 
 package org.nefele.ui.dialog;
 
-import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
-import javafx.util.Pair;
 import org.nefele.Application;
-
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
 
 public final class Dialogs {
 

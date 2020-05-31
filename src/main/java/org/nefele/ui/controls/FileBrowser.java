@@ -24,8 +24,11 @@
 
 package org.nefele.ui.controls;
 
-import javafx.beans.property.*;
-import javafx.collections.*;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
@@ -47,7 +50,8 @@ import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 
@@ -124,13 +128,12 @@ public class FileBrowser extends ScrollPane implements Initializable, Themeable 
             while(change.next()) {
 
                 if(change.wasRemoved()) {
-                    executorService.submit(() -> {
-                        change.getRemoved().forEach(i -> {
-                            PlatformUtils.runLaterAndWait(() -> {
-                                cells.removeIf(j -> i.equals(j.getItem()));
-                            });
-                        });
-                    });
+                    executorService.submit(() ->
+                        change.getRemoved().forEach(i ->
+                            PlatformUtils.runLaterAndWait(() ->
+                                cells.removeIf(j -> i.equals(j.getItem())))
+                        )
+                    );
                 }
 
 
@@ -138,14 +141,12 @@ public class FileBrowser extends ScrollPane implements Initializable, Themeable 
 
                 if(change.wasAdded()) {
 
-                    executorService.submit(() -> {
-                        change.getAddedSubList().forEach(i -> {
-                            PlatformUtils.runLaterAndWait(() -> {
-                                cells.add(new FileBrowserCell(i));
-                            });
-                        });
-
-                    });
+                    executorService.submit(() ->
+                        change.getAddedSubList().forEach(i ->
+                            PlatformUtils.runLaterAndWait(() ->
+                                cells.add(new FileBrowserCell(i)))
+                        )
+                    );
 
                 }
 

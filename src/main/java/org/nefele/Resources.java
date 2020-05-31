@@ -110,7 +110,7 @@ public final class Resources {
 
     public static InputStream getStream(Object parent, String resource) {
 
-        InputStream stream = null;
+        InputStream stream;
         if(Objects.isNull((stream = parent.getClass().getResourceAsStream(resource))))
             stream = parent.getClass().getClassLoader().getResourceAsStream(resource);
 
@@ -122,7 +122,7 @@ public final class Resources {
 
     public static URL getURL(Object parent, String resource) {
 
-        URL url = null;
+        URL url;
         if(Objects.isNull((url = parent.getClass().getResource(resource))))
             url = parent.getClass().getClassLoader().getResource(resource);
 

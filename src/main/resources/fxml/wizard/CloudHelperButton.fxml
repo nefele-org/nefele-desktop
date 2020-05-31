@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
 <!--
   ~ The MIT License
   ~
@@ -27,9 +24,13 @@
   ~ THE SOFTWARE.
   -->
 
-<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
 <?import com.jfoenix.controls.JFXButton?>
-
+<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <fx:root type="JFXButton" alignment="CENTER" contentDisplay="CENTER" prefHeight="48.0"
          prefWidth="192.0" text=" " xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" >
     <graphic>

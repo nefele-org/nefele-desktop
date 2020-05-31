@@ -24,8 +24,6 @@
 
 package org.nefele;
 
-import javafx.concurrent.Task;
-
 public interface ApplicationService extends AutoCloseable {
     void initialize();
     void update(ApplicationTask currentTask);

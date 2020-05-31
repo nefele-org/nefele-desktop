@@ -88,7 +88,7 @@ public final class Mimes implements ApplicationService {
             Application.getInstance().getDatabase().fetch (
                     "SELECT * FROM mime",
                     null,
-                    r -> {
+                    r ->
 
                         getMimes().add(
                                 new Mime(
@@ -96,9 +96,9 @@ public final class Mimes implements ApplicationService {
                                         r.getString(2),
                                         r.getString(3),
                                         r.getString(4))
-                        );
+                        )
 
-                    }
+
             );
 
         } catch (SQLException e) {

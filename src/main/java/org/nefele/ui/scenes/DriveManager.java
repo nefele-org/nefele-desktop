@@ -41,9 +41,9 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.nefele.Application;
 import org.nefele.Resources;
+import org.nefele.Themeable;
 import org.nefele.cloud.DriveProvider;
 import org.nefele.cloud.DriveProviders;
-import org.nefele.Themeable;
 import org.nefele.ui.controls.NefelePane;
 import org.nefele.ui.wizard.Wizard;
 
@@ -103,7 +103,7 @@ public class DriveManager extends StackPane implements Initializable, Themeable 
                 i -> getDriveManagerBoxes().add(new DriveManagerBox(i)));
 
 
-        buttonAdd.setOnMouseClicked(e ->{
+        buttonAdd.setOnMouseClicked(e ->
             Platform.runLater(() -> {
 
                 Stage s = new Stage();
@@ -125,8 +125,8 @@ public class DriveManager extends StackPane implements Initializable, Themeable 
                 s.show();
 
                 nefelePane.setResizable(false);
-            });
-        });
+            })
+        );
 
         Application.getInstance().getViews().add(this);
 

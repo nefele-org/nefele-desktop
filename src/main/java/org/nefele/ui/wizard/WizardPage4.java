@@ -76,16 +76,16 @@ public class WizardPage4 extends WizardPage {
                     this.setSize(8.0);
 
 
-                    this.selectedProperty().addListener((v, o, n) -> {
+                    this.selectedProperty().addListener((v, o, n) ->
 
                         Application.getInstance().runThread(new Thread(() -> {
 
                             Application.getInstance().getConfig().setBoolean("app.ui.startup", n);
                             Application.getInstance().getConfig().update(null);
 
-                        }, "updateSettings()::app.ui.startup"));
+                        }, "updateSettings()::app.ui.startup"))
 
-                    });
+                    );
 
                 }}
         ));
@@ -98,16 +98,16 @@ public class WizardPage4 extends WizardPage {
                     this.setSize(8.0);
 
 
-                    this.selectedProperty().addListener((v, o, n) -> {
+                    this.selectedProperty().addListener((v, o, n) ->
 
                         Application.getInstance().runThread(new Thread(() -> {
 
                             Application.getInstance().getConfig().setBoolean("core.mfs.compression.enable", n);
                             Application.getInstance().getConfig().update(null);
 
-                        }, "updateSettings()::core.mfs.compression.enable"));
+                        }, "updateSettings()::core.mfs.compression.enable"))
 
-                    });
+                    );
 
                 }}
         ));
@@ -120,16 +120,16 @@ public class WizardPage4 extends WizardPage {
                     this.setSize(8.0);
 
 
-                    this.selectedProperty().addListener((v, o, n) -> {
+                    this.selectedProperty().addListener((v, o, n) ->
 
                         Application.getInstance().runThread(new Thread(() -> {
 
                             Application.getInstance().getConfig().setBoolean("core.mfs.encryption.enable", n);
                             Application.getInstance().getConfig().update(null);
 
-                        }, "updateSettings()::core.mfs.encryption.enable"));
+                        }, "updateSettings()::core.mfs.encryption.enable"))
 
-                    });
+                    );
 
                 }}
         ));
@@ -137,11 +137,6 @@ public class WizardPage4 extends WizardPage {
         checkedProperty().setValue(true);
 
         Application.getInstance().getViews().add(this);
-    }
-
-    @Override
-    public void initializeInterface() {
-
     }
 
     public ObservableList<SettingsRecord> getDefaultRecords() {

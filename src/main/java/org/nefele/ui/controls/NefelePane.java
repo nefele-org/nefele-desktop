@@ -138,17 +138,15 @@ public class NefelePane extends StackPane implements Initializable, Themeable {
             toggleDarkMode.setSelected(requireNonNull(n).getStyleName().contains("dark")));
 
 
-        controlMinimize.setOnMouseClicked(e -> {
-            ((Stage) getScene().getWindow()).setIconified(true);
-        });
+        controlMinimize.setOnMouseClicked(e ->
+            ((Stage) getScene().getWindow()).setIconified(true)
+        );
 
-        controlExit.setOnMouseClicked(e -> {
-            close();
-        });
+        controlExit.setOnMouseClicked(e ->
+            close());
 
-        controlMaximize.setOnMouseClicked(e -> {
-            toggleMaximize();
-        });
+        controlMaximize.setOnMouseClicked(e ->
+            toggleMaximize());
 
 
 

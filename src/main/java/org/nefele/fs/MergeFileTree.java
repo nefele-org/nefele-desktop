@@ -24,16 +24,11 @@
 
 package org.nefele.fs;
 
-import com.google.common.collect.ImmutableSet;
-import org.nefele.Application;
 import org.nefele.Mime;
-import org.nefele.Mimes;
 import org.nefele.utils.IdUtils;
 
-import java.nio.file.NoSuchFileException;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;

@@ -35,7 +35,8 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.nefele.Application;
 import org.nefele.Resources;
-import org.nefele.cloud.*;
+import org.nefele.cloud.DriveProvider;
+import org.nefele.cloud.DriveProviders;
 import org.nefele.cloud.providers.DropboxDriveProvider;
 import org.nefele.cloud.providers.GoogleDriveProvider;
 import org.nefele.cloud.providers.OfflineDriveProvider;
@@ -58,7 +59,7 @@ public class WizardPage3 extends WizardPage {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        buttonAddCloud.setOnMouseClicked(e ->{
+        buttonAddCloud.setOnMouseClicked(e ->
             Platform.runLater(() -> {
 
 
@@ -106,15 +107,11 @@ public class WizardPage3 extends WizardPage {
 
                 }
 
-            });
-        });
+            })
+        );
 
 
         Application.getInstance().getViews().add(this);
     }
 
-    @Override
-    public void initializeInterface() {
-
-    }
 }

@@ -24,7 +24,6 @@
 
 package org.nefele.cloud;
 
-import com.sun.nio.file.ExtendedWatchEventModifier;
 import org.nefele.Application;
 import org.nefele.ApplicationService;
 import org.nefele.ApplicationTask;

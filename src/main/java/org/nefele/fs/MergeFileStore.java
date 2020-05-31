@@ -25,10 +25,10 @@
 package org.nefele.fs;
 
 import org.nefele.Application;
-import org.nefele.cloud.DriveProvider;
-import org.nefele.cloud.DriveProviders;
 import org.nefele.Mime;
 import org.nefele.Mimes;
+import org.nefele.cloud.DriveProvider;
+import org.nefele.cloud.DriveProviders;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -36,8 +36,6 @@ import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.FileAttributeView;
 import java.nio.file.attribute.FileStoreAttributeView;
 import java.util.stream.Collectors;
-
-import static java.util.Objects.requireNonNull;
 
 
 public class MergeFileStore extends FileStore {

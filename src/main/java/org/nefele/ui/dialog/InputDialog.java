@@ -33,7 +33,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.*;
+import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -172,7 +172,7 @@ public class InputDialog extends Stage {
 
     private final ArrayList<Integer> buttons;
     private InputDialogResult dialogResult;
-    private String prompt;
+    private final String prompt;
 
 
     protected InputDialog(String title, String... prompt) {

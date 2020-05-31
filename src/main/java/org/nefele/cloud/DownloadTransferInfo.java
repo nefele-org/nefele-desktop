@@ -29,13 +29,12 @@ import org.nefele.Application;
 import org.nefele.fs.MergeChunk;
 import org.nefele.fs.MergePath;
 
-import java.io.*;
+import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 
 public class DownloadTransferInfo extends TransferInfo {
 
-    private static final int DOWNLOAD_BLOCK_SIZE = 65536;
     private static final int PREPARE_BLOCK_SIZE = 4194304;
 
     private final File localFile;

@@ -35,8 +35,8 @@ import javafx.scene.layout.VBox;
 import javafx.util.Pair;
 import org.nefele.Application;
 import org.nefele.Resources;
-import org.nefele.cloud.TransferInfo;
 import org.nefele.Themeable;
+import org.nefele.cloud.TransferInfo;
 import org.nefele.utils.PlatformUtils;
 
 import java.net.URL;

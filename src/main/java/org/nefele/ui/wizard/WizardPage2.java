@@ -25,7 +25,6 @@
 package org.nefele.ui.wizard;
 
 import com.jfoenix.controls.JFXCheckBox;
-import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.ScrollPane;
@@ -34,7 +33,6 @@ import javafx.scene.text.Text;
 import org.nefele.Application;
 import org.nefele.Resources;
 
-import java.awt.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -71,11 +69,6 @@ public class WizardPage2 extends WizardPage {
 
         textMessage.wrappingWidthProperty().bind(scrollTerms.widthProperty());
         Application.getInstance().getViews().add(this);
-    }
-
-    @Override
-    public void initializeInterface() {
-
     }
 
 }

@@ -33,8 +33,9 @@ import org.nefele.ApplicationService;
 import org.nefele.ApplicationTask;
 import org.nefele.utils.PlatformUtils;
 
-import java.nio.file.Files;
-import java.util.concurrent.*;
+import java.util.concurrent.Future;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.TimeUnit;
 
 public class TransferQueue implements ApplicationService {
 

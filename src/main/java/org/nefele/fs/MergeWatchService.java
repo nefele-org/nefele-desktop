@@ -24,14 +24,12 @@
 
 package org.nefele.fs;
 
-import org.nefele.Application;
-
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 public class MergeWatchService implements WatchService {
 

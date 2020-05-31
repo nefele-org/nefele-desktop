@@ -24,7 +24,6 @@
 
 package org.nefele.ui.scenes;
 
-import com.ctc.wstx.sw.EncodingXmlWriter;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import javafx.application.Platform;
@@ -34,13 +33,9 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.StackPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
-import org.nefele.Application;
-import org.nefele.Mime;
-import org.nefele.Mimes;
-import org.nefele.Resources;
+import org.nefele.*;
 import org.nefele.cloud.*;
 import org.nefele.fs.MergePath;
-import org.nefele.Themeable;
 import org.nefele.ui.controls.FileBrowser;
 import org.nefele.ui.controls.FileBrowserItem;
 import org.nefele.ui.controls.FileBrowserItemFactory;
@@ -52,10 +47,13 @@ import org.nefele.utils.FilenameUtils;
 import org.nefele.utils.PlatformUtils;
 
 import java.awt.*;
-import java.io.*;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
-import java.nio.file.*;
+import java.nio.file.DirectoryNotEmptyException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -91,21 +89,17 @@ public class Archive extends StackPane implements Initializable, Themeable {
 
             textFieldPath.setFocusTraversable(false);
 
-            buttonForward.setOnMouseClicked(e -> {
-                fileBrowser.browseHistory(1);
-            });
+            buttonForward.setOnMouseClicked(e ->
+                    fileBrowser.browseHistory(1));
 
-            buttonBack.setOnMouseClicked(e -> {
-                fileBrowser.browseHistory(-1);
-            });
+            buttonBack.setOnMouseClicked(e ->
+                    fileBrowser.browseHistory(-1));
 
-            buttonRefresh.setOnMouseClicked(e -> {
-                fileBrowser.update();
-            });
+            buttonRefresh.setOnMouseClicked(e ->
+                    fileBrowser.update());
 
-            buttonHome.setOnMouseClicked(e -> {
-                fileBrowser.setCurrentPath(Path.of(URI.create("nefele:///")));
-            });
+            buttonHome.setOnMouseClicked(e ->
+                    fileBrowser.setCurrentPath(Path.of(URI.create("nefele:///"))));
 
             buttonSync.setOnMouseClicked(e -> {
                 Platform.runLater(() -> {
@@ -428,9 +422,9 @@ public class Archive extends StackPane implements Initializable, Themeable {
 
 
                 private final MenuItem deleteMenuItem = new MenuItem("") {{
-                    setOnAction(e -> {
+                    setOnAction(e ->
 
-                        fileBrowser.getSelectedItems().forEach(i -> {
+                        fileBrowser.getSelectedItems().forEach(i ->
 
                             Application.getInstance().runThread(new Thread(() -> {
 
@@ -455,11 +449,11 @@ public class Archive extends StackPane implements Initializable, Themeable {
                                     Platform.runLater(fileBrowser::update);
                                 }
 
-                            }, "Archive::delete()"));
+                            }, "Archive::delete()"))
 
-                        });
+                        )
 
-                    });
+                    );
                 }};
 
 

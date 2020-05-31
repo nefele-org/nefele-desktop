@@ -26,8 +26,6 @@ package org.nefele;
 
 import org.sqlite.SQLiteErrorCode;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.*;
 
 public class Database {

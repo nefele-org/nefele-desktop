@@ -72,7 +72,7 @@ public class Docker extends VBox implements Initializable, Themeable {
             while(change.next()) {
 
                 if(change.wasAdded()) {
-                    change.getAddedSubList().forEach(i -> {
+                    change.getAddedSubList().forEach(i ->
                         getChildren().add(new DockerButton(i) {{
 
                             if(i.getIcon().equals("EXIT_TO_APP"))
@@ -80,8 +80,8 @@ public class Docker extends VBox implements Initializable, Themeable {
                             else
                                 setOnMouseClicked(e -> selectedButtonProperty().set(this));
 
-                        }});
-                    });
+                        }})
+                    );
                 }
 
 

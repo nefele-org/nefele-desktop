@@ -24,16 +24,10 @@
 
 package org.nefele.fs;
 
-import com.google.common.collect.ImmutableSet;
 import org.nefele.Application;
 import org.nefele.ApplicationService;
 import org.nefele.ApplicationTask;
-import org.nefele.cloud.DriveFullException;
-import org.nefele.cloud.DriveNotFoundException;
-import org.nefele.cloud.DriveProvider;
-import org.nefele.cloud.DriveProviders;
-import org.nefele.cloud.TransferInfoException;
-import org.nefele.cloud.TransferInfoTryAgainException;
+import org.nefele.cloud.*;
 import org.nefele.utils.CryptoUtils;
 import org.nefele.utils.IdUtils;
 
@@ -47,8 +41,6 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.sql.SQLException;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -59,7 +51,7 @@ import java.util.zip.InflaterInputStream;
 
 public class MergeStorage implements ApplicationService {
 
-    private final MergeFileSystem fileSystem;
+
     private final HashSet<MergeNode> inodes;
     private final HashSet<MergeChunk> chunks;
     private final HashSet<MergeChunk> dustChunks;
@@ -67,9 +59,8 @@ public class MergeStorage implements ApplicationService {
     private final Path cachePath;
 
 
-    public MergeStorage(MergeFileSystem fileSystem) {
+    public MergeStorage() {
 
-        this.fileSystem = fileSystem;
         this.inodes = new HashSet<>();
         this.chunks = new HashSet<>();
         this.dustChunks = new HashSet<>();

@@ -264,7 +264,7 @@ public class DropboxDriveProvider extends DriveProvider {
 
 
                 String URL = webAuth.authorize(request);
-                String accessCode = null;
+                String accessCode;
 
                 AtomicReference<InputDialogResult> result = new AtomicReference<>();
 
@@ -276,11 +276,11 @@ public class DropboxDriveProvider extends DriveProvider {
                             .browse(URI.create(URL));
 
 
-                    PlatformUtils.runLaterAndWait(() -> {
+                    PlatformUtils.runLaterAndWait(() ->
                         result.set(Dialogs.showInputBox(
                                 "DROPBOX_PROVIDER_ADVISE",
-                                InputDialog.DIALOG_RETRY, InputDialog.DIALOG_CONTINUE));
-                    });
+                                InputDialog.DIALOG_RETRY, InputDialog.DIALOG_CONTINUE))
+                    );
 
 
                 } while (result.get().getButton() == InputDialog.DIALOG_RETRY);

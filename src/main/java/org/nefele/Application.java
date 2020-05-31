@@ -27,30 +27,25 @@ package org.nefele;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.concurrent.ScheduledService;
-import javafx.concurrent.Task;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.Duration;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
-import org.nefele.cloud.DriveProvider;
 import org.nefele.cloud.DriveProviders;
 import org.nefele.cloud.SharedFolders;
 import org.nefele.cloud.TransferQueue;
+import org.nefele.ui.SplashScreen;
 import org.nefele.ui.controls.NefelePane;
 import org.nefele.ui.dialog.Dialogs;
 import org.nefele.ui.scenes.Home;
-import org.nefele.ui.SplashScreen;
 import org.nefele.utils.CryptoUtils;
 import org.nefele.utils.PlatformUtils;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -350,11 +345,11 @@ public final class Application extends javafx.application.Application implements
 
 
 
-        PlatformUtils.runLaterAndWait(() -> {
+        PlatformUtils.runLaterAndWait(() ->
             Dialogs.showErrorBox(
                     "DIALOG_PANIC_TITLE",
-                    "DIALOG_PANIC_MESSAGE");
-        });
+                    "DIALOG_PANIC_MESSAGE")
+        );
 
 
         System.exit(1);

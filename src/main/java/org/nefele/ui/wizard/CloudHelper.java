@@ -29,8 +29,6 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXSlider;
 import com.jfoenix.controls.JFXTextField;
 import javafx.application.Platform;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -38,12 +36,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import org.nefele.Application;
 import org.nefele.Resources;
 import org.nefele.Themeable;
-import org.nefele.ui.controls.DockerButton;
 import org.nefele.ui.controls.NefeleContentPane;
 import org.nefele.ui.controls.NefelePane;
 import org.nefele.ui.dialog.BaseDialog;
@@ -113,9 +108,8 @@ public class CloudHelper extends NefeleContentPane implements Initializable, The
                                                 .bind(CloudHelper.this.getScene().getWindow().widthProperty());
 
 
-                                        Platform.runLater(()->{
-                                            ((NefelePane) CloudHelper.this.getScene().getRoot()).setResizable(false);
-                                        });
+                                        Platform.runLater(()->
+                                            ((NefelePane) CloudHelper.this.getScene().getRoot()).setResizable(false));
 
 
                                         contentPane.setSpacing(10);

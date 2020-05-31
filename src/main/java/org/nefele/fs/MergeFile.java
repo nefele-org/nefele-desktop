@@ -25,7 +25,6 @@
 package org.nefele.fs;
 
 import java.io.File;
-import java.net.URI;
 
 public class MergeFile extends File {
 
