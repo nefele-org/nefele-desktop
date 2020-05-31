@@ -214,7 +214,7 @@ public class Stats extends StackPane implements Initializable, Themeable {
 
 
                 spinnerTemporaryFiles.progressProperty().bind(Bindings.createDoubleBinding(() ->
-                        (double) fileSystem.getStorage().getCurrentCacheSize() / (double) Application.getInstance().getConfig().getLong("app.cache.limit").orElse(1L)
+                        (double) fileSystem.getStorage().getCurrentCacheSize() / (double) Application.getInstance().getConfig().getLong("core.mfs.cache.limit").orElse(1L)
                 ));
 
 
@@ -228,7 +228,7 @@ public class Stats extends StackPane implements Initializable, Themeable {
 
 
                 labelTemporaryFilesTotal.textProperty().bind(BindingsUtils.createSizeBinding(() ->
-                        Application.getInstance().getConfig().getLong("app.cache.limit").orElse(1L), ""));
+                        Application.getInstance().getConfig().getLong("core.mfs.cache.limit").orElse(1L), ""));
 
 
 

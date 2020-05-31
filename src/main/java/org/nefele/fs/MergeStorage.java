@@ -24,6 +24,7 @@
 
 package org.nefele.fs;
 
+import com.google.common.collect.ImmutableSet;
 import org.nefele.Application;
 import org.nefele.ApplicationService;
 import org.nefele.ApplicationTask;
@@ -33,6 +34,7 @@ import org.nefele.cloud.DriveProvider;
 import org.nefele.cloud.DriveProviders;
 import org.nefele.cloud.TransferInfoException;
 import org.nefele.cloud.TransferInfoTryAgainException;
+import org.nefele.utils.CryptoUtils;
 import org.nefele.utils.IdUtils;
 
 import java.io.IOException;
@@ -48,7 +50,11 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Stream;
+import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
+import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
 public class MergeStorage implements ApplicationService {
@@ -74,11 +80,27 @@ public class MergeStorage implements ApplicationService {
 
 
     public HashSet<MergeNode> getInodes() {
-        return inodes;
+        synchronized (inodes) {
+            return inodes;
+        }
     }
 
     public HashSet<MergeChunk> getChunks() {
-        return chunks;
+        synchronized (chunks) {
+            return chunks;
+        }
+    }
+
+    public Stream<MergeNode> getInodeStream() {
+        synchronized (inodes) {
+            return Set.copyOf(inodes).stream();
+        }
+    }
+
+    public Stream<MergeChunk> getChunkStream() {
+        synchronized (chunks) {
+            return Set.copyOf(chunks).stream();
+        }
     }
 
 
@@ -96,9 +118,9 @@ public class MergeStorage implements ApplicationService {
 
             }
 
-            if(chunk.isEncrypted()) {
-                // TODO...
-            }
+            if(chunk.isEncrypted() && raw)
+                byteBuffer = CryptoUtils.encrypt(byteBuffer);
+
 
 
             OutputStream outputStream;
@@ -108,7 +130,9 @@ public class MergeStorage implements ApplicationService {
                         StandardOpenOption.CREATE,
                         StandardOpenOption.WRITE,
                         StandardOpenOption.TRUNCATE_EXISTING
-                ));
+                ), new Deflater(Application.getInstance().getConfig()
+                        .getInteger("core.mfs.compression.level")
+                        .orElse(Deflater.DEFAULT_COMPRESSION), true));
 
             } else {
                 outputStream = Files.newOutputStream(cachePath.resolve(chunk.getId()),
@@ -148,14 +172,15 @@ public class MergeStorage implements ApplicationService {
 
         try {
 
-            if(chunk.isEncrypted()) {
-                 // TODO... decrypt()
-            }
+            InputStream inputStream = Files.newInputStream(cachePath.resolve(chunk.getId()));
+
+            if(chunk.isEncrypted() && !raw)
+                 inputStream = CryptoUtils.decrypt(inputStream);
 
             if(chunk.isCompressed() && !raw)
-                return new InflaterInputStream(Files.newInputStream(cachePath.resolve(chunk.getId())));
+                inputStream = new InflaterInputStream(inputStream, new Inflater(true));
 
-            return Files.newInputStream(cachePath.resolve(chunk.getId()));
+            return inputStream;
 
         } catch (IOException e) {
             Application.log(getClass(), e, "read()");
@@ -233,8 +258,8 @@ public class MergeStorage implements ApplicationService {
 
             MergeChunk chunk = new MergeChunk(
                     IdUtils.generateId(), offset, node, driveProvider, 0L, 0L,
-                    Application.getInstance().getConfig().getBoolean("core.mfs.compressed").orElse(false),
-                    Application.getInstance().getConfig().getBoolean("core.mfs.encrypted").orElse(false)
+                    Application.getInstance().getConfig().getBoolean("core.mfs.compression.enable").orElse(false),
+                    Application.getInstance().getConfig().getBoolean("core.mfs.encryption.enable").orElse(false)
             );
 
 
@@ -265,8 +290,7 @@ public class MergeStorage implements ApplicationService {
 
     public long getCurrentCacheSize() {
 
-        return getChunks()
-                .stream()
+        return getChunkStream()
                 .filter(this::isCached)
                 .mapToLong(MergeChunk::getSize)
                 .sum();
@@ -341,8 +365,7 @@ public class MergeStorage implements ApplicationService {
 
                             final var inodeId = r.getString("inode");
 
-                            MergeNode inode = getInodes()
-                                    .stream()
+                            MergeNode inode = getInodeStream()
                                     .filter(i -> i.getId().equals(inodeId))
                                     .findFirst()
                                     .orElse(null);
@@ -377,7 +400,7 @@ public class MergeStorage implements ApplicationService {
 
 
 
-        getChunks().forEach(i ->
+        getChunkStream().forEach(i ->
             i.getInode().getChunks().add(i));
 
 
@@ -394,7 +417,7 @@ public class MergeStorage implements ApplicationService {
 
                     s -> {
 
-                        for(var node : getInodes()) {
+                        for(var node : Set.copyOf(getInodes())) {
 
                             if(!node.isDirty())
                                 continue;
@@ -422,7 +445,7 @@ public class MergeStorage implements ApplicationService {
 
                     s -> {
 
-                        for(var chunk : getChunks()) {
+                        for(var chunk : Set.copyOf(getChunks())) {
 
                             if(!chunk.isDirty())
                                 continue;
@@ -450,7 +473,7 @@ public class MergeStorage implements ApplicationService {
 
                     s -> {
 
-                        for(var node : dustNodes) {
+                        for(var node : Set.copyOf(dustNodes)) {
 
                             s.setString(1, node.getId());
                             s.addBatch();
@@ -466,7 +489,7 @@ public class MergeStorage implements ApplicationService {
 
                     s -> {
 
-                        for(var chunk : dustChunks) {
+                        for(var chunk : Set.copyOf(dustChunks)) {
 
                             s.setString(1, chunk.getId());
                             s.addBatch();

@@ -88,7 +88,7 @@ public class MergeWatchService implements WatchService {
             if(!watchKey.subscribesTo(eventKind))
                 return;
 
-            if(!((Path) watchKey.watchable()).startsWith(context))
+            if(!watchKey.watchable().equals(context.getParent()))
                 return;
 
 

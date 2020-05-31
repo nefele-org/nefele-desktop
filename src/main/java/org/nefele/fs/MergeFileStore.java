@@ -76,8 +76,7 @@ public class MergeFileStore extends FileStore {
     @Override
     public long getUsableSpace() throws IOException {
 
-        return getTotalSpace() - fileSystem.getStorage().getInodes()
-                .stream()
+        return getTotalSpace() - fileSystem.getStorage().getInodeStream()
                 .flatMap(i -> i.getChunks().stream())
                 .collect(Collectors.toList())
                 .stream()

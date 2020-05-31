@@ -295,10 +295,10 @@ public class Settings extends StackPane implements Initializable, Themeable {
         ));
 
 
-        getRecords().add(new SettingsRecord("core.mfs.compressed", "SETTINGS_COMPRESSED", "SETTINGS_COMPRESSED_DESCRIPTION",
+        getRecords().add(new SettingsRecord("core.mfs.compression.enable", "SETTINGS_COMPRESSED", "SETTINGS_COMPRESSED_DESCRIPTION",
                 new JFXToggleButton() {{
 
-                    this.setSelected(Application.getInstance().getConfig().getBoolean("core.mfs.compressed").orElse(false));
+                    this.setSelected(Application.getInstance().getConfig().getBoolean("core.mfs.compression.enable").orElse(false));
                     this.setSize(8.0);
 
 
@@ -306,10 +306,10 @@ public class Settings extends StackPane implements Initializable, Themeable {
 
                         Application.getInstance().runThread(new Thread(() -> {
 
-                            Application.getInstance().getConfig().setBoolean("core.mfs.compressed", n);
+                            Application.getInstance().getConfig().setBoolean("core.mfs.compression.enable", n);
                             Application.getInstance().getConfig().update(null);
 
-                        }, "updateSettings()::core.mfs.compressed"));
+                        }, "updateSettings()::core.mfs.compression.enable"));
 
                     });
 
@@ -317,10 +317,10 @@ public class Settings extends StackPane implements Initializable, Themeable {
         ));
 
 
-        getRecords().add(new SettingsRecord("core.mfs.encrypted", "SETTINGS_ENCRYPTED", "SETTINGS_ENCRYPTED_DESCRIPTION",
+        getRecords().add(new SettingsRecord("core.mfs.encryption.enable", "SETTINGS_ENCRYPTED", "SETTINGS_ENCRYPTED_DESCRIPTION",
                 new JFXToggleButton() {{
 
-                    this.setSelected(Application.getInstance().getConfig().getBoolean("core.mfs.encrypted").orElse(false));
+                    this.setSelected(Application.getInstance().getConfig().getBoolean("core.mfs.encryption.enable").orElse(false));
                     this.setSize(8.0);
 
 
@@ -328,10 +328,10 @@ public class Settings extends StackPane implements Initializable, Themeable {
 
                         Application.getInstance().runThread(new Thread(() -> {
 
-                            Application.getInstance().getConfig().setBoolean("core.mfs.encrypted", n);
+                            Application.getInstance().getConfig().setBoolean("core.mfs.encryption.enable", n);
                             Application.getInstance().getConfig().update(null);
 
-                        }, "updateSettings()::core.mfs.encrypted"));
+                        }, "updateSettings()::core.mfs.encryption.enable"));
 
                     });
 

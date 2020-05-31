@@ -61,14 +61,16 @@ public class UploadTransferInfo extends TransferInfo {
 
             Files.createFile(getPath());
 
-            OutputStream writer = Files.newOutputStream(getPath());
-            InputStream reader = Files.newInputStream(localFile.toPath());
+            try(var writer = Files.newOutputStream(getPath())) {
+                try (var reader = Files.newInputStream(localFile.toPath())) {
 
-            while (reader.available() > 0)
-                writer.write(reader.readNBytes((int) MergeChunk.getDefaultSize()));
+                    while (reader.available() > 0)
+                        writer.write(reader.readNBytes((int) MergeChunk.getDefaultSize()));
 
-            writer.close();
-            reader.close();
+                }
+
+                writer.flush();
+            }
 
 
         } catch (Exception e) {

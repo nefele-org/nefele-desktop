@@ -81,26 +81,6 @@ javafx {
 }
 
 
-model {
-
-    platforms {
-        x64 {
-            architecture "x64"
-        }
-    }
-
-    components {
-        hello(NativeLibrarySpec) {
-            binaries.all {
-                cCompiler.args '-I', "${Jvm.current().javaHome}/include"
-                cCompiler.args '-I', "${Jvm.current().javaHome}/include/linux"
-                cCompiler.args '-D_FILE_OFFSET_BITS=64'
-            }
-        }
-    }
-
-}
-
 run {
 
     jvmArgs = [

@@ -177,7 +177,7 @@ public class GoogleDriveProvider extends DriveProvider {
                         .executeMediaAndDownloadTo(byteArrayOutputStream);
 
                 ByteBuffer byteBuffer = ByteBuffer.wrap(byteArrayOutputStream.toByteArray());
-                return byteBuffer.rewind();
+                return byteBuffer.flip();
 
             }
 

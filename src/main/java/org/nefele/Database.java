@@ -131,6 +131,9 @@ public class Database {
             else if(e.getErrorCode() == SQLiteErrorCode.SQLITE_LOCKED.code)
                 return update(sql, onPrepare, batch);
 
+            else if(e.getMessage().equals("database is locked"))    // SQLState: null, ErrorCode: 0...
+                return update(sql, onPrepare, batch);
+
             else if(e.getErrorCode() == SQLiteErrorCode.SQLITE_CORRUPT.code)
                 Application.panic(Database.class, "Database is gone, rest in peace :( [%s(%d)] %s", e.getSQLState(), e.getErrorCode(), e.getMessage());
 

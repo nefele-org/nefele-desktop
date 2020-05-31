@@ -136,80 +136,20 @@ public final class SharedFolder implements ApplicationService {
             throw new IllegalStateException();
         }
 
-        initialize();
-
     }
+
 
 
     @Override
     public void initialize() {
 
-        try {
+        registerWatchable(this.localPath, this.cloudPath);
 
-            final ArrayList<String> localFiles = new ArrayList<>();
-            final ArrayList<String> cloudFiles = new ArrayList<>();
-
-            Files.walk(localPath)
-                    .filter(Predicate.not(localPath::equals))
-                    .map(localPath::relativize)
-                    .map(Path::toString)
-                    .forEach(localFiles::add);
-
-            Files.walk(cloudPath)
-                    .filter(Predicate.not(cloudPath::equals))
-                    .map(cloudPath::relativize)
-                    .map(Path::toString)
-                    .forEach(cloudFiles::add);
-
-            localFiles
-                    .stream()
-                    .map(name -> name.replace(File.pathSeparator, MergeFileSystem.PATH_SEPARATOR))
-                    .filter(Predicate.not(cloudFiles::contains))
-                    .map(name -> name.replace(MergeFileSystem.PATH_SEPARATOR, File.pathSeparator))
-                    .forEach(i -> createQueue.add(new SharedEntry(HOST_CLOUD, localPath.resolve(i))));
-
-            cloudFiles
-                    .stream()
-                    .map(name -> name.replace(MergeFileSystem.PATH_SEPARATOR, File.pathSeparator))
-                    .filter(Predicate.not(localFiles::contains))
-                    .map(name -> name.replace(File.pathSeparator, MergeFileSystem.PATH_SEPARATOR))
-                    .forEach(i -> createQueue.add(new SharedEntry(HOST_LOCAL, cloudPath.resolve(i))));
-
-
-
-            try {
-
-                final WatchEvent.Kind<?>[] standardWatchEventsKind = new WatchEvent.Kind[] {
-                        StandardWatchEventKinds.ENTRY_CREATE,
-                        StandardWatchEventKinds.ENTRY_DELETE,
-                        StandardWatchEventKinds.ENTRY_MODIFY,
-                };
-
-                watchKeys.add(localPath.register(localWatchService,
-                        standardWatchEventsKind,
-                        ExtendedWatchEventModifier.FILE_TREE // FIXME: REMOVE FILE TREE
-                ));
-
-                watchKeys.add(cloudPath.register(cloudWatchService,
-                        standardWatchEventsKind,
-                        ExtendedWatchEventModifier.FILE_TREE
-                ));
-
-
-            } catch (IOException e) {
-                Application.log(getClass(), e, "watchKeys.add()");
-            }
-
-
-            Application.getInstance().runThread(new Thread(() -> watchServiceWorker(localWatchService), "SharedFolder::watchService::" + localPath));
-            Application.getInstance().runThread(new Thread(() -> watchServiceWorker(cloudWatchService), "SharedFolder::watchService::" + cloudPath));
-
-
-        } catch (Exception e) {
-            Application.log(getClass(), e,"SharedFolder %s", this);
-        }
+        Application.getInstance().runThread(new Thread(() -> watchServiceWorker(localWatchService), "SharedFolder::watchService::" + this.localPath));
+        Application.getInstance().runThread(new Thread(() -> watchServiceWorker(cloudWatchService), "SharedFolder::watchService::" + this.cloudPath));
 
     }
+
 
     @Override @SuppressWarnings("unchecked")
     public void update(ApplicationTask currentTask) {
@@ -236,9 +176,18 @@ public final class SharedFolder implements ApplicationService {
 
                         if(Files.notExists(q.getTarget())) {
 
-                            if (Files.isDirectory(q.getSource()))
+                            if (Files.isDirectory(q.getSource())) {
+
                                 Files.createDirectory(q.getTarget());
-                            else
+
+
+                                if(q.getSource() instanceof MergePath)
+                                    registerWatchable(q.getTarget(), q.getSource());
+                                else
+                                    registerWatchable(q.getSource(), q.getTarget());
+
+
+                            } else
                                 currentUpdateQueue.add(q);
 
                         }
@@ -455,6 +404,88 @@ public final class SharedFolder implements ApplicationService {
 
     }
 
+
+    public void registerWatchable(Path localPath, Path cloudPath) {
+
+        try {
+
+            final ArrayList<String> localFiles = new ArrayList<>();
+            final ArrayList<String> cloudFiles = new ArrayList<>();
+
+            Files.list(localPath)
+                    .map(localPath::relativize)
+                    .map(Path::toString)
+                    .forEach(localFiles::add);
+
+            Files.list(cloudPath)
+                    .map(cloudPath::relativize)
+                    .map(Path::toString)
+                    .forEach(cloudFiles::add);
+
+            localFiles
+                    .stream()
+                    .map(name -> name.replace(File.pathSeparator, MergeFileSystem.PATH_SEPARATOR))
+                    .filter(Predicate.not(cloudFiles::contains))
+                    .map(name -> name.replace(MergeFileSystem.PATH_SEPARATOR, File.pathSeparator))
+                    .forEach(i -> createQueue.add(new SharedEntry(HOST_CLOUD, localPath.resolve(i))));
+
+            cloudFiles
+                    .stream()
+                    .map(name -> name.replace(MergeFileSystem.PATH_SEPARATOR, File.pathSeparator))
+                    .filter(Predicate.not(localFiles::contains))
+                    .map(name -> name.replace(File.pathSeparator, MergeFileSystem.PATH_SEPARATOR))
+                    .forEach(i -> createQueue.add(new SharedEntry(HOST_LOCAL, cloudPath.resolve(i))));
+
+
+
+
+
+            final WatchEvent.Kind<?>[] standardWatchEventsKind = new WatchEvent.Kind[] {
+                    StandardWatchEventKinds.ENTRY_CREATE,
+                    StandardWatchEventKinds.ENTRY_DELETE,
+                    StandardWatchEventKinds.ENTRY_MODIFY,
+            };
+
+
+            Files.walk(localPath)
+                    .filter(Files::isDirectory)
+                    .forEach(path -> {
+
+                        try {
+
+                            watchKeys.add(path.register(localWatchService,
+                                    standardWatchEventsKind
+                            ));
+
+                        } catch (IOException e) {
+                            Application.log(getClass(), e, "watchKeys.add()");
+                        }
+
+                    });
+
+
+            Files.walk(cloudPath)
+                    .filter(Files::isDirectory)
+                    .forEach(path -> {
+
+                        try {
+
+                            watchKeys.add(path.register(cloudWatchService,
+                                    standardWatchEventsKind
+                            ));
+
+                        } catch (IOException e) {
+                            Application.log(getClass(), e, "watchKeys.add()");
+                        }
+
+                    });
+
+
+        } catch (Exception e) {
+            Application.log(getClass(), e,"SharedFolder %s", this);
+        }
+
+    }
 
 
     @Override

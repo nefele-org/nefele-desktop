@@ -44,6 +44,7 @@ import org.nefele.ui.controls.NefelePane;
 import org.nefele.ui.dialog.Dialogs;
 import org.nefele.ui.scenes.Home;
 import org.nefele.ui.SplashScreen;
+import org.nefele.utils.CryptoUtils;
 import org.nefele.utils.PlatformUtils;
 
 import java.nio.file.Path;
@@ -124,6 +125,7 @@ public final class Application extends javafx.application.Application implements
         Resources.getFont(this, "/font/segoeuii.ttf");
 
 
+        CryptoUtils.initialize();
 
         getServiceManager().register(getConfig(), "Config",
                 true, 30, 30, TimeUnit.SECONDS);
@@ -208,8 +210,9 @@ public final class Application extends javafx.application.Application implements
             PlatformUtils
                     .runLaterAndWait(serviceManager::shutdown);
 
-
             try {
+
+                Thread.sleep(5000); // FIXME: Find a better way
 
                 Application.log(Application.class, "Doing a genocide");
 

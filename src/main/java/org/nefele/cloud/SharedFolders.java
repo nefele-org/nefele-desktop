@@ -24,6 +24,7 @@
 
 package org.nefele.cloud;
 
+import org.nefele.Application;
 import org.nefele.ApplicationService;
 import org.nefele.ApplicationTask;
 import org.nefele.fs.MergePath;
@@ -72,9 +73,19 @@ public final class SharedFolders implements ApplicationService {
 
 
     public <T extends SharedFolder & ApplicationService> void addSharedFolderService(T service) {
+
         synchronized (sharedFolders) {
+
             sharedFolders.add(service);
+
+            try {
+                service.initialize();
+            } catch (Exception e) {
+                sharedFolders.remove(service);
+                Application.log(getClass(), e, "addSharedFolderService(): " + service);
+            }
         }
+
     }
 
     public <T extends SharedFolder & ApplicationService> void removeSharedFolderServiceByPath(MergePath path) {

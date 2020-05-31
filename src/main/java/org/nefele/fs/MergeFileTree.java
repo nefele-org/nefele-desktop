@@ -67,8 +67,7 @@ public class MergeFileTree {
 
             final var currentParent = parent;
 
-            walker = fileSystem.getStorage().getInodes()
-                    .stream()
+            walker = fileSystem.getStorage().getInodeStream()
                     .filter(i -> i.getName().equals(path) && i.getParent().equals(currentParent))
                     .findFirst()
                     .orElse(null);
@@ -97,8 +96,7 @@ public class MergeFileTree {
         if(id.isEmpty())
             return null;
 
-        var result = fileSystem.getStorage().getInodes()
-                .stream()
+        var result = fileSystem.getStorage().getInodeStream()
                 .filter(i -> i.getId().equals(id))
                 .findFirst()
                 .orElse(null);
@@ -131,8 +129,7 @@ public class MergeFileTree {
 
     public Set<MergeNode> listChildren(MergeNode inode) {
 
-        return fileSystem.getStorage().getInodes()
-                .stream()
+        return fileSystem.getStorage().getInodeStream()
                 .filter(i -> i.getParent().equals(inode.getId()))
                 .collect(Collectors.toUnmodifiableSet());
 

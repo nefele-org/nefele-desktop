@@ -179,8 +179,8 @@ public class MergePath implements Path {
                 return getRoot();
             else
                 return new MergePath(fileSystem, fileSystem.getFileTree().resolve(inode.getParent()),
-                        String.join(MergeFileSystem.PATH_SEPARATOR, names.subList(0, names.size() - 1)),
-                        String.join(MergeFileSystem.PATH_SEPARATOR, names.subList(0, names.size() - 1)));
+                        MergeFileSystem.ROOT + String.join(MergeFileSystem.PATH_SEPARATOR, names.subList(0, names.size() - 1)),
+                        MergeFileSystem.ROOT + String.join(MergeFileSystem.PATH_SEPARATOR, names.subList(0, names.size() - 1)));
 
         } catch (MergeFileSystemException e) {
             Application.panic(getClass(), e);

@@ -122,7 +122,7 @@ public class OfflineDriveProvider extends DriveProvider {
             }
 
 
-            return byteBuffer.rewind();
+            return byteBuffer.flip();
 
         } catch (Exception e) {
             throw new TransferInfoAbortException(e.getMessage());
@@ -138,6 +138,9 @@ public class OfflineDriveProvider extends DriveProvider {
 
             Files.delete(drivePath
                     .resolve(Paths.get(chunk.getId())));
+
+            Files.delete(drivePath
+                    .resolve(Paths.get(chunk.getId() + ".rev")));
 
         } catch (Exception e) {
             throw new TransferInfoAbortException(e.getMessage());

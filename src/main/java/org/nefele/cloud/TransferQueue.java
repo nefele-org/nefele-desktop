@@ -31,6 +31,7 @@ import javafx.util.Pair;
 import org.nefele.Application;
 import org.nefele.ApplicationService;
 import org.nefele.ApplicationTask;
+import org.nefele.utils.PlatformUtils;
 
 import java.nio.file.Files;
 import java.util.concurrent.*;
@@ -52,7 +53,7 @@ public class TransferQueue implements ApplicationService {
                 .register(this, "TransferQueue", true, TRANSFER_QUEUE_INTERVAL, TRANSFER_QUEUE_INTERVAL, TimeUnit.MILLISECONDS);
 
         Application.getInstance().getServiceManager()
-                .register(executorService, "TransferExecutorQueue", true, 500, 500, TimeUnit.MILLISECONDS);
+                .register(executorService, "TransferExecutorQueue", true, 250, 250, TimeUnit.MILLISECONDS);
 
     }
 
@@ -60,11 +61,10 @@ public class TransferQueue implements ApplicationService {
 
     public Future<Integer> enqueue(TransferInfo i) {
 
-        Future<Integer> future;
+        final Future<Integer> future = executorService.submit(i::execute);
 
-        synchronized (transferQueue) {
-            transferQueue.add(new Pair<>(i, (future = executorService.submit(i::execute))));
-        }
+        PlatformUtils.runLaterAndWait(() ->
+            transferQueue.add(new Pair<>(i, future)));
 
         return future;
 

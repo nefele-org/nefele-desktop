@@ -132,23 +132,29 @@ public class DownloadTransferInfo extends TransferInfo {
         try {
 
             if (!localFile.exists())
-                localFile.createNewFile();
+                Files.createFile(localFile.toPath());
 
 
-            OutputStream outputStream = Files.newOutputStream(localFile.toPath());
-            InputStream inputStream = Files.newInputStream(getPath());
+            try(var outputStream = Files.newOutputStream(localFile.toPath())) {
+                try (var inputStream = Files.newInputStream(getPath())) {
 
-            while (inputStream.available() > 0) {
+                    while (inputStream.available() > 0) {
 
-                var bytes = new byte[Math.min(PREPARE_BLOCK_SIZE, inputStream.available())];
+                        var bytes = new byte[Math.min(PREPARE_BLOCK_SIZE, inputStream.available())];
 
-                if(inputStream.read(bytes) > 0)
-                    outputStream.write(bytes);
+                        if (inputStream.read(bytes) > 0)
+                            outputStream.write(bytes);
+
+                    }
+
+                }
+
+
+                outputStream.flush();
 
             }
 
-            outputStream.close();
-            inputStream.close();
+
 
 
         } catch (Exception e) {

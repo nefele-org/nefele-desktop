@@ -25,9 +25,7 @@
 package org.nefele.ui.controls;
 
 import javafx.beans.property.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
+import javafx.collections.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
@@ -51,6 +49,7 @@ import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Predicate;
 
 import static java.util.Objects.requireNonNull;
 
@@ -159,11 +158,19 @@ public class FileBrowser extends ScrollPane implements Initializable, Themeable 
 
             while(change.next()) {
 
-                if(change.wasRemoved())
-                    change.getRemoved().forEach(cellPane.getChildren()::remove);
+                if(change.wasRemoved()) {
+                    change.getRemoved()
+                            .stream()
+                            .filter(cellPane.getChildren()::contains)
+                            .forEach(cellPane.getChildren()::remove);
+                }
 
-                if(change.wasAdded())
-                    change.getAddedSubList().forEach(cellPane.getChildren()::add);
+                if(change.wasAdded()) {
+                    change.getAddedSubList()
+                            .stream()
+                            .filter(Predicate.not(cellPane.getChildren()::contains))
+                            .forEach(cellPane.getChildren()::add);
+                }
 
             }
 

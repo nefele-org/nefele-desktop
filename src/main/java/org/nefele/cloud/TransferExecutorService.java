@@ -118,9 +118,6 @@ public class TransferExecutorService extends ThreadPoolExecutor implements Appli
     @Override
     public void initialize() {
 
-        Application.getInstance().runWorker(new Thread(
-                this::updatePool, "TransferExecutorService::updatePool()"), 0, 250, TimeUnit.MILLISECONDS);
-
     }
 
     @Override

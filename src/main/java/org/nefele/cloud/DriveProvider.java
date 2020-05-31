@@ -183,8 +183,7 @@ public abstract class DriveProvider {
                 .getFileSystem(URI.create("nefele:///")))
                 .getStorage();
 
-        return storage.getInodes()
-                .stream()
+        return storage.getInodeStream()
                 .flatMap(i -> i.getChunks().stream())
                 .collect(Collectors.toList())
                 .stream()
