@@ -69,6 +69,7 @@ public final class Application extends javafx.application.Application implements
     private final Views views;
     private final ObjectProperty<Theme> theme;
     private final Path dataPath;
+    private final ApplicationLogger applicationLogger;
 
     private Stage primaryStage;
 
@@ -82,6 +83,7 @@ public final class Application extends javafx.application.Application implements
         dataPath = Paths.get(System.getProperty("user.home"), ".nefele");
         running = new AtomicBoolean(true);
 
+        applicationLogger = new ApplicationLogger();
         serviceManager = new ApplicationServiceManager();
         database = new Database();
         config = new Config(database);
@@ -161,7 +163,10 @@ public final class Application extends javafx.application.Application implements
 
             Application.log(getClass(), "Initialize theme");
 
-            setTheme(new Theme(getConfig().getString("app.ui.theme").orElse(Theme.DEFAULT_THEME)));
+            setTheme(new Theme(getConfig()
+                    .getString("app.ui.theme")
+                    .orElse(Theme.DEFAULT_THEME)
+            ));
 
 
 
@@ -205,9 +210,11 @@ public final class Application extends javafx.application.Application implements
             PlatformUtils
                     .runLaterAndWait(serviceManager::shutdown);
 
+
             try {
 
-                Thread.sleep(5000); // FIXME: Find a better way
+                Thread.sleep(5000); // FIXME: Find a better way to wait service manager
+
 
                 Application.log(Application.class, "Doing a genocide");
 
@@ -219,16 +226,15 @@ public final class Application extends javafx.application.Application implements
                 executorService.shutdown();
                 executorService.awaitTermination(1, TimeUnit.SECONDS);
 
-
-            } catch (InterruptedException e) {
-                Application.panic(Application.class, e);
-            }
+            } catch (InterruptedException ignored ) { }
 
 
             Application.log(Application.class, "Goodbye!");
+
+            getApplicationLogger().close();
             System.exit(0);
 
-        }).start();
+        }, "Application::BackgroundUnloading").start();
 
 
         super.stop();
@@ -310,6 +316,10 @@ public final class Application extends javafx.application.Application implements
         return primaryStage;
     }
 
+    public ApplicationLogger getApplicationLogger() {
+        return applicationLogger;
+    }
+
     public Theme getTheme() {
         return theme.get();
     }
@@ -323,9 +333,16 @@ public final class Application extends javafx.application.Application implements
     }
 
 
+
+
+
+
+
     public static Application getInstance() {
         return requireNonNull(instance);
     }
+
+
 
     public static void panic(Class<?> className, String message, Object... args) {
 
@@ -387,7 +404,18 @@ public final class Application extends javafx.application.Application implements
     }
 
     public static void log(Class<?> className, String message, Object... args) {
-        System.err.println(String.format("[%s] (%s) %s", Date.from(Instant.now()).toString(), className.getName(), String.format(message, args)));
+
+        var logMessage = String.format(
+            "[%s] (%s) %s", Date.from(Instant.now()).toString(), className.getName(), String.format(message, args)
+        );
+
+
+        if(Application.getInstance() != null)
+            if(Application.getInstance().getApplicationLogger() != null)
+                Application.getInstance().getApplicationLogger().writeLog(logMessage);
+
+        System.err.println(logMessage);
+
     }
 
 
@@ -400,5 +428,7 @@ public final class Application extends javafx.application.Application implements
         Application.log(Application.class, "Garbage collected, %d MB freed", (m0 - m1) / 1024 / 1024);
 
     }
+
+
 
 }

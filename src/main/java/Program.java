@@ -24,18 +24,16 @@
 
 import org.nefele.Application;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Instant;
 
 
 public class Program {
-
-//    static {
-//        System.setProperty("java.library.path", "build/libs/hello/shared"); // FIXME
-//        System.loadLibrary("hello");
-//    }
 
 
     public static void main(String[] args) {
@@ -58,6 +56,9 @@ public class Program {
             if (Files.notExists(dataPath.resolve(Paths.get("drive"))))
                 Files.createDirectory(dataPath.resolve(Paths.get("drive")));
 
+            if (Files.notExists(dataPath.resolve(Paths.get("logs"))))
+                Files.createDirectory(dataPath.resolve(Paths.get("logs")));
+
             if(Files.notExists(dataPath.resolve(Paths.get("nefele.db"))))
                 Files.write(dataPath.resolve(Paths.get("nefele.db")), Program.class.getResourceAsStream("/setup/nefele.db").readAllBytes());
 
@@ -68,6 +69,7 @@ public class Program {
         }
 
         javafx.application.Application.launch(Application.class, args);
+
     }
 
 }
