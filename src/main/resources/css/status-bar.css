@@ -34,6 +34,6 @@
     -fx-font-size: 12;
 }
 
-.status-bar .glyph-icon {   /* TODO: remove this */
-    -fx-fill: darkorange;
+.status-bar .glyph-icon {
+    -fx-fill: -nefele-theme-primary;
 }

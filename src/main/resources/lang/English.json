@@ -12,6 +12,14 @@
     "ERROR_FILE_UPLOAD" : "An error occurred while uploading the file or folder",
 
 
+    "STATUS_READY" : "Ready!",
+    "STATUS_NETWORK_DOWN" : "No network connection available",
+    "STATUS_TRANSFER_RUNNING" : "Transfer running for",
+    "STATUS_TRANSFER_COMPLETED" : "Transfer completed for",
+    "STATUS_DRIVE_FULL" : "Drive is full, remove something or increase storage space",
+    "STATUS_DRIVE_EMPTY" : "No ready drive available, please add one on Drive Manager tab",
+
+
     "DIALOG_CONTINUE" : "Continue",
     "DIALOG_OK" : "Ok",
     "DIALOG_ABORT" : "Cancel",

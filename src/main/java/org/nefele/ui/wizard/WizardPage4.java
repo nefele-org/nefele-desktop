@@ -32,8 +32,8 @@ import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.VBox;
 import org.nefele.Application;
-import org.nefele.Resources;
-import org.nefele.ui.scenes.SettingsRecord;
+import org.nefele.core.Resources;
+import org.nefele.ui.scenes.settings.SettingsRecord;
 
 import java.net.URL;
 import java.util.ResourceBundle;

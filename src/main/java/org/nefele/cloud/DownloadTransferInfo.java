@@ -26,6 +26,7 @@ package org.nefele.cloud;
 
 import javafx.application.Platform;
 import org.nefele.Application;
+import org.nefele.ui.scenes.Status;
 import org.nefele.fs.MergeChunk;
 import org.nefele.fs.MergePath;
 
@@ -54,6 +55,9 @@ public class DownloadTransferInfo extends TransferInfo {
 
         Application.log(getClass(), "Started DownloadTransferInfo() for %s (size: %d)", getPath().toString(), getSize());
 
+
+        Application.getInstance().getStatus()
+                .updateMessage(Status.ICON_TRANSFERS, "STATUS_TRANSFER_RUNNING", getName());
 
 
         for(MergeChunk chunk : getPath().getInode().getChunks()) {
@@ -105,6 +109,9 @@ public class DownloadTransferInfo extends TransferInfo {
                     } catch (Exception e) {
 
                         Application.log(getClass(), e, "Something wrong, transfer canceled for %s", chunk.getId());
+
+                        Application.getInstance().getStatus()
+                                .updateMessage(Status.ICON_ALERT, "STATUS_TRANSFER_ERROR", getName());
 
                         setStatus(TRANSFER_STATUS_ERROR);
                         return getStatus();
@@ -168,6 +175,10 @@ public class DownloadTransferInfo extends TransferInfo {
 
 
         Application.log(getClass(), "Completed DownloadTransferInfo() for %s (size: %d) in %s", getPath().toString(), getSize(), localFile.getAbsolutePath());
+
+        Application.getInstance().getStatus()
+                .updateMessage(Status.ICON_TRANSFERS, "STATUS_TRANSFER_COMPLETED", getName());
+
 
         setStatus(TRANSFER_STATUS_COMPLETED);
         return getStatus();

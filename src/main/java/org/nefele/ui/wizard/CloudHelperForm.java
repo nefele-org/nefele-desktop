@@ -34,7 +34,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import org.nefele.Application;
-import org.nefele.Resources;
+import org.nefele.core.Resources;
 import org.nefele.Themeable;
 
 import java.net.URL;
@@ -71,10 +71,6 @@ public class CloudHelperForm extends StackPane implements Initializable, Themeab
         Application.getInstance().getViews().add(this);
     }
 
-    @Override
-    public void initializeInterface() {
-
-    }
 
 
     public String getDescription() {

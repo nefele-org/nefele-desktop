@@ -1,7 +1,7 @@
 package org.nefele.ui.dialog;
 
 import javafx.scene.image.Image;
-import org.nefele.Resources;
+import org.nefele.core.Resources;
 
 public class InfoDialog extends BaseDialog {
     public InfoDialog(String title, String message) {

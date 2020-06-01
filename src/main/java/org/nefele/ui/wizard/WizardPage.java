@@ -55,11 +55,6 @@ public abstract class WizardPage extends StackPane implements Initializable, The
 
     }
 
-    @Override
-    public void initializeInterface() {
-
-    }
-
     
     public boolean isChecked() {
         return checked.get();

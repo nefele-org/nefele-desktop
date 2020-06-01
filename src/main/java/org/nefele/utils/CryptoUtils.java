@@ -27,6 +27,7 @@ package org.nefele.utils;
 import org.nefele.Application;
 
 import javax.crypto.*;
+import javax.crypto.spec.IvParameterSpec;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,6 +37,7 @@ import java.security.*;
 import java.security.cert.CertificateException;
 
 import static java.util.Objects.requireNonNull;
+import static java.util.Objects.requireNonNullElseGet;
 
 public final class CryptoUtils {
 
@@ -106,16 +108,18 @@ public final class CryptoUtils {
                     .getString("core.mfs.encryption.algorithm")
                     .orElse(DEFAULT_ALGORITHM));
 
-            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec(new byte[cipher.getBlockSize()]));
 
+
+            final var outputSize = cipher.getOutputSize(byteBuffer.remaining());
 
             ByteBuffer outputBuffer = ByteBuffer
-                    .allocateDirect(cipher.getOutputSize(byteBuffer.remaining()));
+                    .allocateDirect(outputSize);
 
             cipher.doFinal(byteBuffer, outputBuffer);
             return outputBuffer.flip();
 
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException | ShortBufferException | InvalidKeyException e) {
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException | ShortBufferException | InvalidKeyException | InvalidAlgorithmParameterException e) {
             Application.panic(CryptoUtils.class, e);
         }
 
@@ -139,7 +143,7 @@ public final class CryptoUtils {
                 .getString("core.mfs.encryption.algorithm")
                 .orElse(DEFAULT_ALGORITHM));
 
-            cipher.init(Cipher.DECRYPT_MODE, secretKey);
+            cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(new byte[cipher.getBlockSize()]));
 
 
             ByteArrayInputStream stream;
@@ -150,7 +154,7 @@ public final class CryptoUtils {
 
             return stream;
 
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IOException e) {
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IOException | InvalidAlgorithmParameterException e) {
             Application.panic(CryptoUtils.class, e);
         }
 

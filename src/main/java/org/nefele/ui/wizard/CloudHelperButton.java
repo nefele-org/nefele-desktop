@@ -32,7 +32,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import org.nefele.Application;
-import org.nefele.Resources;
+import org.nefele.core.Resources;
 import org.nefele.Themeable;
 import org.nefele.cloud.DriveNotFoundException;
 import org.nefele.cloud.DriveProvider;
@@ -114,13 +114,14 @@ public class CloudHelperButton extends JFXButton implements Initializable, Theme
 
         });
 
+        tooltip.setUserData(getItem().getHint());
+
         Application.getInstance().getViews().add(this);
     }
 
     @Override
     public void initializeInterface() {
         Resources.getCSS(this, "/css/cloud-helper-text.css");
-        tooltip.setUserData(getItem().getHint());
     }
 
     public String getName() { return name.get(); }

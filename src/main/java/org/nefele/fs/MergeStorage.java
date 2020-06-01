@@ -165,11 +165,11 @@ public class MergeStorage implements ApplicationService {
 
             InputStream inputStream = Files.newInputStream(cachePath.resolve(chunk.getId()));
 
-            if(chunk.isEncrypted() && !raw)
-                 inputStream = CryptoUtils.decrypt(inputStream);
-
             if(chunk.isCompressed() && !raw)
                 inputStream = new InflaterInputStream(inputStream, new Inflater(true));
+
+            if(chunk.isEncrypted() && !raw)
+                inputStream = CryptoUtils.decrypt(inputStream);
 
             return inputStream;
 

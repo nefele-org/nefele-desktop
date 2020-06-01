@@ -54,7 +54,7 @@ public class TransferExecutorService extends ThreadPoolExecutor implements Appli
 
         RunnableFuture<T> runnableFuture = this.newTaskFor(task);
 
-        if(runningTask.size() < maximumThreadActiveCount) {
+        if(runningTask.size() < maximumThreadActiveCount && Application.getInstance().getStatus().isNetworkConnected()) {
             startThread(runnableFuture);
         } else
             pendingTask.add(runnableFuture);
@@ -110,8 +110,13 @@ public class TransferExecutorService extends ThreadPoolExecutor implements Appli
 
         runningTask.removeIf(RunnableFuture::isDone);
 
-        while(!pendingTask.isEmpty() && (runningTask.size() < maximumThreadActiveCount))
-            startThread(pendingTask.pop());
+
+        if(Application.getInstance().getStatus().isNetworkConnected()) {
+
+            while (!pendingTask.isEmpty() && (runningTask.size() < maximumThreadActiveCount))
+                startThread(pendingTask.pop());
+
+        }
 
     }
 

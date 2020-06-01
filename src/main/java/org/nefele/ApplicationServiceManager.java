@@ -56,7 +56,7 @@ public class ApplicationServiceManager {
             setExecutor(executorService);
 
             setOnFailed((i) -> {
-                if(restartable)
+                if(restartable && booted.get())
                     restart();
             });
 
@@ -107,11 +107,12 @@ public class ApplicationServiceManager {
 
     public void shutdown() {
 
+        booted.set(false);
+
         registeredModules
                 .forEach(ApplicationFuture::close);
 
         executorService.shutdown();
-        booted.set(false);
 
     }
 

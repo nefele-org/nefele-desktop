@@ -33,7 +33,7 @@ import com.dropbox.core.v2.files.UploadUploader;
 import com.dropbox.core.v2.users.FullAccount;
 import com.dropbox.core.v2.users.SpaceUsage;
 import org.nefele.Application;
-import org.nefele.Resources;
+import org.nefele.core.Resources;
 import org.nefele.cloud.*;
 import org.nefele.fs.MergeChunk;
 import org.nefele.ui.dialog.Dialogs;

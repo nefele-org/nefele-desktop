@@ -12,6 +12,13 @@
     "ERROR_FILE_UPLOAD" : "Si è verificato un errore durante l'upload del file e/o cartella",
 
 
+    "STATUS_READY" : "Pronto!",
+    "STATUS_NETWORK_DOWN" : "Nessuna connessione ad internet",
+    "STATUS_TRANSFER_RUNNING" : "Trasferimento in corso di",
+    "STATUS_TRANSFER_COMPLETED" : "Trasferimento completato di",
+    "STATUS_DRIVE_FULL" : "Il Drive è pieno, rimuovi qualcosa o incrementa lo spazio d'archiviazione",
+    "STATUS_DRIVE_EMPTY" : "Nessun drive attivo disponibile, aggiungine uno dal Drive Manager",
+
     "DIALOG_CONTINUE" : "Continua",
     "DIALOG_OK" : "Ok",
     "DIALOG_ABORT" : "Annulla",

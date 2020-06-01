@@ -42,8 +42,8 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.nefele.Application;
-import org.nefele.Resources;
-import org.nefele.Theme;
+import org.nefele.core.Resources;
+import org.nefele.core.Theme;
 import org.nefele.Themeable;
 
 import java.net.URL;
@@ -241,9 +241,9 @@ public class NefelePane extends StackPane implements Initializable, Themeable {
         toggleDarkMode.visibleProperty().bind(showDarkModeProperty());
         iconDarkMode.visibleProperty().bind(showDarkModeProperty());
         awesomeLogo.visibleProperty().bind(showLogoProperty());
-        statusBar.visibleProperty().bind(showStatusBarProperty());
         resizeHandle.visibleProperty().bind(resizableProperty());
-
+        statusBar.visibleProperty().bind(showStatusBarProperty());
+        statusBar.managedProperty().bind(showStatusBarProperty());
 
 
         statusText.textProperty().bind(Application.getInstance().getStatus().textProperty());

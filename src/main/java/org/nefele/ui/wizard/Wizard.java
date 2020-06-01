@@ -36,7 +36,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
 import org.nefele.Application;
-import org.nefele.Resources;
+import org.nefele.core.Resources;
 import org.nefele.Themeable;
 import org.nefele.ui.controls.NefeleContentPane;
 
@@ -126,10 +126,6 @@ public class Wizard extends NefeleContentPane implements Initializable, Themeabl
         Application.getInstance().getViews().add(this);
     }
 
-    @Override
-    public void initializeInterface() {
-
-    }
 
     public ArrayList<WizardPage> getParents() {
         return parents;

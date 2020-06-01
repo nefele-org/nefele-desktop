@@ -36,7 +36,9 @@ import javazoom.jl.player.Player;
 import org.nefele.cloud.DriveProviders;
 import org.nefele.cloud.SharedFolders;
 import org.nefele.cloud.TransferQueue;
-import org.nefele.ui.SplashScreen;
+import org.nefele.core.*;
+import org.nefele.ui.scenes.Status;
+import org.nefele.ui.scenes.SplashScreen;
 import org.nefele.ui.controls.NefelePane;
 import org.nefele.ui.dialog.Dialogs;
 import org.nefele.ui.scenes.Home;
@@ -124,11 +126,15 @@ public final class Application extends javafx.application.Application implements
 
         CryptoUtils.initialize();
 
+
         getServiceManager().register(getConfig(), "Config",
                 true, 30, 30, TimeUnit.SECONDS);
 
         getServiceManager().register(getLocale(), "Locale",
                 true, 30, 30, TimeUnit.SECONDS);
+
+        getServiceManager().register(getStatus(), "Status",
+                true, 100, 3000, TimeUnit.MILLISECONDS);
 
         getServiceManager().register(Mimes.getInstance(), "Mimes",
                 true, 365, 365, TimeUnit.DAYS);
@@ -185,6 +191,9 @@ public final class Application extends javafx.application.Application implements
                 stage.setMinHeight(400);
                 stage.setWidth(800);
                 stage.setHeight(480);
+
+                Application.getInstance().getStatus()
+                        .updateMessage(Status.ICON_SUCCESS, "STATUS_READY");
 
             });
 

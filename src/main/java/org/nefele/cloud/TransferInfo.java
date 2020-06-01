@@ -25,6 +25,7 @@
 package org.nefele.cloud;
 
 import javafx.beans.property.*;
+import org.nefele.fs.MergeChunk;
 import org.nefele.fs.MergeFileSystem;
 import org.nefele.fs.MergePath;
 
@@ -66,13 +67,20 @@ public abstract class TransferInfo {
 
 
         this.name = new SimpleStringProperty(path.getFileName().toString());
-        this.size =  new SimpleLongProperty(path.getInode().getSize());
         this.type = new SimpleIntegerProperty(type);
         this.progress = new SimpleLongProperty(0L);
         this.status = new SimpleIntegerProperty(TRANSFER_STATUS_READY);
         this.speed = new SimpleIntegerProperty(0);
         this.path = new SimpleObjectProperty<>(path);
         this.fileSystem = new SimpleObjectProperty<>((MergeFileSystem) path.getFileSystem());
+
+        this.size =  new SimpleLongProperty(
+                path.getInode().getChunks()
+                        .stream()
+                        .mapToLong(MergeChunk::getSize)
+                        .sum()
+        );
+
 
     }
 

@@ -25,8 +25,8 @@
 package org.nefele.fs;
 
 import org.nefele.Application;
-import org.nefele.Mime;
-import org.nefele.Mimes;
+import org.nefele.core.Mime;
+import org.nefele.core.Mimes;
 import org.nefele.cloud.DriveProvider;
 import org.nefele.cloud.DriveProviders;
 

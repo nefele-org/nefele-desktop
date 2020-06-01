@@ -34,7 +34,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.nefele.Application;
-import org.nefele.Resources;
+import org.nefele.core.Resources;
 import org.nefele.cloud.DriveProvider;
 import org.nefele.cloud.DriveProviders;
 import org.nefele.cloud.providers.DropboxDriveProvider;

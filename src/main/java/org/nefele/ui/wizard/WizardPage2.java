@@ -31,7 +31,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import org.nefele.Application;
-import org.nefele.Resources;
+import org.nefele.core.Resources;
 
 import java.net.URL;
 import java.util.ResourceBundle;

@@ -43,8 +43,8 @@ public class ApplicationFuture extends Service<Void> {
 
     public ApplicationFuture(ApplicationService module, String serviceName, long delay, long period, TimeUnit timeUnit) {
         this.module = module;
-        this.period = timeUnit.toMillis(delay);
-        this.delay = timeUnit.toMillis(period);
+        this.delay = timeUnit.toMillis(delay);
+        this.period = timeUnit.toMillis(period);
         this.serviceName = serviceName;
     }
 

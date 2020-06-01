@@ -28,7 +28,7 @@ import com.jfoenix.controls.JFXComboBox;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import org.nefele.Application;
-import org.nefele.Resources;
+import org.nefele.core.Resources;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -67,12 +67,9 @@ public class WizardPage1 extends WizardPage {
 
         });
 
-        Application.getInstance().getViews().add(this);
-    }
-
-    @Override
-    public void initializeInterface() {
         setChecked(true);
+
+        Application.getInstance().getViews().add(this);
     }
 
 }

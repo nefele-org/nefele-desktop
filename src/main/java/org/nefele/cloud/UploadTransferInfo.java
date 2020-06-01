@@ -26,6 +26,7 @@ package org.nefele.cloud;
 
 import javafx.application.Platform;
 import org.nefele.Application;
+import org.nefele.ui.scenes.Status;
 import org.nefele.fs.MergeChunk;
 import org.nefele.fs.MergePath;
 
@@ -76,6 +77,16 @@ public class UploadTransferInfo extends TransferInfo {
 
             Application.log(getClass(), e, "Something wrong, preparing canceled for %s", localFile.getAbsolutePath());
 
+            if(e instanceof DriveNotFoundException) {
+                Application.getInstance().getStatus()
+                        .updateMessage(Status.ICON_ALERT, "STATUS_DRIVE_EMPTY");
+
+            } else {
+                Application.getInstance().getStatus()
+                        .updateMessage(Status.ICON_ALERT, "STATUS_TRANSFER_ERROR", getName());
+
+            }
+
             setStatus(TRANSFER_STATUS_ERROR);
             return getStatus();
 
@@ -83,9 +94,13 @@ public class UploadTransferInfo extends TransferInfo {
 
 
 
+
         setStatus(TRANSFER_STATUS_RUNNING);
         Application.log(getClass(), "Started UploadTransferInfo() for %s (size: %d)", getPath().toString(), getSize());
 
+
+        Application.getInstance().getStatus()
+                .updateMessage(Status.ICON_TRANSFERS, "STATUS_TRANSFER_RUNNING", getName());
 
 
         for (MergeChunk chunk : getPath().getInode().getChunks()) {
@@ -142,6 +157,17 @@ public class UploadTransferInfo extends TransferInfo {
 
                     Application.log(getClass(), e, "Something wrong, transfer canceled for %s", chunk.getId());
 
+
+                    if(e instanceof DriveFullException) {
+                        Application.getInstance().getStatus()
+                                .updateMessage(Status.ICON_ALERT, "STATUS_DRIVE_FULL");
+
+                    } else {
+                        Application.getInstance().getStatus()
+                                .updateMessage(Status.ICON_ALERT, "STATUS_TRANSFER_ERROR", getName());
+
+                    }
+
                     setStatus(TRANSFER_STATUS_ERROR);
                     return getStatus();
 
@@ -164,6 +190,10 @@ public class UploadTransferInfo extends TransferInfo {
 
 
         Application.log(getClass(), "Completed UploadTransferInfo() for %s (size: %d)", getPath().toString(), getSize());
+
+        Application.getInstance().getStatus()
+                .updateMessage(Status.ICON_TRANSFERS, "STATUS_TRANSFER_COMPLETED", getName());
+
 
         setStatus(TRANSFER_STATUS_COMPLETED);
         return getStatus();
