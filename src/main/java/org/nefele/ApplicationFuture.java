@@ -28,6 +28,7 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ApplicationFuture extends Service<Void> {
 
@@ -59,13 +60,6 @@ public class ApplicationFuture extends Service<Void> {
     protected Task<Void> createTask() {
         return new ApplicationTask() {
 
-            {
-                setOnCancelled(i -> {
-                    Application.log(getClass(), "Unloading service %s", serviceName);
-                    module.close();
-                });
-            }
-
             @Override
             protected Void call() throws Exception {
 
@@ -77,7 +71,7 @@ public class ApplicationFuture extends Service<Void> {
                 } catch (InterruptedException e) {
 
                     if(!isCancelled())
-                        throw e;
+                        Application.log(getClass(), e);
 
                 }
 
@@ -91,14 +85,13 @@ public class ApplicationFuture extends Service<Void> {
                     } catch (InterruptedException e) {
 
                         if(!isCancelled())
-                            throw e;
+                            Application.log(getClass(), e);
 
                         break;
 
                     }
 
                 } while (Application.getInstance().isRunning() && !isCancelled());
-
 
                 return null;
 
@@ -117,5 +110,28 @@ public class ApplicationFuture extends Service<Void> {
 
     public String getServiceName() {
         return serviceName;
+    }
+
+
+    public void close() {
+
+        if(!cancel())
+            Application.log(getClass(), "WARNING! cancel() return false for %s: %s", getServiceName(), getState());
+
+        else {
+            while (isRunning())
+                Thread.yield();
+        }
+
+
+        Application.log(getClass(), "Unloading service %s", getServiceName());
+
+
+        try {
+            module.close();
+        } catch (Exception e) {
+            Application.log(getClass(), e, getServiceName());
+        }
+
     }
 }

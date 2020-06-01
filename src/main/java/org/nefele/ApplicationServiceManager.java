@@ -27,8 +27,10 @@ package org.nefele;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
@@ -37,12 +39,12 @@ public class ApplicationServiceManager {
 
     private final ExecutorService executorService;
     private final AtomicBoolean booted;
-    private final ObservableList<ApplicationFuture> registeredModules;
+    private final ArrayList<ApplicationFuture> registeredModules;
 
     public ApplicationServiceManager() {
         this.executorService = Executors.newCachedThreadPool();
         this.booted = new AtomicBoolean(false);
-        this.registeredModules = FXCollections.observableArrayList();
+        this.registeredModules = new ArrayList<>();
     }
 
 
@@ -106,8 +108,9 @@ public class ApplicationServiceManager {
     public void shutdown() {
 
         registeredModules
-                .forEach(ApplicationFuture::cancel);
+                .forEach(ApplicationFuture::close);
 
+        executorService.shutdown();
         booted.set(false);
 
     }

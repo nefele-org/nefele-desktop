@@ -115,10 +115,7 @@ public class TransferExecutorService extends ThreadPoolExecutor implements Appli
 
     }
 
-    @Override
-    public void initialize() {
 
-    }
 
     @Override
     public void update(ApplicationTask currentTask) {

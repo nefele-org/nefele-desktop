@@ -61,6 +61,7 @@ public abstract class ApplicationTask extends Task<Void> {
         return super.runAndReset();
     }
 
+
     protected abstract Void call() throws Exception;
 
 }

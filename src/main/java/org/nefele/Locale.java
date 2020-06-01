@@ -207,14 +207,5 @@ public class Locale implements ApplicationService {
 
     }
 
-    @Override
-    public void update(ApplicationTask currentTask) {
-
-    }
-
-    @Override
-    public void close() {
-
-    }
 
 }

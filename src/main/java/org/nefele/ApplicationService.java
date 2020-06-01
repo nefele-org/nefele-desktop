@@ -25,7 +25,17 @@
 package org.nefele;
 
 public interface ApplicationService extends AutoCloseable {
-    void initialize();
-    void update(ApplicationTask currentTask);
-    void close();
+
+    default void initialize() {
+
+    }
+
+    default void update(ApplicationTask currentTask) {
+
+    }
+
+    default void close() {
+
+    }
+
 }

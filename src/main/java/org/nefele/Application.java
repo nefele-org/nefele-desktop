@@ -141,7 +141,6 @@ public final class Application extends javafx.application.Application implements
 
 
 
-
         Application.log(getClass(), "Initialize interface");
         Platform.setImplicitExit(false);
 
@@ -212,9 +211,6 @@ public final class Application extends javafx.application.Application implements
 
 
             try {
-
-                Thread.sleep(5000); // FIXME: Find a better way to wait service manager
-
 
                 Application.log(Application.class, "Doing a genocide");
 

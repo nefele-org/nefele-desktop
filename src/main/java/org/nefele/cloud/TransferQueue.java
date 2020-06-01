@@ -138,9 +138,4 @@ public class TransferQueue implements ApplicationService {
 
     }
 
-    @Override
-    public void close() {
-
-    }
-
 }

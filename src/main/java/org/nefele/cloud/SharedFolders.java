@@ -48,25 +48,15 @@ public final class SharedFolders implements ApplicationService {
         sharedFolders = new HashSet<>();
     }
 
-    @Override
-    public void initialize() {
-
-    }
 
     @Override
     public void update(ApplicationTask currentTask) {
-
-        synchronized (sharedFolders) {
-            sharedFolders.forEach(i -> i.update(currentTask));
-        }
-
+         sharedFolders.forEach(i -> i.update(currentTask));
     }
 
     @Override
     public void close() {
-        synchronized (sharedFolders) {
-            sharedFolders.forEach(SharedFolder::close);
-        }
+        sharedFolders.forEach(SharedFolder::close);
     }
 
 
