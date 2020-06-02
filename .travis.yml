@@ -43,7 +43,7 @@ deploy:
   token:
     "$GH_TOKEN"
   file:
-    - build/distributions/${HOST}-nefele-desktop-1.0-SNAPSHOT.zip
+    - build/distributions/nefele-desktop-${HOST}-1.0-SNAPSHOT.zip
 
   overwrite: true
   draft: false
