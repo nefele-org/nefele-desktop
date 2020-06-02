@@ -111,7 +111,7 @@ public class TransferExecutorService extends ThreadPoolExecutor implements Appli
         runningTask.removeIf(RunnableFuture::isDone);
 
 
-        if(Application.getInstance().getStatus().isNetworkConnected()) {
+        if(Application.getInstance().getStatus().isNetworkConnected() && Application.getInstance().isRunning()) {
 
             while (!pendingTask.isEmpty() && (runningTask.size() < maximumThreadActiveCount))
                 startThread(pendingTask.pop());
