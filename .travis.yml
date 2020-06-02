@@ -11,13 +11,13 @@ jobs:
         - HOST="linux"
       before_install:
         - chmod +x ./gradlew
-      after_script:
+      script:
         - ./gradlew distZip -PHOST=$HOST
 
     - os: windows
       env:
         - HOST="win64"
-      after_script:
+      script:
         - gradlew.bat distZip -PHOST=%HOST%
 
     - os: osx
@@ -25,7 +25,7 @@ jobs:
         - HOST="darwin"
       before_install:
         - chmod +x ./gradlew
-      after_script:
+      script:
         - ./gradlew distZip -PHOST=$HOST
 
 
@@ -43,7 +43,7 @@ deploy:
   token:
     "$GH_TOKEN"
   file:
-    - build/distributions/nefele-desktop-${HOST}-1.0-SNAPSHOT.zip
+    "build/distributions/*.zip"
 
   overwrite: true
   draft: false
