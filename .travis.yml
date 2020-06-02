@@ -1,0 +1,54 @@
+language: java
+os: linux
+dist: bionic
+jdk:
+  - openjdk11
+
+jobs:
+  include:
+    - os: linux
+      env:
+        - HOST="linux"
+      before_install:
+        - chmod +x ./gradlew
+      after_script:
+        - ./gradlew distZip -PHOST=$HOST
+
+    - os: windows
+      env:
+        - HOST="win64"
+      after_script:
+        - gradlew.bat distZip -PHOST=%HOST%
+
+    - os: osx
+      env:
+        - HOST="darwin"
+      before_install:
+        - chmod +x ./gradlew
+      after_script:
+        - ./gradlew distZip -PHOST=$HOST
+
+
+
+
+
+before_deploy:
+  - git config --local user.name "Antonino Natale"
+  - git config --local user.email "antonio.natale97@hotmail.com"
+  - export TRAVIS_TAG=v1.0.$(date +'%Y%m%d')
+  - git tag $TRAVIS_TAG
+
+deploy:
+  provider: releases
+  token:
+    "$GH_TOKEN"
+  file:
+    ${HOST}-nefele-desktop-1.0-SNAPSHOT.zip
+
+  overwrite: true
+  draft: false
+  edge: true
+
+  on:
+    repo: nefele-org/nefele-desktop
+    tags: false

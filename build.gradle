@@ -100,3 +100,9 @@ jar {
     from 'AUTHORS'
 
 }
+
+distZip {
+    if(project.hasProperty('HOST')) {
+        appendix "${HOST}"
+    }
+}
