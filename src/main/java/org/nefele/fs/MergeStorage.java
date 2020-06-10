@@ -43,6 +43,7 @@ import java.sql.SQLException;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
@@ -318,14 +319,13 @@ public class MergeStorage implements ApplicationService {
         }
 
 
-
         try {
 
             Application.getInstance().getDatabase().fetch(
                     "SELECT * FROM inodes", null,
                     r -> {
 
-                        MergeNode node = new MergeNode (
+                        MergeNode node = new MergeNode(
                                 r.getString("name"),
                                 r.getString("mime"),
                                 r.getLong("size"),
@@ -361,11 +361,11 @@ public class MergeStorage implements ApplicationService {
                                     .findFirst()
                                     .orElse(null);
 
-                            if(inode == null)
+                            if (inode == null)
                                 throw new NoSuchFileException(inodeId);
 
 
-                            MergeChunk chunk = new MergeChunk (
+                            MergeChunk chunk = new MergeChunk(
                                     r.getString("id"),
                                     r.getLong("offset"),
                                     inode,
@@ -390,10 +390,16 @@ public class MergeStorage implements ApplicationService {
         }
 
 
-
         getChunkStream().forEach(i ->
-            i.getInode().getChunks().add(i));
+                i.getInode().getChunks().add(i));
 
+        getInodes().removeAll(
+                getInodeStream()
+                        .filter(i -> i.getSize() > 0)
+                        .filter(i -> i.getChunks().isEmpty())
+                        .peek(i -> Application.log(getClass(), "WARNING! Inode %s has been corrupted or invalid", i.getId()))
+                        .collect(Collectors.toList())
+        );
 
     }
 

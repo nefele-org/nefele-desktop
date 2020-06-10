@@ -28,7 +28,6 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ApplicationFuture extends Service<Void> {
 

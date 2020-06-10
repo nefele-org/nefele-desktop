@@ -74,7 +74,6 @@ public class Archive extends StackPane implements Initializable, Themeable {
     @FXML private JFXButton buttonBack;
     @FXML private JFXButton buttonRefresh;
     @FXML private JFXButton buttonHome;
-    @FXML private JFXButton buttonSync;
     @FXML private JFXButton buttonUpFile;
     @FXML private JFXButton buttonAddFolder;
     @FXML private JFXButton buttonUpFolder;
@@ -104,23 +103,6 @@ public class Archive extends StackPane implements Initializable, Themeable {
             buttonHome.setOnMouseClicked(e ->
                     fileBrowser.setCurrentPath(Path.of(URI.create("nefele:///"))));
 
-            buttonSync.setOnMouseClicked(e -> {
-                Platform.runLater(() -> {
-
-                    try {
-
-//                    if(Dialogs.showInfoBox("ARCHIVE_DIALOG_REQUEST_SYNC",
-//                            BaseDialog.DIALOG_NO, BaseDialog.DIALOG_YES) == BaseDialog.DIALOG_YES)
-                        /*TODO...*/
-
-                    } catch (Exception exception) {
-
-                        Dialogs.showErrorBox("ARCHIVE_ERROR_DIALOG_REQUEST_SYNC");
-
-                    }
-
-                });
-            });
 
             buttonUpFile.setOnMouseClicked(e -> {
 

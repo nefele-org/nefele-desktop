@@ -24,8 +24,6 @@
 
 package org.nefele.ui.scenes;
 
-import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
-import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.util.Pair;
 import org.nefele.Application;
@@ -36,7 +34,6 @@ import org.nefele.utils.PlatformUtils;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashSet;
 
 public final class Status implements ApplicationService {

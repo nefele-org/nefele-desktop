@@ -229,44 +229,6 @@ public class NefelePane extends StackPane implements Initializable, Themeable {
         });
 
 
-        modalProperty().setValue(MODAL_WINDOW);
-
-        controlExit.setFocusTraversable(false);
-        controlMinimize.setFocusTraversable(false);
-        controlMaximize.setFocusTraversable(false);
-
-        toggleDarkMode.setSelected(Application.getInstance().getTheme().getStyleName().contains("dark"));
-        toggleDarkMode.setFocusTraversable(false);
-
-        toggleDarkMode.visibleProperty().bind(showDarkModeProperty());
-        iconDarkMode.visibleProperty().bind(showDarkModeProperty());
-        awesomeLogo.visibleProperty().bind(showLogoProperty());
-        resizeHandle.visibleProperty().bind(resizableProperty());
-        statusBar.visibleProperty().bind(showStatusBarProperty());
-        statusBar.managedProperty().bind(showStatusBarProperty());
-
-
-        statusText.textProperty().bind(Application.getInstance().getStatus().textProperty());
-        statusIcon.glyphNameProperty().bind(Application.getInstance().getStatus().iconProperty());
-
-        contentPaneContainer.getChildren().add(contentPane);
-
-
-
-        Application.getInstance().getViews().add(this);
-
-    }
-
-    @Override
-    public void initializeInterface() {
-
-
-        Resources.getCSS(this, "/css/window-header-icon.css");
-        Resources.getCSS(this, "/css/window-header-control-box.css");
-        Resources.getCSS(this, "/css/window-pane.css");
-        Resources.getCSS(this, "/css/status-bar.css");
-
-
 
         resizeHandle.setOnMouseReleased(e -> {
             setCursor(Cursor.DEFAULT);
@@ -309,16 +271,52 @@ public class NefelePane extends StackPane implements Initializable, Themeable {
 
         });
 
+        resizeHandle.setOnMouseEntered(e -> setCursor(Cursor.SE_RESIZE));
+        resizeHandle.setPickOnBounds(true);
 
 
+
+
+
+        modalProperty().setValue(MODAL_WINDOW);
+
+        controlExit.setFocusTraversable(false);
+        controlMinimize.setFocusTraversable(false);
+        controlMaximize.setFocusTraversable(false);
+
+        toggleDarkMode.setSelected(Application.getInstance().getTheme().getStyleName().contains("dark"));
+        toggleDarkMode.setFocusTraversable(false);
+
+        toggleDarkMode.visibleProperty().bind(showDarkModeProperty());
+        iconDarkMode.visibleProperty().bind(showDarkModeProperty());
+        awesomeLogo.visibleProperty().bind(showLogoProperty());
+        resizeHandle.visibleProperty().bind(resizableProperty());
+        statusBar.visibleProperty().bind(showStatusBarProperty());
+        statusBar.managedProperty().bind(showStatusBarProperty());
+
+
+        statusText.textProperty().bind(Application.getInstance().getStatus().textProperty());
+        statusIcon.glyphNameProperty().bind(Application.getInstance().getStatus().iconProperty());
+
+        contentPaneContainer.getChildren().add(contentPane);
+
+
+
+        Application.getInstance().getViews().add(this);
+
+    }
+
+    @Override
+    public void initializeInterface() {
+
+        Resources.getCSS(this, "/css/window-header-icon.css");
+        Resources.getCSS(this, "/css/window-header-control-box.css");
+        Resources.getCSS(this, "/css/window-pane.css");
+        Resources.getCSS(this, "/css/window-status-bar.css");
 
 
         if(!Objects.isNull(getScene().getWindow()))
             resizeHandle.visibleProperty().bind((((Stage) getScene().getWindow()).maximizedProperty().not().and(resizableProperty())));
-
-        resizeHandle.setOnMouseEntered(e -> setCursor(Cursor.SE_RESIZE));
-        resizeHandle.setPickOnBounds(true);
-
 
     }
 

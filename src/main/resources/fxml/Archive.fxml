@@ -88,16 +88,6 @@
                </HBox.margin>
             </JFXTextField>
 
-            <JFXButton contentDisplay="GRAPHIC_ONLY" fx:id="buttonSync" mnemonicParsing="false" text=" "
-                       styleClass="filebrowser-header-button">
-               <graphic>
-                  <MaterialDesignIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="CLOUD_SYNC"
-                                          size="24.0"/>
-               </graphic>
-               <tooltip>
-                  <Tooltip userData="ARCHIVE_HINT_SYNC"/>
-               </tooltip>
-            </JFXButton>
 
             <JFXButton contentDisplay="GRAPHIC_ONLY" fx:id="buttonUpFile" mnemonicParsing="false" text=" "
                        styleClass="filebrowser-header-button">
