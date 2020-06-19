@@ -316,23 +316,26 @@ public class GoogleDriveProvider extends DriveProvider {
 
     private Credential getCredentials(NetHttpTransport httpTransport) throws IOException {
 
-        final InputStream inputStream = Resources.getStream(this, "/services/google-drive/credentials.json");
-        final GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(inputStream));
+        try (var reader = new InputStreamReader(Resources.getStream(this, "/services/google-drive/credentials.json"))) {
 
-        final GoogleAuthorizationCodeFlow codeFlow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, JSON_FACTORY, clientSecrets, SCOPES)
-                .setDataStoreFactory(new FileDataStoreFactory(servicePath.toFile()))
-                .setAccessType("offline")
-                .build();
+            final GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, reader);
 
-
-        final LocalServerReceiver receiver = new LocalServerReceiver.Builder()
-                .setPort(8888)
-                //.setLandingPages() // TODO...
-                .build();
+            final GoogleAuthorizationCodeFlow codeFlow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, JSON_FACTORY, clientSecrets, SCOPES)
+                    .setDataStoreFactory(new FileDataStoreFactory(servicePath.toFile()))
+                    .setAccessType("offline")
+                    .build();
 
 
-        return new AuthorizationCodeInstalledApp(codeFlow, receiver)
-                .authorize("user");
+            final LocalServerReceiver receiver = new LocalServerReceiver.Builder()
+                    .setPort(8888)
+                    //.setLandingPages() // TODO...
+                    .build();
+
+
+            return new AuthorizationCodeInstalledApp(codeFlow, receiver)
+                    .authorize("user");
+
+        }
 
     }
 
