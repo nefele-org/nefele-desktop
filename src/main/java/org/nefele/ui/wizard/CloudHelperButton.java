@@ -32,11 +32,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import org.nefele.Application;
-import org.nefele.core.Resources;
 import org.nefele.Themeable;
 import org.nefele.cloud.DriveNotFoundException;
 import org.nefele.cloud.DriveProvider;
 import org.nefele.cloud.DriveProviders;
+import org.nefele.core.Resources;
 import org.nefele.ui.dialog.BaseDialog;
 import org.nefele.ui.dialog.Dialogs;
 

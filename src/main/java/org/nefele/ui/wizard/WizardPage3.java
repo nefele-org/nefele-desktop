@@ -34,12 +34,12 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.nefele.Application;
-import org.nefele.core.Resources;
 import org.nefele.cloud.DriveProvider;
 import org.nefele.cloud.DriveProviders;
 import org.nefele.cloud.providers.DropboxDriveProvider;
 import org.nefele.cloud.providers.GoogleDriveProvider;
 import org.nefele.cloud.providers.OfflineDriveProvider;
+import org.nefele.core.Resources;
 import org.nefele.ui.controls.NefelePane;
 
 import java.net.URL;

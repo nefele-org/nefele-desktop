@@ -40,10 +40,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.nefele.Application;
-import org.nefele.core.Resources;
 import org.nefele.Themeable;
 import org.nefele.cloud.DriveProvider;
 import org.nefele.cloud.DriveProviders;
+import org.nefele.core.Resources;
 import org.nefele.ui.controls.NefelePane;
 import org.nefele.ui.wizard.Wizard;
 

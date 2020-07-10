@@ -39,8 +39,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import org.nefele.Application;
-import org.nefele.core.Resources;
 import org.nefele.Themeable;
+import org.nefele.core.Resources;
 import org.nefele.ui.controls.NefelePane;
 
 import java.net.URL;

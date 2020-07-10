@@ -37,7 +37,6 @@ import java.security.*;
 import java.security.cert.CertificateException;
 
 import static java.util.Objects.requireNonNull;
-import static java.util.Objects.requireNonNullElseGet;
 
 public final class CryptoUtils {
 

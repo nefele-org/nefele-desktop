@@ -41,9 +41,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import org.nefele.Application;
+import org.nefele.Themeable;
 import org.nefele.core.Resources;
 import org.nefele.core.Theme;
-import org.nefele.Themeable;
 import org.nefele.ui.dialog.BaseDialog;
 import org.nefele.ui.dialog.Dialogs;
 

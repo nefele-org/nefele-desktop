@@ -37,11 +37,11 @@ import org.nefele.cloud.DriveProviders;
 import org.nefele.cloud.SharedFolders;
 import org.nefele.cloud.TransferQueue;
 import org.nefele.core.*;
-import org.nefele.ui.scenes.Status;
-import org.nefele.ui.scenes.SplashScreen;
 import org.nefele.ui.controls.NefelePane;
 import org.nefele.ui.dialog.Dialogs;
 import org.nefele.ui.scenes.Home;
+import org.nefele.ui.scenes.SplashScreen;
+import org.nefele.ui.scenes.Status;
 import org.nefele.utils.CryptoUtils;
 import org.nefele.utils.PlatformUtils;
 

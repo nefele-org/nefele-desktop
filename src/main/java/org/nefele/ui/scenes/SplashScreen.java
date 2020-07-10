@@ -29,8 +29,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.StackPane;
 import org.nefele.Application;
-import org.nefele.core.Resources;
 import org.nefele.Themeable;
+import org.nefele.core.Resources;
 
 import java.net.URL;
 import java.util.ResourceBundle;

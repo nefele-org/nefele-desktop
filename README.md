@@ -6,12 +6,14 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](/LICENSE)
 
 ## Details
-Descrizione....
+Description bla-bla...
+
+![Diagram](docs/images/diagram.png)
 
 ## How to run?
 ```shell script
 # Clone repository
-$> git clone https://github.com/nefele-org/nefele-desktop
+$> git clone https://github.com/nefele-org/nefele-desktop --depth=1
 $> cd nefele-desktop
 
 # Java 11 is required

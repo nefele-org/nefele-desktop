@@ -40,8 +40,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.shape.Rectangle;
 import org.nefele.Application;
-import org.nefele.core.Resources;
 import org.nefele.Themeable;
+import org.nefele.core.Resources;
 import org.nefele.utils.PlatformUtils;
 
 import java.net.URI;

@@ -42,11 +42,11 @@ import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.About;
 import com.google.api.services.drive.model.File;
 import org.nefele.Application;
-import org.nefele.core.Resources;
 import org.nefele.cloud.DriveProvider;
 import org.nefele.cloud.TransferInfoAbortException;
 import org.nefele.cloud.TransferInfoCallback;
 import org.nefele.cloud.TransferInfoException;
+import org.nefele.core.Resources;
 import org.nefele.fs.MergeChunk;
 
 import java.io.ByteArrayOutputStream;

@@ -42,9 +42,9 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.nefele.Application;
+import org.nefele.Themeable;
 import org.nefele.core.Resources;
 import org.nefele.core.Theme;
-import org.nefele.Themeable;
 
 import java.net.URL;
 import java.util.Objects;
@@ -324,15 +324,16 @@ public class NefelePane extends StackPane implements Initializable, Themeable {
     private void toggleMaximize() {
 
         Stage stage = (Stage) getScene().getWindow();
+
+        setDraggable(stage.isMaximized());
         stage.setMaximized(!stage.isMaximized());
+
 
         // FIXME: test MacOSX
         if (System.getProperty("os.name").toLowerCase().contains("windows")) {
             if (stage.isMaximized())
                 stage.setHeight(Screen.getPrimary().getVisualBounds().getHeight());
         }
-
-        setDraggable(!stage.isMaximized());
 
     }
 

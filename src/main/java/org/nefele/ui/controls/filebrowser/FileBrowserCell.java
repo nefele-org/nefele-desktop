@@ -33,8 +33,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
-import org.nefele.core.Resources;
 import org.nefele.Themeable;
+import org.nefele.core.Resources;
 
 import java.net.URL;
 import java.util.Objects;

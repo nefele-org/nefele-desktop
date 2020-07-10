@@ -35,9 +35,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import org.nefele.Application;
-import org.nefele.core.Resources;
 import org.nefele.Themeable;
 import org.nefele.cloud.TransferInfo;
+import org.nefele.core.Resources;
 import org.nefele.utils.BindingsUtils;
 
 import java.net.URL;
