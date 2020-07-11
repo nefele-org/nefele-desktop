@@ -22,7 +22,7 @@ gradlew run --console=rich
  * [Mac](https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_osx-x64_bin.tar.gz)
  * [Linux](https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_linux-x64_bin.tar.gz)
 
-**NOTE:** You need to set JAVA_HOME environment variable to point to your Java 11 directory, before running Gradle Wrapper.
+You need to set JAVA_HOME environment variable to point to your Java 11 directory, before running Gradle Wrapper.
 ```shell script
 export JAVA_HOME=/path_to_jdk_11
 ```
