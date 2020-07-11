@@ -329,7 +329,7 @@ public class NefelePane extends StackPane implements Initializable, Themeable {
         stage.setMaximized(!stage.isMaximized());
 
 
-        // FIXME: test MacOSX
+        // FIXME: test MacOS, i'm too poor...
         if (System.getProperty("os.name").toLowerCase().contains("windows")) {
             if (stage.isMaximized())
                 stage.setHeight(Screen.getPrimary().getVisualBounds().getHeight());

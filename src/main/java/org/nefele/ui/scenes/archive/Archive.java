@@ -132,8 +132,6 @@ public class Archive extends StackPane implements Initializable, Themeable {
                             switch (status) {
 
                                 case TransferInfo.TRANSFER_STATUS_COMPLETED:
-
-                                    //Application.getInstance().setStatus(...)
                                     break;
 
                                 case TransferInfo.TRANSFER_STATUS_ERROR:
@@ -246,8 +244,6 @@ public class Archive extends StackPane implements Initializable, Themeable {
                                                     switch (status) {
 
                                                         case TransferInfo.TRANSFER_STATUS_COMPLETED:
-
-                                                            //Application.getInstance().setStatus(... // TODO: set Status Bar
                                                             break;
 
 
@@ -493,7 +489,6 @@ public class Archive extends StackPane implements Initializable, Themeable {
 
                                                     }
 
-                                                    //Application.getInstance().setStatus(... // TODO: set Status Bar
                                                     break;
 
 

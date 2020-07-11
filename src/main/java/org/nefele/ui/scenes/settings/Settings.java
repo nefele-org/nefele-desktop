@@ -382,7 +382,7 @@ public class Settings extends StackPane implements Initializable, Themeable {
         boxAdvancedSettings.setMinHeight(0);
         boxAdvancedSettings.setVisible(false);
 
-        labelNefele.setText("v1.0 SNAPSHOT"); /* TODO... */
+        labelNefele.setText("v1.0 SNAPSHOT"); /* TODO: we need a version here... */
         labelJava.setText(System.getProperty("java.version"));
         labelJavaFX.setText(System.getProperty("javafx.runtime.version"));
 

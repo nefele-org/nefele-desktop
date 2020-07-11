@@ -328,7 +328,7 @@ public class GoogleDriveProvider extends DriveProvider {
 
             final LocalServerReceiver receiver = new LocalServerReceiver.Builder()
                     .setPort(8888)
-                    //.setLandingPages() // TODO...
+                    //.setLandingPages() // TODO: no website, no party.
                     .build();
 
 

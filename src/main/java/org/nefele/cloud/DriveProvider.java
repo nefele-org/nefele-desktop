@@ -179,8 +179,6 @@ public abstract class DriveProvider {
 
     public long getUsedSpace() {
 
-        /* FIXME: Optimize... */
-
         MergeStorage storage = ((MergeFileSystem) FileSystems
                 .getFileSystem(URI.create("nefele:///")))
                 .getStorage();

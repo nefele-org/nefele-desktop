@@ -47,10 +47,7 @@ public class Database {
         try {
             connection = DriverManager.getConnection(CONNECTION_URL);
         } catch (SQLException e) {
-
-            // TODO: Handle exception
             Application.panic(getClass(), e);
-
         }
 
         return connection;

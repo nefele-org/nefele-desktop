@@ -219,7 +219,7 @@ public final class SharedFolder implements ApplicationService {
 
 
                         if(Files.exists(q.getTarget()))
-                            Files.delete(q.getTarget()); /* FIXME: Dangerous */
+                            Files.delete(q.getTarget());
 
 
 
