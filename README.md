@@ -71,8 +71,12 @@ Lo scopo di Nefele è, quindi, quello di gestire e ampliare i propri spazi di me
     
 #### Screenshots
 
-    
- 
+![Languages](docs/images/05.png) 
+<br><br>
+![Languages](docs/images/06.png)
+<br><br>
+![Languages](docs/images/04.png)
+<br><br>
 
 ## Build
 
