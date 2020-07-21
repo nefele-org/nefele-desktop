@@ -272,8 +272,11 @@ public class DropboxDriveProvider extends DriveProvider {
 
                     Application.log(getClass(), "Opening Login Page: %s", URL);
 
-                    Desktop.getDesktop()
-                            .browse(URI.create(URL));
+
+                    if(Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE))
+                        Desktop.getDesktop().browse(URI.create(URL));
+                    else
+                        Application.log(getClass(), "Desktop is not supported! Open login page, manually!");
 
 
                     PlatformUtils.runLaterAndWait(() ->

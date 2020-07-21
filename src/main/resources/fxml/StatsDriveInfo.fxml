@@ -41,7 +41,7 @@
 
                 <StackPane>
                     <JFXSpinner fx:id="spinner" />
-                    <MaterialDesignIconView strokeType="OUTSIDE" strokeWidth="0.0" text=" " glyphName="LAYERS" size="28.0"  />
+                    <MaterialDesignIconView fx:id="icon" strokeType="OUTSIDE" strokeWidth="0.0" text=" " size="28.0"  />
                 </StackPane>
 
                 <Separator orientation="VERTICAL"/>

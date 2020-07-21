@@ -112,11 +112,8 @@ public class Wizard extends NefeleContentPane implements Initializable, Themeabl
 
             if(++currentIndex < parents.size())
                 currentPage.setValue(parents.get(currentIndex));
-            else {
-
-                /* TODO... */
+            else
                 getScene().getWindow().hide();
-            }
 
         });
 

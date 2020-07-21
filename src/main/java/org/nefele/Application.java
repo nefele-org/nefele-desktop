@@ -42,6 +42,7 @@ import org.nefele.ui.dialog.Dialogs;
 import org.nefele.ui.scenes.Home;
 import org.nefele.ui.scenes.SplashScreen;
 import org.nefele.ui.scenes.Status;
+import org.nefele.ui.wizard.Wizard;
 import org.nefele.utils.CryptoUtils;
 import org.nefele.utils.PlatformUtils;
 
@@ -183,6 +184,36 @@ public final class Application extends javafx.application.Application implements
 
 
 
+
+            if(!Application.getInstance().getConfig().getBoolean("app.ui.setup").orElse(false)) {
+
+                PlatformUtils.runLaterAndWait(() -> {
+
+                    NefelePane nefelePane = new NefelePane(new Wizard());
+                    nefelePane.setModal(NefelePane.MODAL_UNDECORATED);
+                    nefelePane.setShowDarkMode(false);
+                    nefelePane.setShowLogo(true);
+                    nefelePane.setShowStatusBar(false);
+                    nefelePane.setResizable(false);
+
+
+                    Stage wizardStage = new Stage();
+                    wizardStage.setHeight(400);
+                    wizardStage.setWidth(600);
+                    wizardStage.setScene(new Scene(nefelePane));
+                    wizardStage.setTitle("Nefele Wizard");
+                    wizardStage.initStyle(StageStyle.UNDECORATED);
+                    wizardStage.centerOnScreen();
+                    wizardStage.getIcons().add(new Image(Resources.getURL(this, "/images/trayicon.png").toExternalForm()));
+                    wizardStage.showAndWait();
+
+
+                    getConfig().setBoolean("app.ui.setup", true);
+
+                });
+
+            }
+
             PlatformUtils.runLaterAndWait(() -> {
 
                 stage.setScene(new Scene(new NefelePane(new Home())));
@@ -197,10 +228,12 @@ public final class Application extends javafx.application.Application implements
 
             });
 
+
         }, "Application::Loading"));
 
-
     }
+
+
 
     @Override
     public void stop() throws Exception {

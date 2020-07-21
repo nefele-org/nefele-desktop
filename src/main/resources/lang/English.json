@@ -14,6 +14,7 @@
 
     "STATUS_READY" : "Ready!",
     "STATUS_NETWORK_DOWN" : "No network connection available",
+    "STATUS_TRANSFER_ERROR" : "Transfer failed for",
     "STATUS_TRANSFER_RUNNING" : "Transfer running for",
     "STATUS_TRANSFER_COMPLETED" : "Transfer completed for",
     "STATUS_DRIVE_FULL" : "Drive is full, remove something or increase storage space",
@@ -112,6 +113,7 @@
     "ARCHIVE_DIALOG_RENAME_INVALID_NAME" : "Name must be valid",
     "ARCHIVE_DIALOG_FILE_NOTSELECTED" : "The file was not selected",
     "ARCHIVE_DIALOG_FILE_INVALID" : "The path must be a file",
+    "ARCHIVE_DIALOG_FOLDER_EMPTY" : "Folder name can not be empty",
     "ARCHIVE_DIALOG_FOLDER_NOTSELECTED" : "The folder has not been selected",
     "ARCHIVE_DIALOG_FOLDER_INVALID" : "The path must be a folder",
     "ARCHIVE_DIALOG_REQUEST_SYNC" : "Are you sure you want to share this folder?",

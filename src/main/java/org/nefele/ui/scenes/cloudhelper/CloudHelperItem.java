@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package org.nefele.ui.wizard;
+package org.nefele.ui.scenes.cloudhelper;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;

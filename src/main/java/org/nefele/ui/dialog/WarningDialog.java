@@ -24,13 +24,10 @@
 
 package org.nefele.ui.dialog;
 
-import javafx.scene.image.Image;
-import org.nefele.core.Resources;
-
 public class WarningDialog extends BaseDialog {
     public WarningDialog (String title, String message) {
         super(title, message);
-        setIcon(new Image(Resources.getURL(this, "/images/dialog_warning.png").toExternalForm()));
+        setIcon("ALERT");
     }
 
 }

@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package org.nefele.ui.wizard;
+package org.nefele.ui.scenes.cloudhelper;
 
 import com.jfoenix.controls.JFXButton;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
@@ -98,7 +98,7 @@ public class CloudHelperButton extends JFXButton implements Initializable, Theme
                 }
 
 
-                if(driveProvider.getStatus() == DriveProvider.STATUS_READY){
+                if(driveProvider.getStatus() == DriveProvider.STATUS_READY) {
 
                     setDrive(driveProvider);
                     access.setValue(true);

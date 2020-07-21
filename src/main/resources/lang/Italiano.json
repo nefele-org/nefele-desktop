@@ -14,6 +14,7 @@
 
     "STATUS_READY" : "Pronto!",
     "STATUS_NETWORK_DOWN" : "Nessuna connessione ad internet",
+    "STATUS_TRANSFER_ERROR" : "Trasferimento fallito di",
     "STATUS_TRANSFER_RUNNING" : "Trasferimento in corso di",
     "STATUS_TRANSFER_COMPLETED" : "Trasferimento completato di",
     "STATUS_DRIVE_FULL" : "Il Drive è pieno, rimuovi qualcosa o incrementa lo spazio d'archiviazione",
@@ -34,7 +35,7 @@
     "DIALOG_TITLE_ERROR" : "Errore",
     "DIALOG_PANIC_TITLE" : "Errore fatale",
     "DIALOG_RETRY" : "Riprova",
-    "DIALOG_PANIC_MESSAGE" : "A fatal error has occured, nobody will help you! Please erase your entire hard-drive and throw away your machine!",
+    "DIALOG_PANIC_MESSAGE" : "Si è verificato un errore fatale durante l'esecuzione di Nefele, contattare il cientodigiotto ai porticati di Teramo!!1!",
 
     "INPUTDIALOG_TITLE" : "Inserisci un valore",
 
@@ -112,6 +113,7 @@
     "ARCHIVE_DIALOG_RENAME_INVALID_NAME" : "Il nome non è valido",
     "ARCHIVE_DIALOG_FILE_NOTSELECTED" : "Il file non è stato selezionato",
     "ARCHIVE_DIALOG_FILE_INVALID" : "Il percorso deve essere un file valido",
+    "ARCHIVE_DIALOG_FOLDER_EMPTY" : "Il nome della cartella non può essere vuoto",
     "ARCHIVE_DIALOG_FOLDER_NOTSELECTED" : "La cartella non è stata selezionata",
     "ARCHIVE_DIALOG_FOLDER_INVALID" : "Il percorso deve essere una cartella valida",
     "ARCHIVE_DIALOG_REQUEST_SYNC" : "Sei sicuro di voler condividere questa cartella?",

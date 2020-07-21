@@ -31,11 +31,12 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
 <?import org.nefele.ui.controls.NefeleContentPane?>
+<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
 <fx:root prefHeight="170.0" prefWidth="300.0" type="NefeleContentPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
    <BorderPane>
       <top>
          <HBox spacing="8" alignment="CENTER_LEFT">
-            <ImageView fx:id="ivIcon" fitHeight="32.0" fitWidth="32.0" />
+            <MaterialDesignIconView fx:id="ivIcon" size="48" />
             <Label fx:id="labelTitle" text=" " styleClass="text-h2" />
             <padding>
                <Insets left="24" right="24" top="8" bottom="8" />

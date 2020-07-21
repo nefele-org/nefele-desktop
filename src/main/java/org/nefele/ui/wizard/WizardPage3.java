@@ -41,6 +41,8 @@ import org.nefele.cloud.providers.GoogleDriveProvider;
 import org.nefele.cloud.providers.OfflineDriveProvider;
 import org.nefele.core.Resources;
 import org.nefele.ui.controls.NefelePane;
+import org.nefele.ui.scenes.cloudhelper.CloudHelper;
+import org.nefele.ui.scenes.cloudhelper.CloudHelperItem;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -82,7 +84,7 @@ public class WizardPage3 extends WizardPage {
                 }});
 
 
-                nefelePane.setPrefWidth(400);
+                nefelePane.setPrefWidth(600);
                 nefelePane.setModal(NefelePane.MODAL_DIALOG);
                 nefelePane.setShowDarkMode(false);
                 nefelePane.setShowLogo(true);
@@ -97,6 +99,8 @@ public class WizardPage3 extends WizardPage {
                 stage.getIcons().add(new Image(Resources.getURL(this, "/images/trayicon.png").toExternalForm()));
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.initStyle(StageStyle.UNDECORATED);
+                stage.setWidth(600);
+                stage.setHeight(400);
 
                 stage.showAndWait();
 

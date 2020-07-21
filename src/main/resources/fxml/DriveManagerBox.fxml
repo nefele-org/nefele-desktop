@@ -42,7 +42,7 @@
 
                 <VBox VBox.vgrow="ALWAYS" >
                     <StackPane>
-                        <MaterialDesignIconView text=" " glyphName="LAYERS" size="36.0" />
+                        <MaterialDesignIconView fx:id="icon" text=" " glyphName="LAYERS" size="36.0" />
                     </StackPane>
                 </VBox>
 

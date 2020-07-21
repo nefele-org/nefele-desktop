@@ -25,7 +25,6 @@
 package org.nefele.ui.scenes.drivemanager;
 
 import com.jfoenix.controls.JFXButton;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -43,9 +42,13 @@ import org.nefele.Application;
 import org.nefele.Themeable;
 import org.nefele.cloud.DriveProvider;
 import org.nefele.cloud.DriveProviders;
+import org.nefele.cloud.providers.DropboxDriveProvider;
+import org.nefele.cloud.providers.GoogleDriveProvider;
+import org.nefele.cloud.providers.OfflineDriveProvider;
 import org.nefele.core.Resources;
 import org.nefele.ui.controls.NefelePane;
-import org.nefele.ui.wizard.Wizard;
+import org.nefele.ui.scenes.cloudhelper.CloudHelper;
+import org.nefele.ui.scenes.cloudhelper.CloudHelperItem;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -67,7 +70,6 @@ public class DriveManager extends StackPane implements Initializable, Themeable 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
 
         DriveProviders.getInstance().getDriveProviders().addListener((ListChangeListener<? super DriveProvider>) change -> {
 
@@ -103,30 +105,48 @@ public class DriveManager extends StackPane implements Initializable, Themeable 
                 i -> getDriveManagerBoxes().add(new DriveManagerBox(i)));
 
 
-        buttonAdd.setOnMouseClicked(e ->
-            Platform.runLater(() -> {
+        buttonAdd.setOnMouseClicked(e -> {
 
-                Stage s = new Stage();
+            NefelePane nefelePane = new NefelePane(new CloudHelper() {{
 
 
-                NefelePane nefelePane = new NefelePane(new Wizard());
-                nefelePane.setModal(NefelePane.MODAL_UNDECORATED);
-                nefelePane.setShowDarkMode(false);
-                nefelePane.setShowLogo(true);
-                nefelePane.setShowStatusBar(false);
+                getHelperButtons().add(new CloudHelperItem(
+                        OfflineDriveProvider.SERVICE_ID,
+                        OfflineDriveProvider.SERVICE_DEFAULT_DESCRIPTION, "LAYERS", "DRIVE_OFFLINE_HINT"));
 
-                s.setHeight(420);
-                s.setWidth(580);
-                s.setScene(new Scene(nefelePane));
-                s.setTitle("Nefele Wizard");
-                s.getIcons().add(new Image(Resources.getURL(this, "/images/trayicon.png").toExternalForm()));
-                s.initModality(Modality.APPLICATION_MODAL);
-                s.initStyle(StageStyle.UNDECORATED);
-                s.show();
+                getHelperButtons().add(new CloudHelperItem(
+                        GoogleDriveProvider.SERVICE_ID,
+                        GoogleDriveProvider.SERVICE_DEFAULT_DESCRIPTION, "GOOGLE_DRIVE", "DRIVE_GOOGLE_DRIVE_HINT"));
 
-                nefelePane.setResizable(false);
-            })
-        );
+                getHelperButtons().add(new CloudHelperItem(
+                        DropboxDriveProvider.SERVICE_ID,
+                        DropboxDriveProvider.SERVICE_DEFAULT_DESCRIPTION, "DROPBOX", "DRIVE_DROPBOX_HINT"));
+
+
+            }});
+
+
+            nefelePane.setPrefWidth(600);
+            nefelePane.setModal(NefelePane.MODAL_DIALOG);
+            nefelePane.setShowDarkMode(false);
+            nefelePane.setShowLogo(true);
+            nefelePane.setShowStatusBar(false);
+            nefelePane.setResizable(false);
+
+            Stage stage = new Stage();
+            Scene scene = new Scene(nefelePane);
+
+            stage.setScene(scene);
+            stage.setTitle("Nefele");
+            stage.getIcons().add(new Image(Resources.getURL(this, "/images/trayicon.png").toExternalForm()));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initStyle(StageStyle.UNDECORATED);
+            stage.setWidth(600);
+            stage.setHeight(400);
+
+            stage.showAndWait();
+
+        });
 
         Application.getInstance().getViews().add(this);
 

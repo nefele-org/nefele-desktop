@@ -1,0 +1,21 @@
+{
+  "-nefele-theme-primary"             :   "",
+  "-nefele-theme-primary-variant"     :   "",
+  "-nefele-theme-secondary"           :   "",
+  "-nefele-theme-secondary-variant"   :   "",
+  "-nefele-theme-background"          :   "",
+  "-nefele-theme-surface"             :   "",
+  "-nefele-theme-error"               :   "",
+
+  "-nefele-theme-primary-text"        :   "",
+  "-nefele-theme-secondary-text"      :   "",
+  "-nefele-theme-background-text"     :   "",
+  "-nefele-theme-surface-text"        :   "",
+  "-nefele-theme-error-text"          :   "",
+
+  "-nefele-theme-primary-hover"       :   "",
+  "-nefele-theme-secondary-hover"     :   "",
+  "-nefele-theme-background-hover"    :   "",
+  "-nefele-theme-surface-hover"       :   "",
+  "-nefele-theme-error-hover"         :   ""
+}

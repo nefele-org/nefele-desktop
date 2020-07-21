@@ -25,6 +25,7 @@
 package org.nefele.ui.scenes.stats;
 
 import com.jfoenix.controls.JFXSpinner;
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -33,6 +34,8 @@ import javafx.scene.layout.StackPane;
 import org.nefele.Application;
 import org.nefele.Themeable;
 import org.nefele.cloud.DriveProvider;
+import org.nefele.cloud.providers.DropboxDriveProvider;
+import org.nefele.cloud.providers.GoogleDriveProvider;
 import org.nefele.core.Resources;
 import org.nefele.utils.BindingsUtils;
 
@@ -46,6 +49,7 @@ public class StatsDriveInfo extends StackPane implements Initializable, Themeabl
     @FXML private Label labelStatus;
     @FXML private Label labelTotalSpace;
     @FXML private Label labelTotalQuota;
+    @FXML private MaterialDesignIconView icon;
 
     private final DriveProvider driveProvider;
 
@@ -54,10 +58,42 @@ public class StatsDriveInfo extends StackPane implements Initializable, Themeabl
         this.driveProvider = driveProvider;
 
         Resources.getFXML(this, "/fxml/StatsDriveInfo.fxml");
+
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        // TODO: delete Java!
+        if(driveProvider.getService().equals(GoogleDriveProvider.SERVICE_ID))
+            icon.setGlyphName("GOOGLE_DRIVE");
+        else if(driveProvider.getService().equals(DropboxDriveProvider.SERVICE_ID))
+            icon.setGlyphName("DROPBOX");
+        else
+            icon.setGlyphName("LAYERS");
+
+
+        labelDriveName.textProperty().bind(getDriveProvider().descriptionProperty());
+
+
+        labelTotalQuota.textProperty().bind(
+                BindingsUtils.createSizeBinding(() -> getDriveProvider().getQuota(), "", getDriveProvider().quotaProperty(), getDriveProvider().chunksProperty()));
+
+        labelTotalSpace.textProperty().bind(
+                BindingsUtils.createSizeBinding(() -> getDriveProvider().getMaxQuota(), ""));
+
+        spinner.progressProperty().bind(Bindings.createDoubleBinding (
+                () -> (double) getDriveProvider().getUsedSpace() / (double) getDriveProvider().getQuota(), getDriveProvider().chunksProperty(), getDriveProvider().quotaProperty()));
+
+
+
+        Application.getInstance().getViews().add(this);
+
+    }
+
+
+    @Override
+    public void initializeInterface() {
 
         labelStatus.textProperty().bind(Bindings.createStringBinding(() -> {
 
@@ -90,29 +126,8 @@ public class StatsDriveInfo extends StackPane implements Initializable, Themeabl
 
         }, getDriveProvider().statusProperty()));
 
-
-        labelDriveName.textProperty().bind(getDriveProvider().descriptionProperty());
-
-
-        labelTotalQuota.textProperty().bind(
-                BindingsUtils.createSizeBinding(() -> getDriveProvider().getQuota(), "", getDriveProvider().quotaProperty(), getDriveProvider().chunksProperty()));
-
-        labelTotalSpace.textProperty().bind(
-                BindingsUtils.createSizeBinding(() -> getDriveProvider().getMaxQuota(), ""));
-
-        spinner.progressProperty().bind(Bindings.createDoubleBinding (
-                () -> (double) getDriveProvider().getUsedSpace() / (double) getDriveProvider().getQuota(), getDriveProvider().chunksProperty(), getDriveProvider().quotaProperty()));
-
     }
 
-
-
-
-    public void update() {
-
-        spinner.setProgress((double) getDriveProvider().getUsedSpace() / (double) getDriveProvider().getQuota());
-
-    }
 
     public DriveProvider getDriveProvider() {
         return driveProvider;

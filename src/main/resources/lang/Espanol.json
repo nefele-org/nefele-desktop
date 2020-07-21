@@ -1,1 +1,285 @@
-{"SETTINGS_GENERAL":"General","DIALOG_CONTINUE":"Seguir","STATSDRIVEINFO_STATUS_DISCONNECTED":"Desconectado","NEFELE_PANE_HINT_DARKMODE":"Modo oscuro","SETTINGS_FONT_SIZE":"Tamaño de fuente","DRIVEMANAGER_DESCRIPTION":"Agregue, elimine o cambie la configuración de su unidad.","STATS_CARD_HINT_MEMORY_CLEAN":"Memoria libre","STATS_STATUS_DISABLED":"Deshabilitado por el usuario","DIALOG_NO":"No","ARCHIVE_HINT_SYNC":"Compartir carpeta","SETTINGS_STARTUP":"Puesta en marcha","HOME_DIALOG_TITLE":"Confirmar salida","STATSDRIVEINFO_STATUS_CONNECTED":"Conectado","STATS_CARD_HINT_TEMPORARY_CLEAN":"Eliminar archivos temporales","ARCHIVE_HINT_UPFOLDER":"Subir carpeta","STATS_STATUS_DISCONNECTED":"Desconectado","DIALOG_OK":"Okay","SETTINGS_TRANSFERS":"Descargar y cargar","SYSTEM_TRAY_ERROR":"La bandeja del sistema no es compatible con el sistema.","DIALOG_MINIMIZE":"Minimizar en bandeja","DIALOG_TITLE_WARNING":"Advertencia","WORD_FOLDERS":"carpetas","SETTINGS_SHARED_DESCRIPTION":"Elija si desea compartir y sincronizar su nube con otros dispositivos sin conexión.","STATS_STATUS_CONNECTING":"Conectando","WORD_FOLDER":"carpeta","DIALOG_YES":"si","ARCHIVE_HINT_FORWARD":"Adelante","STATS_STATUS_UNKNOWN":"Desconocido","DIALOG_TITLE_MESSAGE":"Mensaje","SETTINGS_SYSTEM_INFO":"Información","STATS_CARD_SECONDARY_TITLE":"Almacenamiento utilizado","DIALOG_PANIC_MESSAGE":"Ha ocurrido un error fatal, ¡nadie te ayudará! ¡Borre todo el disco duro y deseche la máquina!","TRANSFERVIEWER_TRANSFER_PREPARED":"Preparando...","SETTINGS_DRIVE_ERROR_DIALOG_DESCRIPTION":"Esta unidad contiene datos, por lo que no se puede eliminar, aún puede deshabilitarla en cualquier momento desde la configuración","SETTINGS_LOCALE_DESCRIPTION":"Elija su idioma para mostrar los menús, mensajes y notificaciones de Nefele.","DOCKER_BUTTON_HINT_TRANSFERVIEWER":"Cola de transferencia","DIALOG_TITLE_INFO":"Información","DOCKER_BUTTON_HINT_ARCHIVE":"Archivo","HOME_DIALOG_DESCRIPTION":"¿Estás seguro de que quieres renunciar a Nefele?","CONTEXT_MENU_RENAME":"Rebautizar","ARCHIVE_DIALOG_FOLDER_INVALID_NAME":"El nombre de la carpeta debe ser válido.","ARCHIVE_ERROR_DIALOG_REQUEST_SYNC":"Algo salió mal en la sincronización. Por favor, inténtelo de nuevo más tarde","SETTINGS_DRIVE_DIALOG_DESCRIPTION":"¿Realmente quieres eliminar esta unidad? Esta acción podría ser irreversible.","SETTINGS_FONT_FAMILY_DESCRIPTION":"Seleccione su familia de fuentes preferida.","WORD_FILE":"archivo","ARCHIVE_DIALOG_FILE_INVALID":"La ruta debe ser un archivo","SETTINGS_DRIVE_DIALOG_TITLE":"Confirmar eliminación","SETTINGS_ADVANCED_BUTTON_HIDE":"Ocultar configuración avanzada","WIZARD_FIRST_CLOUD":"Agregue su primera nube a Nefele","WIZARD_TERMS":"Acepto los términos de uso del servicio y declaro que he leído la información sobre el procesamiento de mis datos personales.","INPUTDIALOG_TITLE":"Ingrese el nombre de la carpeta","DIALOG_PANIC_TITLE":"Error fatal","SETTINGS_THEME_DESCRIPTION":"Elige tu color.","SETTINGS_TRANSFERS_DESCRIPTION":"Elija el número máximo de descargas y cargas simultáneas.","DOCKER_BUTTON_HINT_EXIT":"Cerrar sesión","WORD_FILES":"archivos","WORD_OF":"de","ARCHIVE_DIALOG_FILE_NOTSELECTED":"El archivo no fue seleccionado","ARCHIVE_HINT_BACK":"atrás","STATS_CARD_PRIMARY_TITLE":"Uso general","WORD_ADD":"Añadir","ARCHIVE_HINT_ADDFOLDER":"Crear carpeta","SETTINGS_LOCALE":"Idioma","SETTINGS_ADVANCED":"Avanzado","TRANSFERVIEWER_TRANSFER_NULL":"No hay descarga o carga en progreso ahora","STATS_STATUS_DISCONNECTING":"Desconectando ...","SETTINGS_ADVANCED_BUTTON_SHOW":"Mostrar configuración avanzada","ARCHIVE_DIALOG_REQUEST_SYNC":"¿Seguro que quieres compartir esta carpeta?","DRIVEMANAGER_TITLE":"Gerente de manejo","WIZARD_WELCOME":"Bienvenido a nefele","STATS_CARD_TERTIARY_TITLE":"Datos","STATS_CARD_PRIMARY_HEADER_1":"Almacenamiento","SETTINGS_THEME":"Apariencia","CONTEXT_MENU_DOWNLOAD":"Descargar","SETTINGS_ADVANCED_DIALOG_DESCRIPTION":"¿Realmente quieres aplicar los cambios? Esta acción será irreversible, los cambios se aplicarán en el próximo reinicio.","STATS_CARD_PRIMARY_HEADER_2":"Archivos temporales","STATS_CARD_PRIMARY_HEADER_3":"Memoria de tiempo de ejecución","STATS_CARD_TERTIARY_CONTENT_1":"Todos los archivos","STATS_STATUS_READY":"Listo","SETTINGS_FONT_SIZE_DESCRIPTION":"Seleccione su tamaño de fuente preferido.","STATS_CARD_TERTIARY_CONTENT_2":"Todas las carpetas","STATS_CARD_TERTIARY_CONTENT_3":"Acciones entrantes","SETTINGS_STARTUP_DESCRIPTION":"Ejecute Nefele en el inicio del sistema.","WIZARD_FIRST_CLOUD_DESCRIPTION":"Siga al asistente para agregar su primer espacio de almacenamiento.","DIALOG_EXIT":"Salida","WIZARD_SELECT_LANGUAGE":"Selecciona un idioma.","ERROR_DIRECTORY_NOT_EMPTY":"La carpeta seleccionada no está vacía","DIALOG_TITLE_ERROR":"Error","STATSDRIVEINFO_CONTENT_4":"Límite:","DOCKER_BUTTON_HINT_DRIVEMANAGER":"Gerente de manejo","ARCHIVE_DIALOG_FOLDER_NOTSELECTED":"La carpeta no ha sido seleccionada","STATS_CARD_TERTIARY_CONTENT_4":"Acciones salientes","STATS_STATUS_ERROR":"Error","ARCHIVE_HINT_HOME":"Casa","STATSDRIVEINFO_CONTENT_3":"Almacenamiento:","DIALOG_ABORT":"Cancelar","STATSDRIVEINFO_CONTENT_2":"Estado:","SYSTEM_TRAY_EXIT":"Salida","DOCKER_BUTTON_HINT_SETTINGS":"Configuraciones","SETTINGS_FONT_FAMILY":"Familia tipográfica","SETTINGS_ADVANCED_BUTTON_APPLY":"Aplicar","CONTEXT_MENU_OPEN":"Abierto","DOCKER_BUTTON_HINT_STATS":"Estadísticas","ARCHIVE_HINT_REFRESH":"Actualizar","STATS_CARD_SECONDARY_CONTENT_2":"Disponible","SYSTEM_TRAY_SHOW":"Abierto","STATS_CARD_SECONDARY_CONTENT_1":"Unidad de nube","ERROR_FILE_UPLOAD":"Se produjo un error al cargar el archivo o carpeta","SETTINGS_SHARED":"Compartir","ERROR_FILE_DELETE":"Se produjo un error al eliminar un archivo o carpeta","ARCHIVE_DIALOG_FOLDER_EMPTY":"El nombre de la carpeta no puede estar vacío","ARCHIVE_DIALOG_FOLDER_INVALID":"La ruta debe ser una carpeta","CLOUDHELPER_TITLE":"","CONTEXT_MENU_DELETE":"Eliminar","STATS_CARD_DIALOG_TEMPORARY_CLEAN":"¿Eliminar permanentemente los archivos temporales?","ARCHIVE_HINT_UPFILE":"Subir archivo"}
+{
+    "WORD_OF" : "de",
+
+    "WORD_FILE" : "expediente",
+
+    "WORD_FILES" : "archivos",
+
+    "WORD_FOLDER" : "carpeta",
+
+    "WORD_FOLDERS" : "carpetas",
+
+    "WORD_ADD" : "A\u00f1adir",
+
+    "ERROR_DIRECTORY_NOT_EMPTY" : "La carpeta seleccionada no est\u00e1 vac\u00eda",
+
+    "ERROR_FILE_DELETE" : "Se produjo un error al eliminar un archivo o carpeta",
+
+    "ERROR_FILE_UPLOAD" : "Se produjo un error al cargar el archivo o carpeta",
+
+    "STATUS_READY" : "\u00a1Listo!",
+
+    "STATUS_NETWORK_DOWN" : "No hay conexi\u00f3n de red disponible",
+
+    "STATUS_TRANSFER_ERROR" : "Transferencia fallida por",
+
+    "STATUS_TRANSFER_RUNNING" : "Transferencia corriendo por",
+
+    "STATUS_TRANSFER_COMPLETED" : "Transferencia completada para",
+
+    "STATUS_DRIVE_FULL" : "La unidad est\u00e1 llena, elimina algo o aumenta el espacio de almacenamiento",
+
+    "STATUS_DRIVE_EMPTY" : "No hay una unidad lista disponible, agregue una en la pesta\u00f1a Administrador de unidades",
+
+    "DIALOG_CONTINUE" : "Seguir",
+
+    "DIALOG_OK" : "Okay",
+
+    "DIALOG_ABORT" : "Cancelar",
+
+    "DIALOG_YES" : "si",
+
+    "DIALOG_NO" : "No",
+
+    "DIALOG_EXIT" : "Salida",
+
+    "DIALOG_RETRY" : "Rever",
+
+    "DIALOG_MINIMIZE" : "Minimizar en bandeja",
+
+    "DIALOG_TITLE_MESSAGE" : "Mensaje",
+
+    "DIALOG_TITLE_INFO" : "Informaci\u00f3n",
+
+    "DIALOG_TITLE_WARNING" : "Advertencia",
+
+    "DIALOG_TITLE_ERROR" : "Error",
+
+    "DIALOG_PANIC_TITLE" : "Error fatal",
+
+    "DIALOG_PANIC_MESSAGE" : "Ha ocurrido un error fatal, \u00a1nadie te ayudar\u00e1! \u00a1Borre todo su disco duro y deseche su m\u00e1quina!",
+
+    "INPUTDIALOG_TITLE" : "Ingrese el nombre de la carpeta",
+
+    "NEFELE_PANE_HINT_DARKMODE" : "Modo oscuro",
+
+    "CONTEXT_MENU_OPEN" : "Abierto",
+
+    "CONTEXT_MENU_DOWNLOAD" : "Descargar",
+
+    "CONTEXT_MENU_RENAME" : "Rebautizar",
+
+    "CONTEXT_MENU_DELETE" : "Eliminar",
+
+    "CONTEXT_MENU_SHARE" : "Sincronizar sin conexi\u00f3n",
+
+    "CONTEXT_MENU_UNSHARE" : "Eliminar sincronizaci\u00f3n",
+
+    "SETTINGS_GENERAL" : "General",
+
+    "SETTINGS_LOCALE" : "Idioma",
+
+    "SETTINGS_LOCALE_DESCRIPTION" : "Elija su idioma para mostrar los men\u00fas, mensajes y notificaciones de Nefele.",
+
+    "SETTINGS_THEME" : "Apariencia",
+
+    "SETTINGS_THEME_DESCRIPTION" : "Elige tu color.",
+
+    "SETTINGS_FONT_FAMILY" : "Familia tipogr\u00e1fica",
+
+    "SETTINGS_FONT_FAMILY_DESCRIPTION" : "Seleccione su familia de fuentes preferida.",
+
+    "SETTINGS_FONT_SIZE" : "Tama\u00f1o de fuente",
+
+    "SETTINGS_FONT_SIZE_DESCRIPTION" : "Seleccione su tama\u00f1o de fuente preferido.",
+
+    "SETTINGS_TRANSFERS" : "Descargar y subir",
+
+    "SETTINGS_TRANSFERS_DESCRIPTION" : "Elija el n\u00famero m\u00e1ximo de descargas y cargas simult\u00e1neas.",
+
+    "SETTINGS_SHARED" : "Compartir",
+
+    "SETTINGS_SHARED_DESCRIPTION" : "Elija si desea compartir y sincronizar su nube con otros dispositivos sin conexi\u00f3n.",
+
+    "SETTINGS_STARTUP" : "Puesta en marcha",
+
+    "SETTINGS_STARTUP_DESCRIPTION" : "Ejecute Nefele al iniciar el sistema.",
+
+    "SETTINGS_COMPRESSED" : "Compresi\u00f3n",
+
+    "SETTINGS_COMPRESSED_DESCRIPTION" : "Habilitar compresi\u00f3n de datos",
+
+    "SETTINGS_ENCRYPTED" : "Criptograf\u00eda",
+
+    "SETTINGS_ENCRYPTED_DESCRIPTION" : "Habilite la criptograf\u00eda de datos de extremo a extremo",
+
+    "SETTINGS_ADVANCED" : "Avanzado",
+
+    "SETTINGS_SYSTEM_INFO" : "Informaci\u00f3n",
+
+    "SETTINGS_ADVANCED_BUTTON_SHOW" : "Mostrar configuraci\u00f3n avanzada",
+
+    "SETTINGS_ADVANCED_BUTTON_HIDE" : "Ocultar configuraci\u00f3n avanzada",
+
+    "SETTINGS_ADVANCED_BUTTON_APPLY" : "Aplicar",
+
+    "SETTINGS_ADVANCED_DIALOG_DESCRIPTION" : "\u00bfRealmente quieres aplicar los cambios? Esta acci\u00f3n ser\u00e1 irreversible, los cambios se aplicar\u00e1n en el pr\u00f3ximo reinicio.",
+
+    "DOCKER_BUTTON_HINT_ARCHIVE" : "Archivo",
+
+    "DOCKER_BUTTON_HINT_TRANSFERVIEWER" : "Cola de transferencia",
+
+    "DOCKER_BUTTON_HINT_STATS" : "Estad\u00edsticas",
+
+    "DOCKER_BUTTON_HINT_DRIVEMANAGER" : "Gerente de manejo",
+
+    "DOCKER_BUTTON_HINT_SETTINGS" : "Configuraciones",
+
+    "DOCKER_BUTTON_HINT_EXIT" : "Cerrar sesi\u00f3n",
+
+    "ARCHIVE_HINT_FORWARD" : "Adelante",
+
+    "ARCHIVE_HINT_BACK" : "Espalda",
+
+    "ARCHIVE_HINT_HOME" : "Hogar",
+
+    "ARCHIVE_HINT_UPFILE" : "Subir archivo",
+
+    "ARCHIVE_HINT_ADDFOLDER" : "Crear carpeta",
+
+    "ARCHIVE_HINT_UPFOLDER" : "Subir carpeta",
+
+    "ARCHIVE_HINT_REFRESH" : "Actualizar",
+
+    "ARCHIVE_HINT_SYNC" : "Compartir carpeta",
+
+    "ARCHIVE_ERROR_DIALOG_REQUEST_SYNC" : "Algo sali\u00f3 mal en la sincronizaci\u00f3n. Por favor, int\u00e9ntelo de nuevo m\u00e1s tarde",
+
+    "ARCHIVE_DIALOG_RENAME_EMPTY" : "El nombre no puede estar vac\u00edo",
+
+    "ARCHIVE_DIALOG_RENAME_INVALID_NAME" : "El nombre debe ser valido",
+
+    "ARCHIVE_DIALOG_FILE_NOTSELECTED" : "El archivo no fue seleccionado",
+
+    "ARCHIVE_DIALOG_FILE_INVALID" : "La ruta debe ser un archivo",
+
+    "ARCHIVE_DIALOG_FOLDER_EMPTY" : "El nombre de la carpeta no puede estar vac\u00edo",
+
+    "ARCHIVE_DIALOG_FOLDER_NOTSELECTED" : "La carpeta no ha sido seleccionada",
+
+    "ARCHIVE_DIALOG_FOLDER_INVALID" : "La ruta debe ser una carpeta",
+
+    "ARCHIVE_DIALOG_REQUEST_SYNC" : "\u00bfSeguro que quieres compartir esta carpeta?",
+
+    "STATS_CARD_PRIMARY_TITLE" : "Uso general",
+
+    "STATS_CARD_PRIMARY_HEADER_1" : "Almacenamiento",
+
+    "STATS_CARD_PRIMARY_HEADER_2" : "Archivos temporales",
+
+    "STATS_CARD_PRIMARY_HEADER_3" : "Memoria de tiempo de ejecuci\u00f3n",
+
+    "STATS_CARD_SECONDARY_TITLE" : "Almacenamiento utilizado",
+
+    "STATS_CARD_SECONDARY_CONTENT_1" : "Unidad de nube",
+
+    "STATS_CARD_SECONDARY_CONTENT_2" : "Disponible",
+
+    "STATS_CARD_TERTIARY_TITLE" : "Datos",
+
+    "STATS_CARD_TERTIARY_CONTENT_1" : "Todos los archivos",
+
+    "STATS_CARD_TERTIARY_CONTENT_2" : "Todas las carpetas",
+
+    "STATS_CARD_TERTIARY_CONTENT_3" : "Acciones entrantes",
+
+    "STATS_CARD_TERTIARY_CONTENT_4" : "Acciones salientes",
+
+    "STATSDRIVEINFO_CONTENT_4" : "L\u00edmite:",
+
+    "STATSDRIVEINFO_CONTENT_3" : "Almacenamiento:",
+
+    "STATSDRIVEINFO_CONTENT_2" : "Estado:",
+
+    "STATSDRIVEINFO_STATUS_CONNECTED" : "Conectado",
+
+    "STATSDRIVEINFO_STATUS_DISCONNECTED" : "Desconectado",
+
+    "STATS_CARD_HINT_MEMORY_CLEAN" : "Memoria libre",
+
+    "STATS_CARD_HINT_TEMPORARY_CLEAN" : "Eliminar archivos temporales",
+
+    "STATS_CARD_DIALOG_TEMPORARY_CLEAN" : "\u00bfEliminar permanentemente los archivos temporales?",
+
+    "STATS_STATUS_UNKNOWN" : "Desconocido",
+
+    "STATS_STATUS_CONNECTING" : "Conectando",
+
+    "STATS_STATUS_READY" : "Listo",
+
+    "STATS_STATUS_DISCONNECTING" : "Desconectando ...",
+
+    "STATS_STATUS_DISCONNECTED" : "Desconectado",
+
+    "STATS_STATUS_ERROR" : "Error",
+
+    "STATS_STATUS_DISABLED" : "Deshabilitado por el usuario",
+
+    "HOME_DIALOG_DESCRIPTION" : "\u00bfEst\u00e1s seguro de que quieres renunciar a Nefele?",
+
+    "HOME_DIALOG_TITLE" : "Confirmar salida",
+
+    "SYSTEM_TRAY_ERROR" : "La bandeja del sistema no es compatible con el sistema.",
+
+    "SYSTEM_TRAY_SHOW" : "Abierto",
+
+    "SYSTEM_TRAY_EXIT" : "Salida",
+
+    "TRANSFERVIEWER_TRANSFER_NULL" : "No hay descarga o carga en curso ahora",
+
+    "TRANSFERVIEWER_TRANSFER_PREPARED" : "Preparando...",
+
+    "DRIVEMANAGER_TITLE" : "Gerente de manejo",
+
+    "DRIVEMANAGER_DESCRIPTION" : "Agregue, elimine o cambie la configuraci\u00f3n de su unidad.",
+
+    "SETTINGS_DRIVE_DIALOG_TITLE" : "Confirmar eliminaci\u00f3n",
+
+    "SETTINGS_DRIVE_DIALOG_DESCRIPTION" : "\u00bfRealmente quieres eliminar esta unidad? Esta acci\u00f3n podr\u00eda ser irreversible.",
+
+    "SETTINGS_DRIVE_ERROR_DIALOG_DESCRIPTION" : "Esta unidad contiene datos, por lo que no se puede eliminar, a\u00fan puede deshabilitarla en cualquier momento desde la configuraci\u00f3n",
+
+    "WIZARD_SELECT_LANGUAGE" : "Selecciona un idioma.",
+
+    "WIZARD_WELCOME" : "Bienvenido a nefele",
+
+    "WIZARD_TERMS" : "Acepto los t\u00e9rminos de uso del servicio y declaro que he le\u00eddo la informaci\u00f3n sobre el procesamiento de mis datos personales.",
+
+    "WIZARD_FIRST_CLOUD" : "Agregue su primera nube a Nefele",
+
+    "WIZARD_FIRST_CLOUD_DESCRIPTION" : "Siga al asistente para agregar su primer espacio de almacenamiento.",
+
+    "DRIVE_GOOGLE_DRIVE_HINT" : "Google Drive",
+
+    "DRIVE_DROPBOX_HINT" : "Dropbox Drive",
+
+    "DRIVE_OFFLINE_HINT" : "Drive sin conexi\u00f3n",
+
+    "CLOUDHELPER_TITLE" : "Seleccione un servicio de unidad para insertar en Nefele",
+
+    "CLOUDHELPER_DIALOG_ERROR_LOGIN" : "Se produjo un error al inicializar el controlador",
+
+    "CLOUDHELPER_FORM_NAME" : "Ingrese un alias para su servicio en la nube",
+
+    "CLOUDHELPER_FORM_QUOTA" : "Elige cu\u00e1nto espacio quieres dedicar a Nefele",
+
+    "CLOUDHELPER_FORM_DIALOG" : "\u00bfDe verdad quieres continuar? El alias asignado no ser\u00e1 editable",
+
+    "CLOUDHELPER_FORM_DIALOG_EMPTY_NAME" : "El alias no puede ser una cadena vac\u00eda",
+
+    "CLOUDHELPER_FORM_TITLE" : "Configuraci\u00f3n del servicio en la nube",
+
+    "WIZARD_END_MESSAGE" : "Ya casi hemos terminado..",
+
+    "DROPBOX_PROVIDER_ADVISE" : "Ingrese el c\u00f3digo de autorizaci\u00f3n que recibi\u00f3 de Dropbox"
+}

@@ -25,13 +25,12 @@
 package org.nefele.ui.dialog;
 
 import com.jfoenix.controls.JFXButton;
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
@@ -67,7 +66,7 @@ public class BaseDialog extends Stage {
         @FXML private HBox buttonHBox;
         @FXML private Label labelTitle;
         @FXML private Text textMessage;
-        @FXML private ImageView ivIcon;
+        @FXML private MaterialDesignIconView ivIcon;
         @FXML private ScrollPane scrollMessage;
 
         public MessagePane() {
@@ -85,7 +84,7 @@ public class BaseDialog extends Stage {
             textMessage.setText(getMessage());
 
             if(getIcon() != null)
-                ivIcon.setImage(getIcon());
+                ivIcon.setGlyphName(getIcon());
 
             Application.getInstance().getViews().add(this);
 
@@ -170,7 +169,7 @@ public class BaseDialog extends Stage {
 
 
     private final ArrayList<Integer> buttons;
-    private Image icon;
+    private String icon;
     private int dialogResult;
     private String message;
 
@@ -216,14 +215,13 @@ public class BaseDialog extends Stage {
 
 
 
-    protected Image getIcon() {
+    protected String getIcon() {
         return icon;
     }
 
-    protected void setIcon(Image icon) {
+    protected void setIcon(String icon) {
         this.icon = icon;
     }
-
 
 
     protected void exitWithDialogResult(int dialogResult) {

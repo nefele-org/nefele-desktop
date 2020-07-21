@@ -24,13 +24,9 @@
 
 package org.nefele.ui.dialog;
 
-import javafx.scene.image.Image;
-import org.nefele.core.Resources;
-
-
 public class ErrorDialog extends BaseDialog {
     public ErrorDialog(String title, String message){
         super(title, message);
-        setIcon(new Image(Resources.getURL(this, "/images/dialog_error.png").toExternalForm()));
+        setIcon("ALERT_BOX");
     }
 }

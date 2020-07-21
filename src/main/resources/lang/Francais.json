@@ -1,1 +1,285 @@
-{"SETTINGS_GENERAL":"Général","DIALOG_CONTINUE":"Continuer","STATSDRIVEINFO_STATUS_DISCONNECTED":"Débranché","NEFELE_PANE_HINT_DARKMODE":"Mode sombre","SETTINGS_FONT_SIZE":"Taille de police","DRIVEMANAGER_DESCRIPTION":"Ajoutez, supprimez ou modifiez les paramètres de votre lecteur.","STATS_CARD_HINT_MEMORY_CLEAN":"Mémoire libre","STATS_STATUS_DISABLED":"Désactivé par l'utilisateur","DIALOG_NO":"Non","ARCHIVE_HINT_SYNC":"Dossier de partage","SETTINGS_STARTUP":"Commencez","HOME_DIALOG_TITLE":"Confirmer la sortie","STATSDRIVEINFO_STATUS_CONNECTED":"Lié","STATS_CARD_HINT_TEMPORARY_CLEAN":"Supprimer les fichiers temporaires","ARCHIVE_HINT_UPFOLDER":"Dossier de téléchargement","STATS_STATUS_DISCONNECTED":"Débranché","DIALOG_OK":"D'accord","SETTINGS_TRANSFERS":"Télécharger et télécharger","SYSTEM_TRAY_ERROR":"La barre d'état système n'est pas prise en charge par le système.","DIALOG_MINIMIZE":"Minimiser sur le plateau","DIALOG_TITLE_WARNING":"Attention","WORD_FOLDERS":"Dossiers","SETTINGS_SHARED_DESCRIPTION":"Choisissez de partager et de synchroniser votre cloud avec d'autres appareils hors ligne.","STATS_STATUS_CONNECTING":"De liaison","WORD_FOLDER":"dossier","DIALOG_YES":"Oui","ARCHIVE_HINT_FORWARD":"Vers l'avant","STATS_STATUS_UNKNOWN":"Inconnue","DIALOG_TITLE_MESSAGE":"Message","SETTINGS_SYSTEM_INFO":"Information","STATS_CARD_SECONDARY_TITLE":"Stockage utilisé","DIALOG_PANIC_MESSAGE":"Une erreur fatale s'est produite, personne ne vous aidera! Veuillez effacer l'intégralité de votre disque dur et jeter votre machine!","TRANSFERVIEWER_TRANSFER_PREPARED":"En train de préparer...","SETTINGS_DRIVE_ERROR_DIALOG_DESCRIPTION":"Ce lecteur contient des données, il ne peut donc pas être supprimé, vous pouvez toujours le désactiver à tout moment à partir des paramètres","SETTINGS_LOCALE_DESCRIPTION":"Choisissez votre langue d'affichage des menus, messages et notifications de Nefele.","DOCKER_BUTTON_HINT_TRANSFERVIEWER":"File d'attente de transfert","DIALOG_TITLE_INFO":"Information","DOCKER_BUTTON_HINT_ARCHIVE":"Archiver","HOME_DIALOG_DESCRIPTION":"Êtes-vous sûr de vouloir quitter Nefele?","CONTEXT_MENU_RENAME":"Renommer","ARCHIVE_DIALOG_FOLDER_INVALID_NAME":"Le nom du dossier doit être valide","ARCHIVE_ERROR_DIALOG_REQUEST_SYNC":"Une erreur s'est produite lors de la synchronisation. Veuillez réessayer plus tard","SETTINGS_DRIVE_DIALOG_DESCRIPTION":"Voulez-vous vraiment supprimer ce Drive? Cette action pourrait être irréversible","SETTINGS_FONT_FAMILY_DESCRIPTION":"Sélectionnez votre famille de polices préférée.","WORD_FILE":"fichier","ARCHIVE_DIALOG_FILE_INVALID":"Le chemin doit être un fichier","SETTINGS_DRIVE_DIALOG_TITLE":"Confirmation de la suppression","SETTINGS_ADVANCED_BUTTON_HIDE":"Masquer les paramètres avancés","WIZARD_FIRST_CLOUD":"Ajoutez votre premier Cloud à Nefele","WIZARD_TERMS":"J'accepte les conditions d'utilisation du service et je déclare avoir pris connaissance des informations relatives au traitement de mes données personnelles.","INPUTDIALOG_TITLE":"Entrez le nom du dossier","DIALOG_PANIC_TITLE":"Erreur fatale","SETTINGS_THEME_DESCRIPTION":"Choisissez votre couleur.","SETTINGS_TRANSFERS_DESCRIPTION":"Choisissez le nombre maximal de téléchargements et de téléchargements simultanés.","DOCKER_BUTTON_HINT_EXIT":"Se déconnecter","WORD_FILES":"des dossiers","WORD_OF":"de","ARCHIVE_DIALOG_FILE_NOTSELECTED":"Le fichier n'a pas été sélectionné","ARCHIVE_HINT_BACK":"Retour","STATS_CARD_PRIMARY_TITLE":"Utilisation globale","WORD_ADD":"Ajouter","ARCHIVE_HINT_ADDFOLDER":"Créer le dossier","SETTINGS_LOCALE":"Langue","SETTINGS_ADVANCED":"Avancée","TRANSFERVIEWER_TRANSFER_NULL":"Aucun téléchargement ou téléchargement en cours maintenant","STATS_STATUS_DISCONNECTING":"Déconnexion ...","SETTINGS_ADVANCED_BUTTON_SHOW":"Afficher les paramètres avancés","ARCHIVE_DIALOG_REQUEST_SYNC":"Voulez-vous vraiment partager ce dossier?","DRIVEMANAGER_TITLE":"Drive Manager","WIZARD_WELCOME":"Bienvenue à Nefele","STATS_CARD_TERTIARY_TITLE":"Les données","STATS_CARD_PRIMARY_HEADER_1":"Espace de rangement","SETTINGS_THEME":"Apparence","CONTEXT_MENU_DOWNLOAD":"Télécharger","SETTINGS_ADVANCED_DIALOG_DESCRIPTION":"Voulez-vous vraiment appliquer les modifications? Cette action sera irréversible, les modifications seront appliquées au prochain redémarrage.","STATS_CARD_PRIMARY_HEADER_2":"Fichiers temporaires","STATS_CARD_PRIMARY_HEADER_3":"Mémoire d'exécution","STATS_CARD_TERTIARY_CONTENT_1":"Tous les fichiers","STATS_STATUS_READY":"Prêt","SETTINGS_FONT_SIZE_DESCRIPTION":"Sélectionnez votre taille de police préférée.","STATS_CARD_TERTIARY_CONTENT_2":"Tous les dossiers","STATS_CARD_TERTIARY_CONTENT_3":"Partages entrants","SETTINGS_STARTUP_DESCRIPTION":"Exécutez Nefele au démarrage du système.","WIZARD_FIRST_CLOUD_DESCRIPTION":"Suivez l'assistant pour ajouter votre premier espace de stockage.","DIALOG_EXIT":"Sortie","WIZARD_SELECT_LANGUAGE":"Sélectionnez une langue.","ERROR_DIRECTORY_NOT_EMPTY":"Le dossier sélectionné n'est pas vide","DIALOG_TITLE_ERROR":"Erreur","STATSDRIVEINFO_CONTENT_4":"Limite:","DOCKER_BUTTON_HINT_DRIVEMANAGER":"Drive Manager","ARCHIVE_DIALOG_FOLDER_NOTSELECTED":"Le dossier n'a pas été sélectionné","STATS_CARD_TERTIARY_CONTENT_4":"Partages sortants","STATS_STATUS_ERROR":"Erreur","ARCHIVE_HINT_HOME":"Accueil","STATSDRIVEINFO_CONTENT_3":"Espace de rangement:","DIALOG_ABORT":"Annuler","STATSDRIVEINFO_CONTENT_2":"Statut:","SYSTEM_TRAY_EXIT":"Sortie","DOCKER_BUTTON_HINT_SETTINGS":"Réglages","SETTINGS_FONT_FAMILY":"Famille de polices","SETTINGS_ADVANCED_BUTTON_APPLY":"Appliquer","CONTEXT_MENU_OPEN":"Ouvert","DOCKER_BUTTON_HINT_STATS":"Statistiques","ARCHIVE_HINT_REFRESH":"Rafraîchir","STATS_CARD_SECONDARY_CONTENT_2":"Disponible","SYSTEM_TRAY_SHOW":"Ouvert","STATS_CARD_SECONDARY_CONTENT_1":"Cloud Drive","ERROR_FILE_UPLOAD":"Une erreur s'est produite lors du téléchargement du fichier ou du dossier","SETTINGS_SHARED":"Partage","ERROR_FILE_DELETE":"Une erreur s'est produite lors de la suppression d'un fichier ou d'un dossier","ARCHIVE_DIALOG_FOLDER_EMPTY":"Le nom du dossier ne peut pas être vide","ARCHIVE_DIALOG_FOLDER_INVALID":"Le chemin doit être un dossier","CLOUDHELPER_TITLE":"","CONTEXT_MENU_DELETE":"Supprimer","STATS_CARD_DIALOG_TEMPORARY_CLEAN":"Supprimer définitivement les fichiers temporaires?","ARCHIVE_HINT_UPFILE":"Téléverser un fichier"}
+{
+    "WORD_OF" : "de",
+
+    "WORD_FILE" : "fichier",
+
+    "WORD_FILES" : "des dossiers",
+
+    "WORD_FOLDER" : "dossier",
+
+    "WORD_FOLDERS" : "Dossiers",
+
+    "WORD_ADD" : "Ajouter",
+
+    "ERROR_DIRECTORY_NOT_EMPTY" : "Le dossier s\u00e9lectionn\u00e9 n'est pas vide",
+
+    "ERROR_FILE_DELETE" : "Une erreur s'est produite lors de la suppression d'un fichier ou d'un dossier",
+
+    "ERROR_FILE_UPLOAD" : "Une erreur s'est produite lors du t\u00e9l\u00e9chargement du fichier ou du dossier",
+
+    "STATUS_READY" : "Pr\u00eat!",
+
+    "STATUS_NETWORK_DOWN" : "Aucune connexion r\u00e9seau disponible",
+
+    "STATUS_TRANSFER_ERROR" : "Le transfert a \u00e9chou\u00e9 pour",
+
+    "STATUS_TRANSFER_RUNNING" : "Transfert en cours pour",
+
+    "STATUS_TRANSFER_COMPLETED" : "Transfert termin\u00e9 pour",
+
+    "STATUS_DRIVE_FULL" : "Le lecteur est plein, supprimez quelque chose ou augmentez l'espace de stockage",
+
+    "STATUS_DRIVE_EMPTY" : "Aucun lecteur pr\u00eat disponible, veuillez en ajouter un dans l'onglet Drive Manager",
+
+    "DIALOG_CONTINUE" : "Continuer",
+
+    "DIALOG_OK" : "D'accord",
+
+    "DIALOG_ABORT" : "Annuler",
+
+    "DIALOG_YES" : "Oui",
+
+    "DIALOG_NO" : "Non",
+
+    "DIALOG_EXIT" : "Sortie",
+
+    "DIALOG_RETRY" : "Recommencez",
+
+    "DIALOG_MINIMIZE" : "Minimiser sur le plateau",
+
+    "DIALOG_TITLE_MESSAGE" : "Message",
+
+    "DIALOG_TITLE_INFO" : "Information",
+
+    "DIALOG_TITLE_WARNING" : "avertissement",
+
+    "DIALOG_TITLE_ERROR" : "Erreur",
+
+    "DIALOG_PANIC_TITLE" : "Erreur fatale",
+
+    "DIALOG_PANIC_MESSAGE" : "Une erreur fatale s'est produite, personne ne vous aidera! Veuillez effacer tout votre disque dur et jeter votre machine!",
+
+    "INPUTDIALOG_TITLE" : "Entrez le nom du dossier",
+
+    "NEFELE_PANE_HINT_DARKMODE" : "Mode sombre",
+
+    "CONTEXT_MENU_OPEN" : "Ouvert",
+
+    "CONTEXT_MENU_DOWNLOAD" : "T\u00e9l\u00e9charger",
+
+    "CONTEXT_MENU_RENAME" : "Renommer",
+
+    "CONTEXT_MENU_DELETE" : "Supprimer",
+
+    "CONTEXT_MENU_SHARE" : "Synchroniser hors ligne",
+
+    "CONTEXT_MENU_UNSHARE" : "Supprimer la synchronisation",
+
+    "SETTINGS_GENERAL" : "G\u00e9n\u00e9ral",
+
+    "SETTINGS_LOCALE" : "Langue",
+
+    "SETTINGS_LOCALE_DESCRIPTION" : "Choisissez votre langue dans laquelle afficher les menus, les messages et les notifications de Nefele.",
+
+    "SETTINGS_THEME" : "Apparence",
+
+    "SETTINGS_THEME_DESCRIPTION" : "Choisissez votre couleur.",
+
+    "SETTINGS_FONT_FAMILY" : "Famille de polices",
+
+    "SETTINGS_FONT_FAMILY_DESCRIPTION" : "S\u00e9lectionnez votre famille de polices pr\u00e9f\u00e9r\u00e9e.",
+
+    "SETTINGS_FONT_SIZE" : "Taille de police",
+
+    "SETTINGS_FONT_SIZE_DESCRIPTION" : "S\u00e9lectionnez votre taille de police pr\u00e9f\u00e9r\u00e9e.",
+
+    "SETTINGS_TRANSFERS" : "T\u00e9l\u00e9charger et t\u00e9l\u00e9charger",
+
+    "SETTINGS_TRANSFERS_DESCRIPTION" : "Choisissez le nombre maximum de t\u00e9l\u00e9chargements et de t\u00e9l\u00e9chargements simultan\u00e9s.",
+
+    "SETTINGS_SHARED" : "Partage",
+
+    "SETTINGS_SHARED_DESCRIPTION" : "Choisissez de partager et de synchroniser votre cloud avec d'autres appareils hors ligne.",
+
+    "SETTINGS_STARTUP" : "Commencez",
+
+    "SETTINGS_STARTUP_DESCRIPTION" : "Ex\u00e9cutez Nefele au d\u00e9marrage du syst\u00e8me.",
+
+    "SETTINGS_COMPRESSED" : "Compression",
+
+    "SETTINGS_COMPRESSED_DESCRIPTION" : "Activer la compression des donn\u00e9es",
+
+    "SETTINGS_ENCRYPTED" : "Cryptographie",
+
+    "SETTINGS_ENCRYPTED_DESCRIPTION" : "Activer la cryptographie des donn\u00e9es de bout en bout",
+
+    "SETTINGS_ADVANCED" : "Avanc\u00e9e",
+
+    "SETTINGS_SYSTEM_INFO" : "Information",
+
+    "SETTINGS_ADVANCED_BUTTON_SHOW" : "Afficher les param\u00e8tres avanc\u00e9s",
+
+    "SETTINGS_ADVANCED_BUTTON_HIDE" : "Masquer les param\u00e8tres avanc\u00e9s",
+
+    "SETTINGS_ADVANCED_BUTTON_APPLY" : "Appliquer",
+
+    "SETTINGS_ADVANCED_DIALOG_DESCRIPTION" : "Voulez-vous vraiment appliquer les modifications? Cette action sera irr\u00e9versible, les modifications seront appliqu\u00e9es au prochain red\u00e9marrage.",
+
+    "DOCKER_BUTTON_HINT_ARCHIVE" : "Archiver",
+
+    "DOCKER_BUTTON_HINT_TRANSFERVIEWER" : "File d'attente de transfert",
+
+    "DOCKER_BUTTON_HINT_STATS" : "Statistiques",
+
+    "DOCKER_BUTTON_HINT_DRIVEMANAGER" : "Gestionnaire de lecteur",
+
+    "DOCKER_BUTTON_HINT_SETTINGS" : "Param\u00e8tres",
+
+    "DOCKER_BUTTON_HINT_EXIT" : "Se d\u00e9connecter",
+
+    "ARCHIVE_HINT_FORWARD" : "Vers l'avant",
+
+    "ARCHIVE_HINT_BACK" : "Arri\u00e8re",
+
+    "ARCHIVE_HINT_HOME" : "Accueil",
+
+    "ARCHIVE_HINT_UPFILE" : "T\u00e9l\u00e9verser un fichier",
+
+    "ARCHIVE_HINT_ADDFOLDER" : "Cr\u00e9er le dossier",
+
+    "ARCHIVE_HINT_UPFOLDER" : "T\u00e9l\u00e9charger le dossier",
+
+    "ARCHIVE_HINT_REFRESH" : "Rafra\u00eechir",
+
+    "ARCHIVE_HINT_SYNC" : "Dossier de partage",
+
+    "ARCHIVE_ERROR_DIALOG_REQUEST_SYNC" : "Une erreur s'est produite lors de la synchronisation. Veuillez r\u00e9essayer plus tard",
+
+    "ARCHIVE_DIALOG_RENAME_EMPTY" : "Le nom ne peut pas \u00eatre vide",
+
+    "ARCHIVE_DIALOG_RENAME_INVALID_NAME" : "Le nom doit \u00eatre valide",
+
+    "ARCHIVE_DIALOG_FILE_NOTSELECTED" : "Le fichier n'a pas \u00e9t\u00e9 s\u00e9lectionn\u00e9",
+
+    "ARCHIVE_DIALOG_FILE_INVALID" : "Le chemin doit \u00eatre un fichier",
+
+    "ARCHIVE_DIALOG_FOLDER_EMPTY" : "Le nom du dossier ne peut pas \u00eatre vide",
+
+    "ARCHIVE_DIALOG_FOLDER_NOTSELECTED" : "Le dossier n'a pas \u00e9t\u00e9 s\u00e9lectionn\u00e9",
+
+    "ARCHIVE_DIALOG_FOLDER_INVALID" : "Le chemin doit \u00eatre un dossier",
+
+    "ARCHIVE_DIALOG_REQUEST_SYNC" : "Voulez-vous vraiment partager ce dossier?",
+
+    "STATS_CARD_PRIMARY_TITLE" : "Utilisation globale",
+
+    "STATS_CARD_PRIMARY_HEADER_1" : "Espace de rangement",
+
+    "STATS_CARD_PRIMARY_HEADER_2" : "Fichiers temporaires",
+
+    "STATS_CARD_PRIMARY_HEADER_3" : "M\u00e9moire d'ex\u00e9cution",
+
+    "STATS_CARD_SECONDARY_TITLE" : "Stockage utilis\u00e9",
+
+    "STATS_CARD_SECONDARY_CONTENT_1" : "Cloud Drive",
+
+    "STATS_CARD_SECONDARY_CONTENT_2" : "Disponible",
+
+    "STATS_CARD_TERTIARY_TITLE" : "Les donn\u00e9es",
+
+    "STATS_CARD_TERTIARY_CONTENT_1" : "Tous les fichiers",
+
+    "STATS_CARD_TERTIARY_CONTENT_2" : "Tous les dossiers",
+
+    "STATS_CARD_TERTIARY_CONTENT_3" : "Partages entrants",
+
+    "STATS_CARD_TERTIARY_CONTENT_4" : "Partages sortants",
+
+    "STATSDRIVEINFO_CONTENT_4" : "Limite:",
+
+    "STATSDRIVEINFO_CONTENT_3" : "Espace de rangement:",
+
+    "STATSDRIVEINFO_CONTENT_2" : "Statut:",
+
+    "STATSDRIVEINFO_STATUS_CONNECTED" : "Li\u00e9",
+
+    "STATSDRIVEINFO_STATUS_DISCONNECTED" : "D\u00e9branch\u00e9",
+
+    "STATS_CARD_HINT_MEMORY_CLEAN" : "M\u00e9moire libre",
+
+    "STATS_CARD_HINT_TEMPORARY_CLEAN" : "Supprimer les fichiers temporaires",
+
+    "STATS_CARD_DIALOG_TEMPORARY_CLEAN" : "Supprimer d\u00e9finitivement les fichiers temporaires?",
+
+    "STATS_STATUS_UNKNOWN" : "Inconnue",
+
+    "STATS_STATUS_CONNECTING" : "De liaison",
+
+    "STATS_STATUS_READY" : "Pr\u00eat",
+
+    "STATS_STATUS_DISCONNECTING" : "D\u00e9connexion ...",
+
+    "STATS_STATUS_DISCONNECTED" : "D\u00e9branch\u00e9",
+
+    "STATS_STATUS_ERROR" : "Erreur",
+
+    "STATS_STATUS_DISABLED" : "D\u00e9sactiv\u00e9 par l'utilisateur",
+
+    "HOME_DIALOG_DESCRIPTION" : "Voulez-vous vraiment quitter Nefele?",
+
+    "HOME_DIALOG_TITLE" : "Confirmer la sortie",
+
+    "SYSTEM_TRAY_ERROR" : "La barre d'\u00e9tat syst\u00e8me n'est pas prise en charge par le syst\u00e8me.",
+
+    "SYSTEM_TRAY_SHOW" : "Ouvert",
+
+    "SYSTEM_TRAY_EXIT" : "Sortie",
+
+    "TRANSFERVIEWER_TRANSFER_NULL" : "Aucun t\u00e9l\u00e9chargement ou t\u00e9l\u00e9chargement en cours actuellement",
+
+    "TRANSFERVIEWER_TRANSFER_PREPARED" : "En train de pr\u00e9parer...",
+
+    "DRIVEMANAGER_TITLE" : "Gestionnaire de lecteur",
+
+    "DRIVEMANAGER_DESCRIPTION" : "Ajoutez, supprimez ou modifiez les param\u00e8tres de votre lecteur.",
+
+    "SETTINGS_DRIVE_DIALOG_TITLE" : "Confirmation de la suppression",
+
+    "SETTINGS_DRIVE_DIALOG_DESCRIPTION" : "Voulez-vous vraiment supprimer ce Drive? Cette action pourrait \u00eatre irr\u00e9versible",
+
+    "SETTINGS_DRIVE_ERROR_DIALOG_DESCRIPTION" : "Ce lecteur contient des donn\u00e9es et ne peut donc pas \u00eatre supprim\u00e9, vous pouvez toujours le d\u00e9sactiver \u00e0 tout moment dans les param\u00e8tres",
+
+    "WIZARD_SELECT_LANGUAGE" : "S\u00e9lectionnez une langue.",
+
+    "WIZARD_WELCOME" : "Bienvenue \u00e0 Nefele",
+
+    "WIZARD_TERMS" : "J'accepte les conditions d'utilisation du service et je d\u00e9clare avoir pris connaissance des informations relatives au traitement de mes donn\u00e9es personnelles.",
+
+    "WIZARD_FIRST_CLOUD" : "Ajoutez votre premier Cloud \u00e0 Nefele",
+
+    "WIZARD_FIRST_CLOUD_DESCRIPTION" : "Suivez l'assistant pour ajouter votre premier espace de stockage.",
+
+    "DRIVE_GOOGLE_DRIVE_HINT" : "Google Drive",
+
+    "DRIVE_DROPBOX_HINT" : "Lecteur Dropbox",
+
+    "DRIVE_OFFLINE_HINT" : "Lecteur hors ligne",
+
+    "CLOUDHELPER_TITLE" : "S\u00e9lectionnez un service Drive \u00e0 ins\u00e9rer sur Nefele",
+
+    "CLOUDHELPER_DIALOG_ERROR_LOGIN" : "Une erreur s'est produite lors de l'initialisation du pilote",
+
+    "CLOUDHELPER_FORM_NAME" : "Entrez un alias pour votre service cloud",
+
+    "CLOUDHELPER_FORM_QUOTA" : "Choisissez l'espace que vous souhaitez consacrer \u00e0 Nefele",
+
+    "CLOUDHELPER_FORM_DIALOG" : "Voulez-vous vraiment continuer? L'alias attribu\u00e9 ne sera pas modifiable",
+
+    "CLOUDHELPER_FORM_DIALOG_EMPTY_NAME" : "L'alias ne peut pas \u00eatre une cha\u00eene vide",
+
+    "CLOUDHELPER_FORM_TITLE" : "Param\u00e8tres du service cloud",
+
+    "WIZARD_END_MESSAGE" : "Nous avons presque termin\u00e9.",
+
+    "DROPBOX_PROVIDER_ADVISE" : "Saisissez le code d'autorisation que vous avez re\u00e7u de Dropbox"
+}

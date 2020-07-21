@@ -41,10 +41,6 @@ public abstract class WizardPage extends StackPane implements Initializable, The
     private final BooleanProperty checked;
     private final ReadOnlyObjectProperty<Parent> wizardRoot;
 
-    public WizardPage() {
-        throw new IllegalStateException();
-    }
-
     public WizardPage(Parent wizardRoot) {
         this.checked = new SimpleBooleanProperty(false);
         this.wizardRoot = new SimpleObjectProperty<>(wizardRoot);

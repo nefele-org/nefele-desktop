@@ -1,0 +1,285 @@
+{
+    "WORD_OF" : "z",
+
+    "WORD_FILE" : "plik",
+
+    "WORD_FILES" : "pliki",
+
+    "WORD_FOLDER" : "teczka",
+
+    "WORD_FOLDERS" : "lornetka sk\u0142adana",
+
+    "WORD_ADD" : "Dodaj",
+
+    "ERROR_DIRECTORY_NOT_EMPTY" : "Wybrany folder nie jest pusty",
+
+    "ERROR_FILE_DELETE" : "Wyst\u0105pi\u0142 b\u0142\u0105d podczas usuwania pliku lub folderu",
+
+    "ERROR_FILE_UPLOAD" : "Wyst\u0105pi\u0142 b\u0142\u0105d podczas przesy\u0142ania pliku lub folderu",
+
+    "STATUS_READY" : "Gotowy!",
+
+    "STATUS_NETWORK_DOWN" : "Brak po\u0142\u0105czenia sieciowego",
+
+    "STATUS_TRANSFER_ERROR" : "Transfer nie powi\u00f3d\u0142 si\u0119 dla",
+
+    "STATUS_TRANSFER_RUNNING" : "Transfer dzia\u0142a dla",
+
+    "STATUS_TRANSFER_COMPLETED" : "Transfer zako\u0144czony dla",
+
+    "STATUS_DRIVE_FULL" : "Dysk jest pe\u0142ny, usu\u0144 co\u015b lub zwi\u0119ksz przestrze\u0144 dyskow\u0105",
+
+    "STATUS_DRIVE_EMPTY" : "Brak gotowego dysku, dodaj go na karcie Mened\u017cer dysk\u00f3w",
+
+    "DIALOG_CONTINUE" : "Kontyntynuj",
+
+    "DIALOG_OK" : "Dobrze",
+
+    "DIALOG_ABORT" : "Anuluj",
+
+    "DIALOG_YES" : "tak",
+
+    "DIALOG_NO" : "Nie",
+
+    "DIALOG_EXIT" : "Wyj\u015bcie",
+
+    "DIALOG_RETRY" : "Spr\u00f3bowa\u0107 ponownie",
+
+    "DIALOG_MINIMIZE" : "Zminimalizuj na tacy",
+
+    "DIALOG_TITLE_MESSAGE" : "Wiadomo\u015b\u0107",
+
+    "DIALOG_TITLE_INFO" : "Informacja",
+
+    "DIALOG_TITLE_WARNING" : "Ostrze\u017cenie",
+
+    "DIALOG_TITLE_ERROR" : "B\u0142\u0105d",
+
+    "DIALOG_PANIC_TITLE" : "B\u0142\u0105d krytyczny",
+
+    "DIALOG_PANIC_MESSAGE" : "Wyst\u0105pi\u0142 b\u0142\u0105d krytyczny, nikt Ci nie pomo\u017ce! Wyma\u017c ca\u0142y dysk twardy i wyrzu\u0107 komputer!",
+
+    "INPUTDIALOG_TITLE" : "Wprowad\u017a nazw\u0119 folderu",
+
+    "NEFELE_PANE_HINT_DARKMODE" : "Tryb ciemny",
+
+    "CONTEXT_MENU_OPEN" : "otwarty",
+
+    "CONTEXT_MENU_DOWNLOAD" : "Pobieranie",
+
+    "CONTEXT_MENU_RENAME" : "Przemianowa\u0107",
+
+    "CONTEXT_MENU_DELETE" : "Usun\u0105\u0107",
+
+    "CONTEXT_MENU_SHARE" : "Synchronizuj offline",
+
+    "CONTEXT_MENU_UNSHARE" : "Usu\u0144 synchronizacj\u0119",
+
+    "SETTINGS_GENERAL" : "Genera\u0142",
+
+    "SETTINGS_LOCALE" : "J\u0119zyk",
+
+    "SETTINGS_LOCALE_DESCRIPTION" : "Wybierz j\u0119zyk, w kt\u00f3rym maj\u0105 by\u0107 wy\u015bwietlane menu, komunikaty i powiadomienia Nefele.",
+
+    "SETTINGS_THEME" : "Wygl\u0105d",
+
+    "SETTINGS_THEME_DESCRIPTION" : "Wybierz sw\u00f3j kolor.",
+
+    "SETTINGS_FONT_FAMILY" : "Rodzina czcionek",
+
+    "SETTINGS_FONT_FAMILY_DESCRIPTION" : "Wybierz preferowan\u0105 rodzin\u0119 czcionek.",
+
+    "SETTINGS_FONT_SIZE" : "Rozmiar czcionki",
+
+    "SETTINGS_FONT_SIZE_DESCRIPTION" : "Wybierz preferowany rozmiar czcionki.",
+
+    "SETTINGS_TRANSFERS" : "Pobierz i prze\u015blij",
+
+    "SETTINGS_TRANSFERS_DESCRIPTION" : "Wybierz maksymaln\u0105 liczb\u0119 jednoczesnych pobra\u0144 i za\u0142adowa\u0144.",
+
+    "SETTINGS_SHARED" : "Dzielenie si\u0119",
+
+    "SETTINGS_SHARED_DESCRIPTION" : "Wybierz, czy chcesz udost\u0119pnia\u0107 i synchronizowa\u0107 chmur\u0119 z innymi urz\u0105dzeniami offline.",
+
+    "SETTINGS_STARTUP" : "Uruchomienie",
+
+    "SETTINGS_STARTUP_DESCRIPTION" : "Uruchom Nefele przy starcie systemu.",
+
+    "SETTINGS_COMPRESSED" : "Kompresja",
+
+    "SETTINGS_COMPRESSED_DESCRIPTION" : "W\u0142\u0105cz kompresj\u0119 danych",
+
+    "SETTINGS_ENCRYPTED" : "Kryptografia",
+
+    "SETTINGS_ENCRYPTED_DESCRIPTION" : "W\u0142\u0105cz kompleksow\u0105 kryptografi\u0119 danych",
+
+    "SETTINGS_ADVANCED" : "zaawansowane",
+
+    "SETTINGS_SYSTEM_INFO" : "Informacja",
+
+    "SETTINGS_ADVANCED_BUTTON_SHOW" : "Poka\u017c ustawienia zaawansowane",
+
+    "SETTINGS_ADVANCED_BUTTON_HIDE" : "Ukryj ustawienia zaawansowane",
+
+    "SETTINGS_ADVANCED_BUTTON_APPLY" : "Zastosowa\u0107",
+
+    "SETTINGS_ADVANCED_DIALOG_DESCRIPTION" : "Czy na pewno chcesz zastosowa\u0107 zmiany? Ta akcja b\u0119dzie nieodwracalna, zmiany zostan\u0105 zastosowane przy nast\u0119pnym uruchomieniu.",
+
+    "DOCKER_BUTTON_HINT_ARCHIVE" : "Archiwum",
+
+    "DOCKER_BUTTON_HINT_TRANSFERVIEWER" : "Kolejka transferowa",
+
+    "DOCKER_BUTTON_HINT_STATS" : "Statystyki",
+
+    "DOCKER_BUTTON_HINT_DRIVEMANAGER" : "Mened\u017cer dysk\u00f3w",
+
+    "DOCKER_BUTTON_HINT_SETTINGS" : "Ustawienia",
+
+    "DOCKER_BUTTON_HINT_EXIT" : "Wyloguj",
+
+    "ARCHIVE_HINT_FORWARD" : "Naprz\u00f3d",
+
+    "ARCHIVE_HINT_BACK" : "Plecy",
+
+    "ARCHIVE_HINT_HOME" : "Dom",
+
+    "ARCHIVE_HINT_UPFILE" : "Przesy\u0142anie pliku",
+
+    "ARCHIVE_HINT_ADDFOLDER" : "Utw\u00f3rz folder",
+
+    "ARCHIVE_HINT_UPFOLDER" : "Prze\u015blij folder",
+
+    "ARCHIVE_HINT_REFRESH" : "Od\u015bwie\u017ca\u0107",
+
+    "ARCHIVE_HINT_SYNC" : "Udost\u0119pnij folder",
+
+    "ARCHIVE_ERROR_DIALOG_REQUEST_SYNC" : "Co\u015b posz\u0142o nie tak podczas synchronizacji. Spr\u00f3buj ponownie p\u00f3\u017aniej",
+
+    "ARCHIVE_DIALOG_RENAME_EMPTY" : "Nazwa nie mo\u017ce by\u0107 pusta",
+
+    "ARCHIVE_DIALOG_RENAME_INVALID_NAME" : "Imi\u0119 musi by\u0107 prawid\u0142owe",
+
+    "ARCHIVE_DIALOG_FILE_NOTSELECTED" : "Plik nie zosta\u0142 wybrany",
+
+    "ARCHIVE_DIALOG_FILE_INVALID" : "\u015acie\u017cka musi by\u0107 plikiem",
+
+    "ARCHIVE_DIALOG_FOLDER_EMPTY" : "Nazwa folderu nie mo\u017ce by\u0107 pusta",
+
+    "ARCHIVE_DIALOG_FOLDER_NOTSELECTED" : "Folder nie zosta\u0142 wybrany",
+
+    "ARCHIVE_DIALOG_FOLDER_INVALID" : "\u015acie\u017cka musi by\u0107 folderem",
+
+    "ARCHIVE_DIALOG_REQUEST_SYNC" : "Czy na pewno chcesz udost\u0119pni\u0107 ten folder?",
+
+    "STATS_CARD_PRIMARY_TITLE" : "Og\u00f3lne wykorzystanie",
+
+    "STATS_CARD_PRIMARY_HEADER_1" : "Przechowywanie",
+
+    "STATS_CARD_PRIMARY_HEADER_2" : "Pliki tymczasowe",
+
+    "STATS_CARD_PRIMARY_HEADER_3" : "Pami\u0119\u0107 uruchomieniowa",
+
+    "STATS_CARD_SECONDARY_TITLE" : "Wykorzystane miejsce na dane",
+
+    "STATS_CARD_SECONDARY_CONTENT_1" : "Cloud Drive",
+
+    "STATS_CARD_SECONDARY_CONTENT_2" : "Dost\u0119pny",
+
+    "STATS_CARD_TERTIARY_TITLE" : "Dane",
+
+    "STATS_CARD_TERTIARY_CONTENT_1" : "Wszystkie pliki",
+
+    "STATS_CARD_TERTIARY_CONTENT_2" : "Wszystkie foldery",
+
+    "STATS_CARD_TERTIARY_CONTENT_3" : "Udost\u0119pnienia przychodz\u0105ce",
+
+    "STATS_CARD_TERTIARY_CONTENT_4" : "Akcje wychodz\u0105ce",
+
+    "STATSDRIVEINFO_CONTENT_4" : "Limit:",
+
+    "STATSDRIVEINFO_CONTENT_3" : "Przechowywanie:",
+
+    "STATSDRIVEINFO_CONTENT_2" : "Status:",
+
+    "STATSDRIVEINFO_STATUS_CONNECTED" : "Po\u0142\u0105czony",
+
+    "STATSDRIVEINFO_STATUS_DISCONNECTED" : "Bez\u0142adny",
+
+    "STATS_CARD_HINT_MEMORY_CLEAN" : "Wolna pami\u0119\u0107",
+
+    "STATS_CARD_HINT_TEMPORARY_CLEAN" : "Usu\u0144 pliki tymczasowe",
+
+    "STATS_CARD_DIALOG_TEMPORARY_CLEAN" : "Trwale usun\u0105\u0107 pliki tymczasowe?",
+
+    "STATS_STATUS_UNKNOWN" : "Nieznany",
+
+    "STATS_STATUS_CONNECTING" : "Z\u0142\u0105czony",
+
+    "STATS_STATUS_READY" : "Gotowy",
+
+    "STATS_STATUS_DISCONNECTING" : "Roz\u0142\u0105czam ...",
+
+    "STATS_STATUS_DISCONNECTED" : "Bez\u0142adny",
+
+    "STATS_STATUS_ERROR" : "B\u0142\u0105d",
+
+    "STATS_STATUS_DISABLED" : "Wy\u0142\u0105czone przez u\u017cytkownika",
+
+    "HOME_DIALOG_DESCRIPTION" : "Czy na pewno chcesz opu\u015bci\u0107 Nefele?",
+
+    "HOME_DIALOG_TITLE" : "Potwierd\u017a wyj\u015bcie",
+
+    "SYSTEM_TRAY_ERROR" : "Zasobnik systemowy nie jest obs\u0142ugiwany przez system.",
+
+    "SYSTEM_TRAY_SHOW" : "otwarty",
+
+    "SYSTEM_TRAY_EXIT" : "Wyj\u015bcie",
+
+    "TRANSFERVIEWER_TRANSFER_NULL" : "Nie trwa pobieranie ani przesy\u0142anie",
+
+    "TRANSFERVIEWER_TRANSFER_PREPARED" : "Przygotowuj\u0119 ...",
+
+    "DRIVEMANAGER_TITLE" : "Mened\u017cer dysk\u00f3w",
+
+    "DRIVEMANAGER_DESCRIPTION" : "Dodaj, usu\u0144 lub zmie\u0144 ustawienia dysku.",
+
+    "SETTINGS_DRIVE_DIALOG_TITLE" : "Potwierd\u017a usuni\u0119cie",
+
+    "SETTINGS_DRIVE_DIALOG_DESCRIPTION" : "Czy na pewno chcesz usun\u0105\u0107 ten Dysk? Ta czynno\u015b\u0107 mo\u017ce by\u0107 nieodwracalna",
+
+    "SETTINGS_DRIVE_ERROR_DIALOG_DESCRIPTION" : "Ten dysk zawiera dane, wi\u0119c nie mo\u017cna go usun\u0105\u0107, nadal mo\u017cesz go wy\u0142\u0105czy\u0107 w dowolnym momencie w ustawieniach",
+
+    "WIZARD_SELECT_LANGUAGE" : "Wybierz j\u0119zyk.",
+
+    "WIZARD_WELCOME" : "Witamy w Nefele",
+
+    "WIZARD_TERMS" : "Akceptuj\u0119 regulamin serwisu i o\u015bwiadczam, \u017ce zapozna\u0142em si\u0119 z informacj\u0105 o przetwarzaniu moich danych osobowych.",
+
+    "WIZARD_FIRST_CLOUD" : "Dodaj swoj\u0105 pierwsz\u0105 chmur\u0119 do Nefele",
+
+    "WIZARD_FIRST_CLOUD_DESCRIPTION" : "Post\u0119puj zgodnie z instrukcjami kreatora, aby doda\u0107 pierwsz\u0105 przestrze\u0144 dyskow\u0105.",
+
+    "DRIVE_GOOGLE_DRIVE_HINT" : "dysk Google",
+
+    "DRIVE_DROPBOX_HINT" : "Dysk Dropbox",
+
+    "DRIVE_OFFLINE_HINT" : "Dysk offline",
+
+    "CLOUDHELPER_TITLE" : "Wybierz us\u0142ug\u0119 Drive, kt\u00f3r\u0105 chcesz umie\u015bci\u0107 w Nefele",
+
+    "CLOUDHELPER_DIALOG_ERROR_LOGIN" : "Wyst\u0105pi\u0142 b\u0142\u0105d podczas inicjowania sterownika",
+
+    "CLOUDHELPER_FORM_NAME" : "Wprowad\u017a alias swojej us\u0142ugi w chmurze",
+
+    "CLOUDHELPER_FORM_QUOTA" : "Wybierz, ile miejsca chcesz po\u015bwi\u0119ci\u0107 Nefele",
+
+    "CLOUDHELPER_FORM_DIALOG" : "Czy na pewno chcesz kontynuowa\u0107? Przypisanego aliasu nie b\u0119dzie mo\u017cna edytowa\u0107",
+
+    "CLOUDHELPER_FORM_DIALOG_EMPTY_NAME" : "Alias \u200b\u200bnie mo\u017ce by\u0107 pustym ci\u0105giem",
+
+    "CLOUDHELPER_FORM_TITLE" : "Ustawienia us\u0142ugi w chmurze",
+
+    "WIZARD_END_MESSAGE" : "Prawie sko\u0144czyli\u015bmy..",
+
+    "DROPBOX_PROVIDER_ADVISE" : "Wpisz kod autoryzacyjny otrzymany od Dropbox"
+}

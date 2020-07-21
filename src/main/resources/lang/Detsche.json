@@ -1,0 +1,285 @@
+{
+    "WORD_OF" : "von",
+
+    "WORD_FILE" : "Datei",
+
+    "WORD_FILES" : "Dateien",
+
+    "WORD_FOLDER" : "Ordner",
+
+    "WORD_FOLDERS" : "Ordner",
+
+    "WORD_ADD" : "Hinzuf\u00fcgen",
+
+    "ERROR_DIRECTORY_NOT_EMPTY" : "Der ausgew\u00e4hlte Ordner ist nicht leer",
+
+    "ERROR_FILE_DELETE" : "Beim L\u00f6schen einer Datei oder eines Ordners ist ein Fehler aufgetreten",
+
+    "ERROR_FILE_UPLOAD" : "Beim Hochladen der Datei oder des Ordners ist ein Fehler aufgetreten",
+
+    "STATUS_READY" : "Bereit!",
+
+    "STATUS_NETWORK_DOWN" : "Keine Netzwerkverbindung verf\u00fcgbar",
+
+    "STATUS_TRANSFER_ERROR" : "\u00dcbertragung fehlgeschlagen f\u00fcr",
+
+    "STATUS_TRANSFER_RUNNING" : "\u00dcbertragung l\u00e4uft f\u00fcr",
+
+    "STATUS_TRANSFER_COMPLETED" : "\u00dcbertragung abgeschlossen f\u00fcr",
+
+    "STATUS_DRIVE_FULL" : "Laufwerk ist voll, entfernen Sie etwas oder erh\u00f6hen Sie den Speicherplatz",
+
+    "STATUS_DRIVE_EMPTY" : "Es ist kein fertiges Laufwerk verf\u00fcgbar. F\u00fcgen Sie eines auf der Registerkarte Laufwerksmanager hinzu",
+
+    "DIALOG_CONTINUE" : "Fortsetzen",
+
+    "DIALOG_OK" : "OK",
+
+    "DIALOG_ABORT" : "Stornieren",
+
+    "DIALOG_YES" : "Ja",
+
+    "DIALOG_NO" : "Nein",
+
+    "DIALOG_EXIT" : "Ausgang",
+
+    "DIALOG_RETRY" : "Wiederholen",
+
+    "DIALOG_MINIMIZE" : "Auf Tablett minimieren",
+
+    "DIALOG_TITLE_MESSAGE" : "Botschaft",
+
+    "DIALOG_TITLE_INFO" : "Information",
+
+    "DIALOG_TITLE_WARNING" : "Warnung",
+
+    "DIALOG_TITLE_ERROR" : "Error",
+
+    "DIALOG_PANIC_TITLE" : "Fataler Fehler",
+
+    "DIALOG_PANIC_MESSAGE" : "Ein schwerwiegender Fehler ist aufgetreten, niemand wird Ihnen helfen! Bitte l\u00f6schen Sie Ihre gesamte Festplatte und werfen Sie Ihre Maschine weg!",
+
+    "INPUTDIALOG_TITLE" : "Geben Sie den Namen des Ordners ein",
+
+    "NEFELE_PANE_HINT_DARKMODE" : "Dunkler Modus",
+
+    "CONTEXT_MENU_OPEN" : "\u00d6ffnen",
+
+    "CONTEXT_MENU_DOWNLOAD" : "Herunterladen",
+
+    "CONTEXT_MENU_RENAME" : "Umbenennen",
+
+    "CONTEXT_MENU_DELETE" : "L\u00f6schen",
+
+    "CONTEXT_MENU_SHARE" : "Offline synchronisieren",
+
+    "CONTEXT_MENU_UNSHARE" : "Synchronisierung entfernen",
+
+    "SETTINGS_GENERAL" : "Allgemeines",
+
+    "SETTINGS_LOCALE" : "Sprache",
+
+    "SETTINGS_LOCALE_DESCRIPTION" : "W\u00e4hlen Sie Ihre Sprache, in der die Men\u00fcs, Nachrichten und Benachrichtigungen von Nefele angezeigt werden sollen.",
+
+    "SETTINGS_THEME" : "Aussehen",
+
+    "SETTINGS_THEME_DESCRIPTION" : "W\u00e4hlen Sie Ihre Farbe.",
+
+    "SETTINGS_FONT_FAMILY" : "Schriftfamilie",
+
+    "SETTINGS_FONT_FAMILY_DESCRIPTION" : "W\u00e4hlen Sie Ihre bevorzugte Schriftfamilie aus.",
+
+    "SETTINGS_FONT_SIZE" : "Schriftgr\u00f6\u00dfe",
+
+    "SETTINGS_FONT_SIZE_DESCRIPTION" : "W\u00e4hlen Sie Ihre bevorzugte Schriftgr\u00f6\u00dfe.",
+
+    "SETTINGS_TRANSFERS" : "Herunterladen und hochladen",
+
+    "SETTINGS_TRANSFERS_DESCRIPTION" : "W\u00e4hlen Sie die maximale Anzahl gleichzeitiger Downloads und Uploads.",
+
+    "SETTINGS_SHARED" : "Teilen",
+
+    "SETTINGS_SHARED_DESCRIPTION" : "W\u00e4hlen Sie aus, ob Sie Ihre Cloud f\u00fcr andere Offline-Ger\u00e4te freigeben und synchronisieren m\u00f6chten.",
+
+    "SETTINGS_STARTUP" : "Anfang",
+
+    "SETTINGS_STARTUP_DESCRIPTION" : "F\u00fchren Sie Nefele beim Systemstart aus.",
+
+    "SETTINGS_COMPRESSED" : "Kompression",
+
+    "SETTINGS_COMPRESSED_DESCRIPTION" : "Aktivieren Sie die Datenkomprimierung",
+
+    "SETTINGS_ENCRYPTED" : "Kryptographie",
+
+    "SETTINGS_ENCRYPTED_DESCRIPTION" : "Aktivieren Sie die End-to-End-Datenkryptografie",
+
+    "SETTINGS_ADVANCED" : "Fortgeschrittene",
+
+    "SETTINGS_SYSTEM_INFO" : "Information",
+
+    "SETTINGS_ADVANCED_BUTTON_SHOW" : "Erweiterte Einstellungen anzeigen",
+
+    "SETTINGS_ADVANCED_BUTTON_HIDE" : "Verberge erweiterte Einstellungen",
+
+    "SETTINGS_ADVANCED_BUTTON_APPLY" : "Anwenden",
+
+    "SETTINGS_ADVANCED_DIALOG_DESCRIPTION" : "M\u00f6chten Sie wirklich \u00c4nderungen \u00fcbernehmen? Diese Aktion ist irreversibel. \u00c4nderungen werden beim n\u00e4chsten Neustart \u00fcbernommen.",
+
+    "DOCKER_BUTTON_HINT_ARCHIVE" : "Archiv",
+
+    "DOCKER_BUTTON_HINT_TRANSFERVIEWER" : "\u00dcbertragungswarteschlange",
+
+    "DOCKER_BUTTON_HINT_STATS" : "Statistiken",
+
+    "DOCKER_BUTTON_HINT_DRIVEMANAGER" : "Laufwerksmanager",
+
+    "DOCKER_BUTTON_HINT_SETTINGS" : "die Einstellungen",
+
+    "DOCKER_BUTTON_HINT_EXIT" : "Ausloggen",
+
+    "ARCHIVE_HINT_FORWARD" : "Nach vorne",
+
+    "ARCHIVE_HINT_BACK" : "Zur\u00fcck",
+
+    "ARCHIVE_HINT_HOME" : "Zuhause",
+
+    "ARCHIVE_HINT_UPFILE" : "Datei hochladen",
+
+    "ARCHIVE_HINT_ADDFOLDER" : "Ordner erstellen",
+
+    "ARCHIVE_HINT_UPFOLDER" : "Ordner hochladen",
+
+    "ARCHIVE_HINT_REFRESH" : "Aktualisierung",
+
+    "ARCHIVE_HINT_SYNC" : "Ordner teilen",
+
+    "ARCHIVE_ERROR_DIALOG_REQUEST_SYNC" : "Bei der Synchronisation ist ein Fehler aufgetreten. Bitte versuchen Sie es sp\u00e4ter noch einmal",
+
+    "ARCHIVE_DIALOG_RENAME_EMPTY" : "Der Name darf nicht leer sein",
+
+    "ARCHIVE_DIALOG_RENAME_INVALID_NAME" : "Der Name muss g\u00fcltig sein",
+
+    "ARCHIVE_DIALOG_FILE_NOTSELECTED" : "Die Datei wurde nicht ausgew\u00e4hlt",
+
+    "ARCHIVE_DIALOG_FILE_INVALID" : "Der Pfad muss eine Datei sein",
+
+    "ARCHIVE_DIALOG_FOLDER_EMPTY" : "Der Ordnername darf nicht leer sein",
+
+    "ARCHIVE_DIALOG_FOLDER_NOTSELECTED" : "Der Ordner wurde nicht ausgew\u00e4hlt",
+
+    "ARCHIVE_DIALOG_FOLDER_INVALID" : "Der Pfad muss ein Ordner sein",
+
+    "ARCHIVE_DIALOG_REQUEST_SYNC" : "M\u00f6chten Sie diesen Ordner wirklich freigeben?",
+
+    "STATS_CARD_PRIMARY_TITLE" : "Gesamtnutzung",
+
+    "STATS_CARD_PRIMARY_HEADER_1" : "Lager",
+
+    "STATS_CARD_PRIMARY_HEADER_2" : "Tempor\u00e4re Dateien",
+
+    "STATS_CARD_PRIMARY_HEADER_3" : "Laufzeitspeicher",
+
+    "STATS_CARD_SECONDARY_TITLE" : "Speicher verwendet",
+
+    "STATS_CARD_SECONDARY_CONTENT_1" : "Cloud-Speicher",
+
+    "STATS_CARD_SECONDARY_CONTENT_2" : "Verf\u00fcgbar",
+
+    "STATS_CARD_TERTIARY_TITLE" : "Daten",
+
+    "STATS_CARD_TERTIARY_CONTENT_1" : "Alle Dateien",
+
+    "STATS_CARD_TERTIARY_CONTENT_2" : "Alle Ordner",
+
+    "STATS_CARD_TERTIARY_CONTENT_3" : "Eingehende Aktien",
+
+    "STATS_CARD_TERTIARY_CONTENT_4" : "Ausgehende Aktien",
+
+    "STATSDRIVEINFO_CONTENT_4" : "Grenze:",
+
+    "STATSDRIVEINFO_CONTENT_3" : "Lager:",
+
+    "STATSDRIVEINFO_CONTENT_2" : "Status:",
+
+    "STATSDRIVEINFO_STATUS_CONNECTED" : "In Verbindung gebracht",
+
+    "STATSDRIVEINFO_STATUS_DISCONNECTED" : "Getrennt",
+
+    "STATS_CARD_HINT_MEMORY_CLEAN" : "Freier Speicher",
+
+    "STATS_CARD_HINT_TEMPORARY_CLEAN" : "Tempor\u00e4re Dateien l\u00f6schen",
+
+    "STATS_CARD_DIALOG_TEMPORARY_CLEAN" : "Tempor\u00e4re Dateien dauerhaft entfernen?",
+
+    "STATS_STATUS_UNKNOWN" : "Unbekannt",
+
+    "STATS_STATUS_CONNECTING" : "Anschlie\u00dfen",
+
+    "STATS_STATUS_READY" : "Bereit",
+
+    "STATS_STATUS_DISCONNECTING" : "Trennen ...",
+
+    "STATS_STATUS_DISCONNECTED" : "Getrennt",
+
+    "STATS_STATUS_ERROR" : "Error",
+
+    "STATS_STATUS_DISABLED" : "Vom Benutzer deaktiviert",
+
+    "HOME_DIALOG_DESCRIPTION" : "Bist du sicher, dass du Nefele verlassen willst?",
+
+    "HOME_DIALOG_TITLE" : "Beenden Sie den Ausgang",
+
+    "SYSTEM_TRAY_ERROR" : "Die Taskleiste wird vom System nicht unterst\u00fctzt.",
+
+    "SYSTEM_TRAY_SHOW" : "\u00d6ffnen",
+
+    "SYSTEM_TRAY_EXIT" : "Ausgang",
+
+    "TRANSFERVIEWER_TRANSFER_NULL" : "Derzeit wird kein Download oder Upload durchgef\u00fchrt",
+
+    "TRANSFERVIEWER_TRANSFER_PREPARED" : "Vorbereiten ...",
+
+    "DRIVEMANAGER_TITLE" : "Laufwerksmanager",
+
+    "DRIVEMANAGER_DESCRIPTION" : "F\u00fcgen Sie Ihre Laufwerkseinstellungen hinzu, entfernen Sie sie oder \u00e4ndern Sie sie.",
+
+    "SETTINGS_DRIVE_DIALOG_TITLE" : "L\u00f6schen best\u00e4tigen",
+
+    "SETTINGS_DRIVE_DIALOG_DESCRIPTION" : "M\u00f6chten Sie dieses Laufwerk wirklich l\u00f6schen? Diese Aktion kann irreversibel sein",
+
+    "SETTINGS_DRIVE_ERROR_DIALOG_DESCRIPTION" : "Dieses Laufwerk enth\u00e4lt Daten, sodass sie nicht gel\u00f6scht werden k\u00f6nnen. Sie k\u00f6nnen sie jederzeit in den Einstellungen deaktivieren",
+
+    "WIZARD_SELECT_LANGUAGE" : "W\u00e4hle eine Sprache.",
+
+    "WIZARD_WELCOME" : "Willkommen in Nefele",
+
+    "WIZARD_TERMS" : "Ich akzeptiere die Nutzungsbedingungen des Dienstes und erkl\u00e4re, dass ich die Informationen zur Verarbeitung meiner pers\u00f6nlichen Daten gelesen habe.",
+
+    "WIZARD_FIRST_CLOUD" : "F\u00fcge deine erste Wolke zu Nefele hinzu",
+
+    "WIZARD_FIRST_CLOUD_DESCRIPTION" : "Folgen Sie dem Assistenten, um Ihren ersten Speicherplatz hinzuzuf\u00fcgen.",
+
+    "DRIVE_GOOGLE_DRIVE_HINT" : "Google Drive",
+
+    "DRIVE_DROPBOX_HINT" : "Dropbox-Laufwerk",
+
+    "DRIVE_OFFLINE_HINT" : "Offline-Laufwerk",
+
+    "CLOUDHELPER_TITLE" : "W\u00e4hlen Sie einen Laufwerksdienst aus, der in Nefele eingef\u00fcgt werden soll",
+
+    "CLOUDHELPER_DIALOG_ERROR_LOGIN" : "Beim Initialisieren des Treibers ist ein Fehler aufgetreten",
+
+    "CLOUDHELPER_FORM_NAME" : "Geben Sie einen Alias \u200b\u200bf\u00fcr Ihren Cloud-Dienst ein",
+
+    "CLOUDHELPER_FORM_QUOTA" : "W\u00e4hlen Sie aus, wie viel Platz Sie Nefele widmen m\u00f6chten",
+
+    "CLOUDHELPER_FORM_DIALOG" : "M\u00f6chten Sie wirklich fortfahren? Der zugewiesene Alias \u200b\u200bkann nicht bearbeitet werden",
+
+    "CLOUDHELPER_FORM_DIALOG_EMPTY_NAME" : "Der Alias \u200b\u200bdarf keine leere Zeichenfolge sein",
+
+    "CLOUDHELPER_FORM_TITLE" : "Cloud-Service-Einstellungen",
+
+    "WIZARD_END_MESSAGE" : "Wir sind fast fertig..",
+
+    "DROPBOX_PROVIDER_ADVISE" : "Geben Sie den Autorisierungscode ein, den Sie von Dropbox erhalten haben"
+}

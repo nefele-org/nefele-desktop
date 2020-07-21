@@ -22,13 +22,12 @@
  * THE SOFTWARE.
  */
 
-package org.nefele.ui.wizard;
+package org.nefele.ui.scenes.cloudhelper;
 
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXSlider;
 import com.jfoenix.controls.JFXTextField;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -40,7 +39,6 @@ import org.nefele.Application;
 import org.nefele.Themeable;
 import org.nefele.core.Resources;
 import org.nefele.ui.controls.NefeleContentPane;
-import org.nefele.ui.controls.NefelePane;
 import org.nefele.ui.dialog.BaseDialog;
 import org.nefele.ui.dialog.Dialogs;
 
@@ -88,31 +86,13 @@ public class CloudHelper extends NefeleContentPane implements Initializable, The
 
 
                                         contentPane.getChildren().clear();
+
                                         titleBox.getChildren().clear();
 
 
-                                        ((NefelePane) CloudHelper.this.getScene().getRoot()).setModal(NefelePane.MODAL_UNDECORATED);
+                                        CloudHelper.this.getScene().getWindow().setWidth(600);
+                                        CloudHelper.this.getScene().getWindow().setHeight(400);
 
-
-                                        ((NefelePane) CloudHelper.this.getScene().getRoot()).setResizable(true);
-
-
-                                        CloudHelper.this.getScene().getWindow().setWidth(580);
-                                        CloudHelper.this.getScene().getWindow().setHeight(360);
-
-
-                                        ((NefelePane) CloudHelper.this.getScene().getRoot()).prefHeightProperty()
-                                                .bind(CloudHelper.this.getScene().getWindow().heightProperty());
-
-                                        ((NefelePane) CloudHelper.this.getScene().getRoot()).prefWidthProperty()
-                                                .bind(CloudHelper.this.getScene().getWindow().widthProperty());
-
-
-                                        Platform.runLater(()->
-                                            ((NefelePane) CloudHelper.this.getScene().getRoot()).setResizable(false));
-
-
-                                        contentPane.setSpacing(10);
 
                                         titleBox.getChildren().add(new Label() {{
 
@@ -142,9 +122,11 @@ public class CloudHelper extends NefeleContentPane implements Initializable, The
                                                 } else if (Dialogs.showWarningBox("DIALOG_TITLE_WARNING", "CLOUDHELPER_FORM_DIALOG", BaseDialog.DIALOG_NO,
                                                         BaseDialog.DIALOG_YES) == BaseDialog.DIALOG_YES) {
 
-                                                    getDrive().setQuota((long) sliderQuota.getValue());
+                                                    getDrive().setQuota((long) sliderQuota.getValue() * 1024L * 1024L);
                                                     getDrive().setDescription(name.getText().trim());
                                                     getDrive().invalidate();
+
+                                                    Application.getInstance().getViews().update();
                                                     getScene().getWindow().hide();
 
                                                 }

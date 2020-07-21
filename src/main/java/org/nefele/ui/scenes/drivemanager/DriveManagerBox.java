@@ -40,6 +40,8 @@ import org.nefele.Themeable;
 import org.nefele.cloud.DriveNotEmptyException;
 import org.nefele.cloud.DriveProvider;
 import org.nefele.cloud.DriveProviders;
+import org.nefele.cloud.providers.DropboxDriveProvider;
+import org.nefele.cloud.providers.GoogleDriveProvider;
 import org.nefele.core.Resources;
 import org.nefele.ui.dialog.BaseDialog;
 import org.nefele.ui.dialog.Dialogs;
@@ -54,15 +56,18 @@ import static java.util.Objects.requireNonNull;
 public class DriveManagerBox extends StackPane implements Initializable, Themeable {
     
     private final ReadOnlyObjectProperty<DriveProvider> drive;
+    private final DriveProvider driveProvider;
 
     @FXML private Label labelName;
     @FXML private JFXToggleButton toggleState;
     @FXML private MaterialDesignIconView buttonDelete;
+    @FXML private MaterialDesignIconView icon;
     @FXML private JFXSlider sliderChunks;
 
     public DriveManagerBox(DriveProvider driveProvider) {
 
         this.drive = new SimpleObjectProperty<>(requireNonNull(driveProvider));
+        this.driveProvider = driveProvider;
 
         Resources.getFXML(this, "/fxml/DriveManagerBox.fxml");
     }
@@ -72,8 +77,18 @@ public class DriveManagerBox extends StackPane implements Initializable, Themeab
 
         labelName.textProperty().bind(getDrive().descriptionProperty());
 
+        // TODO: delete Java!
+        if(driveProvider.getService().equals(GoogleDriveProvider.SERVICE_ID))
+            icon.setGlyphName("GOOGLE_DRIVE");
+        else if(driveProvider.getService().equals(DropboxDriveProvider.SERVICE_ID))
+            icon.setGlyphName("DROPBOX");
+        else
+            icon.setGlyphName("LAYERS");
+
 
         toggleState.setSelected(getDrive().getStatus() == DriveProvider.STATUS_READY);
+
+
 
         toggleState.selectedProperty().addListener((v, o, n) -> {
 
@@ -115,6 +130,16 @@ public class DriveManagerBox extends StackPane implements Initializable, Themeab
         );
 
 
+
+        Application.getInstance().getViews().add(this);
+    }
+
+    @Override
+    public void initializeInterface() {
+
+        Resources.getCSS(this, "/css/drivemanager-box.css");
+
+
         sliderChunks.minProperty().bind(getDrive().chunksProperty().divide(1024 * 1024));
         sliderChunks.setMax(getDrive().getMaxQuota() / 1024.0 / 1024.0);
         sliderChunks.setValue(getDrive().getQuota() / 1024.0 / 1024.0);
@@ -139,12 +164,6 @@ public class DriveManagerBox extends StackPane implements Initializable, Themeab
                         .otherwise(false)
         );
 
-        Application.getInstance().getViews().add(this);
-    }
-
-    @Override
-    public void initializeInterface() {
-        Resources.getCSS(this, "/css/drivemanager-box.css");
     }
 
     public DriveProvider getDrive() {

@@ -26,12 +26,11 @@ package org.nefele.ui.dialog;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
@@ -66,7 +65,7 @@ public class InputDialog extends Stage {
 
         @FXML private HBox buttonHBox;
         @FXML private Label labelTitle;
-        @FXML private ImageView ivIcon;
+        @FXML private MaterialDesignIconView ivIcon;
         @FXML private JFXTextField textField;
 
         public MessagePane() {
@@ -80,8 +79,7 @@ public class InputDialog extends Stage {
             labelTitle.setUserData(getTitle());
             labelTitle.setText(getTitle());
 
-            ivIcon.setImage(new Image(Resources.getURL(this, "/images/dialog_input.png").toExternalForm()));
-
+            ivIcon.setGlyphName("KEYBOARD");
 
             Application.getInstance().getViews().add(this);
 

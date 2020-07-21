@@ -1,0 +1,285 @@
+{
+    "WORD_OF" : "\uc758",
+
+    "WORD_FILE" : "\ud30c\uc77c",
+
+    "WORD_FILES" : "\ud30c\uc77c\ub4e4",
+
+    "WORD_FOLDER" : "\ud3f4\ub354",
+
+    "WORD_FOLDERS" : "\ud3f4\ub354",
+
+    "WORD_ADD" : "\ub354\ud558\ub2e4",
+
+    "ERROR_DIRECTORY_NOT_EMPTY" : "\uc120\ud0dd\ud55c \ud3f4\ub354\uac00 \ube44\uc5b4 \uc788\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4",
+
+    "ERROR_FILE_DELETE" : "\ud30c\uc77c \ub610\ub294 \ud3f4\ub354\ub97c \uc0ad\uc81c\ud558\ub294 \uc911 \uc624\ub958\uac00 \ubc1c\uc0dd\ud588\uc2b5\ub2c8\ub2e4",
+
+    "ERROR_FILE_UPLOAD" : "\ud30c\uc77c \ub610\ub294 \ud3f4\ub354\ub97c \uc5c5\ub85c\ub4dc\ud558\ub294 \ub3d9\uc548 \uc624\ub958\uac00 \ubc1c\uc0dd\ud588\uc2b5\ub2c8\ub2e4",
+
+    "STATUS_READY" : "\uc900\ube44\ub41c!",
+
+    "STATUS_NETWORK_DOWN" : "\uc0ac\uc6a9 \uac00\ub2a5\ud55c \ub124\ud2b8\uc6cc\ud06c \uc5f0\uacb0\uc774 \uc5c6\uc2b5\ub2c8\ub2e4",
+
+    "STATUS_TRANSFER_ERROR" : "\uc5d0 \ub300\ud55c \uc804\uc1a1 \uc2e4\ud328",
+
+    "STATUS_TRANSFER_RUNNING" : "\uc5d0 \ub300\ud55c \uc804\uc1a1 \uc2e4\ud589",
+
+    "STATUS_TRANSFER_COMPLETED" : "\uc774\uc804 \uc644\ub8cc",
+
+    "STATUS_DRIVE_FULL" : "\ub4dc\ub77c\uc774\ube0c\uac00 \uac00\ub4dd \ucc3c\uc2b5\ub2c8\ub2e4. \ubb34\uc5b8\uac00\ub97c \uc81c\uac70\ud558\uac70\ub098 \uc800\uc7a5 \uacf5\uac04\uc744 \ub298\ub9ac\uc2ed\uc2dc\uc624.",
+
+    "STATUS_DRIVE_EMPTY" : "\uc900\ube44\ub41c \ub4dc\ub77c\uc774\ube0c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4. \ub4dc\ub77c\uc774\ube0c \uad00\ub9ac\uc790 \ud0ed\uc5d0\uc11c \ucd94\uac00\ud558\uc2ed\uc2dc\uc624",
+
+    "DIALOG_CONTINUE" : "\uacc4\uc18d\ud558\ub2e4",
+
+    "DIALOG_OK" : "\ud655\uc778",
+
+    "DIALOG_ABORT" : "\ucde8\uc18c",
+
+    "DIALOG_YES" : "\uc608",
+
+    "DIALOG_NO" : "\uc544\ub2c8",
+
+    "DIALOG_EXIT" : "\ucd9c\uad6c",
+
+    "DIALOG_RETRY" : "\ub2e4\uc2dc \ud574 \ubcf4\ub2e4",
+
+    "DIALOG_MINIMIZE" : "\ud2b8\ub808\uc774\uc5d0\uc11c \ucd5c\uc18c\ud654",
+
+    "DIALOG_TITLE_MESSAGE" : "\uba54\uc2dc\uc9c0",
+
+    "DIALOG_TITLE_INFO" : "\uc815\ubcf4",
+
+    "DIALOG_TITLE_WARNING" : "\uacbd\uace0",
+
+    "DIALOG_TITLE_ERROR" : "\uc624\ub958",
+
+    "DIALOG_PANIC_TITLE" : "\uce58\uba85\uc801 \uc624\ub958",
+
+    "DIALOG_PANIC_MESSAGE" : "\uce58\uba85\uc801\uc778 \uc624\ub958\uac00 \ubc1c\uc0dd\ud558\uc5ec \uc544\ubb34\ub3c4 \ub2f9\uc2e0\uc744 \ub3c4\uc6b8 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4! \uc804\uccb4 \ud558\ub4dc \ub4dc\ub77c\uc774\ube0c\ub97c \uc9c0\uc6b0\uace0 \uae30\uacc4\ub97c \ubc84\ub824\uc8fc\uc2ed\uc2dc\uc624!",
+
+    "INPUTDIALOG_TITLE" : "\ud3f4\ub354 \uc774\ub984\uc744 \uc785\ub825\ud558\uc2ed\uc2dc\uc624",
+
+    "NEFELE_PANE_HINT_DARKMODE" : "\ub2e4\ud06c \ubaa8\ub4dc",
+
+    "CONTEXT_MENU_OPEN" : "\uc5f4\ub2e4",
+
+    "CONTEXT_MENU_DOWNLOAD" : "\ub2e4\uc6b4\ub85c\ub4dc",
+
+    "CONTEXT_MENU_RENAME" : "\uc774\ub984 \ubc14\uafb8\uae30",
+
+    "CONTEXT_MENU_DELETE" : "\uc9c0\uc6b0\ub2e4",
+
+    "CONTEXT_MENU_SHARE" : "\uc624\ud504\ub77c\uc778 \ub3d9\uae30\ud654",
+
+    "CONTEXT_MENU_UNSHARE" : "\ub3d9\uae30\ud654 \uc81c\uac70",
+
+    "SETTINGS_GENERAL" : "\uc77c\ubc18",
+
+    "SETTINGS_LOCALE" : "\uc5b8\uc5b4",
+
+    "SETTINGS_LOCALE_DESCRIPTION" : "Nefele\uc758 \uba54\ub274, \uba54\uc2dc\uc9c0 \ubc0f \uc54c\ub9bc\uc744 \ud45c\uc2dc \ud560 \uc5b8\uc5b4\ub97c \uc120\ud0dd\ud558\uc2ed\uc2dc\uc624.",
+
+    "SETTINGS_THEME" : "\uc678\uad00",
+
+    "SETTINGS_THEME_DESCRIPTION" : "\uc0c9\uc0c1\uc744 \uc120\ud0dd\ud558\uc2ed\uc2dc\uc624.",
+
+    "SETTINGS_FONT_FAMILY" : "\ud3f0\ud2b8 \ud328\ubc00\ub9ac",
+
+    "SETTINGS_FONT_FAMILY_DESCRIPTION" : "\uc120\ud638\ud558\ub294 \uae00\uaf34 \ubaa8\uc74c\uc744 \uc120\ud0dd\ud558\uc2ed\uc2dc\uc624.",
+
+    "SETTINGS_FONT_SIZE" : "\ud3f0\ud2b8 \uc0ac\uc774\uc988",
+
+    "SETTINGS_FONT_SIZE_DESCRIPTION" : "\uc6d0\ud558\ub294 \uae00\uaf34 \ud06c\uae30\ub97c \uc120\ud0dd\ud558\uc2ed\uc2dc\uc624.",
+
+    "SETTINGS_TRANSFERS" : "\ub2e4\uc6b4\ub85c\ub4dc \ubc0f \uc5c5\ub85c\ub4dc",
+
+    "SETTINGS_TRANSFERS_DESCRIPTION" : "\ucd5c\ub300 \ub3d9\uc2dc \ub2e4\uc6b4\ub85c\ub4dc \ubc0f \uc5c5\ub85c\ub4dc \uc218\ub97c \uc120\ud0dd\ud558\uc2ed\uc2dc\uc624.",
+
+    "SETTINGS_SHARED" : "\ub098\ub204\ub294",
+
+    "SETTINGS_SHARED_DESCRIPTION" : "\ud074\ub77c\uc6b0\ub4dc\ub97c \ub2e4\ub978 \uc624\ud504\ub77c\uc778 \uc7a5\uce58\uc640 \uacf5\uc720 \ubc0f \ub3d9\uae30\ud654\ud560\uc9c0 \uc5ec\ubd80\ub97c \uc120\ud0dd\ud558\uc2ed\uc2dc\uc624.",
+
+    "SETTINGS_STARTUP" : "\uc2a4\ud0c0\ud2b8 \uc5c5",
+
+    "SETTINGS_STARTUP_DESCRIPTION" : "\uc2dc\uc2a4\ud15c \uc2dc\uc791\uc2dc Nefele\uc744 \uc2e4\ud589\ud558\uc2ed\uc2dc\uc624.",
+
+    "SETTINGS_COMPRESSED" : "\uc555\ucd95",
+
+    "SETTINGS_COMPRESSED_DESCRIPTION" : "\ub370\uc774\ud130 \uc555\ucd95 \uc0ac\uc6a9",
+
+    "SETTINGS_ENCRYPTED" : "\uc554\ud638\ud654",
+
+    "SETTINGS_ENCRYPTED_DESCRIPTION" : "\uc5d4\ub4dc \ud22c \uc5d4\ub4dc \ub370\uc774\ud130 \uc554\ud638\ud654 \uc0ac\uc6a9",
+
+    "SETTINGS_ADVANCED" : "\ub9ce\uc740",
+
+    "SETTINGS_SYSTEM_INFO" : "\uc815\ubcf4",
+
+    "SETTINGS_ADVANCED_BUTTON_SHOW" : "\uace0\uae09 \uc124\uc815 \ud45c\uc2dc",
+
+    "SETTINGS_ADVANCED_BUTTON_HIDE" : "\uace0\uae09 \uc124\uc815 \uc228\uae30\uae30",
+
+    "SETTINGS_ADVANCED_BUTTON_APPLY" : "\ub300\ub2e4",
+
+    "SETTINGS_ADVANCED_DIALOG_DESCRIPTION" : "\uc815\ub9d0\ub85c \ubcc0\uacbd \uc0ac\ud56d\uc744 \uc801\uc6a9 \ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c? \uc774 \uc791\uc5c5\uc740 \ub418\ub3cc\ub9b4 \uc218 \uc5c6\uc73c\uba70 \ub2e4\uc74c\uc5d0 \ub2e4\uc2dc \ubd80\ud305 \ud560 \ub54c \ubcc0\uacbd \uc0ac\ud56d\uc774 \uc801\uc6a9\ub429\ub2c8\ub2e4.",
+
+    "DOCKER_BUTTON_HINT_ARCHIVE" : "\ubcf4\uad00",
+
+    "DOCKER_BUTTON_HINT_TRANSFERVIEWER" : "\uc804\uc1a1 \ub300\uae30\uc5f4",
+
+    "DOCKER_BUTTON_HINT_STATS" : "\ud1b5\uacc4",
+
+    "DOCKER_BUTTON_HINT_DRIVEMANAGER" : "\ub4dc\ub77c\uc774\ube0c \uad00\ub9ac\uc790",
+
+    "DOCKER_BUTTON_HINT_SETTINGS" : "\uc124\uc815",
+
+    "DOCKER_BUTTON_HINT_EXIT" : "\ub85c\uadf8 \uc544\uc6c3",
+
+    "ARCHIVE_HINT_FORWARD" : "\uc55e\uc73c\ub85c",
+
+    "ARCHIVE_HINT_BACK" : "\ub4a4",
+
+    "ARCHIVE_HINT_HOME" : "\uc9d1",
+
+    "ARCHIVE_HINT_UPFILE" : "\ud30c\uc77c \uc5c5\ub85c\ub4dc",
+
+    "ARCHIVE_HINT_ADDFOLDER" : "\ud3f4\ub354 \ub9cc\ub4e4\uae30",
+
+    "ARCHIVE_HINT_UPFOLDER" : "\ud3f4\ub354 \uc5c5\ub85c\ub4dc",
+
+    "ARCHIVE_HINT_REFRESH" : "\uc0c8\ub86d\uac8c \ud558\ub2e4",
+
+    "ARCHIVE_HINT_SYNC" : "\uacf5\uc720 \ud3f4\ub354",
+
+    "ARCHIVE_ERROR_DIALOG_REQUEST_SYNC" : "\ub3d9\uae30\ud654\uc5d0 \ubb38\uc81c\uac00 \uc788\uc2b5\ub2c8\ub2e4. \ub098\uc911\uc5d0 \ub2e4\uc2dc \uc2dc\ub3c4\ud558\uc2ed\uc2dc\uc624",
+
+    "ARCHIVE_DIALOG_RENAME_EMPTY" : "\uc774\ub984\uc740 \ube44\uc6cc \ub458 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4",
+
+    "ARCHIVE_DIALOG_RENAME_INVALID_NAME" : "\uc774\ub984\uc740 \uc720\ud6a8\ud574\uc57c\ud569\ub2c8\ub2e4",
+
+    "ARCHIVE_DIALOG_FILE_NOTSELECTED" : "\ud30c\uc77c\uc774 \uc120\ud0dd\ub418\uc9c0 \uc54a\uc558\uc2b5\ub2c8\ub2e4",
+
+    "ARCHIVE_DIALOG_FILE_INVALID" : "\uacbd\ub85c\ub294 \ud30c\uc77c\uc774\uc5b4\uc57c\ud569\ub2c8\ub2e4",
+
+    "ARCHIVE_DIALOG_FOLDER_EMPTY" : "\ud3f4\ub354 \uc774\ub984\uc740 \ube44\uc6cc \ub458 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4",
+
+    "ARCHIVE_DIALOG_FOLDER_NOTSELECTED" : "\ud3f4\ub354\uac00 \uc120\ud0dd\ub418\uc9c0 \uc54a\uc558\uc2b5\ub2c8\ub2e4",
+
+    "ARCHIVE_DIALOG_FOLDER_INVALID" : "\uacbd\ub85c\ub294 \ud3f4\ub354 \uc5ec\uc57c\ud569\ub2c8\ub2e4",
+
+    "ARCHIVE_DIALOG_REQUEST_SYNC" : "\uc774 \ud3f4\ub354\ub97c \uacf5\uc720 \ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?",
+
+    "STATS_CARD_PRIMARY_TITLE" : "\uc804\ubc18\uc801\uc778 \uc0ac\uc6a9",
+
+    "STATS_CARD_PRIMARY_HEADER_1" : "\uc800\uc7a5",
+
+    "STATS_CARD_PRIMARY_HEADER_2" : "\uc784\uc2dc \ud30c\uc77c",
+
+    "STATS_CARD_PRIMARY_HEADER_3" : "\ub7f0\ud0c0\uc784 \uba54\ubaa8\ub9ac",
+
+    "STATS_CARD_SECONDARY_TITLE" : "\uc0ac\uc6a9 \ub41c \uc800\uc7a5 \uc6a9\ub7c9",
+
+    "STATS_CARD_SECONDARY_CONTENT_1" : "\ud074\ub77c\uc6b0\ub4dc \ub4dc\ub77c\uc774\ube0c",
+
+    "STATS_CARD_SECONDARY_CONTENT_2" : "\uc720\ud6a8\ud55c",
+
+    "STATS_CARD_TERTIARY_TITLE" : "\ub370\uc774\ud130",
+
+    "STATS_CARD_TERTIARY_CONTENT_1" : "\ubaa8\ub4e0 \ud30c\uc77c",
+
+    "STATS_CARD_TERTIARY_CONTENT_2" : "\ubaa8\ub4e0 \ud3f4\ub354",
+
+    "STATS_CARD_TERTIARY_CONTENT_3" : "\ub4e4\uc5b4\uc624\ub294 \uc8fc\uc2dd",
+
+    "STATS_CARD_TERTIARY_CONTENT_4" : "\ub098\uac00\ub294 \uc8fc\uc2dd",
+
+    "STATSDRIVEINFO_CONTENT_4" : "\ud55c\ub3c4:",
+
+    "STATSDRIVEINFO_CONTENT_3" : "\uc800\uc7a5:",
+
+    "STATSDRIVEINFO_CONTENT_2" : "\uc0c1\ud0dc:",
+
+    "STATSDRIVEINFO_STATUS_CONNECTED" : "\uc5f0\uacb0\ub428",
+
+    "STATSDRIVEINFO_STATUS_DISCONNECTED" : "\uc5f0\uacb0 \ud574\uc81c",
+
+    "STATS_CARD_HINT_MEMORY_CLEAN" : "\uc5ec\uc720 \uba54\ubaa8\ub9ac",
+
+    "STATS_CARD_HINT_TEMPORARY_CLEAN" : "\uc784\uc2dc \ud30c\uc77c \uc0ad\uc81c",
+
+    "STATS_CARD_DIALOG_TEMPORARY_CLEAN" : "\uc784\uc2dc \ud30c\uc77c\uc744 \uc601\uad6c\uc801\uc73c\ub85c \uc81c\uac70 \ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?",
+
+    "STATS_STATUS_UNKNOWN" : "\uc54c \uc218 \uc5c6\ub294",
+
+    "STATS_STATUS_CONNECTING" : "\uc5f0\uacb0 \uc911",
+
+    "STATS_STATUS_READY" : "\uc900\ube44\ub41c",
+
+    "STATS_STATUS_DISCONNECTING" : "\uc5f0\uacb0 \ud574\uc81c \uc911 ...",
+
+    "STATS_STATUS_DISCONNECTED" : "\uc5f0\uacb0 \ud574\uc81c",
+
+    "STATS_STATUS_ERROR" : "\uc624\ub958",
+
+    "STATS_STATUS_DISABLED" : "\uc0ac\uc6a9\uc790\uac00 \ube44\ud65c\uc131\ud654",
+
+    "HOME_DIALOG_DESCRIPTION" : "Nefele\uc744 \uc885\ub8cc \ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?",
+
+    "HOME_DIALOG_TITLE" : "\uc885\ub8cc \ud655\uc778",
+
+    "SYSTEM_TRAY_ERROR" : "\uc2dc\uc2a4\ud15c\uc5d0\uc11c \uc2dc\uc2a4\ud15c \ud2b8\ub808\uc774\ub97c \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.",
+
+    "SYSTEM_TRAY_SHOW" : "\uc5f4\ub2e4",
+
+    "SYSTEM_TRAY_EXIT" : "\ucd9c\uad6c",
+
+    "TRANSFERVIEWER_TRANSFER_NULL" : "\uc9c0\uae08 \ub2e4\uc6b4\ub85c\ub4dc \ub610\ub294 \uc5c5\ub85c\ub4dc\uac00 \uc5c6\uc2b5\ub2c8\ub2e4",
+
+    "TRANSFERVIEWER_TRANSFER_PREPARED" : "\uc900\ube44 \uc911 ...",
+
+    "DRIVEMANAGER_TITLE" : "\ub4dc\ub77c\uc774\ube0c \uad00\ub9ac\uc790",
+
+    "DRIVEMANAGER_DESCRIPTION" : "\ub4dc\ub77c\uc774\ube0c \uc124\uc815\uc744 \ucd94\uac00, \uc81c\uac70 \ub610\ub294 \ubcc0\uacbd\ud558\uc2ed\uc2dc\uc624.",
+
+    "SETTINGS_DRIVE_DIALOG_TITLE" : "\uc0ad\uc81c \ud655\uc778",
+
+    "SETTINGS_DRIVE_DIALOG_DESCRIPTION" : "\uc774 \ub4dc\ub77c\uc774\ube0c\ub97c \uc815\ub9d0\ub85c \uc0ad\uc81c \ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c? \uc774 \uc791\uc5c5\uc740 \ub418\ub3cc\ub9b4 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4",
+
+    "SETTINGS_DRIVE_ERROR_DIALOG_DESCRIPTION" : "\uc774 \ub4dc\ub77c\uc774\ube0c\uc5d0\ub294 \uc0ad\uc81c\ud560 \uc218\uc5c6\ub294 \ub370\uc774\ud130\uac00 \ud3ec\ud568\ub418\uc5b4 \uc788\uc73c\uba70 \uc124\uc815\uc5d0\uc11c \uc5b8\uc81c\ub4e0\uc9c0 \ube44\ud65c\uc131\ud654 \ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4",
+
+    "WIZARD_SELECT_LANGUAGE" : "\uc5b8\uc5b4\ub97c \uc120\ud0dd\ud558\uc2ed\uc2dc\uc624.",
+
+    "WIZARD_WELCOME" : "Nefele\uc5d0 \uc624\uc2e0 \uac83\uc744 \ud658\uc601\ud569\ub2c8\ub2e4",
+
+    "WIZARD_TERMS" : "\uc11c\ube44\uc2a4 \uc774\uc6a9 \uc57d\uad00\uc5d0 \ub3d9\uc758\ud558\uba70 \uac1c\uc778 \ub370\uc774\ud130 \ucc98\ub9ac\uc5d0 \ub300\ud55c \uc815\ubcf4\ub97c \uc77d\uc5c8\ub2e4 \uace0 \uc120\uc5b8\ud569\ub2c8\ub2e4.",
+
+    "WIZARD_FIRST_CLOUD" : "Nefele\uc5d0 \uccab \ubc88\uc9f8 \ud074\ub77c\uc6b0\ub4dc \ucd94\uac00",
+
+    "WIZARD_FIRST_CLOUD_DESCRIPTION" : "\ub9c8\ubc95\uc0ac\ub97c \ub530\ub77c \uccab \ubc88\uc9f8 \uc2a4\ud1a0\ub9ac\uc9c0 \uacf5\uac04\uc744 \ucd94\uac00\ud558\uc2ed\uc2dc\uc624.",
+
+    "DRIVE_GOOGLE_DRIVE_HINT" : "\uad6c\uae00 \ub4dc\ub77c\uc774\ube0c",
+
+    "DRIVE_DROPBOX_HINT" : "\ubcf4\uad00 \uc6a9 \ub4dc\ub77c\uc774\ube0c",
+
+    "DRIVE_OFFLINE_HINT" : "\uc624\ud504\ub77c\uc778 \ub4dc\ub77c\uc774\ube0c",
+
+    "CLOUDHELPER_TITLE" : "Nefele\uc5d0 \uc0bd\uc785 \ud560 \ub4dc\ub77c\uc774\ube0c \uc11c\ube44\uc2a4\ub97c \uc120\ud0dd\ud558\uc2ed\uc2dc\uc624",
+
+    "CLOUDHELPER_DIALOG_ERROR_LOGIN" : "\ub4dc\ub77c\uc774\ubc84\ub97c \ucd08\uae30\ud654\ud558\ub294 \ub3d9\uc548 \uc624\ub958\uac00 \ubc1c\uc0dd\ud588\uc2b5\ub2c8\ub2e4",
+
+    "CLOUDHELPER_FORM_NAME" : "\ud074\ub77c\uc6b0\ub4dc \uc11c\ube44\uc2a4\uc758 \ubcc4\uba85\uc744 \uc785\ub825\ud558\uc2ed\uc2dc\uc624",
+
+    "CLOUDHELPER_FORM_QUOTA" : "Nefele \uc804\uc6a9 \uacf5\uac04\uc744 \uc120\ud0dd\ud558\uc2ed\uc2dc\uc624",
+
+    "CLOUDHELPER_FORM_DIALOG" : "\uc815\ub9d0\ub85c \uc9c4\ud589 \ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c? \ud560\ub2f9 \ub41c \ubcc4\uce6d\uc740 \ud3b8\uc9d1 \ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4",
+
+    "CLOUDHELPER_FORM_DIALOG_EMPTY_NAME" : "\ubcc4\uce6d\uc740 \ube48 \ubb38\uc790\uc5f4 \uc77c \uc218 \uc5c6\uc2b5\ub2c8\ub2e4",
+
+    "CLOUDHELPER_FORM_TITLE" : "\ud074\ub77c\uc6b0\ub4dc \uc11c\ube44\uc2a4 \uc124\uc815",
+
+    "WIZARD_END_MESSAGE" : "\uac70\uc758 \ub2e4\ub410\ub2e4 ..",
+
+    "DROPBOX_PROVIDER_ADVISE" : "Dropbox\ub85c\ubd80\ud130\ubc1b\uc740 \uc778\uc99d \ucf54\ub4dc\ub97c \uc785\ub825\ud558\uc2ed\uc2dc\uc624"
+}
