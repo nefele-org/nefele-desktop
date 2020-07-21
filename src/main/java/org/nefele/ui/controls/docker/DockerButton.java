@@ -64,7 +64,7 @@ public class DockerButton extends JFXButton implements Initializable, Themeable 
 
         this.item = new SimpleObjectProperty<>(requireNonNull(item));
 
-        Resources.getFXML(this, "/fxml/controls/DockerButton.fxml");
+        Resources.getFXML(this, "/fxml/controls/docker/DockerButton.fxml");
 
     }
 

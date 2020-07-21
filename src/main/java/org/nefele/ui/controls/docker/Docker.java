@@ -61,7 +61,7 @@ public class Docker extends VBox implements Initializable, Themeable {
         contentPane = new SimpleObjectProperty<>(null);
         parents = FXCollections.observableArrayList();
 
-        Resources.getFXML(this, "/fxml/controls/Docker.fxml");
+        Resources.getFXML(this, "/fxml/controls/docker/Docker.fxml");
 
     }
 
