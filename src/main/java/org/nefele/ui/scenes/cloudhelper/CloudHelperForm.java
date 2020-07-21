@@ -57,7 +57,7 @@ public class CloudHelperForm extends StackPane implements Initializable, Themeab
         this.description = new SimpleStringProperty(requireNonNull(description));
         this.inputType = new SimpleObjectProperty<>(requireNonNull(inputType));
 
-        Resources.getFXML(this, "/fxml/wizard/CloudHelperForm.fxml");
+        Resources.getFXML(this, "/fxml/scenes/cloudhelper/CloudHelperForm.fxml");
 
     }
 

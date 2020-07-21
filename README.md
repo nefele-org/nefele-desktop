@@ -56,7 +56,11 @@ Lo scopo di Nefele è, quindi, quello di gestire e ampliare i propri spazi di me
 
 * ##### Temi
 
+    ![Themes](docs/images/01.png) 
+
 * ##### Dark Mode
+
+    ![Themes](docs/images/02.png) 
 
 * ##### Supporto multi-lingua
 

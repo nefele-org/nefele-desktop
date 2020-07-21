@@ -78,7 +78,7 @@ public class Settings extends StackPane implements Initializable, Themeable {
         this.records = FXCollections.observableArrayList();
         this.advancedRecords = FXCollections.observableArrayList();
 
-        Resources.getFXML(this, "/fxml/Settings.fxml");
+        Resources.getFXML(this, "/fxml/scenes/settings/Settings.fxml");
 
     }
 

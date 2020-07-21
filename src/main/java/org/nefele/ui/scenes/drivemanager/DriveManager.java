@@ -46,7 +46,7 @@ import org.nefele.cloud.providers.DropboxDriveProvider;
 import org.nefele.cloud.providers.GoogleDriveProvider;
 import org.nefele.cloud.providers.OfflineDriveProvider;
 import org.nefele.core.Resources;
-import org.nefele.ui.controls.NefelePane;
+import org.nefele.ui.base.NefelePane;
 import org.nefele.ui.scenes.cloudhelper.CloudHelper;
 import org.nefele.ui.scenes.cloudhelper.CloudHelperItem;
 
@@ -64,7 +64,7 @@ public class DriveManager extends StackPane implements Initializable, Themeable 
     public DriveManager(){
 
         this.driveManagerBoxes = FXCollections.observableArrayList();
-        Resources.getFXML(this, "/fxml/DriveManager.fxml");
+        Resources.getFXML(this, "/fxml/scenes/drivemanager/DriveManager.fxml");
 
     }
 

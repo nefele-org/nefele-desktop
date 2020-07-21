@@ -42,7 +42,7 @@ public class SplashScreen extends StackPane implements Initializable, Themeable 
 
 
     public SplashScreen() {
-        Resources.getFXML(this, "/fxml/SplashScreen.fxml");
+        Resources.getFXML(this, "/fxml/scenes/SplashScreen.fxml");
         Resources.getCSS(this, "/css/base-progress.css");
         Resources.getCSS(this, "/css/window-header-icon.css");
     }

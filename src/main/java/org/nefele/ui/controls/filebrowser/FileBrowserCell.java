@@ -60,7 +60,7 @@ public class FileBrowserCell extends BorderPane implements Initializable, Themea
             }
         };
 
-        Resources.getFXML(this, "/fxml/controls/FileBrowserCell.fxml");
+        Resources.getFXML(this, "/fxml/controls/filebrowser/FileBrowserCell.fxml");
     }
 
 

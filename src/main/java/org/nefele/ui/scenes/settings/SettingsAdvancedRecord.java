@@ -53,7 +53,7 @@ public class SettingsAdvancedRecord extends StackPane implements Initializable, 
         this.name = new SimpleStringProperty(requireNonNull(name));
         this.value = new SimpleStringProperty(requireNonNull(value));
 
-        Resources.getFXML(this, "/fxml/SettingsAdvancedRecord.fxml");
+        Resources.getFXML(this, "/fxml/scenes/settings/SettingsAdvancedRecord.fxml");
     }
 
     @Override

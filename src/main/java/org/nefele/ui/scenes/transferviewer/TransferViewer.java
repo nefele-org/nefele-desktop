@@ -52,7 +52,7 @@ public class TransferViewer extends StackPane implements Initializable, Themeabl
 
 
     public TransferViewer() {
-        Resources.getFXML(this, "/fxml/TransferViewer.fxml");
+        Resources.getFXML(this, "/fxml/scenes/transferviewer/TransferViewer.fxml");
     }
 
     @Override

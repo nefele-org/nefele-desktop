@@ -40,7 +40,7 @@ import org.nefele.cloud.providers.DropboxDriveProvider;
 import org.nefele.cloud.providers.GoogleDriveProvider;
 import org.nefele.cloud.providers.OfflineDriveProvider;
 import org.nefele.core.Resources;
-import org.nefele.ui.controls.NefelePane;
+import org.nefele.ui.base.NefelePane;
 import org.nefele.ui.scenes.cloudhelper.CloudHelper;
 import org.nefele.ui.scenes.cloudhelper.CloudHelperItem;
 

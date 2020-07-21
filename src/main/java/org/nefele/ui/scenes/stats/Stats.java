@@ -105,7 +105,7 @@ public class Stats extends StackPane implements Initializable, Themeable {
 
     public Stats() {
         this.cells = FXCollections.observableArrayList();
-        Resources.getFXML(this, "/fxml/Stats.fxml");
+        Resources.getFXML(this, "/fxml/scenes/stats/Stats.fxml");
     }
 
     @Override

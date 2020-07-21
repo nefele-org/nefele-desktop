@@ -30,7 +30,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
-<?import org.nefele.ui.controls.NefeleContentPane?>
+<?import org.nefele.ui.base.NefeleContentPane?>
 <?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
 <fx:root prefHeight="170.0" prefWidth="300.0" type="NefeleContentPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
    <BorderPane>

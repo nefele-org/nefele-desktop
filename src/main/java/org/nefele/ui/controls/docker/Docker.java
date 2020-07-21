@@ -41,7 +41,7 @@ import javafx.util.Duration;
 import org.nefele.Application;
 import org.nefele.Themeable;
 import org.nefele.core.Resources;
-import org.nefele.ui.controls.NefelePane;
+import org.nefele.ui.base.NefelePane;
 
 import java.net.URL;
 import java.util.ResourceBundle;

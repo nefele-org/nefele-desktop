@@ -104,7 +104,7 @@ public class FileBrowser extends ScrollPane implements Initializable, Themeable 
         this.contextMenu = new ContextMenu();
 
 
-        Resources.getFXML(this, "/fxml/controls/FileBrowser.fxml");
+        Resources.getFXML(this, "/fxml/controls/filebrowser/FileBrowser.fxml");
     }
 
 

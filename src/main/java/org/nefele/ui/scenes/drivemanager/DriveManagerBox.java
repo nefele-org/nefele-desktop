@@ -69,7 +69,7 @@ public class DriveManagerBox extends StackPane implements Initializable, Themeab
         this.drive = new SimpleObjectProperty<>(requireNonNull(driveProvider));
         this.driveProvider = driveProvider;
 
-        Resources.getFXML(this, "/fxml/DriveManagerBox.fxml");
+        Resources.getFXML(this, "/fxml/scenes/drivemanager/DriveManagerBox.fxml");
     }
 
     @Override

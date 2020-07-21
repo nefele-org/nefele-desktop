@@ -82,7 +82,7 @@ public class Archive extends StackPane implements Initializable, Themeable {
 
 
     public Archive() {
-        Resources.getFXML(this, "/fxml/Archive.fxml");
+        Resources.getFXML(this, "/fxml/scenes/archive/Archive.fxml");
     }
 
     @Override

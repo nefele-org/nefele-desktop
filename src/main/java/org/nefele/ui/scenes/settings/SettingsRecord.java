@@ -61,7 +61,7 @@ public class SettingsRecord extends StackPane implements Initializable, Themeabl
         this.reference = new SimpleStringProperty(requireNonNull(reference));
         this.inputType = new SimpleObjectProperty<>(requireNonNull(inputType));
 
-        Resources.getFXML(this, "/fxml/SettingsRecord.fxml");
+        Resources.getFXML(this, "/fxml/scenes/settings/SettingsRecord.fxml");
 
     }
 

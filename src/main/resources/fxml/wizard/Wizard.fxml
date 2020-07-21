@@ -32,7 +32,7 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.*?>
-<?import org.nefele.ui.controls.NefeleContentPane?>
+<?import org.nefele.ui.base.NefeleContentPane?>
 <fx:root prefHeight="200.0" prefWidth="200.0" type="NefeleContentPane"
          xmlns="http://javafx.com/javafx/10.0.2-internal"
          xmlns:fx="http://javafx.com/fxml/1">

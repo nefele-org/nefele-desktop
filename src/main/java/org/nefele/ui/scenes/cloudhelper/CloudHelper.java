@@ -38,7 +38,7 @@ import javafx.scene.layout.VBox;
 import org.nefele.Application;
 import org.nefele.Themeable;
 import org.nefele.core.Resources;
-import org.nefele.ui.controls.NefeleContentPane;
+import org.nefele.ui.base.NefeleContentPane;
 import org.nefele.ui.dialog.BaseDialog;
 import org.nefele.ui.dialog.Dialogs;
 
@@ -56,7 +56,7 @@ public class CloudHelper extends NefeleContentPane implements Initializable, The
     public CloudHelper(){
 
         helperButtons = FXCollections.observableArrayList();
-        Resources.getFXML(this, "/fxml/wizard/CloudHelper.fxml");
+        Resources.getFXML(this, "/fxml/scenes/cloudhelper/CloudHelper.fxml");
     }
 
     @Override

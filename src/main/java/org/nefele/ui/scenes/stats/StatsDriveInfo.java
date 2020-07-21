@@ -57,7 +57,7 @@ public class StatsDriveInfo extends StackPane implements Initializable, Themeabl
         
         this.driveProvider = driveProvider;
 
-        Resources.getFXML(this, "/fxml/StatsDriveInfo.fxml");
+        Resources.getFXML(this, "/fxml/scenes/stats/StatsDriveInfo.fxml");
 
     }
 

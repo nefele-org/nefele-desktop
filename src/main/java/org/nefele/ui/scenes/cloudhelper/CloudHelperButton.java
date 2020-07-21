@@ -68,7 +68,7 @@ public class CloudHelperButton extends JFXButton implements Initializable, Theme
         this.item = new SimpleObjectProperty<>(requireNonNull(item));
         this.drive = new SimpleObjectProperty<>();
 
-        Resources.getFXML(this, "/fxml/wizard/CloudHelperButton.fxml");
+        Resources.getFXML(this, "/fxml/scenes/cloudhelper/CloudHelperButton.fxml");
 
     }
 

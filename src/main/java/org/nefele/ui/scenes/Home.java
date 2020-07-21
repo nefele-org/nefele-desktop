@@ -33,8 +33,8 @@ import javafx.stage.Stage;
 import org.nefele.Application;
 import org.nefele.Themeable;
 import org.nefele.core.Resources;
-import org.nefele.ui.controls.NefeleContentPane;
-import org.nefele.ui.controls.NefelePane;
+import org.nefele.ui.base.NefeleContentPane;
+import org.nefele.ui.base.NefelePane;
 import org.nefele.ui.controls.docker.Docker;
 import org.nefele.ui.controls.docker.DockerItem;
 import org.nefele.ui.dialog.BaseDialog;
@@ -61,7 +61,7 @@ public class Home extends NefeleContentPane implements Initializable, Themeable 
 
 
     public Home() {
-        Resources.getFXML(this, "/fxml/Home.fxml");
+        Resources.getFXML(this, "/fxml/scenes/Home.fxml");
     }
 
     @Override
