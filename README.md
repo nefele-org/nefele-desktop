@@ -40,6 +40,9 @@ Lo scopo di Nefele è, quindi, quello di gestire e ampliare i propri spazi di me
     
  * ##### Gestione dei Drive
     Aggiungi, modifica o rimuove i cloud utente, attraverso una procedura guidata.
+
+ * ##### Gestione quote
+    Decidi quanto spazio riservare, per ogni singolo cloud, a Nefele
     
  * ##### Crittografia
     Abilita la crittografia end-to-end sui *chunk*, ovvero una sistema di comunicazione cifrata per la protezione dei dati sensibili.
