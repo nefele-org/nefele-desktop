@@ -43,7 +43,6 @@ import org.nefele.Themeable;
 import org.nefele.core.Resources;
 import org.nefele.ui.base.NefelePane;
 
-import javax.imageio.ImageIO;
 import java.net.URL;
 import java.util.ResourceBundle;
 

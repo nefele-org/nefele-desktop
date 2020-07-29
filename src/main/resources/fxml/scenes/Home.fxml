@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import org.nefele.ui.controls.docker.Docker?>
-<?import org.nefele.ui.base.NefeleContentPane?>
 <!--
   ~ The MIT License
   ~
@@ -30,6 +25,11 @@
   ~ THE SOFTWARE.
   -->
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import org.nefele.ui.base.NefeleContentPane?>
+<?import org.nefele.ui.controls.docker.Docker?>
 <fx:root prefHeight="200.0" prefWidth="200.0" type="NefeleContentPane"
          xmlns="http://javafx.com/javafx/10.0.2-internal"
          xmlns:fx="http://javafx.com/fxml/1">
