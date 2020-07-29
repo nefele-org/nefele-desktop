@@ -219,15 +219,16 @@ public class MergeStorage implements ApplicationService {
 
     }
 
-    public void free(MergeNode node) {
+    public void free(MergeNode node, boolean clearData) {
 
         try {
 
             getInodes().remove(node);
 
-            while (!node.getChunks().isEmpty())
-                free(node.getChunks().get(0));
-
+            if(clearData) {
+                while (!node.getChunks().isEmpty())
+                    free(node.getChunks().get(0));
+            }
 
         } finally {
             dustNodes.add(node);

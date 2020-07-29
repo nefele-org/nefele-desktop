@@ -155,7 +155,7 @@ public class MergeFileStore extends FileStore {
 
 
         fileSystem.getStorage()
-                .free(path.getInode());
+                .free(path.getInode(), true);
 
         fileSystem.getWatchService()
                 .post(StandardWatchEventKinds.ENTRY_DELETE, path);
@@ -172,17 +172,20 @@ public class MergeFileStore extends FileStore {
             throw new FileAlreadyExistsException(newPath.toString());
 
 
-        String newParent = oldPath.getInode().getParent();
-        String newName = newPath.getInode().getName();
+        newPath.getInode().setCreatedTime(oldPath.getInode().getCreatedTime());
+        newPath.getInode().setModifiedTime(oldPath.getInode().getModifiedTime());
+        newPath.getInode().setAccessedTime(oldPath.getInode().getAccessedTime());
+        newPath.getInode().setSize(oldPath.getInode().getSize());
+        newPath.getInode().setMime(oldPath.getInode().getMime());
+        newPath.getInode().setParent(oldPath.getInode().getParent());
+        newPath.getInode().getChunks().addAll(oldPath.getInode().getChunks());
 
-
-        newPath.getInode().setName(newName);
-        newPath.getInode().setParent(newParent);
         newPath.getInode().invalidate();
 
 
-        fileSystem.getStorage().getInodes()
-                .remove(oldPath.getInode());
+
+        fileSystem.getStorage()
+                .free(oldPath.getInode(), false);
 
         fileSystem.getStorage().getInodes()
                 .add(newPath.getInode());
