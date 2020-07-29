@@ -109,6 +109,7 @@
 
     "ARCHIVE_ERROR_DIALOG_REQUEST_SYNC":  "Something went wrong in synchronization. Please try again later",
 
+    "ARCHIVE_DIALOG_RENAME" : "Insert new name",
     "ARCHIVE_DIALOG_RENAME_EMPTY" : "Name cannot be empty",
     "ARCHIVE_DIALOG_RENAME_INVALID_NAME" : "Name must be valid",
     "ARCHIVE_DIALOG_FILE_NOTSELECTED" : "The file was not selected",

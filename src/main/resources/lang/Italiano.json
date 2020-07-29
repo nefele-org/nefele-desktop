@@ -109,6 +109,7 @@
 
     "ARCHIVE_ERROR_DIALOG_REQUEST_SYNC": "Si è verificato un errore nella condivisione della cartella. Riprova più tardi",
 
+    "ARCHIVE_DIALOG_RENAME" : "Inserisci un nuovo nome",
     "ARCHIVE_DIALOG_RENAME_EMPTY" : "Il nome non può essere vuoto",
     "ARCHIVE_DIALOG_RENAME_INVALID_NAME" : "Il nome non è valido",
     "ARCHIVE_DIALOG_FILE_NOTSELECTED" : "Il file non è stato selezionato",

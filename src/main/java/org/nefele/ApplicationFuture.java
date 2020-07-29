@@ -32,8 +32,6 @@ import java.util.concurrent.TimeUnit;
 public class ApplicationFuture extends Service<Void> {
 
 
-
-
     private final ApplicationService module;
     private final long period;
     private final long delay;
